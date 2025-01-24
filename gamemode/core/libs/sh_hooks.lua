@@ -1,10 +1,20 @@
+--- Custom function based hooks.
+-- @module ow.hooks
+
 ow.hooks = ow.hooks or {}
 ow.hooks.stored = ow.hooks.stored or {}
 
+--- Registers a new hook type.
+-- @realm shared
+-- @param string name The name of the hook type.
 function ow.hooks.Register(name)
     ow.commands.stored[name] = true
 end
 
+--- Unregisters a hook type.
+-- @realm shared
+-- @param string name The name of the hook type.
+-- @internal
 function ow.hooks.UnRegister(name)
     ow.commands.stored[name] = nil
 end

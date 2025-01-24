@@ -5,6 +5,7 @@ ow.colors = ow.colors or {}
 ow.colors.stored = ow.colors.stored or {}
 
 --- Registers a new color.
+-- @realm shared
 -- @param info A table containing information about the color.
 function ow.colors:Register(info)
     if ( !info.Name ) then
@@ -21,6 +22,7 @@ function ow.colors:Register(info)
 end
 
 --- Gets a color by its name.
+-- @realm shared
 -- @param name The name of the color.
 -- @return The color.
 function ow.colors:Get(name)
