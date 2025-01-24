@@ -1,0 +1,79 @@
+ow.modules = ow.modules or {}
+ow.modules.stored = ow.modules.stored or {}
+
+function ow.modules.Register(info)
+    if ( !info ) then
+        ow.util.PrintError("Attempted to register an invalid module!")
+        return
+    end
+
+    if ( !info.Name ) then
+        info.Name = "Unknown"
+    end
+
+    if ( !info.Description ) then
+        info.Description = "No description provided."
+    end
+
+    if ( !info.Author ) then
+        info.Author = "Unknown"
+    end
+
+    local uniqueID = string.lower(string.gsub(info.Name, "%s", "_")) 
+    info.UniqueID = uniqueID
+
+    ow.commands.stored[uniqueID] = info
+
+    return uniqueID
+end
+
+function ow.modules.Get(identifier)
+    if ( !identifier ) then
+        ow.util.PrintError("Attempted to get an invalid module!")
+        return
+    end
+
+    if ( ow.commands.stored[identifier] ) then
+        return ow.commands.stored[identifier]
+    end
+
+    for k, v in pairs(ow.commands.stored) do
+        if ( ow.util.FindString(v.Name, identifier) ) then
+            return v
+        elseif ( ow.util.FindString(v.UniqueID, identifier) ) then
+            return v
+        end
+    end
+end
+
+function ow.modules.LoadFolder(path, bFromLua)
+    local baseDir = engine.ActiveGamemode()
+    baseDir = baseDir .. "/"
+
+    if ( SCHEMA and SCHEMA.folder ) then
+        baseDir = SCHEMA.folder .. "/schema/"
+    else
+        baseDir = baseDir .. "/gamemode/"
+    end
+
+    if ( bFromLua ) then
+        baseDir = ""
+    end
+
+    -- Load modules from the main folder
+    for k, v in ipairs(file.Find(baseDir .. path .. "/*.lua", "LUA")) do
+        ow.util.LoadFile(path .. "/" .. v)
+    end
+
+    -- Load modules from subfolders
+    local files, folders = file.Find(baseDir .. path .. "/*", "LUA")
+    for k, v in ipairs(folders) do
+        local modulePath = baseDir .. path .. "/" .. v .. "/sh_module.lua"
+
+        if ( file.Exists(modulePath, "LUA") ) then
+            ow.util.LoadFile(modulePath, true)
+        end
+    end
+
+    return true
+end
