@@ -1,14 +1,14 @@
 --- Commands library.
--- @module ow.commands
+-- @module ow.command
 
-ow.commands = {}
-ow.commands.stored = {}
+ow.command = {}
+ow.command.stored = {}
 
 --- Registers a new command.
 -- @realm shared
 -- @param table info The command information.
 -- @return table The command information.
-function ow.commands:Register(info)
+function ow.command:Register(info)
     if ( !info ) then
         ow.util:PrintError("Attempted to register an invalid command!")
         return
@@ -39,7 +39,7 @@ end
 -- @realm shared
 -- @param string name The name of the command.
 -- @internal
-function ow.commands:UnRegister(name)
+function ow.command:UnRegister(name)
     self.stored[name] = nil
 end
 
@@ -47,7 +47,7 @@ end
 -- @realm shared
 -- @param string identifier The unique identifier or prefix of the command.
 -- @return table The command.
-function ow.commands:Get(identifier)
+function ow.command:Get(identifier)
     if ( !identifier ) then
         ow.util:PrintError("Attempted to get an invalid command!")
         return

@@ -1,4 +1,4 @@
-ow.commands:Register({
+ow.command:Register({
     Name = "Respawn",
     Prefixes = {"Respawn"},
     AdminOnly = true,

@@ -1,9 +1,12 @@
+--- Command library
+-- @module ow.command
+
 --- Runs a command.
 -- @realm server
 -- @param Player ply The player running the command.
 -- @param string command The command to run.
 -- @param table arguments The arguments of the command.
-function ow.commands:Run(ply, command, arguments)
+function ow.command:Run(ply, command, arguments)
     if ( !IsValid(ply) ) then
         ow.util:PrintError("Attempted to run a command with no player!")
         return false
@@ -43,7 +46,7 @@ concommand.Add("ow_command_run", function(ply, cmd, arguments)
     local command = arguments[1]
     table.remove(arguments, 1)
 
-    ow.commands:Run(ply, command, arguments)
+    ow.command:Run(ply, command, arguments)
 
     ply.owNextCommand = CurTime() + 1
 end)
@@ -60,7 +63,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
 
     ow.util:Print("Commands:")
 
-    for k, v in pairs(ow.commands.stored) do
+    for k, v in pairs(ow.command.stored) do
         if ( v.AdminOnly and !ply:IsAdmin() ) then
             continue
         end
@@ -80,7 +83,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
 end--[[, function(cmd, argStr, args)
     local commands = {}
 
-    for k, v in pairs(ow.commands.stored) do
+    for k, v in pairs(ow.command.stored) do
         table.insert(commands, cmd .. " " .. v.Name)
     end
 

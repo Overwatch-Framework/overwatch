@@ -1,3 +1,6 @@
+--- Item library
+-- @module ow.item
+
 ow.item = {}
 ow.item.stored = {}
 ow.item.instances = {}

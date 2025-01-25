@@ -1,3 +1,6 @@
+--- Inventory library
+-- @module ow.inventory
+
 ow.inventory = {}
 ow.inventory.stored = {}
 
