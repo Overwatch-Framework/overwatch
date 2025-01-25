@@ -25,7 +25,7 @@ ow.faction.instances = {}
 
 function ow.faction:Register(factionData)
     local uniqueID = string.lower(string.gsub(factionData.Name, "%s", "_"))
-    factionData.UniqueID = uniqueID
+    factionData.UniqueID = factionData.UniqueID or uniqueID
 
     factionData.Name = factionData.Name or "Unknown Faction"
     factionData.Color = factionData.Color or Color(255, 255, 255)
