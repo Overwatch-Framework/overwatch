@@ -26,7 +26,7 @@ function ow.modules:Register(info)
         info.Author = "Unknown"
     end
 
-    local uniqueID = string.lower(string.gsub(info.Name, "%s", "_")) 
+    local uniqueID = string.lower(string.gsub(info.Name, "%s", "-")) 
     info.UniqueID = uniqueID
 
     self.stored[uniqueID] = info
