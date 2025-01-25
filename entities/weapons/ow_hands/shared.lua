@@ -45,6 +45,18 @@ function SWEP:PrimaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
 end
 
+function SWEP:GetMaxMassHold()
+    return hook.Run("OW.GetMaxHandsMass", self:GetOwner()) or 100
+end
+
+function SWEP:GetReachDistance()
+    return hook.Run("OW.GetHandsReachDistance", self:GetOwner()) or 96
+end
+
+function SWEP:GetPushForce()
+    return hook.Run("OW.GetHandsPushForce", self:GetOwner()) or 128
+end
+
 function SWEP:SecondaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
 
@@ -52,7 +64,7 @@ function SWEP:SecondaryAttack()
 
     local traceData = util.TraceLine({
         start = ply:GetShootPos(),
-        endpos = ply:GetShootPos() + ply:GetAimVector() * 96,
+        endpos = ply:GetShootPos() + ply:GetAimVector() * self:GetReachDistance(),
         filter = ply
     })
 
@@ -62,7 +74,7 @@ function SWEP:SecondaryAttack()
     if ( ent:IsPlayer() or ent:IsNPC() ) then
         ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
         ply:ViewPunch(Angle(-4, 0, 0))
-        ent:SetVelocity(ply:GetAimVector() * 128)
+        ent:SetVelocity(ply:GetAimVector() * self:GetPushForce())
 
         if ( ent:IsPlayer() ) then
             ent:ViewPunch(Angle(4, 0, 0))
@@ -70,8 +82,9 @@ function SWEP:SecondaryAttack()
     elseif ( IsValid(ent:GetPhysicsObject()) ) then
         ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
         ply:ViewPunch(Angle(-4, 0, 0))
-        ent:GetPhysicsObject():ApplyForceOffset(ply:GetAimVector() * 128, traceData.HitPos)
+        ent:GetPhysicsObject():ApplyForceOffset(ply:GetAimVector() * self:GetPushForce(), traceData.HitPos)
     end
 
+    hook.Run("OW.HandsPush", ply, ent)
     self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
 end
