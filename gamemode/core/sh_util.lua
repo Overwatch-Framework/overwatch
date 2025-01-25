@@ -45,7 +45,7 @@ end
 function ow.util.Print(...)
     local args = ow.util.PreparePackage(...)
 
-    MsgC(Color(0 ,100, 150), "Overwatch | ", color_white, args, "\n")
+    MsgC(Color(0, 100, 150), "Overwatch | ", color_white, args, "\n")
 end
 
 --- Prints an error message to the console.
@@ -54,7 +54,7 @@ end
 function ow.util.PrintError(...)
     local args = ow.util.PreparePackage(...)
 
-    MsgC(Color(0 ,100, 150), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
+    MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
 end
 
 --- Prints a warning message to the console.
@@ -63,7 +63,7 @@ end
 function ow.util.PrintWarning(...)
     local args = ow.util.PreparePackage(...)
 
-    MsgC(Color(0 ,100, 150), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
+    MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
 end
 
 --- Loads a file based on the realm.
