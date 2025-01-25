@@ -2,7 +2,7 @@
 -- @module ow.hooks
 
 ow.hooks = {}
-ow.hooks.stored = ow.hooks.stored or {}
+ow.hooks.stored = {}
 
 --- Registers a new hook type.
 -- @realm shared
