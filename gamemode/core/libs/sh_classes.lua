@@ -10,17 +10,25 @@ function ow.class:Register(classData)
         ow.util:PrintError("Attempted to register a class without a valid faction!")
         return
     end
-    
-    self.stored[classData.uniqueID] = classData
-    self.instances[#self.instances + 1] = classData
-
-    classData.index = #self.instances
 
     local faction = ow.faction:Get(classData.faction)
     if ( faction == nil ) then
         ow.util:PrintError("Attempted to register a class for an invalid faction!")
         return
     end
+
+    local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
+    classData.UniqueID = uniqueID
+
+    classData.Name = classData.Name or "Unknown Faction"
+    classData.Color = classData.Color or Color(255, 255, 255)
+    classData.Description = classData.Description or "No description provided."
+    classData.IsDefault = classData.IsDefault or false
+    
+    self.stored[uniqueID] = classData
+    self.instances[#self.instances + 1] = classData
+
+    classData.index = #self.instances
 
     faction.classes = faction.classes or {}
     faction.classes[#faction.classes + 1] = classData
