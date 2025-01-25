@@ -46,7 +46,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:GetMaxMassHold()
-    return hook.Run("OW.GetMaxHandsMass", self:GetOwner()) or 100
+    return hook.Run("OW.GetMaxHandsMass", self:GetOwner()) or 64
 end
 
 function SWEP:GetReachDistance()
