@@ -13,7 +13,7 @@ ow.util:LoadFolder("core/net")
 ow.util:Print("Initialized.")
 
 ow.util:Print("Initializing Modules...")
-ow.modules:LoadFolder("overwatch/modules", true)
+ow.util:LoadFolder("overwatch/modules", true)
 ow.util:Print("Initializing Modules.")
 
 function GM:Initialize()
