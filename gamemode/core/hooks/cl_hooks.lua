@@ -44,4 +44,6 @@ function GM:LoadFonts()
         size = 32,
         weight = 700
     })
+
+    hook.Run("PostCreateFonts")
 end
