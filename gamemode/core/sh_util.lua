@@ -122,10 +122,11 @@ end
 -- @realm shared
 -- @param value any The value to check.
 -- @return string The type of the value.
-function ow.util:FindString(str, find)
+function ow.util:FindString(str, find, bPatterns)
     if ( !str or !find ) then return false end
+    if ( bPatterns == nil ) then bPatterns = true end
 
-    return tobool(string.find(string.lower(str), string.lower(find)))
+    return tobool(string.find(string.lower(str), string.lower(find), 1, bPatterns))
 end
 
 --- Searches a given text for the specified value.
