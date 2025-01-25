@@ -39,7 +39,6 @@ function ow.faction:Register(factionData)
     factionData.Index = #self.instances
 
     team.SetUp(factionData.Index, factionData.Name, factionData.Color, false)
-
     return factionData.Index
 end
 
