@@ -1,5 +1,5 @@
 GM.Name = "Overwatch"
-GM.Author = "Riggs"
+GM.Author = "Riggs & eon (bloodycop)"
 GM.Description = "A roleplaying gamemode for Garry's Mod."
 GM.Version = "Foundation"
 
