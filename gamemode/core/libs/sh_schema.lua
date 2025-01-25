@@ -41,7 +41,7 @@ function ow.schema:Initialize()
     end
 
     ow.hooks:Register("SCHEMA")
-    ow.modules:LoadFolder(folder .. "/modules", true)
+    ow.util:LoadFolder(folder .. "/modules", true)
     ow.util:LoadFolder(folder .. "/schema/factions", true)
     ow.util:LoadFolder(folder .. "/schema/items", true)
 

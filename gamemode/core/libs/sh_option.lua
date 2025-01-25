@@ -1,10 +1,13 @@
-ow.options = {}
-ow.options.stored = {}
+--- Options library
+-- @module ow.optio
 
-function ow.options:Register(uniqueID, optionData)
+ow.option = {}
+ow.option.stored = {}
+
+function ow.option:Register(uniqueID, optionData)
     self.stored[uniqueID] = optionData
 end
 
-function ow.options:Get(uniqueID)
+function ow.option:Get(uniqueID)
     return self.stored[uniqueID]
 end

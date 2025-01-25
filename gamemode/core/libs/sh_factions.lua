@@ -1,3 +1,6 @@
+--- Faction library
+-- @module ow.faction
+
 ow.faction = {}
 ow.faction.stored = {}
 ow.faction.instances = {}

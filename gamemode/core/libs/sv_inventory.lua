@@ -1,1 +1,2 @@
-// nothing yet
+--- Inventory library
+-- @module ow.inventory

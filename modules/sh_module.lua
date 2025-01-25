@@ -8,4 +8,4 @@ function MODULE:OnReloaded()
     print("Test Module has been reloaded.")
 end
 
-ow.modules:Register(MODULE)
+ow.module:Register(MODULE)

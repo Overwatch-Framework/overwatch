@@ -1,3 +1,6 @@
+--- Class library
+-- @module ow.class
+
 ow.class = {}
 ow.class.stored = {}
 ow.class.instances = {}
