@@ -57,6 +57,14 @@ function SWEP:GetPushForce()
     return hook.Run("OW.GetHandsPushForce", self:GetOwner()) or 128
 end
 
+function SWEP:CanPush(ent)
+    return hook.Run("OW.CanHandsPush", self:GetOwner(), ent) or true
+end
+
+function SWEP:CanPickup(ent)
+    return hook.Run("OW.CanHandsPickup", self:GetOwner(), ent) or true
+end
+
 function SWEP:SecondaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
 
@@ -71,7 +79,7 @@ function SWEP:SecondaryAttack()
     local ent = traceData.Entity
     if ( !IsValid(ent) ) then return end
 
-    if ( ent:IsPlayer() or ent:IsNPC() ) then
+    if ( ( ent:IsPlayer() or ent:IsNPC() ) and self:CanPush() ) then
         ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
         ply:ViewPunch(Angle(-4, 0, 0))
         ent:SetVelocity(ply:GetAimVector() * self:GetPushForce())
@@ -81,7 +89,7 @@ function SWEP:SecondaryAttack()
         end
 
         hook.Run("OW.HandsPush", ply, ent)
-    elseif ( SERVER and IsValid(ent:GetPhysicsObject()) ) then
+    elseif ( SERVER and IsValid(ent:GetPhysicsObject()) and self:CanPickup() ) then
         if ( ent:IsPlayerHolding() ) then
             ply:DropObject()
         else
