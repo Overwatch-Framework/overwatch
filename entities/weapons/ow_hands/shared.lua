@@ -59,11 +59,18 @@ function SWEP:SecondaryAttack()
     local ent = traceData.Entity
     if ( !IsValid(ent) ) then return end
 
-    if ( ent:IsPlayer() ) then
+    if ( ent:IsPlayer() or ent:IsNPC() ) then
         ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
         ply:ViewPunch(Angle(-4, 0, 0))
         ent:SetVelocity(ply:GetAimVector() * 128)
-        ent:ViewPunch(Angle(4, 0, 0))
+
+        if ( ent:IsPlayer() ) then
+            ent:ViewPunch(Angle(4, 0, 0))
+        end
+    elseif ( IsValid(ent:GetPhysicsObject()) ) then
+        ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
+        ply:ViewPunch(Angle(-4, 0, 0))
+        ent:GetPhysicsObject():ApplyForceOffset(ply:GetAimVector() * 128, traceData.HitPos)
     end
 
     self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
