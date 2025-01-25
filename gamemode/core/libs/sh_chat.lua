@@ -1,10 +1,10 @@
 ow.chat = {}
 ow.chat.classes = {}
 
-function ow.chat.Register(chatData)
-    ow.chat.classes[chatData.uniqueID] = chatData
+function ow.chat:Register(chatData)
+    self.classes[chatData.uniqueID] = chatData
 end
 
-function ow.chat.Get(uniqueID)
-    return ow.chat.classes[uniqueID]
+function ow.chat:Get(uniqueID)
+    return self.classes[uniqueID]
 end

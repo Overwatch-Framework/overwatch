@@ -1,14 +1,14 @@
 --- A library for managing modules in the gamemode.
 -- @module ow.modules
 
-ow.modules = ow.modules or {}
-ow.modules.stored = ow.modules.stored or {}
+ow.modules = {}
+ow.modules.stored = {}
 
 --- Registers a module.
 -- @realm shared
 -- @param table info The module information.
 -- @return string The unique identifier of the module.
-function ow.modules.Register(info)
+function ow.modules:Register(info)
     if ( !info ) then
         ow.util.PrintError("Attempted to register an invalid module!")
         return
@@ -29,7 +29,7 @@ function ow.modules.Register(info)
     local uniqueID = string.lower(string.gsub(info.Name, "%s", "_")) 
     info.UniqueID = uniqueID
 
-    ow.commands.stored[uniqueID] = info
+    self.stored[uniqueID] = info
 
     return uniqueID
 end
@@ -38,17 +38,17 @@ end
 -- @realm shared
 -- @param string identifier The unique identifier or name of the module.
 -- @return table The module.
-function ow.modules.Get(identifier)
+function ow.modules:Get(identifier)
     if ( !identifier ) then
         ow.util.PrintError("Attempted to get an invalid module!")
         return
     end
 
-    if ( ow.commands.stored[identifier] ) then
-        return ow.commands.stored[identifier]
+    if ( self.stored[identifier] ) then
+        return self.stored[identifier]
     end
 
-    for k, v in pairs(ow.commands.stored) do
+    for k, v in pairs(self.stored) do
         if ( ow.util.FindString(v.Name, identifier) ) then
             return v
         elseif ( ow.util.FindString(v.UniqueID, identifier) ) then
@@ -62,7 +62,7 @@ end
 -- @param string path The path to the module file.
 -- @param boolean bFromLua Whether the file is being loaded from Lua or not.
 -- @return boolean Returns true if the module was successfully loaded, false otherwise.
-function ow.modules.LoadFolder(path, bFromLua)
+function ow.modules:LoadFolder(path, bFromLua)
     local baseDir = engine.ActiveGamemode()
     baseDir = baseDir .. "/"
 

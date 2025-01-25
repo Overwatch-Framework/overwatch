@@ -3,7 +3,7 @@
 
 require("mongo")
 
-ow.database = ow.database or {}
+ow.database = {}
 ow.database.database = nil
 
 local client = MongoDB.Client("mongodb://admin:password@localhost:27017")
@@ -12,7 +12,7 @@ local client = MongoDB.Client("mongodb://admin:password@localhost:27017")
 -- @realm server
 -- @return boolean Returns true if the database was successfully initialized, false otherwise.
 -- @internal
-function ow.database.Initialize()
+function ow.database:Initialize()
     if ( !SCHEMA ) then
         ow.util.PrintError("Schema not found!")
         return
@@ -21,7 +21,7 @@ function ow.database.Initialize()
     local folder = engine.ActiveGamemode()
     local database = client:Database(folder)
 
-    ow.database.database = database
+    self.database = database
 
     ow.util.Print("Connected to database \"" .. folder .. "\".")
 
@@ -30,7 +30,7 @@ end
 
 --- Returns the active database.
 -- @realm server
-function ow.database.GetDatabase()
+function ow.database:GetDatabase()
     return ow.database.database
 end
 
@@ -38,8 +38,8 @@ end
 -- @realm server
 -- @param string name The name of the collection.
 -- @return table The collection object.
-function ow.database.CreateCollection(name)
-    local database = ow.database.GetDatabase()
+function ow.database:CreateCollection(name)
+    local database = self:GetDatabase()
     if ( !database ) then
         ow.util.PrintError("Database not found!")
         return
