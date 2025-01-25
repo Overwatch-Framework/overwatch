@@ -79,12 +79,19 @@ function SWEP:SecondaryAttack()
         if ( ent:IsPlayer() ) then
             ent:ViewPunch(Angle(4, 0, 0))
         end
-    elseif ( IsValid(ent:GetPhysicsObject()) ) then
-        ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
-        ply:ViewPunch(Angle(-4, 0, 0))
-        ent:GetPhysicsObject():ApplyForceOffset(ply:GetAimVector() * self:GetPushForce(), traceData.HitPos)
-    end
 
-    hook.Run("OW.HandsPush", ply, ent)
+        hook.Run("OW.HandsPush", ply, ent)
+    elseif ( SERVER and IsValid(ent:GetPhysicsObject()) ) then
+        if ( ent:IsPlayerHolding() ) then
+            ply:DropObject()
+        else
+            timer.Simple(0.1, function()
+                if ( !IsValid(ent) ) then return end
+
+                ply:PickupObject(ent)
+                hook.Run("OW.HandsPickup", ply, ent)
+            end)
+        end
+    end
     self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
 end
