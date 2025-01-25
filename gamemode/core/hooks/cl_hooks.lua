@@ -13,6 +13,30 @@ end
 function GM:HUDPaint()
 end
 
+local elements = {
+    ["CHUDQuickInfo"] = true,
+    ["CHudAmmo"] = true,
+    ["CHudBattery"] = true,
+    ["CHudDamageIndicator"] = true,
+    ["CHudGeiger"] = true,
+    ["CHudHealth"] = true,
+    ["CHudHistoryResource"] = true,
+    ["CHudPoisonDamageIndicator"] = true,
+    ["CHudSecondaryAmmo"] = true,
+    ["CHudSquadStatus"] = true,
+    ["CHudSuitPower"] = true,
+    ["CHudTrain"] = true,
+    ["CHudVehicle"] = true
+}
+
+function GM:HUDShouldDraw(name)
+    if ( elements[name] ) then
+        return false
+    end
+
+    return true
+end
+
 function GM:LoadFonts()
     surface.CreateFont("ow.fonts.default", {
         font = "Arial",
@@ -45,13 +69,13 @@ function GM:LoadFonts()
         weight = 700
     })
 
-    surface.CreateFont("ow.fonts.default.xlarge", {
+    surface.CreateFont("ow.fonts.default.extralarge", {
         font = "Arial",
         size = 32,
         weight = 500
     })
 
-    surface.CreateFont("ow.fonts.default.xlarge.bold", {
+    surface.CreateFont("ow.fonts.default.extralarge.bold", {
         font = "Arial",
         size = 32,
         weight = 700
