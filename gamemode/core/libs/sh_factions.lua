@@ -53,6 +53,10 @@ function ow.faction:Get(identifier)
         return self.stored[identifier]
     end
 
+    if ( isnumber(identifier) ) then
+        return self.instances[identifier]
+    end
+
     for k, v in pairs(self.stored) do
         if ( ow.util:FindString(v.Name, identifier) ) then
             return v
