@@ -1,0 +1,724 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Overwatch documentation</title>
+    <link rel="stylesheet" href="../../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>Overwatch</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Libraries</h2>
+<ul class="nowrap">
+  <li><a href="../../libraries/core.meta.sh_player/">core.meta.sh_player</a></li>
+  <li><a href="../../libraries/core.meta.sh_entity/">core.meta.sh_entity</a></li>
+  <li><a href="../../libraries/ow.database/">ow.database</a></li>
+  <li><a href="../../libraries/ow.schema/">ow.schema</a></li>
+  <li><a href="../../libraries/ow.modules/">ow.modules</a></li>
+  <li><a href="../../libraries/core.net.cl_net/">core.net.cl_net</a></li>
+  <li><a href="../../libraries/core.net.sv_net/">core.net.sv_net</a></li>
+  <li><strong>ow.util</strong></li>
+  <li><a href="../../libraries/ow.hooks/">ow.hooks</a></li>
+  <li><a href="../../libraries/ow.colors/">ow.colors</a></li>
+  <li><a href="../../libraries/ow.commands/">ow.commands</a></li>
+</ul>
+<h2>Manual</h2>
+<ul class="nowrap">
+  <li><a href="../../manual/readme/">readme</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>ow.util</code></h1>
+<p>Utility functions</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.SendChatText">ow.util.SendChatText(ply, ...)</a></td>
+	<td class="summary">Sends a chat message to the player.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.PreparePackage">ow.util.PreparePackage(...)</a></td>
+	<td class="summary">Prepares a package for printing to either the chat or console.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.Print">ow.util.Print(...)</a></td>
+	<td class="summary">Prints a message to the console.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.PrintError">ow.util.PrintError(...)</a></td>
+	<td class="summary">Prints an error message to the console.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.PrintWarning">ow.util.PrintWarning(...)</a></td>
+	<td class="summary">Prints a warning message to the console.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.LoadFile">ow.util.LoadFile(path, realm)</a></td>
+	<td class="summary">Loads a file based on the realm.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.LoadFolder">ow.util.LoadFolder(directory, bFromLua)</a></td>
+	<td class="summary">Loads all files in a folder based on the realm.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.FindString">ow.util.FindString(value)</a></td>
+	<td class="summary">Returns the type of a value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.FindText">ow.util.FindText(txt, find)</a></td>
+	<td class="summary">Searches a given text for the specified value.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.FindPlayer">ow.util.FindPlayer(identifier)</a></td>
+	<td class="summary">Searches for a player based on the given identifier.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.GetBounds">ow.util.GetBounds(startpos, endpos)</a></td>
+	<td class="summary">Gets the bounds of a box, providing the center, minimum, and maximum points.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.VectorToColor">ow.util.VectorToColor(vec, alpha)</a></td>
+	<td class="summary">Converts a vector to a color.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.ColorToVector">ow.util.ColorToVector(col)</a></td>
+	<td class="summary">Converts a color to a vector.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.ColorDim">ow.util.ColorDim(col, frac)</a></td>
+	<td class="summary">Dims a color by a specified fraction.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.ColorRandom">ow.util.ColorRandom(min, max)</a></td>
+	<td class="summary">Randomizes a color within a specified range.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.DrawBlur">ow.util.DrawBlur(panel, amount, passes)</a></td>
+	<td class="summary">Draws blur on a panel.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.DrawBlurRect">ow.util.DrawBlurRect(x, y, w, h, amount, passes)</a></td>
+	<td class="summary">Draws a blurred rectangle.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.GetTextWidth">ow.util.GetTextWidth(font, text)</a></td>
+	<td class="summary">Returns the given text's width.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.GetTextHeight">ow.util.GetTextHeight(font)</a></td>
+	<td class="summary">Returns the given text's height.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#ow.util.GetTextSize">ow.util.GetTextSize(font, text)</a></td>
+	<td class="summary">Returns the given text's size.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "ow.util.SendChatText"></a>
+    <strong>ow.util.SendChatText(ply, ...)</strong>
+    </dt>
+    <dd>
+    Sends a chat message to the player.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">ply</span>
+         Player The player to send the message to.
+        </li>
+        <li><span class="parameter">...</span>
+         any The message to send.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.PreparePackage"></a>
+    <strong>ow.util.PreparePackage(...)</strong>
+    </dt>
+    <dd>
+    Prepares a package for printing to either the chat or console.  This is useful for chat messages that need to be colored.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         any The package to prepare.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        any The prepared package.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.Print"></a>
+    <strong>ow.util.Print(...)</strong>
+    </dt>
+    <dd>
+    Prints a message to the console.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         any The message to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.PrintError"></a>
+    <strong>ow.util.PrintError(...)</strong>
+    </dt>
+    <dd>
+    Prints an error message to the console.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         any The message to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.PrintWarning"></a>
+    <strong>ow.util.PrintWarning(...)</strong>
+    </dt>
+    <dd>
+    Prints a warning message to the console.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">...</span>
+         any The message to print.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.LoadFile"></a>
+    <strong>ow.util.LoadFile(path, realm)</strong>
+    </dt>
+    <dd>
+    Loads a file based on the realm.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">path</span>
+         string The path to the file.
+        </li>
+        <li><span class="parameter">realm</span>
+         string The realm to load the file in.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.LoadFolder"></a>
+    <strong>ow.util.LoadFolder(directory, bFromLua)</strong>
+    </dt>
+    <dd>
+    Loads all files in a folder based on the realm.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">directory</span>
+         string The directory to load the files from.
+        </li>
+        <li><span class="parameter">bFromLua</span>
+         boolean Whether or not the files are being loaded from Lua.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.FindString"></a>
+    <strong>ow.util.FindString(value)</strong>
+    </dt>
+    <dd>
+    Returns the type of a value.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">value</span>
+         any The value to check.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        string The type of the value.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.FindText"></a>
+    <strong>ow.util.FindText(txt, find)</strong>
+    </dt>
+    <dd>
+    Searches a given text for the specified value.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">txt</span>
+         string The text to search.
+        </li>
+        <li><span class="parameter">find</span>
+         string The value to search for.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        boolean Whether or not the value was found.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.FindPlayer"></a>
+    <strong>ow.util.FindPlayer(identifier)</strong>
+    </dt>
+    <dd>
+    Searches for a player based on the given identifier.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">identifier</span>
+         any The identifier to search for.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Player The player that was found.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.GetBounds"></a>
+    <strong>ow.util.GetBounds(startpos, endpos)</strong>
+    </dt>
+    <dd>
+    Gets the bounds of a box, providing the center, minimum, and maximum points.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">startpos</span>
+         Vector The starting position of the box.
+        </li>
+        <li><span class="parameter">endpos</span>
+         Vector The ending position of the box.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Vector The center of the box.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.VectorToColor"></a>
+    <strong>ow.util.VectorToColor(vec, alpha)</strong>
+    </dt>
+    <dd>
+    Converts a vector to a color.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">vec</span>
+         Vector The vector to convert.
+        </li>
+        <li><span class="parameter">alpha</span>
+         number The alpha value of the color.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Color The color that was created.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.ColorToVector"></a>
+    <strong>ow.util.ColorToVector(col)</strong>
+    </dt>
+    <dd>
+    Converts a color to a vector.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">col</span>
+         Color The color to convert.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Vector The vector that was created.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.ColorDim"></a>
+    <strong>ow.util.ColorDim(col, frac)</strong>
+    </dt>
+    <dd>
+    Dims a color by a specified fraction.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">col</span>
+         Color The color to dim.
+        </li>
+        <li><span class="parameter">frac</span>
+         number The fraction to dim the color by.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Color The dimmed color.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.ColorRandom"></a>
+    <strong>ow.util.ColorRandom(min, max)</strong>
+    </dt>
+    <dd>
+    Randomizes a color within a specified range.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">min</span>
+         number The minimum value of the color.
+        </li>
+        <li><span class="parameter">max</span>
+         number The maximum value of the color.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Color The randomized color.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.DrawBlur"></a>
+    <strong>ow.util.DrawBlur(panel, amount, passes)</strong>
+    </dt>
+    <dd>
+    Draws blur on a panel.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">panel</span>
+         Panel The panel to draw the blur on.
+        </li>
+        <li><span class="parameter">amount</span>
+         number The amount of blur to apply.
+        </li>
+        <li><span class="parameter">passes</span>
+         number The number of passes to apply.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.DrawBlurRect"></a>
+    <strong>ow.util.DrawBlurRect(x, y, w, h, amount, passes)</strong>
+    </dt>
+    <dd>
+    Draws a blurred rectangle.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">x</span>
+         number The x position of the rectangle.
+        </li>
+        <li><span class="parameter">y</span>
+         number The y position of the rectangle.
+        </li>
+        <li><span class="parameter">w</span>
+         number The width of the rectangle.
+        </li>
+        <li><span class="parameter">h</span>
+         number The height of the rectangle.
+        </li>
+        <li><span class="parameter">amount</span>
+         number The amount of blur to apply.
+        </li>
+        <li><span class="parameter">passes</span>
+         number The number of passes to apply.
+        </li>
+    </ul>
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.GetTextWidth"></a>
+    <strong>ow.util.GetTextWidth(font, text)</strong>
+    </dt>
+    <dd>
+    Returns the given text's width.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+         string The font to use.
+        </li>
+        <li><span class="parameter">text</span>
+         string The text to measure.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number The width of the text.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.GetTextHeight"></a>
+    <strong>ow.util.GetTextHeight(font)</strong>
+    </dt>
+    <dd>
+    Returns the given text's height.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+         string The font to use.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        number The height of the text.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "ow.util.GetTextSize"></a>
+    <strong>ow.util.GetTextSize(font, text)</strong>
+    </dt>
+    <dd>
+    Returns the given text's size.
+
+    </ul>
+    </ul>
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">font</span>
+         string The font to use.
+        </li>
+        <li><span class="parameter">text</span>
+         string The text to measure.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+        <li>
+        number The width of the text.</li>
+        <li>
+        number The height of the text.</li>
+    </ol>
+
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2025-01-25 01:58:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
