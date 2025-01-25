@@ -28,10 +28,10 @@ function ow.class:Register(classData)
     self.stored[uniqueID] = classData
     self.instances[#self.instances + 1] = classData
 
-    classData.index = #self.instances
+    classData.Index = #self.instances
 
-    faction.classes = faction.classes or {}
-    faction.classes[#faction.classes + 1] = classData
+    faction.Classes = faction.Classes or {}
+    faction.Classes[#faction.Classes + 1] = classData
 
-    return classData.index
+    return classData.Index
 end
