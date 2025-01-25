@@ -6,7 +6,8 @@ require("mongo")
 ow.database = {}
 ow.database.database = nil
 
-local client = MongoDB.Client("mongodb://admin:password@localhost:27017")
+local client
+local database
 
 --- Initializes the database.
 -- @realm server
@@ -19,7 +20,14 @@ function ow.database:Initialize()
     end
 
     local folder = engine.ActiveGamemode()
-    local database = client:Database(folder)
+
+    client = MongoDB.Client("mongodb://admin:password@localhost:27017")
+    if ( !client ) then
+        ow.util:PrintError("Connection to database failed!")
+        return false
+    end
+
+    database = client:Database(folder)
 
     self.database = database
 
@@ -60,3 +68,6 @@ function ow.database:CreateCollection(name)
 
     return result
 end
+
+-- Initialize the database on startup
+ow.database:Initialize()

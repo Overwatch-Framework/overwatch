@@ -53,3 +53,7 @@ end
 function GM:PlayerUseSpawnSaver(ply)
     return false
 end
+
+function GM:Initialize()
+    ow.database:Initialize()
+end
