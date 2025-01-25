@@ -17,7 +17,7 @@ ow.modules:LoadFolder("overwatch/modules", true)
 ow.util:Print("Initializing Modules.")
 
 function GM:Initialize()
-    ow.schema.Initialize()
+    ow.schema:Initialize()
 
     hook.Run("LoadFonts")
 end

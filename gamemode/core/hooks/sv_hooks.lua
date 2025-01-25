@@ -40,7 +40,7 @@ function GM:PlayerSay(ply, text, teamChat)
         local command = arguments[1]
         table.remove(arguments, 1)
 
-        ow.commands.Run(ply, command, arguments)
+        ow.commands:Run(ply, command, arguments)
 
         return ""
     end
