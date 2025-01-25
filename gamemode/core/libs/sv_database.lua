@@ -1,10 +1,17 @@
-require("mongo")
+--- Database library
+-- @module ow.database
 
-local client = MongoDB.Client("mongodb://admin:password@localhost:27017")
+require("mongo")
 
 ow.database = ow.database or {}
 ow.database.database = nil
 
+local client = MongoDB.Client("mongodb://admin:password@localhost:27017")
+
+--- Initializes the database.
+-- @realm server
+-- @return boolean Returns true if the database was successfully initialized, false otherwise.
+-- @internal
 function ow.database.Initialize()
     if ( !SCHEMA ) then
         ow.util.PrintError("Schema not found!")
@@ -21,10 +28,16 @@ function ow.database.Initialize()
     return true
 end
 
+--- Returns the active database.
+-- @realm server
 function ow.database.GetDatabase()
     return ow.database.database
 end
 
+--- Creates a collection.
+-- @realm server
+-- @param string name The name of the collection.
+-- @return table The collection object.
 function ow.database.CreateCollection(name)
     local database = ow.database.GetDatabase()
     if ( !database ) then

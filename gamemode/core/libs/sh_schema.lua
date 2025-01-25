@@ -1,3 +1,6 @@
+--- Schema library.
+-- @module ow.schema
+
 ow.schema = ow.schema or {}
 
 local default = {
@@ -6,6 +9,10 @@ local default = {
     Author = "Unknown"
 }
 
+--- Initializes the schema.
+-- @realm shared
+-- @return boolean Returns true if the schema was successfully initialized, false otherwise.
+-- @internal
 function ow.schema.Initialize()
     SCHEMA = {}
 
