@@ -8,7 +8,7 @@ ow.hooks.stored = ow.hooks.stored or {}
 -- @realm shared
 -- @param string name The name of the hook type.
 function ow.hooks.Register(name)
-    ow.commands.stored[name] = true
+    ow.hooks.stored[name] = true
 end
 
 --- Unregisters a hook type.
@@ -16,7 +16,7 @@ end
 -- @param string name The name of the hook type.
 -- @internal
 function ow.hooks.UnRegister(name)
-    ow.commands.stored[name] = nil
+    ow.hooks.stored[name] = nil
 end
 
 hook.owCall = hook.owCall or hook.Call
