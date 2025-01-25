@@ -112,7 +112,7 @@ function ow.commands:Run(ply, command, arguments)
     return true
 end
 
-concommand.Add("ms_command_run", function(ply, cmd, arguments)
+concommand.Add("ow_command_run", function(ply, cmd, arguments)
     if ( !IsValid(ply) ) then
         ow.util:PrintError("Attempted to run a command with no player!")
         return
@@ -126,7 +126,7 @@ concommand.Add("ms_command_run", function(ply, cmd, arguments)
     ply.owNextCommand = CurTime() + 1
 end)
 
-concommand.Add("ms_command_list", function(ply, cmd, arguments)
+concommand.Add("ow_command", function(ply, cmd, arguments)
     if ( !IsValid(ply) ) then
         ow.util:PrintError("Attempted to list commands with no player!")
         return
@@ -155,4 +155,12 @@ concommand.Add("ms_command_list", function(ply, cmd, arguments)
     end
 
     ply.owNextCommand = CurTime() + 1
-end)
+end--[[, function(cmd, argStr, args)
+    local commands = {}
+
+    for k, v in pairs(ow.commands.stored) do
+        table.insert(commands, cmd .. " " .. v.Name)
+    end
+
+    return commands
+end, "Lists all available commands."]])

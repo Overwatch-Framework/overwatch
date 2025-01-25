@@ -1,13 +1,13 @@
-ow.items = {}
-ow.items.stored = {}
-ow.items.instances = {}
+ow.item = {}
+ow.item.stored = {}
+ow.item.instances = {}
 
-function ow.items:Register(itemData)
+function ow.item:Register(itemData)
     self.instances[#self.stored + 1] = itemData
     self.stored[itemData.uniqueID] = itemData
 end
 
-function ow.items:Get(look)
+function ow.item:Get(look)
     if ( isstring(look) ) then
         return self.stored[look]
     elseif ( isnumber(look) ) then
@@ -17,22 +17,32 @@ function ow.items:Get(look)
     return nil
 end
 
-function ow.items:Load()
-    --[[
-    for k, v in ipairs(file.Find("ow/items/*.lua", "LUA")) do
-        local path = "ow/items/" .. v
-        local uniqueID = string.lower(string.gsub(v, ".lua", ""))
+--[[
+function ow.item:Load()
+    local baseDir = engine.ActiveGamemode()
+    baseDir = baseDir .. "/"
 
-        ITEM = ow.items.Get(uniqueID) or {}
-        ITEM.uniqueID = uniqueID
-
-        if ( SERVER ) then
-            AddCSLuaFile(path)
-        end
-
-        include(path)
-
-        ow.items.Register(ITEM)
+    if ( SCHEMA and SCHEMA.Folder ) then
+        baseDir = SCHEMA.Folder .. "/schema/"
+    else
+        baseDir = baseDir .. "/gamemode/"
     end
-    ]]
+
+    if ( bFromLua ) then
+        baseDir = ""
+    end
+
+    -- Load modules from the main folder
+    for k, v in ipairs(file.Find(baseDir .. path .. "/*.lua", "LUA")) do
+        local uniqueIDName = string.lower(string.gsub(v, ".lua", ""))
+        uniqueIDName = string.gsub(uniqueIDName, "sh_", "")
+
+        ITEM = { uniqueID = uniqueIDName }
+            ow.util:LoadFile(path .. "/" .. v)
+            self:Register(ITEM)
+        ITEM = nil
+    end
+
+    return true
 end
+]]

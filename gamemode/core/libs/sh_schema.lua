@@ -32,7 +32,7 @@ function ow.schema:Initialize()
         ow.util:LoadFile(path)
     end
 
-    hook.Run("PreSchemaLoad", path, SCHEMA)
+    hook.Call("PreSchemaLoad", path, SCHEMA)
 
     for k, v in pairs(default) do
         if ( !SCHEMA[k] ) then
@@ -42,10 +42,12 @@ function ow.schema:Initialize()
 
     ow.hooks:Register("SCHEMA")
     ow.modules:LoadFolder(folder .. "/modules", true)
+    //ow.faction:LoadFolder(folder .. "/schema/factions", true)
+    //ow.item:LoadFolder(folder .. "/schema/items", true)
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
 
-    hook.Run("PostSchemaLoad", path, SCHEMA)
+    hook.Call("PostSchemaLoad", path, SCHEMA)
 
     return true
 end

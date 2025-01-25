@@ -66,8 +66,8 @@ function ow.modules:LoadFolder(path, bFromLua)
     local baseDir = engine.ActiveGamemode()
     baseDir = baseDir .. "/"
 
-    if ( SCHEMA and SCHEMA.folder ) then
-        baseDir = SCHEMA.folder .. "/schema/"
+    if ( SCHEMA and SCHEMA.Folder ) then
+        baseDir = SCHEMA.Folder .. "/schema/"
     else
         baseDir = baseDir .. "/gamemode/"
     end
