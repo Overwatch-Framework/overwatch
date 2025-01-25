@@ -43,7 +43,7 @@ end
 -- @realm shared
 -- @param ... any The message to print.
 function ow.util:Print(...)
-    local args = ow.util:PreparePackage(...)
+    local args = self:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", color_white, args, "\n")
 end
@@ -52,7 +52,7 @@ end
 -- @realm shared
 -- @param ... any The message to print.
 function ow.util:PrintError(...)
-    local args = ow.util:PreparePackage(...)
+    local args = self:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
 end
@@ -61,7 +61,7 @@ end
 -- @realm shared
 -- @param ... any The message to print.
 function ow.util:PrintWarning(...)
-    local args = ow.util:PreparePackage(...)
+    local args = self:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
 end
