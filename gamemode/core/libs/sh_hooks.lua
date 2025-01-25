@@ -36,7 +36,7 @@ function hook.Call(name, gm, ...)
         end
     end
 
-    for k, v in pairs(ow.modules.stored) do
+    for k, v in pairs(ow.module.stored) do
         for k2, v2 in pairs(v) do
             if ( type(v2) == "function" ) then
                 if ( k2 == name ) then

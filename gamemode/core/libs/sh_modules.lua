@@ -1,5 +1,5 @@
 --- A library for managing modules in the gamemode.
--- @module ow.modules
+-- @module ow.module
 
 ow.module = {}
 ow.module.stored = {}
