@@ -46,7 +46,7 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:GetMaxMassHold()
-    return hook.Run("OW.GetMaxHandsMass", self:GetOwner()) or 100
+    return hook.Run("OW.GetMaxHandsMass", self:GetOwner()) or 64
 end
 
 function SWEP:GetReachDistance()
@@ -90,6 +90,8 @@ function SWEP:SecondaryAttack()
 
         hook.Run("OW.HandsPush", ply, ent)
     elseif ( SERVER and IsValid(ent:GetPhysicsObject()) and self:CanPickup() ) then
+        if ( ent:GetPhysicsObject():GetMass() > self:GetMaxMassHold() ) then return end
+
         if ( ent:IsPlayerHolding() ) then
             ply:DropObject()
         else
@@ -97,9 +99,11 @@ function SWEP:SecondaryAttack()
                 if ( !IsValid(ent) ) then return end
 
                 ply:PickupObject(ent)
+
                 hook.Run("OW.HandsPickup", ply, ent)
             end)
         end
     end
+
     self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
 end
