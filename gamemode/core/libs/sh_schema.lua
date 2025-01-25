@@ -1,7 +1,7 @@
 --- Schema library.
 -- @module ow.schema
 
-ow.schema = ow.schema or {}
+ow.schema = {}
 
 local default = {
     Name = "Unknown",
