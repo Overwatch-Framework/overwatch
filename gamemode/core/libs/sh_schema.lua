@@ -13,7 +13,7 @@ local default = {
 -- @realm shared
 -- @return boolean Returns true if the schema was successfully initialized, false otherwise.
 -- @internal
-function ow.schema.Initialize()
+function ow.schema:Initialize()
     SCHEMA = {}
 
     local folder = engine.ActiveGamemode()

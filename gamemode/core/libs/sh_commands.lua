@@ -8,7 +8,7 @@ ow.commands.stored = ow.commands.stored or {}
 -- @realm shared
 -- @param table info The command information.
 -- @return table The command information.
-function ow.commands.Register(info)
+function ow.commands:Register(info)
     if ( !info ) then
         ow.util.PrintError("Attempted to register an invalid command!")
         return
@@ -32,7 +32,7 @@ function ow.commands.Register(info)
     local uniqueID = string.lower(string.gsub(info.Name, "%s", "_"))
     uniqueID = info.uniqueID or uniqueID
 
-    ow.commands.stored[uniqueID] = info
+    self.stored[uniqueID] = info
 
     return info
 end
@@ -41,26 +41,26 @@ end
 -- @realm shared
 -- @param string name The name of the command.
 -- @internal
-function ow.commands.UnRegister(name)
-    ow.commands.stored[name] = nil
+function ow.commands:UnRegister(name)
+    self.stored[name] = nil
 end
 
 --- Returns a command by its unique identifier or prefix.
 -- @realm shared
 -- @param string identifier The unique identifier or prefix of the command.
 -- @return table The command.
-function ow.commands.Get(identifier)
+function ow.commands:Get(identifier)
     if ( !identifier ) then
         ow.util.PrintError("Attempted to get an invalid command!")
         return
     end
 
-    if ( ow.commands.stored[identifier] ) then
-        return ow.commands.stored[identifier]
+    if ( self.stored[identifier] ) then
+        return self.stored[identifier]
     end
 
-    for k, v in pairs(ow.commands.stored) do
-        for k2, v2 in pairs(v.Prefixes) do
+    for k, v in pairs(self.stored) do
+        for k2, v2 in ipairs(v.Prefixes) do
             if ( ow.util.FindString(v2, identifier) ) then
                 return v
             end
@@ -81,7 +81,7 @@ end
 -- @param Player ply The player running the command.
 -- @param string command The command to run.
 -- @param table arguments The arguments of the command.
-function ow.commands.Run(ply, command, arguments)
+function ow.commands:Run(ply, command, arguments)
     if ( !IsValid(ply) ) then
         ow.util.PrintError("Attempted to run a command with no player!")
         return false
@@ -92,7 +92,7 @@ function ow.commands.Run(ply, command, arguments)
         return false
     end
 
-    local info = ow.commands.Get(command)
+    local info = self:Get(command)
     if ( !info ) then
         ow.util.PrintError("Attempted to run an invalid command!", ply)
         return false

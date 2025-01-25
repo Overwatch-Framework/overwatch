@@ -1,7 +1,7 @@
 --- Colors library
 -- @module ow.colors
 
-ow.colors = ow.colors or {}
+ow.colors = {}
 ow.colors.stored = ow.colors.stored or {}
 
 --- Registers a new color.
