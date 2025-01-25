@@ -1,3 +1,15 @@
+function GM:PlayerStartVoice(ply)
+    if ( IsValid(g_VoicePanelList) ) then
+        g_VoicePanelList:Remove()
+    end
+end
+
+function GM:PlayerEndVoice(ply)
+    if ( IsValid(g_VoicePanelList) ) then
+        g_VoicePanelList:Remove()
+    end
+end
+
 function GM:HUDPaint()
 end
 
