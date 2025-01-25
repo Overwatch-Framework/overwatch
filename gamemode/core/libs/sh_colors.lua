@@ -33,7 +33,7 @@ function ow.colors:Get(name)
     end
 
     ow.util:PrintError("Attempted to get an invalid color!")
-
+    
     return
 end
 

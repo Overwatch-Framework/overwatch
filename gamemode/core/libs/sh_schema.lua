@@ -42,8 +42,8 @@ function ow.schema:Initialize()
 
     ow.hooks:Register("SCHEMA")
     ow.modules:LoadFolder(folder .. "/modules", true)
-    //ow.faction:LoadFolder(folder .. "/schema/factions", true)
-    //ow.item:LoadFolder(folder .. "/schema/items", true)
+    ow.util:LoadFolder(folder .. "/schema/factions", true)
+    ow.util:LoadFolder(folder .. "/schema/items", true)
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
 
