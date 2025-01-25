@@ -9,12 +9,12 @@ ow.colors.stored = ow.colors.stored or {}
 -- @param info A table containing information about the color.
 function ow.colors:Register(info)
     if ( !info.Name ) then
-        ow.util.PrintError("Attempted to register a color without a name!")
+        ow.util:PrintError("Attempted to register a color without a name!")
         return
     end
 
     if ( !info.Color ) then
-        ow.util.PrintError("Attempted to register a color without a color!")
+        ow.util:PrintError("Attempted to register a color without a color!")
         return
     end
 
@@ -32,7 +32,7 @@ function ow.colors:Get(name)
         end
     end
 
-    ow.util.PrintError("Attempted to get an invalid color!")
+    ow.util:PrintError("Attempted to get an invalid color!")
 
     return
 end

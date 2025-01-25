@@ -19,7 +19,7 @@ SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
 SKIN.Colours.Label.Highlight = Color(90, 200, 250, 255)
 
 function SKIN:PaintFrame(panel, width, height)
-    ow.util.DrawBlur(panel)
+    ow.util:DrawBlur(panel)
 
     draw.RoundedBox(0, 0, 0, width, height, Color(50, 50, 50, 150))
     draw.RoundedBox(0, 0, 0, width, 24, Color(100, 100, 100, 150))

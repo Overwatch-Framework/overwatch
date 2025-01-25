@@ -14,7 +14,7 @@ local client = MongoDB.Client("mongodb://admin:password@localhost:27017")
 -- @internal
 function ow.database:Initialize()
     if ( !SCHEMA ) then
-        ow.util.PrintError("Schema not found!")
+        ow.util:PrintError("Schema not found!")
         return
     end
 
@@ -23,7 +23,7 @@ function ow.database:Initialize()
 
     self.database = database
 
-    ow.util.Print("Connected to database \"" .. folder .. "\".")
+    ow.util:Print("Connected to database \"" .. folder .. "\".")
 
     return true
 end
@@ -41,22 +41,22 @@ end
 function ow.database:CreateCollection(name)
     local database = self:GetDatabase()
     if ( !database ) then
-        ow.util.PrintError("Database not found!")
+        ow.util:PrintError("Database not found!")
         return
     end
 
     if ( !name or name == "" or string.gsub(name, "%s", "") == "" ) then
-        ow.util.PrintError("Invalid collection name!")
+        ow.util:PrintError("Invalid collection name!")
         return
     end
 
     local result = database:CreateCollection(name)
     if ( !result ) then
-        ow.util.PrintError("Failed to create collection \"" .. name .. "\"!")
+        ow.util:PrintError("Failed to create collection \"" .. name .. "\"!")
         return
     end
 
-    ow.util.Print("Created collection \"" .. name .. "\".")
+    ow.util:Print("Created collection \"" .. name .. "\".")
 
     return result
 end

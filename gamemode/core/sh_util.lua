@@ -5,7 +5,7 @@
 -- @realm shared
 -- @param ply Player The player to send the message to.
 -- @param ... any The message to send.
-function ow.util.SendChatText(ply, ...)
+function ow.util:SendChatText(ply, ...)
     if ( !IsValid(ply) ) then return end
 
     if ( SERVER ) then
@@ -21,7 +21,7 @@ end
 -- @realm shared
 -- @param ... any The package to prepare.
 -- @return any The prepared package.
-function ow.util.PreparePackage(...)
+function ow.util:PreparePackage(...)
     local args = {...}
     local package = {}
 
@@ -42,8 +42,8 @@ end
 --- Prints a message to the console.
 -- @realm shared
 -- @param ... any The message to print.
-function ow.util.Print(...)
-    local args = ow.util.PreparePackage(...)
+function ow.util:Print(...)
+    local args = ow.util:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", color_white, args, "\n")
 end
@@ -51,8 +51,8 @@ end
 --- Prints an error message to the console.
 -- @realm shared
 -- @param ... any The message to print.
-function ow.util.PrintError(...)
-    local args = ow.util.PreparePackage(...)
+function ow.util:PrintError(...)
+    local args = ow.util:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
 end
@@ -60,8 +60,8 @@ end
 --- Prints a warning message to the console.
 -- @realm shared
 -- @param ... any The message to print.
-function ow.util.PrintWarning(...)
-    local args = ow.util.PreparePackage(...)
+function ow.util:PrintWarning(...)
+    local args = ow.util:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
 end
@@ -70,9 +70,9 @@ end
 -- @realm shared
 -- @param path string The path to the file.
 -- @param realm string The realm to load the file in.
-function ow.util.LoadFile(path, realm)
+function ow.util:LoadFile(path, realm)
     if ( !path ) then
-        ow.util.PrintError("Failed to load file " .. path .. "!")
+        self:PrintError("Failed to load file " .. path .. "!")
         return
     end
 
@@ -97,7 +97,7 @@ end
 -- @realm shared
 -- @param directory string The directory to load the files from.
 -- @param bFromLua boolean Whether or not the files are being loaded from Lua.
-function ow.util.LoadFolder(directory, bFromLua)
+function ow.util:LoadFolder(directory, bFromLua)
     local baseDir = debug.getinfo(2).source
     baseDir = string.sub(baseDir, 2, string.find(baseDir, "/[^/]*$"))
     baseDir = string.gsub(baseDir, "gamemodes/", "")
@@ -108,11 +108,11 @@ function ow.util.LoadFolder(directory, bFromLua)
 
     for k, v in ipairs(file.Find(baseDir .. directory .. "/*.lua", "LUA")) do
         if ( !file.Exists(baseDir .. directory .. "/" .. v, "LUA") ) then
-            ow.util.PrintError("Failed to load file " .. baseDir .. directory .. "/" .. v .. "!")
+            self:PrintError("Failed to load file " .. baseDir .. directory .. "/" .. v .. "!")
             continue
         end
 
-        ow.util.LoadFile(baseDir .. directory .. "/" .. v)
+        self:LoadFile(baseDir .. directory .. "/" .. v)
     end
 
     return true
@@ -122,7 +122,7 @@ end
 -- @realm shared
 -- @param value any The value to check.
 -- @return string The type of the value.
-function ow.util.FindString(str, find)
+function ow.util:FindString(str, find)
     if ( !str or !find ) then return false end
 
     return tobool(string.find(string.lower(str), string.lower(find)))
@@ -133,12 +133,12 @@ end
 -- @param txt string The text to search.
 -- @param find string The value to search for.
 -- @return boolean Whether or not the value was found.
-function ow.util.FindText(txt, find)
+function ow.util:FindText(txt, find)
     if ( !txt or !find ) then return end
 
     local words = string.Explode(" ", txt)
     for k, v in ipairs(words) do
-        if ( ow.util.FindString(v, find) ) then
+        if ( self:FindString(v, find) ) then
             return true
         end
     end
@@ -150,7 +150,7 @@ end
 -- @realm shared
 -- @param identifier any The identifier to search for.
 -- @return Player The player that was found.
-function ow.util.FindPlayer(identifier)
+function ow.util:FindPlayer(identifier)
     if ( !identifier ) then return end
 
     if ( type(identifier) == "Player" ) then
@@ -159,7 +159,7 @@ function ow.util.FindPlayer(identifier)
 
     if ( type(identifier) == "string" ) then
         for k, v in player.Iterator() do
-            if ( ow.util.FindString(v:Name(), identifier) or ow.util.FindString(v:SteamID(), identifier) or ow.util.FindString(v:SteamID64(), identifier) ) then
+            if ( self:FindString(v:Name(), identifier) or self:FindString(v:SteamID(), identifier) or self:FindString(v:SteamID64(), identifier) ) then
                 return v
             end
         end
@@ -171,7 +171,7 @@ function ow.util.FindPlayer(identifier)
 
     if ( type(identifier) == "table" ) then
         for k, v in ipairs(identifier) do
-            return ow.util.FindPlayer(v)
+            return self:FindPlayer(v)
         end
     end
 end
@@ -181,7 +181,7 @@ end
 -- @param startpos Vector The starting position of the box.
 -- @param endpos Vector The ending position of the box.
 -- @return Vector The center of the box.
-function ow.util.GetBounds(startpos, endpos)
+function ow.util:GetBounds(startpos, endpos)
 	local center = LerpVector(0.5, startpos, endpos)
 	local min = WorldToLocal(startpos, angle_zero, center, angle_zero)
 	local max = WorldToLocal(endpos, angle_zero, center, angle_zero)
@@ -194,7 +194,7 @@ end
 -- @param vec Vector The vector to convert.
 -- @param alpha number The alpha value of the color.
 -- @return Color The color that was created.
-function ow.util.VectorToColor(vec, alpha)
+function ow.util:VectorToColor(vec, alpha)
     return Color(vec.x * 255, vec.y * 255, vec.z * 255, alpha or 255)
 end
 
@@ -202,7 +202,7 @@ end
 -- @realm shared
 -- @param col Color The color to convert.
 -- @return Vector The vector that was created.
-function ow.util.ColorToVector(col)
+function ow.util:ColorToVector(col)
     return Vector(col.r / 255, col.g / 255, col.b / 255)
 end
 
@@ -211,7 +211,7 @@ end
 -- @param col Color The color to dim.
 -- @param frac number The fraction to dim the color by.
 -- @return Color The dimmed color.
-function ow.util.ColorDim(col, frac)
+function ow.util:ColorDim(col, frac)
     return Color(col.r * frac, col.g * frac, col.b * frac, col.a)
 end
 
@@ -220,7 +220,7 @@ end
 -- @param min number The minimum value of the color.
 -- @param max number The maximum value of the color.
 -- @return Color The randomized color.
-function ow.util.ColorRandom(min, max)
+function ow.util:ColorRandom(min, max)
     min = min or 0
     max = max or 255
 
@@ -237,7 +237,7 @@ if ( CLIENT ) then
     -- @param panel Panel The panel to draw the blur on.
     -- @param amount number The amount of blur to apply.
     -- @param passes number The number of passes to apply.
-    function ow.util.DrawBlur(panel, amount, passes)
+    function ow.util:DrawBlur(panel, amount, passes)
         amount = amount or defaultAmount
         passes = passes or defaultPasses
 
@@ -264,7 +264,7 @@ if ( CLIENT ) then
     -- @param h number The height of the rectangle.
     -- @param amount number The amount of blur to apply.
     -- @param passes number The number of passes to apply.
-    function ow.util.DrawBlurRect(x, y, w, h, amount, passes)
+    function ow.util:DrawBlurRect(x, y, w, h, amount, passes)
         amount = amount or defaultAmount
         passes = passes or defaultPasses
 
@@ -285,7 +285,7 @@ if ( CLIENT ) then
     -- @param font string The font to use.
     -- @param text string The text to measure.
     -- @return number The width of the text.
-    function ow.util.GetTextWidth(font, text)
+    function ow.util:GetTextWidth(font, text)
         surface.SetFont(font)
         return select(1, surface.GetTextSize(text))
     end
@@ -294,7 +294,7 @@ if ( CLIENT ) then
     -- @realm client
     -- @param font string The font to use.
     -- @return number The height of the text.
-    function ow.util.GetTextHeight(font)
+    function ow.util:GetTextHeight(font)
         surface.SetFont(font)
         return select(2, surface.GetTextSize("W"))
     end
@@ -305,7 +305,7 @@ if ( CLIENT ) then
     -- @param text string The text to measure.
     -- @return number The width of the text.
     -- @return number The height of the text.
-    function ow.util.GetTextSize(font, text)
+    function ow.util:GetTextSize(font, text)
         surface.SetFont(font)
         return surface.GetTextSize(text)
     end

@@ -10,7 +10,7 @@ ow.modules.stored = {}
 -- @return string The unique identifier of the module.
 function ow.modules:Register(info)
     if ( !info ) then
-        ow.util.PrintError("Attempted to register an invalid module!")
+        ow.util:PrintError("Attempted to register an invalid module!")
         return
     end
 
@@ -40,7 +40,7 @@ end
 -- @return table The module.
 function ow.modules:Get(identifier)
     if ( !identifier ) then
-        ow.util.PrintError("Attempted to get an invalid module!")
+        ow.util:PrintError("Attempted to get an invalid module!")
         return
     end
 
@@ -49,9 +49,9 @@ function ow.modules:Get(identifier)
     end
 
     for k, v in pairs(self.stored) do
-        if ( ow.util.FindString(v.Name, identifier) ) then
+        if ( ow.util:FindString(v.Name, identifier) ) then
             return v
-        elseif ( ow.util.FindString(v.UniqueID, identifier) ) then
+        elseif ( ow.util:FindString(v.UniqueID, identifier) ) then
             return v
         end
     end
@@ -78,7 +78,7 @@ function ow.modules:LoadFolder(path, bFromLua)
 
     -- Load modules from the main folder
     for k, v in ipairs(file.Find(baseDir .. path .. "/*.lua", "LUA")) do
-        ow.util.LoadFile(path .. "/" .. v)
+        ow.util:LoadFile(path .. "/" .. v)
     end
 
     -- Load modules from subfolders
@@ -87,7 +87,7 @@ function ow.modules:LoadFolder(path, bFromLua)
         local modulePath = baseDir .. path .. "/" .. v .. "/sh_module.lua"
 
         if ( file.Exists(modulePath, "LUA") ) then
-            ow.util.LoadFile(modulePath, true)
+            ow.util:LoadFile(modulePath, true)
         end
     end
 

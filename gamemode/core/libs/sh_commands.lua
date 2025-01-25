@@ -10,22 +10,22 @@ ow.commands.stored = ow.commands.stored or {}
 -- @return table The command information.
 function ow.commands:Register(info)
     if ( !info ) then
-        ow.util.PrintError("Attempted to register an invalid command!")
+        ow.util:PrintError("Attempted to register an invalid command!")
         return
     end
 
     if ( !info.Name ) then
-        ow.util.PrintError("Attempted to register a command with no name!")
+        ow.util:PrintError("Attempted to register a command with no name!")
         return
     end
 
     if ( !info.Callback ) then
-        ow.util.PrintError("Attempted to register a command with no callback!")
+        ow.util:PrintError("Attempted to register a command with no callback!")
         return
     end
 
     if ( !info.Prefixes ) then
-        ow.util.PrintError("Attempted to register a command with no prefixes!")
+        ow.util:PrintError("Attempted to register a command with no prefixes!")
         return
     end
 
@@ -51,7 +51,7 @@ end
 -- @return table The command.
 function ow.commands:Get(identifier)
     if ( !identifier ) then
-        ow.util.PrintError("Attempted to get an invalid command!")
+        ow.util:PrintError("Attempted to get an invalid command!")
         return
     end
 
@@ -61,13 +61,13 @@ function ow.commands:Get(identifier)
 
     for k, v in pairs(self.stored) do
         for k2, v2 in ipairs(v.Prefixes) do
-            if ( ow.util.FindString(v2, identifier) ) then
+            if ( ow.util:FindString(v2, identifier) ) then
                 return v
             end
         end
     end
 
-    ow.util.PrintError("Attempted to get an invalid command!")
+    ow.util:PrintError("Attempted to get an invalid command!")
 
     return
 end
@@ -83,28 +83,28 @@ end
 -- @param table arguments The arguments of the command.
 function ow.commands:Run(ply, command, arguments)
     if ( !IsValid(ply) ) then
-        ow.util.PrintError("Attempted to run a command with no player!")
+        ow.util:PrintError("Attempted to run a command with no player!")
         return false
     end
 
     if ( !command ) then
-        ow.util.PrintError("Attempted to run a command with no command!", ply)
+        ow.util:PrintError("Attempted to run a command with no command!", ply)
         return false
     end
 
     local info = self:Get(command)
     if ( !info ) then
-        ow.util.PrintError("Attempted to run an invalid command!", ply)
+        ow.util:PrintError("Attempted to run an invalid command!", ply)
         return false
     end
 
     if ( info.AdminOnly and !ply:IsAdmin() ) then
-        ow.util.PrintError("Attempted to run an admin-only command!", ply)
+        ow.util:PrintError("Attempted to run an admin-only command!", ply)
         return false
     end
 
     if ( info.SuperAdminOnly and !ply:IsSuperAdmin() ) then
-        ow.util.PrintError("Attempted to run a superadmin-only command!", ply)
+        ow.util:PrintError("Attempted to run a superadmin-only command!", ply)
         return false
     end
 
@@ -114,7 +114,7 @@ end
 
 concommand.Add("ms_command_run", function(ply, cmd, arguments)
     if ( !IsValid(ply) ) then
-        ow.util.PrintError("Attempted to run a command with no player!")
+        ow.util:PrintError("Attempted to run a command with no player!")
         return
     end
 
@@ -128,7 +128,7 @@ end)
 
 concommand.Add("ms_command_list", function(ply, cmd, arguments)
     if ( !IsValid(ply) ) then
-        ow.util.PrintError("Attempted to list commands with no player!")
+        ow.util:PrintError("Attempted to list commands with no player!")
         return
     end
 
@@ -136,7 +136,7 @@ concommand.Add("ms_command_list", function(ply, cmd, arguments)
         return
     end
 
-    ow.util.Print("Commands:")
+    ow.util:Print("Commands:")
 
     for k, v in pairs(ow.commands.stored) do
         if ( v.AdminOnly and !ply:IsAdmin() ) then
@@ -148,9 +148,9 @@ concommand.Add("ms_command_list", function(ply, cmd, arguments)
         end
 
         if ( v.Description ) then
-            ow.util.Print("/" .. v.Name .. " - " .. v.Description)
+            ow.util:Print("/" .. v.Name .. " - " .. v.Description)
         else
-            ow.util.Print("/" .. v.Name)
+            ow.util:Print("/" .. v.Name)
         end
     end
 
