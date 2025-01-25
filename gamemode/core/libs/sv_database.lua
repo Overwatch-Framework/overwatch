@@ -1,7 +1,7 @@
 --- Database library
 -- @module ow.database
 
-require("mongo")
+--require("mongo")
 
 ow.database = {}
 ow.database.database = nil
@@ -14,6 +14,11 @@ local database
 -- @return boolean Returns true if the database was successfully initialized, false otherwise.
 -- @internal
 function ow.database:Initialize()
+    if ( !MongoDB ) then
+        ow.util:PrintError("MongoDB library not found!")
+        return
+    end
+
     if ( !SCHEMA ) then
         ow.util:PrintError("Schema not found!")
         return

@@ -32,7 +32,7 @@ function ow.schema:Initialize()
         ow.util:LoadFile(path)
     end
 
-    hook.Call("PreSchemaLoad", path, SCHEMA)
+    hook.Run("PreSchemaLoad", nil, path, SCHEMA)
 
     for k, v in pairs(default) do
         if ( !SCHEMA[k] ) then
@@ -44,10 +44,21 @@ function ow.schema:Initialize()
     ow.util:LoadFolder(folder .. "/modules", true)
     ow.util:LoadFolder(folder .. "/schema/factions", true)
     ow.util:LoadFolder(folder .. "/schema/items", true)
+    ow.util:LoadFolder(folder .. "/schema/config", true)
+
+    -- Load the current map config if it exists
+    local map = game.GetMap()
+    path = folder .. "/schema/config/maps/" .. map .. ".lua"
+    if ( file.Exists(path, "LUA") ) then
+        ow.util:LoadFile(path, "shared")
+        ow.util:Print("Loaded map config for \"" .. map .. "\".")
+    else
+        ow.util:PrintError("Failed to find map config for \"" .. map .. "\".")
+    end
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
 
-    hook.Call("PostSchemaLoad", path, SCHEMA)
+    hook.Run("PostSchemaLoad", nil, path, SCHEMA)
 
     return true
 end

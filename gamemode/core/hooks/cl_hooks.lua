@@ -81,5 +81,5 @@ function GM:LoadFonts()
         weight = 700
     })
 
-    hook.Call("PostCreateFonts")
+    hook.Run("PostCreateFonts")
 end

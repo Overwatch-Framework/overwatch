@@ -19,7 +19,7 @@ ow.util:Print("Initializing Modules.")
 function GM:Initialize()
     ow.schema:Initialize()
 
-    hook.Call("LoadFonts")
+    hook.Run("LoadFonts")
 end
 
 ow.reloaded = false
@@ -34,14 +34,14 @@ function GM:OnReloaded()
 
     ow.schema:Initialize()
 
-    hook.Call("LoadFonts")
+    hook.Run("LoadFonts")
 
     ow.refresh.count = ow.refresh.count + 1
     ow.refresh.time = SysTime() - ow.refresh.time
 
     ow.util:Print("Reloaded Files (Refreshes: " .. ow.refresh.count .. ", Time: " .. ow.refresh.time .. "s)")
 
-    hook.Call("PostReloaded")
+    hook.Run("PostReloaded")
 end
 
 ow.util:LoadFile("core/sh_chat.lua")

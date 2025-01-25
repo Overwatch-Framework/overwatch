@@ -1,6 +1,6 @@
 DeriveGamemode("sandbox")
 
-ow = ow or {util = {}, meta = {}}
+ow = ow or {util = {}, meta = {}, config = {}}
 
 AddCSLuaFile("cl_init.lua")
 

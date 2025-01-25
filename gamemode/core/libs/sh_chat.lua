@@ -19,7 +19,6 @@ function ow.chat:Register(uniqueID, chatData)
     end
 
     if ( chatData.Prefixes ) then
-        print("Registering chat class with prefixes: " .. table.concat(chatData.Prefixes, ", "))
         ow.command:Register({
             Name = uniqueID,
             Prefixes = chatData.Prefixes,
@@ -61,7 +60,7 @@ else
 
         local players = {}
         for k, v in player.Iterator() do
-            if ( canHear(speaker, v) and hook.Call("PlayerCanHearChat", speaker, v, uniqueID) != false ) then
+            if ( canHear(speaker, v) and hook.Run("PlayerCanHearChat", speaker, v, uniqueID) != false ) then
                 table.insert(players, v)
             end
         end

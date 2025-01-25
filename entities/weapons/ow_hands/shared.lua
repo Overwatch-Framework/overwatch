@@ -1,8 +1,8 @@
-SWEP.PrintName		= "Hands"
-SWEP.Author			= "Overwatch"
-SWEP.Contact		= ""
-SWEP.Purpose		= "Grab and throw things"
-SWEP.Instructions	= ""
+SWEP.PrintName = "Hands"
+SWEP.Author = "Overwatch"
+SWEP.Contact = ""
+SWEP.Purpose = "Grab and throw things"
+SWEP.Instructions = ""
 
 SWEP.Slot = 0
 SWEP.SlotPos = 1
@@ -12,15 +12,15 @@ SWEP.DrawCrosshair = true
 SWEP.ViewModel = Model("models/weapons/c_arms.mdl")
 SWEP.WorldModel = ""
 
-util.PrecacheModel( SWEP.ViewModel )
-util.PrecacheModel( SWEP.WorldModel )
+util.PrecacheModel(SWEP.ViewModel)
+util.PrecacheModel(SWEP.WorldModel)
 
-SWEP.UseHands		= true
-SWEP.Spawnable		= true
+SWEP.UseHands = true
+SWEP.Spawnable = true
 
 SWEP.ViewModelFOV = 45
 SWEP.ViewModelFlip = false
-SWEP.AnimPrefix     = "rpg"
+SWEP.AnimPrefix = "rpg"
 
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -33,7 +33,7 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
-SWEP.Secondary.Delay = 0.5
+SWEP.Secondary.Delay = 1
 
 SWEP.HoldType = "fist"
 
@@ -42,9 +42,29 @@ function SWEP:Initialize()
 end
 
 function SWEP:PrimaryAttack()
-    if (!IsFirstTimePredicted()) then return end
+    if ( !IsFirstTimePredicted() ) then return end
 end
 
 function SWEP:SecondaryAttack()
-    if (!IsFirstTimePredicted()) then return end
+    if ( !IsFirstTimePredicted() ) then return end
+
+    local ply = self:GetOwner()
+
+    local traceData = util.TraceLine({
+        start = ply:GetShootPos(),
+        endpos = ply:GetShootPos() + ply:GetAimVector() * 96,
+        filter = ply
+    })
+
+    local ent = traceData.Entity
+    if ( !IsValid(ent) ) then return end
+
+    if ( ent:IsPlayer() ) then
+        ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
+        ply:ViewPunch(Angle(-4, 0, 0))
+        ent:SetVelocity(ply:GetAimVector() * 128)
+        ent:ViewPunch(Angle(4, 0, 0))
+    end
+
+    self:SetNextSecondaryFire(CurTime() + self.Secondary.Delay)
 end

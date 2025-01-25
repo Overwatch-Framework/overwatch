@@ -7,7 +7,7 @@ function GM:StartCommand(ply, cmd)
     if ( loadQueue[ply] and !cmd:IsForced() ) then
         loadQueue[ply] = nil
         
-        hook.Call("PostPlayerInitialSpawn", ply)
+        hook.Run("PostPlayerInitialSpawn", ply)
     end
 end
 
@@ -18,14 +18,26 @@ function GM:PlayerDisconnected(ply)
 end
 
 function GM:PlayerSpawn(ply)
-    hook.Call("PlayerLoadout", ply)
+    hook.Run("PlayerLoadout", ply)
 end
 
 function GM:PlayerLoadout(ply)
-    ply:Give("weapon_physgun")
-    ply:Give("gmod_tool")
+    if ( ply:IsAdmin() ) then
+        ply:Give("weapon_physgun")
+        ply:Give("gmod_tool")
+    end
 
-    hook.Call("PostPlayerLoadout", ply)
+    ply:Give("ow_hands")
+    ply:SelectWeapon("ow_hands")
+
+    ply:SetWalkSpeed(ow.config.walkSpeed or 80)
+    ply:SetRunSpeed(ow.config.runSpeed or 180)
+    ply:SetJumpPower(ow.config.jumpPower or 160)
+
+    ply:SetupHands()
+
+    hook.Run("PostPlayerLoadout", ply)
+
     return true
 end
 

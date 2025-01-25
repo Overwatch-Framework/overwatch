@@ -29,8 +29,6 @@ function ow.util:PreparePackage(...)
         if ( type(v) == "Player" ) then
             table.insert(package, team.GetColor(v:Team()))
             table.insert(package, v:Name())
-        elseif ( type(v) == "table" ) then
-            table.insert(package, table.ToString(v, "Table", true))
         else
             table.insert(package, v)
         end
