@@ -24,5 +24,5 @@ function ENT:SetItem(uniqueID)
     end
     
     -- bloodycop: Something like netvar or smth in the future
-    self:SetInternalVariable("m_iOWItemUniqueID", uniqueID)
+    --self:SetInternalVariable("m_iOWItemUniqueID", uniqueID)
 end
