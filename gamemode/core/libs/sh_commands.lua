@@ -84,31 +84,32 @@ end
 function ow.commands.Run(ply, command, arguments)
     if ( !IsValid(ply) ) then
         ow.util.PrintError("Attempted to run a command with no player!")
-        return
+        return false
     end
 
     if ( !command ) then
         ow.util.PrintError("Attempted to run a command with no command!", ply)
-        return
+        return false
     end
 
     local info = ow.commands.Get(command)
     if ( !info ) then
         ow.util.PrintError("Attempted to run an invalid command!", ply)
-        return
+        return false
     end
 
     if ( info.AdminOnly and !ply:IsAdmin() ) then
         ow.util.PrintError("Attempted to run an admin-only command!", ply)
-        return
+        return false
     end
 
     if ( info.SuperAdminOnly and !ply:IsSuperAdmin() ) then
         ow.util.PrintError("Attempted to run a superadmin-only command!", ply)
-        return
+        return false
     end
 
     info:Callback(ply, arguments)
+    return true
 end
 
 concommand.Add("ms_command_run", function(ply, cmd, arguments)
