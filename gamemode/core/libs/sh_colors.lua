@@ -1,13 +1,13 @@
 --- Colors library
--- @module ow.colors
+-- @module ow.color
 
-ow.colors = {}
-ow.colors.stored = ow.colors.stored or {}
+ow.color = {}
+ow.color.stored = ow.color.stored or {}
 
 --- Registers a new color.
 -- @realm shared
 -- @param info A table containing information about the color.
-function ow.colors:Register(info)
+function ow.color:Register(info)
     if ( !info.Name ) then
         ow.util:PrintError("Attempted to register a color without a name!")
         return
@@ -25,7 +25,7 @@ end
 -- @realm shared
 -- @param name The name of the color.
 -- @return The color.
-function ow.colors:Get(name)
+function ow.color:Get(name)
     for k, v in pairs(self.stored) do
         if ( k == name ) then
             return v
@@ -36,30 +36,3 @@ function ow.colors:Get(name)
     
     return
 end
-
--- Default colors
-ow.colors:Register({Name = "white", Color = color_white})
-ow.colors:Register({Name = "black", Color = color_black})
-ow.colors:Register({Name = "red", Color = Color(255, 0, 0, 255)})
-ow.colors:Register({Name = "green", Color = Color(0, 255, 0, 255)})
-ow.colors:Register({Name = "blue", Color = Color(0, 0, 255, 255)})
-ow.colors:Register({Name = "yellow", Color = Color(255, 255, 0, 255)})
-ow.colors:Register({Name = "orange", Color = Color(255, 165, 0, 255)})
-ow.colors:Register({Name = "purple", Color = Color(130, 0, 130, 255)})
-ow.colors:Register({Name = "pink", Color = Color(255, 190, 205, 255)})
-ow.colors:Register({Name = "cyan", Color = Color(0, 255, 255, 255)})
-ow.colors:Register({Name = "brown", Color = Color(165, 40, 40, 255)})
-ow.colors:Register({Name = "gray", Color = Color(130, 130, 130, 255)})
-ow.colors:Register({Name = "light.gray", Color = Color(210, 210, 210, 255)})
-ow.colors:Register({Name = "dark.gray", Color = Color(170, 170, 170, 255)})
-ow.colors:Register({Name = "lime", Color = Color(0, 255, 0, 255)})
-ow.colors:Register({Name = "maroon", Color = Color(130, 0, 0, 255)})
-ow.colors:Register({Name = "navy", Color = Color(0, 0, 130, 255)})
-ow.colors:Register({Name = "olive", Color = Color(130, 130, 0, 255)})
-ow.colors:Register({Name = "silver", Color = Color(190, 190, 190, 255)})
-
--- Framework colors
-ow.colors:Register({Name = "background", Color = Color(30, 30, 30, 255)})
-ow.colors:Register({Name = "foreground", Color = Color(50, 50, 50, 255)})
-ow.colors:Register({Name = "text", Color = Color(200, 200, 200, 255)})
-ow.colors:Register({Name = "text.light", Color = Color(255, 255, 255, 255)})

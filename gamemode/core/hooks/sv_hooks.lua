@@ -45,9 +45,12 @@ function GM:PlayerSay(ply, text, teamChat)
         table.remove(arguments, 1)
 
         ow.command:Run(ply, command, arguments)
+    else
+        ow.chat:Send(ply, "ic", text)
 
-        return ""
     end
+
+    return ""
 end
 
 function GM:PlayerUseSpawnSaver(ply)

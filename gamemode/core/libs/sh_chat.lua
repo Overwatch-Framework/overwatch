@@ -1,10 +1,75 @@
 ow.chat = {}
 ow.chat.classes = {}
 
-function ow.chat:Register(chatData)
-    self.classes[chatData.uniqueID] = chatData
+function ow.chat:Register(uniqueID, chatData)
+    if ( !uniqueID ) then
+        ow.util:PrintError("Attempted to register a chat class without a unique ID!")
+        return
+    end
+
+    if ( !chatData ) then
+        ow.util:PrintError("Attempted to register a chat class without data!")
+        return
+    end
+
+    if ( !chatData.OnChatAdd ) then
+        chatData.OnChatAdd = function(speaker, text)
+            chat.AddText(color_white, speaker:Name() .. " says \"" .. text .. "\"")
+        end
+    end
+
+    if ( chatData.Prefixes ) then
+        print("Registering chat class with prefixes: " .. table.concat(chatData.Prefixes, ", "))
+        ow.command:Register({
+            Name = uniqueID,
+            Prefixes = chatData.Prefixes,
+            Callback = function(info, ply, arguments)
+                local text = table.concat(arguments, " ")
+
+                if ( !text or text == "" ) then
+                    ow.util:PrintError("Attempted to send an empty chat message!", ply)
+                    return
+                end
+
+                self:Send(ply, uniqueID, text)
+            end
+        })
+    end
+
+    self.classes[uniqueID] = chatData
 end
 
 function ow.chat:Get(uniqueID)
     return self.classes[uniqueID]
+end
+
+if ( CLIENT ) then
+    net.Receive("ow.chat", function(len)
+        local speaker = net.ReadPlayer()
+        local uniqueID = net.ReadString()
+        local text = net.ReadString()
+
+        local chatData = ow.chat:Get(uniqueID)
+        if ( chatData ) then
+            chatData.OnChatAdd(speaker, text)
+        end
+    end)
+else
+    util.AddNetworkString("ow.chat")
+    function ow.chat:Send(speaker, uniqueID, text)
+        local canHear = self:Get(uniqueID).CanHear or function(speaker, listener) return true end
+
+        local players = {}
+        for k, v in player.Iterator() do
+            if ( canHear(speaker, v) and hook.Call("PlayerCanHearChat", speaker, v, uniqueID) != false ) then
+                table.insert(players, v)
+            end
+        end
+
+        net.Start("ow.chat")
+            net.WritePlayer(speaker)
+            net.WriteString(uniqueID)
+            net.WriteString(text)
+        net.Send(players)
+    end
 end
