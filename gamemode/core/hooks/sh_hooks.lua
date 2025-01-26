@@ -25,3 +25,7 @@ end
 function GM:GetPlayerHandsMaxMass(ply)
     return 64
 end
+
+function GM:GetFrameworkColor()
+    return ow.config.color or Color(0, 100, 150)
+end
