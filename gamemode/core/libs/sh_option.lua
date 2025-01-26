@@ -1,5 +1,5 @@
 --- Options library
--- @module ow.optio
+-- @module ow.option
 
 ow.option = {}
 ow.option.stored = {}
