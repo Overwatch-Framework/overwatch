@@ -47,23 +47,23 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:GetMaxMassHold()
-    return hook.Run("OWGetMaxHandsMass", self:GetOwner()) or 64
+    return hook.Run("GetHandsMaxMass", self:GetOwner()) or 64
 end
 
 function SWEP:GetReachDistance()
-    return hook.Run("OWGetHandsReachDistance", self:GetOwner()) or 96
+    return hook.Run("GetHandsReachDistance", self:GetOwner()) or 96
 end
 
 function SWEP:GetPushForce()
-    return hook.Run("OWGetHandsPushForce", self:GetOwner()) or 128
+    return hook.Run("GetHandsPushForce", self:GetOwner()) or 128
 end
 
 function SWEP:CanPush(ent)
-    return hook.Run("OWCanHandsPush", self:GetOwner(), ent) or true
+    return hook.Run("CanHandsPush", self:GetOwner(), ent) or true
 end
 
 function SWEP:CanPickup(ent)
-    return hook.Run("OWCanHandsPickup", self:GetOwner(), ent) or true
+    return hook.Run("CanHandsPickup", self:GetOwner(), ent) or true
 end
 
 function SWEP:SecondaryAttack()
