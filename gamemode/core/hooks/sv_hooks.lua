@@ -97,5 +97,9 @@ function GM:PlayerSwitchFlashlight(ply, bEnabled)
 end
 
 function GM:GetFallDamage(ply, speed)
+    if ( speed > 100 ) then
+        -- ply:Ragdoll()
+    end
+
     return speed / 8
 end
