@@ -3,4 +3,4 @@
 
 ow.config = {}
 
-ow.config.color = Color(0, 100, 150)
+ow.config.Color = Color(0, 100, 150)

@@ -101,6 +101,30 @@ function PANEL:Init()
             surface.PlaySound("ow.button.enter")
         end
     end
+
+    self:PlayMenuTrack()
+end
+
+function PANEL:PlayMenuTrack()
+    local track = hook.Run("GetMainMenuMusic")
+    if ( !track or #track == 0 or !file.Exists("sound/" .. track, "GAME") ) then return end
+
+    sound.PlayFile("sound/" .. track, "noplay", function(station, errorID, errorName)
+        if ( IsValid(station) ) then
+            station:Play()
+            self.station = station
+        else
+            ow.util:PrintError("Error playing main menu music: " .. errorID .. " (" .. errorName .. ")")
+        end
+    end)
+end
+
+function PANEL:OnRemove()
+    ow.gui.mainmenu = nil
+
+    if ( IsValid(self.station) ) then
+        self.station:Stop()
+    end
 end
 
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")

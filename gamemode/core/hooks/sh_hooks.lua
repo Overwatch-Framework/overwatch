@@ -27,9 +27,13 @@ function GM:GetPlayerHandsMaxMass(ply)
 end
 
 function GM:GetFrameworkColor()
-    return ow.config.color or Color(0, 100, 150)
+    return ow.config.Color or Color(0, 100, 150)
 end
 
 function GM:GetSchemaColor()
-    return ow.config.schemaColor or Color(0, 150, 100)
+    return ow.config.SchemaColor or Color(0, 150, 100)
+end
+
+function GM:GetMainMenuMusic()
+    return ow.config.MainMenuTrack or "music/hl2_song20_submix0.mp3"
 end
