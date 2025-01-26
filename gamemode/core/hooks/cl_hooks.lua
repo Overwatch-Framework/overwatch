@@ -27,8 +27,9 @@ end
 
 function GM:HUDPaint()
     if ( ow.debugMode:GetBool() ) then
-        draw.SimpleText(self.Name .. " - " .. self.Version, "ow.fonts.default.large", 10, 5, ow.config.color)
-        draw.SimpleText("DEBUG MODE ENABLED", "ow.fonts.default.italic", 10, 35, color_white)
+        local scrW, scrH = ScrW(), ScrH()
+        draw.SimpleText(self.Name .. " - " .. self.Version, "ow.fonts.default.large", 10, scrH / 2, ow.config.color, TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        draw.SimpleText("DEBUG MODE ENABLED", "ow.fonts.default.italic", 10, scrH / 2, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 end
 
@@ -59,19 +60,19 @@ end
 function GM:LoadFonts()
     surface.CreateFont("ow.fonts.default", {
         font = "Arial",
-        size = ScreenScale(8),
+        size = ScreenScale(6),
         weight = 500
     })
 
     surface.CreateFont("ow.fonts.default.bold", {
         font = "Arial",
-        size = ScreenScale(8),
+        size = ScreenScale(6),
         weight = 700
     })
 
     surface.CreateFont("ow.fonts.default.italic", {
         font = "Arial",
-        size = ScreenScale(8),
+        size = ScreenScale(6),
         weight = 500,
         italic = true
     })
