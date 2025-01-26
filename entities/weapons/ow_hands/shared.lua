@@ -47,23 +47,23 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:GetMaxMassHold()
-    return hook.Run("OW.GetMaxHandsMass", self:GetOwner()) or 64
+    return hook.Run("OWGetMaxHandsMass", self:GetOwner()) or 64
 end
 
 function SWEP:GetReachDistance()
-    return hook.Run("OW.GetHandsReachDistance", self:GetOwner()) or 96
+    return hook.Run("OWGetHandsReachDistance", self:GetOwner()) or 96
 end
 
 function SWEP:GetPushForce()
-    return hook.Run("OW.GetHandsPushForce", self:GetOwner()) or 128
+    return hook.Run("OWGetHandsPushForce", self:GetOwner()) or 128
 end
 
 function SWEP:CanPush(ent)
-    return hook.Run("OW.CanHandsPush", self:GetOwner(), ent) or true
+    return hook.Run("OWCanHandsPush", self:GetOwner(), ent) or true
 end
 
 function SWEP:CanPickup(ent)
-    return hook.Run("OW.CanHandsPickup", self:GetOwner(), ent) or true
+    return hook.Run("OWCanHandsPickup", self:GetOwner(), ent) or true
 end
 
 function SWEP:SecondaryAttack()
@@ -94,7 +94,7 @@ function SWEP:SecondaryAttack()
 
         ent:SetVelocity(ply:GetAimVector() * self:GetPushForce())
 
-        hook.Run("OW.HandsPush", ply, ent)
+        hook.Run("OWHandsPush", ply, ent)
     elseif ( ent:GetClass():find("door") ) then
         if ( SERVER ) then
             ply:EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(1, 5) .. ".wav")
@@ -102,7 +102,7 @@ function SWEP:SecondaryAttack()
 
         ply:ViewPunch(Angle(2, 0, 0))
 
-        hook.Run("OW.HandsKnock", ply, ent)
+        hook.Run("OWHandsKnock", ply, ent)
     elseif ( SERVER and IsValid(ent:GetPhysicsObject()) and self:CanPickup() ) then
         if ( ent:GetPhysicsObject():GetMass() > self:GetMaxMassHold() ) then return end
 
@@ -114,7 +114,7 @@ function SWEP:SecondaryAttack()
 
                 ply:PickupObject(ent)
 
-                hook.Run("OW.HandsPickup", ply, ent)
+                hook.Run("OWHandsPickup", ply, ent)
             end)
         end
     end

@@ -28,3 +28,10 @@ function PLAYER:GesturePlay(name)
         self:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, self:LookupSequence(name), 0, true)
     end
 end
+
+function PLAYER:HasWhitelist(identifier, bSchema, bMap)
+    if ( bSchema == nil ) then bSchema = true end
+    if ( bMap == nil ) then bMap = false end
+
+    return true -- DATABVASESAEAEE
+end

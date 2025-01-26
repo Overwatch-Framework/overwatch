@@ -45,8 +45,7 @@ end
 
 function ow.faction:Get(identifier)
     if ( !identifier ) then
-        ow.util:PrintError("Attempted to get an invalid faction!")
-        return
+        return ow.util:PrintError("Attempted to get an invalid faction!")
     end
 
     if ( self.stored[identifier] ) then
@@ -57,10 +56,8 @@ function ow.faction:Get(identifier)
         return self.instances[identifier]
     end
 
-    for k, v in pairs(self.stored) do
-        if ( ow.util:FindString(v.Name, identifier) ) then
-            return v
-        elseif ( ow.util:FindString(v.UniqueID, identifier) ) then
+    for k, v in ipairs(self.instances) do
+        if ( ow.util:FindString(v.Name, identifier) or ow.util:FindString(v.UniqueID, identifier) ) then
             return v
         end
     end
@@ -70,7 +67,7 @@ function ow.faction:CanSwitchTo(ply, factionID)
     local faction = self:Get(factionID)
     if ( !faction ) then return false end
 
-    local hookRun = hook.Run("OW.Faction.CanBecome", ply, factionID)
+    local hookRun = hook.Run("OWFactionCanBecome", ply, factionID)
     if ( hookRun != nil and hookRun == false ) then return false end
 
     if ( faction.CanSwitchTo and !faction:CanSwitchTo(ply) ) then
