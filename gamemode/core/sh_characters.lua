@@ -16,4 +16,10 @@ do
         Field = "model",
         Default = "models/player/kleiner.mdl"
     })
+
+    ow.character:RegisterVariable("money", {
+        Type = "int",
+        Field = "money",
+        Default = 0
+    })
 end
