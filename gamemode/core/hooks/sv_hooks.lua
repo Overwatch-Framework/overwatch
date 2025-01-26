@@ -11,6 +11,7 @@ function GM:PlayerInitialSpawn(ply)
     ply:SetNotSolid(true)
     ply:SetMoveType(MOVETYPE_NONE)
 
+    ply:KillSilent()
     ply:SendLua("vgui.Create(\"ow.mainmenu\")")
 end
 

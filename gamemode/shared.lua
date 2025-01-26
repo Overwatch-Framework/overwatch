@@ -58,9 +58,7 @@ function GM:OnReloaded()
     hook.Run("PostReloaded")
 end
 
-ow.util:LoadFile("core/sh_chat.lua")
-ow.util:LoadFile("core/sh_colors.lua")
-ow.util:LoadFile("core/sh_commands.lua")
+ow.util:LoadFolder("core")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(ply, command, arguments)
