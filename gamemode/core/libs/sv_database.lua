@@ -40,7 +40,8 @@ function ow.database:Initialize()
         return
     end
 
-    local query = mysql:Create("overwatch_players")
+    local query
+    query = mysql:Create("overwatch_players")
         query:Create("steamid64", "VARCHAR(20) NOT NULL")
         query:Create("steamname", "VARCHAR(255) NOT NULL")
         query:Create("data", "TEXT")
