@@ -11,6 +11,7 @@ ow.util:LoadFolder("core/meta")
 ow.util:LoadFolder("core/derma")
 ow.util:LoadFolder("core/hooks")
 ow.util:LoadFolder("core/net")
+ow.util:LoadFolder("core/languages")
 ow.util:Print("Initialized.")
 
 ow.util:Print("Initializing Modules...")
