@@ -1,0 +1,2 @@
+--- Character library.
+-- @module ow.character
