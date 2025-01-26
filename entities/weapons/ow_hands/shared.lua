@@ -82,7 +82,7 @@ function SWEP:SecondaryAttack()
     if ( !IsValid(ent) ) then return end
 
     if ( ( ent:IsPlayer() or ent:IsNPC() ) and self:CanPush() ) then
-        if ( CLIENT ) then
+        if ( SERVER ) then
             ply:EmitSound("physics/flesh/flesh_impact_hard" .. math.random(3, 4) .. ".wav")
         end
 
@@ -96,7 +96,7 @@ function SWEP:SecondaryAttack()
 
         hook.Run("OW.HandsPush", ply, ent)
     elseif ( ent:GetClass():find("door") ) then
-        if ( CLIENT ) then
+        if ( SERVER ) then
             ply:EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(1, 5) .. ".wav")
         end
 
