@@ -9,7 +9,6 @@ local default = {
     Name = "Unknown",
     Description = "No description available.",
     IsDefault = false,
-    Color = color_white,
     CanSwitchTo = nil,
     OnSwitch = nil
 }
