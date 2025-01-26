@@ -107,7 +107,7 @@ function GM:PlayerDeletedCharacter(ply, character)
     -- Do something here
 end
 
-function GM:PlayerLoadedCharacter(ply, character)
+function GM:PlayerLoadedCharacter(ply, character, previousCharacter)
     -- Do something here
 end
 

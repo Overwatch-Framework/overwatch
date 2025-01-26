@@ -54,6 +54,6 @@ function GM:PlayerCanDeleteCharacter(ply, character)
     return true
 end
 
-function GM:PlayerCanLoadCharacter(ply, character)
+function GM:PlayerCanLoadCharacter(ply, character, currentCharacter)
     return true
 end
