@@ -65,3 +65,19 @@ function ow.faction:Get(identifier)
         end
     end
 end
+
+function ow.faction:CanSwitchTo(ply, factionID)
+    local faction = self:Get(factionID)
+    if ( !faction ) then return false end
+
+    local hookRun = hook.Run("OW.Faction.CanBecome", ply, factionID)
+    if ( hookRun != nil and hookRun == false ) then return false end
+
+    if ( faction.CanSwitchTo and !faction:CanSwitchTo(ply) ) then
+        return false
+    end
+
+    if ( !faction.IsDefault ) then return false end
+
+    return true
+end
