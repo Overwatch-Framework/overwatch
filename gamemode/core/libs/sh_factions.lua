@@ -67,7 +67,7 @@ function ow.faction:CanSwitchTo(ply, factionID)
     local faction = self:Get(factionID)
     if ( !faction ) then return false end
 
-    local hookRun = hook.Run("CanBecomeFaction", ply, factionID)
+    local hookRun = hook.Run("CanPlayerBecomeFaction", ply, factionID)
     if ( hookRun != nil and hookRun == false ) then return false end
 
     if ( faction.CanSwitchTo and !faction:CanSwitchTo(ply) ) then
