@@ -107,7 +107,7 @@ end
 
 function PANEL:PlayMenuTrack()
     local track = hook.Run("GetMainMenuMusic")
-    if ( !track or #track == 0 or !file.Exists("sound/" .. track, "GAME") ) then return end
+    if ( !track or #track == 0 ) then return end
 
     sound.PlayFile("sound/" .. track, "noplay", function(station, errorID, errorName)
         if ( IsValid(station) ) then
