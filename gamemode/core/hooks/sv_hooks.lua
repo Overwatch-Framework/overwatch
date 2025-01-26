@@ -82,6 +82,29 @@ function GM:PlayerUseSpawnSaver(ply)
 end
 
 function GM:Initialize()
+    ow.schema:Initialize()
+
+    local host, port, database, username, password, module
+    local config
+    if ( SCHEMA and SCHEMA.Folder and file.Exists(SCHEMA.Folder .. "/schema/config/sv_database.lua", "LUA") ) then
+        config = include(SCHEMA.Folder .. "/schema/config/sv_database.lua")
+    else
+        config = include("overwatch/gamemode/core/sv_database.lua")
+    end
+
+    if ( !config ) then
+        ow.util:PrintError("Database configuration not found!")
+        return
+    end
+
+    host = config.host
+    port = config.port
+    database = config.database
+    username = config.username
+    password = config.password
+    module = config.module
+
+    ow.database:Setup(host, port, database, username, password, module)
     ow.database:Initialize()
 end
 

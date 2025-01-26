@@ -30,12 +30,6 @@ end
 
 ow.util:Print("Initializing Modules.")
 
-function GM:Initialize()
-    ow.schema:Initialize()
-
-    hook.Run("LoadFonts")
-end
-
 ow.reloaded = false
 ow.refresh = ow.refresh or {}
 ow.refresh.count = ow.refresh.count or 0

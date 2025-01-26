@@ -1,22 +1,37 @@
 --- Database library
 -- @module ow.database
 
---require("mongo")
-
 ow.database = {}
-ow.database.database = nil
+ow.database.config = ow.database.config or {}
 
-local client
-local database
+--- Sets up the configuration for the database.
+-- @realm server
+-- @param string host The host of the database.
+-- @param string port The port of the database.
+-- @param string database The name of the database.
+-- @param string username The username of the database.
+-- @param string password The password of the database.
+-- @param string module The module of the database. (sqlite, mysqloo, etc.)
+-- @internal
+function ow.database:Setup(host, port, database, username, password, module)
+    self.config.host = host
+    self.config.port = port
+    self.config.database = database
+    self.config.username = username
+    self.config.password = password
+    self.config.module = module
+end
 
 --- Initializes the database.
 -- @realm server
 -- @return boolean Returns true if the database was successfully initialized, false otherwise.
 -- @internal
 function ow.database:Initialize()
-    if ( !MongoDB ) then
-        ow.util:PrintError("MongoDB library not found!")
-        return
+    for k, v in pairs(self.config) do
+        if ( !v or v == "" ) then
+            ow.util:PrintError("Database configuration for \"" .. k .. "\" is missing or invalid, please check your configuration!")
+            return false
+        end
     end
 
     if ( !SCHEMA ) then
@@ -24,55 +39,23 @@ function ow.database:Initialize()
         return
     end
 
-    local folder = engine.ActiveGamemode()
+    local databaseModule = self.config.module
+    if ( databaseModule == "mysqloo" ) then
+        require("mysqloo")
 
-    client = MongoDB.Client("mongodb://admin:password@localhost:27017")
-    if ( !client ) then
-        ow.util:PrintError("Connection to database failed!")
+        self.db = mysqloo.connect(self.config.host, self.config.username, self.config.password, self.config.database, self.config.port)
+
+        self.db.onConnected = function()
+            ow.util:Print(Color(0, 255, 0), "Connected to the database.")
+        end
+
+        self.db.onConnectionFailed = function(db, error)
+            ow.util:PrintError("Connection to the database failed! Error: " .. error)
+        end
+
+        self.db:connect()
+    else
+        ow.util:PrintError("Database module \"" .. databaseModule .. "\" is not supported!")
         return false
     end
-
-    database = client:Database(folder)
-
-    self.database = database
-
-    ow.util:Print("Connected to database \"" .. folder .. "\".")
-
-    return true
 end
-
---- Returns the active database.
--- @realm server
-function ow.database:GetDatabase()
-    return ow.database.database
-end
-
---- Creates a collection.
--- @realm server
--- @param string name The name of the collection.
--- @return table The collection object.
-function ow.database:CreateCollection(name)
-    local database = self:GetDatabase()
-    if ( !database ) then
-        ow.util:PrintError("Database not found!")
-        return
-    end
-
-    if ( !name or name == "" or string.gsub(name, "%s", "") == "" ) then
-        ow.util:PrintError("Invalid collection name!")
-        return
-    end
-
-    local result = database:CreateCollection(name)
-    if ( !result ) then
-        ow.util:PrintError("Failed to create collection \"" .. name .. "\"!")
-        return
-    end
-
-    ow.util:Print("Created collection \"" .. name .. "\".")
-
-    return result
-end
-
--- Initialize the database on startup
-ow.database:Initialize()

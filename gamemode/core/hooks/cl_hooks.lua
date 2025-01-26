@@ -10,6 +10,12 @@ function GM:PlayerEndVoice(ply)
     end
 end
 
+function GM:Initialize()
+    ow.schema:Initialize()
+
+    hook.Run("LoadFonts")
+end
+
 function GM:PostSchemaLoad()
     -- Do something here
 end
