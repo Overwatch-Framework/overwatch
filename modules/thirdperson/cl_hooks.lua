@@ -38,7 +38,15 @@ function MODULE:CalcView(ply, pos, angles, fov)
         end
     end
 
-    view.origin = pos - (angles:Forward() * thirdperson_pos_x:GetInt()) + (angles:Right() * thirdperson_pos_y:GetInt()) + (angles:Up() * thirdperson_pos_z:GetInt())
+    local trace = util.TraceHull({
+        start = pos,
+        endpos = pos - (angles:Forward() * thirdperson_pos_x:GetInt()) + (angles:Right() * thirdperson_pos_y:GetInt()) + (angles:Up() * thirdperson_pos_z:GetInt()),
+        filter = ply,
+        mins = Vector(-4, -4, -4),
+        maxs = Vector(4, 4, 4)
+    })
+
+    view.origin = trace.HitPos
     view.angles = angles
     view.fov = fov
 
