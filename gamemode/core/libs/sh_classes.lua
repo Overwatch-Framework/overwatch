@@ -14,13 +14,6 @@ local default = {
     OnSwitch = nil
 }
 
-function ow.faction:Register(factionData)
-    for k, v in pairs(default) do
-        if ( factionData[k] == nil ) then
-            factionData[k] = v
-        end
-    end
-
 function ow.class:Register(classData)
     if ( classData.faction == nil or !isnumber(classData.faction) ) then
         return ow.util:PrintError("Attempted to register a class without a valid faction!")
@@ -36,6 +29,7 @@ function ow.class:Register(classData)
             classData[k] = v
         end
     end
+    
     local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
     classData.UniqueID = classData.UniqueID or uniqueID
     
