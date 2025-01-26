@@ -80,6 +80,24 @@ function GM:HUDPaint()
             draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", 48, scrH / 2 + 48, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
         end
     end
+
+    if ( hook.Run("ShouldDrawCrosshair") ) then
+        local x, y = ScrW() / 2, ScrH() / 2
+        local size = 3
+
+        if ( GetConVar("ow_thirdperson"):GetBool() ) then
+            local trace = util.TraceLine({
+                start = LocalPlayer():GetShootPos(),
+                endpos = LocalPlayer():GetShootPos() + LocalPlayer():GetAimVector() * 8192,
+                filter = LocalPlayer()
+            })
+
+            local screen = trace.HitPos:ToScreen()
+            x, y = screen.x, screen.y
+        end
+
+        paint.circles.drawCircle(x, y, size, size, color_white)
+    end
 end
 
 local elements = {
@@ -95,7 +113,8 @@ local elements = {
     ["CHudSquadStatus"] = true,
     ["CHudSuitPower"] = true,
     ["CHudTrain"] = true,
-    ["CHudVehicle"] = true
+    ["CHudVehicle"] = true,
+    ["CHudCrosshair"] = true,
 }
 
 function GM:HUDShouldDraw(name)
@@ -189,4 +208,8 @@ function GM:OnPauseMenuShow()
     end
 
     return false
+end
+
+function GM:ShouldDrawCrosshair()
+    return true
 end
