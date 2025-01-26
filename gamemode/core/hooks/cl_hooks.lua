@@ -15,10 +15,10 @@ function GM:PostSchemaLoad()
 end
 
 function GM:CalcView(ply, pos, angles, fov)
-    if ( IsValid(ow.gui.mainmenu) ) then
+    if ( IsValid(ow.gui.mainmenu) and ow.config.menuCamPos and ow.config.menuCamAng ) then
         return {
-            origin = ow.config.menuCamPos or vector_origin,
-            angles = ow.config.menuCamAng or angle_zero,
+            origin = ow.config.menuCamPos,
+            angles = ow.config.menuCamAng,
             fov = ow.config.menuCamFov or 90,
             drawviewer = true
         }

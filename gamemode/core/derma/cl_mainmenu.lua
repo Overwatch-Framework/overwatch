@@ -62,6 +62,7 @@ function PANEL:Init()
         button:SetText("Button " .. i)
         button:SetFont("ow.fonts.default")
         button:SetTextColor(color_white)
+        button:DockMargin(0, 2, 0, 0)
         button.Paint = function(this, width, height)
             local color = color_button
             if ( this.Depressed or this:IsSelected() ) then
@@ -70,7 +71,9 @@ function PANEL:Init()
                 color = color_button_hover
             end
 
-            draw.RoundedBox(0, 0, 0, width, height, color)
+            paint.startPanel(this, true, true)
+                paint.roundedBoxes.roundedBox(2, 0, 0, width, height, color)
+            paint.endPanel(true, true)
         end
         button.DoClick = function()
             LocalPlayer():EmitSound("ow.button.click")
