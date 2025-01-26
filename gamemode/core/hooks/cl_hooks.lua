@@ -32,7 +32,7 @@ function GM:HUDPaint()
         draw.SimpleText("debug mode enabled", "ow.fonts.fancy", 32, scrH / 2 - 6, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
         if ( SCHEMA ) then
-            draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy", 32, scrH / 2 + 40, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+            draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", 48, scrH / 2 + 48, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
         end
     end
 end
@@ -110,9 +110,19 @@ function GM:LoadFonts()
         size = ScreenScale(8)
     })
 
+    surface.CreateFont("ow.fonts.fancy.small", {
+        font = "K12HL2",
+        size = ScreenScale(6)
+    })
+
     surface.CreateFont("ow.fonts.fancy.large", {
         font = "K12HL2",
         size = ScreenScale(10)
+    })
+
+    surface.CreateFont("ow.fonts.fancy.extralarge", {
+        font = "K12HL2",
+        size = ScreenScale(12)
     })
 
     surface.CreateFont("ow.fonts.title", {
