@@ -26,7 +26,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
 
         for i = 0, ply:GetBoneCount() do
             local bone = ply:GetBoneName(i)
-            if ( ms.util:FindString(bone, "head") ) then
+            if ( ow.util:FindString(bone, "head") ) then
                 head = i
                 break
             end
