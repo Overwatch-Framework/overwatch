@@ -5,6 +5,7 @@ GM.Version = "Foundation"
 
 ow.util:Print("Initializing...")
 ow.util:LoadFolder("core/thirdparty")
+ow.util:LoadFolder("core/thirdparty/paint")
 ow.util:LoadFolder("core/libs")
 ow.util:LoadFolder("core/meta")
 ow.util:LoadFolder("core/derma")

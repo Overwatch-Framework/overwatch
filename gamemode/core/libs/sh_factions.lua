@@ -29,7 +29,7 @@ local default = {
     Models = DEFAULT_MODELS,
     IsDefault = false,
     Color = color_white,
-    CanSwitchTo = nil
+    CanSwitchTo = nil,
     OnSwitch = nil
 }
 

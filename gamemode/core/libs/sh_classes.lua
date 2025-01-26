@@ -10,7 +10,7 @@ local default = {
     Description = "No description available.",
     IsDefault = false,
     Color = color_white,
-    CanSwitchTo = nil
+    CanSwitchTo = nil,
     OnSwitch = nil
 }
 
