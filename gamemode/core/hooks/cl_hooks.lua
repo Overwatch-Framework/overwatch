@@ -23,11 +23,50 @@ function GM:CalcView(ply, pos, angles, fov)
             drawviewer = true
         }
     end
+
+    if ( !ply:Alive() ) then
+        local ragdoll = ply:GetRagdollEntity()
+        if ( !IsValid(ragdoll) ) then return end
+
+        local eyePos
+        local eyeAng
+
+        if ( ragdoll:LookupAttachment("eyes") ) then
+            local attachment = ragdoll:GetAttachment(ragdoll:LookupAttachment("eyes"))
+            if ( attachment ) then
+                eyePos = attachment.Pos
+                eyeAng = attachment.Ang
+            end
+        else 
+            local bone = ragdoll:LookupBone("ValveBiped.Bip01_Head1")
+            if ( !bone ) then return end
+
+            eyePos, eyeAng = ragdoll:GetBonePosition(bone)
+        end
+
+        if ( !eyePos or !eyeAng ) then return end
+
+        local traceHull = util.TraceHull({
+            start = eyePos,
+            endpos = eyePos + eyeAng:Forward() * 2,
+            filter = ragdoll,
+            mins = Vector(-2, -2, -2),
+            maxs = Vector(2, 2, 2)
+        })
+
+        return {
+            origin = traceHull.HitPos,
+            angles = eyeAng,
+            fov = fov,
+            drawviewer = true
+        }
+    end
 end
 
 function GM:HUDPaint()
     if ( ow.debugMode:GetBool() ) then
         local scrW, scrH = ScrW(), ScrH()
+
         draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", 16, scrH / 2 + 8, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
         draw.SimpleText("debug mode enabled", "ow.fonts.fancy", 32, scrH / 2 - 6, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
