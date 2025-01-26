@@ -74,7 +74,7 @@ function GM:Initialize()
 end
 
 function GM:SetupPlayerVisibility(ply, viewEntity)
-    if ( ply:Team() == 0 ) then
+    if ( ply:Team() == 0 and ow.config.menuCamPos ) then
         AddOriginToPVS(ow.config.menuCamPos)
     end
 end

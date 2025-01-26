@@ -243,7 +243,7 @@ if ( CLIENT ) then
         local x, y = panel:LocalToScreen(0, 0)
         local scrW, scrH = ScrW(), ScrH()
 
-        surface.SetDrawColor(255, 255, 255)
+        surface.SetDrawColor(color_white)
         surface.SetMaterial(blur)
 
         for i = -passes, 1, 0.2 do
@@ -267,7 +267,7 @@ if ( CLIENT ) then
         amount = amount or defaultAmount
         passes = passes or defaultPasses
 
-        surface.SetDrawColor(255, 255, 255)
+        surface.SetDrawColor(color_white)
         surface.SetMaterial(blur)
 
         for i = -passes, 1, 0.2 do
