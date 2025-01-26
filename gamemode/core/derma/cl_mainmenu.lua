@@ -38,7 +38,7 @@ function PANEL:Init()
     title:DockMargin(padding, padding, padding, 0)
     title:SetFont("ow.fonts.title")
     title:SetText("OVERWATCH")
-    title:SetTextColor(ow.config.color)
+    title:SetTextColor(hook.Run("GetFrameworkColor"))
     title:SetExpensiveShadow(4, color_button_hover)
     title:SizeToContents()
 
