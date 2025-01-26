@@ -3,6 +3,10 @@ local gradientLeft = Material("vgui/gradient-l")
 
 local PANEL = {}
 
+local color_button = Color(0, 0, 0, 150)
+local color_button_hover = Color(0, 0, 0, 200)
+local color_button_text = color_white
+
 function PANEL:Init()
     if ( IsValid(ow.gui.mainmenu) ) then
         ow.gui.mainmenu:Remove()
@@ -28,7 +32,7 @@ function PANEL:Init()
     title:SetFont("ow.fonts.title")
     title:SetText("OVERWATCH")
     title:SetTextColor(Color(0, 100, 150))
-    title:SetExpensiveShadow(4, Color(0, 0, 0, 200))
+    title:SetExpensiveShadow(4, color_button_hover)
     title:SizeToContents()
 
     local subtitle = sideButtons:Add("DLabel")
@@ -37,7 +41,7 @@ function PANEL:Init()
     subtitle:SetFont("ow.fonts.subtitle")
     subtitle:SetText(string.upper(SCHEMA.Name))
     subtitle:SetTextColor(color_white)
-    subtitle:SetExpensiveShadow(4, Color(0, 0, 0, 200))
+    subtitle:SetExpensiveShadow(4, color_button_hover)
     subtitle:SizeToContents()
 
     local buttons = sideButtons:Add("EditablePanel")
@@ -53,11 +57,11 @@ function PANEL:Init()
         button:SetFont("ow.fonts.default")
         button:SetTextColor(color_white)
         button.Paint = function(this, width, height)
-            local color = Color(0, 0, 0, 150)
+            local color = color_button
             if ( this.Depressed or this:IsSelected() ) then
-                color = Color(0, 0, 0, 200)
+                color = color_button_hover
             elseif ( this.Hovered ) then
-                color = Color(0, 0, 0, 200)
+                color = color_button_hover
             end
 
             draw.RoundedBox(0, 0, 0, width, height, color)
@@ -84,7 +88,7 @@ function PANEL:Init()
             end
         end
         button.OnCursorEntered = function()
-            LocalPlayer():EmitSound("ow.button.enter")
+            surface.PlaySound("ow.button.enter")
         end
     end
 end
