@@ -7,6 +7,23 @@ local color_button = Color(0, 0, 0, 150)
 local color_button_hover = Color(0, 0, 0, 200)
 local color_button_text = color_white
 
+local function ButtonOnCursorEntered(this)
+    surface.PlaySound("ow.button.enter")
+end
+
+local function ButtonPaint(this, width, height)
+    local color = color_button
+    if ( this.Depressed or this:IsSelected() ) then
+        color = color_button_hover
+    elseif ( this.Hovered ) then
+        color = color_button_hover
+    end
+
+    paint.startPanel(this, true, true)
+        paint.roundedBoxes.roundedBox(2, 0, 0, width, height, color)
+    paint.endPanel(true, true)
+end
+
 function PANEL:Init()
     if ( IsValid(ow.gui.mainmenu) ) then
         ow.gui.mainmenu:Remove()
@@ -59,50 +76,44 @@ function PANEL:Init()
     buttons:DockMargin(padding * 2, padding, padding * 4, padding)
 
     -- TODO: add real buttons like "Create Character", "Select Character", "Settings", "Credits", etc.
-    for i = 1, 5 do
-        local button = buttons:Add("DButton")
-        button:Dock(TOP)
-        button:SetTall(ScreenScale(14))
-        button:SetText("Button " .. i)
-        button:SetFont("ow.fonts.default")
-        button:SetTextColor(color_white)
-        button:DockMargin(0, 2, 0, 0)
-        button.Paint = function(this, width, height)
-            local color = color_button
-            if ( this.Depressed or this:IsSelected() ) then
-                color = color_button_hover
-            elseif ( this.Hovered ) then
-                color = color_button_hover
-            end
 
-            paint.startPanel(this, true, true)
-                paint.roundedBoxes.roundedBox(2, 0, 0, width, height, color)
-            paint.endPanel(true, true)
-        end
-        button.DoClick = function()
-            LocalPlayer():EmitSound("ow.button.click")
+    local playButton = buttons:Add("DButton")
+    playButton:Dock(TOP)
+    playButton:SetTall(ScreenScale(14))
+    playButton:SetText("PLAY")
+    playButton:SetFont("ow.fonts.subtitle")
+    playButton:SetTextColor(color_white)
+    playButton:DockMargin(0, 2, 0, 0)
 
-            if ( i == 1 ) then
-                print("Button 1 clicked!")
+    playButton.Paint = ButtonPaint
+    playButton.OnCursorEntered = ButtonOnCursorEntered
 
-                self:Remove()
-            elseif ( i == 2 ) then
-                print("Button 2 clicked!")
-            elseif ( i == 3 ) then
-                print("Button 3 clicked!")
-            elseif ( i == 4 ) then
-                print("Button 4 clicked!")
-            elseif ( i == 5 ) then
-                print("Button 5 clicked!")
+    playButton.DoClick = function()
+        surface.PlaySound("ow.button.click")
 
-                Derma_Query("Are you sure you want to quit?", "Quit Overwatch", "Yes", function()
-                    RunConsoleCommand("disconnect")
-                end, "No")
-            end
-        end
-        button.OnCursorEntered = function()
-            surface.PlaySound("ow.button.enter")
-        end
+        self:Remove()
+    end
+
+    local disconnectButton = buttons:Add("DButton")
+    disconnectButton:Dock(TOP)
+    disconnectButton:SetTall(ScreenScale(14))
+    disconnectButton:SetText("DISCONNECT")
+    disconnectButton:SetFont("ow.fonts.subtitle")
+    disconnectButton:SetTextColor(color_white)
+    disconnectButton:DockMargin(0, 2, 0, 0)
+
+    disconnectButton.Paint = ButtonPaint
+    disconnectButton.OnCursorEntered = function(this)
+        ButtonOnCursorEntered(this)
+        surface.PlaySound("ow.button.enter")
+    end
+
+    disconnectButton.DoClick = function()
+        surface.PlaySound("ow.button.click")
+
+        Derma_Query("Are you sure you want to disconnect?", "Disconnect", "Yes", function()
+            RunConsoleCommand("disconnect")
+        end, "No")
     end
 
     self:PlayMenuTrack()

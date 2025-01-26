@@ -34,7 +34,9 @@ function ow.util:PreparePackage(...)
         end
     end
 
-    return unpack(package)
+    table.insert(package, "\n")
+
+    return package
 end
 
 --- Prints a message to the console.
@@ -43,7 +45,7 @@ end
 function ow.util:Print(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", color_white, args, "\n")
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", unpack(args))
 
     return args
 end
@@ -54,7 +56,7 @@ end
 function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, unpack(args))
 
     return args
 end
@@ -65,7 +67,7 @@ end
 function ow.util:PrintWarning(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, unpack(args))
 
     return args
 end
