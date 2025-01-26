@@ -45,3 +45,15 @@ end
 function GM:PlayerGetPhysgun(ply)
     return CAMI.PlayerHasAccess(ply, "Overwatch - Physgun", nil) 
 end
+
+function GM:PlayerCanCreateCharacter(ply, character)
+    return true
+end
+
+function GM:PlayerCanDeleteCharacter(ply, character)
+    return true
+end
+
+function GM:PlayerCanLoadCharacter(ply, character)
+    return true
+end

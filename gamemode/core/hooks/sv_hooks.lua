@@ -102,3 +102,15 @@ function GM:GetFallDamage(ply, speed)
 
     return speed / 8
 end
+
+function GM:PlayerDeletedCharacter(ply, character)
+    -- Do something here
+end
+
+function GM:PlayerLoadedCharacter(ply, character)
+    -- Do something here
+end
+
+function GM:PlayerCreatedCharacter(ply, character)
+    -- Do something here
+end
