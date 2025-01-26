@@ -1,11 +1,11 @@
-MODULE = {}
+local MODULE = MODULE
 
 MODULE.Name = "Test Module"
 MODULE.Description = "A test module."
 MODULE.Author = "Riggs"
 
 function MODULE:OnReloaded()
-    print("Test Module has been reloaded.")
+    print(self.Name .. " has been reloaded.")
 end
 
 ow.module:Register(MODULE)

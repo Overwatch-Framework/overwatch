@@ -1,4 +1,4 @@
-MODULE = MODULE or {}
+local MODULE = MODULE
 
 local thirdperson = CreateClientConVar("ow_thirdperson", 0, true, false, "Enable third person view.", 0, 1)
 local thirdperson_pos_x = CreateClientConVar("ow_thirdperson_pos_x", 50, true, false, "Set the X position of the third person camera.", -100, 100)
