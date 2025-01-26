@@ -80,7 +80,7 @@ function PANEL:Init()
 
                 Derma_Query("Are you sure you want to quit?", "Quit Overwatch", "Yes", function()
                     RunConsoleCommand("disconnect")
-                end, "No", function() end)
+                end, "No")
             end
         end
         button.OnCursorEntered = function()
