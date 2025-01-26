@@ -18,8 +18,9 @@ ow.util:Print("Initializing Modules...")
 local files, directories = file.Find("overwatch/modules/*", "LUA")
 for k, v in ipairs(directories) do
     if ( file.Exists("overwatch/modules/" .. v .. "/sh_module.lua", "LUA") ) then
-        MODULE = {}
+        MODULE = { UniqueID = v }
             ow.util:LoadFile("overwatch/modules/" .. v .. "/sh_module.lua")
+            ow.module.stored[v] = MODULE
         MODULE = nil
     else
         ow.util:PrintError("Module " .. v .. " is missing a shared module file.")
@@ -27,8 +28,16 @@ for k, v in ipairs(directories) do
 end
 
 for k, v in ipairs(files) do
-    MODULE = {}
+    local ModuleUniqueID = string.StripExtension(v)
+    if ( string.sub(v, 1, 3) == "cl_" or string.sub(v, 1, 3) == "sv_" or string.sub(v, 1, 3) == "sh_" ) then
+        ModuleUniqueID = string.gsub(ModuleUniqueID, "cl_", "")
+        ModuleUniqueID = string.gsub(ModuleUniqueID, "sv_", "")
+        ModuleUniqueID = string.gsub(ModuleUniqueID, "sh_", "")
+    end
+
+    MODULE = { UniqueID = ModuleUniqueID }
         ow.util:LoadFile("overwatch/modules/" .. v, "shared")
+        ow.module.stored[ModuleUniqueID] = MODULE
     MODULE = nil
 end
 

@@ -7,5 +7,3 @@ MODULE.Author = "Riggs"
 function MODULE:OnReloaded()
     print(self.Name .. " has been reloaded.")
 end
-
-ow.module:Register(MODULE)
