@@ -5,6 +5,22 @@ ow.class = {}
 ow.class.stored = {}
 ow.class.instances = {}
 
+local default = {
+    Name = "Unknown",
+    Description = "No description available.",
+    IsDefault = false,
+    Color = color_white,
+    CanSwitchTo = nil
+    OnSwitch = nil
+}
+
+function ow.faction:Register(factionData)
+    for k, v in pairs(default) do
+        if ( factionData[k] == nil ) then
+            factionData[k] = v
+        end
+    end
+
 function ow.class:Register(classData)
     if ( classData.faction == nil or !isnumber(classData.faction) ) then
         return ow.util:PrintError("Attempted to register a class without a valid faction!")
@@ -15,14 +31,13 @@ function ow.class:Register(classData)
         return ow.util:PrintError("Attempted to register a class for an invalid faction!")
     end
 
-    classData.Name = classData.Name or "Unknown Faction"
-
+    for k, v in pairs(default) do
+        if ( classData[k] == nil ) then
+            classData[k] = v
+        end
+    end
     local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
     classData.UniqueID = classData.UniqueID or uniqueID
-
-    classData.Color = classData.Color or Color(255, 255, 255)
-    classData.Description = classData.Description or "No description provided."
-    classData.IsDefault = classData.IsDefault or false
     
     self.stored[uniqueID] = classData
     self.instances[#self.instances + 1] = classData
@@ -66,7 +81,9 @@ function ow.class:CanSwitchTo(ply, classID)
         return false
     end
 
-    if ( !class.IsDefault ) then return false end
+    if ( !class.IsDefault ) then 
+        return false 
+    end
 
     return true
 end

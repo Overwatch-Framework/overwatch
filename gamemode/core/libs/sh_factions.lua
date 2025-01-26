@@ -23,16 +23,25 @@ ow.faction = {}
 ow.faction.stored = {}
 ow.faction.instances = {}
 
+local default = {
+    Name = "Unknown",
+    Description = "No description available.",
+    Models = DEFAULT_MODELS,
+    IsDefault = false,
+    Color = color_white,
+    CanSwitchTo = nil
+    OnSwitch = nil
+}
+
 function ow.faction:Register(factionData)
-    factionData.Name = factionData.Name or "Unknown Faction"
+    for k, v in pairs(default) do
+        if ( factionData[k] == nil ) then
+            factionData[k] = v
+        end
+    end
 
     local uniqueID = string.lower(string.gsub(factionData.Name, "%s", "_"))
     factionData.UniqueID = factionData.UniqueID or uniqueID
-
-    factionData.Color = factionData.Color or Color(255, 255, 255)
-    factionData.Description = factionData.Description or "No description provided."
-    factionData.Models = factionData.Models or DEFAULT_MODELS
-    factionData.IsDefault = factionData.IsDefault or false
 
     self.stored[uniqueID] = factionData
     self.instances[#self.instances + 1] = factionData
