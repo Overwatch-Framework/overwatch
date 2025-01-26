@@ -44,6 +44,8 @@ function ow.util:Print(...)
     local args = self:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", color_white, args, "\n")
+
+    return args
 end
 
 --- Prints an error message to the console.
@@ -53,6 +55,8 @@ function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
+
+    return args
 end
 
 --- Prints a warning message to the console.
@@ -62,6 +66,8 @@ function ow.util:PrintWarning(...)
     local args = self:PreparePackage(...)
 
     MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
+
+    return args
 end
 
 --- Loads a file based on the realm.
