@@ -43,7 +43,7 @@ end
 function ow.util:Print(...)
     local args = self:PreparePackage(...)
 
-    MsgC(Color(0, 100, 150), "Overwatch | ", color_white, args, "\n")
+    MsgC(ow.config.color, "Overwatch | ", color_white, args, "\n")
 
     return args
 end
@@ -54,7 +54,7 @@ end
 function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
-    MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
+    MsgC(ow.config.color, "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, args, "\n")
 
     return args
 end
@@ -65,7 +65,7 @@ end
 function ow.util:PrintWarning(...)
     local args = self:PreparePackage(...)
 
-    MsgC(Color(0, 100, 150), "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
+    MsgC(ow.config.color, "Overwatch | ", Color(200, 100, 50), "Warning | ", color_white, args, "\n")
 
     return args
 end

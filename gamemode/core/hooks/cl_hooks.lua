@@ -25,7 +25,15 @@ function GM:CalcView(ply, pos, angles, fov)
     end
 end
 
+if ( !ConVarExists("ow_debug") ) then
+    ow.debugMode = CreateClientConVar("ow_debug", 0, true, true, "Enables debug mode for Overwatch.", 0, 1)
+end
+
 function GM:HUDPaint()
+    if ( ow.debugMode:GetBool() ) then
+        draw.SimpleText(self.Name .. " - " .. self.Version, "ow.fonts.default.large", 10, 5, ow.color)
+        draw.SimpleText("DEBUG MODE ENABLED", "ow.fonts.default.italic", 10, 35, color_white)
+    end
 end
 
 local elements = {
