@@ -35,10 +35,8 @@ function GM:PlayerSpawn(ply)
 end
 
 function GM:PlayerLoadout(ply)
-    if ( ply:IsAdmin() ) then
-        ply:Give("weapon_physgun")
-        ply:Give("gmod_tool")
-    end
+    if ( hook.Run("PlayerGetToolgun", ply) ) then ply:Give("gmod_tool") end
+    if ( hook.Run("PlayerGetPhysgun", ply) ) then ply:Give("weapon_physgun") end
 
     ply:Give("ow_hands")
     ply:SelectWeapon("ow_hands")

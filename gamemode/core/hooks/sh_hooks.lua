@@ -37,3 +37,11 @@ end
 function GM:GetMainMenuMusic()
     return ow.config.MainMenuTrack or "music/hl2_song20_submix0.mp3"
 end
+
+function GM:PlayerGetToolgun(ply)
+    return CAMI.PlayerHasAccess(ply, "Overwatch - Toolgun", nil) 
+end
+
+function GM:PlayerGetPhysgun(ply)
+    return CAMI.PlayerHasAccess(ply, "Overwatch - Physgun", nil) 
+end
