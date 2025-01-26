@@ -15,6 +15,7 @@ function PANEL:Init()
     ow.gui.mainmenu = self
 
     chat.Close()
+    CloseDermaMenus()
     
     if ( system.IsWindows() ) then
         system.FlashWindow()

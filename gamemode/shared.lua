@@ -71,3 +71,7 @@ end)
 -- concommand.Add("gm_admin_cleanup", function(ply, command, arguments)
 --     ow.util:PrintError("This command has been disabled.", ply)
 -- end)
+
+if ( !ConVarExists("ow_debug") ) then
+    ow.debugMode = CreateConVar("ow_debug", "0", FCVAR_ARCHIVE, "Enable debug mode.", 0, 1)
+end
