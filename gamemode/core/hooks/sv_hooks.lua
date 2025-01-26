@@ -1,6 +1,17 @@
 local loadQueue = {}
 function GM:PlayerInitialSpawn(ply)
     loadQueue[ply] = true
+
+    ply:SetTeam(0)
+    ply:SetModel("models/player/kleiner.mdl")
+
+    -- Do not render the player, as we are in the main menu
+    -- and we do not have a character loaded yet
+    ply:SetNoDraw(true)
+    ply:SetNotSolid(true)
+    ply:SetMoveType(MOVETYPE_NONE)
+
+    ply:SendLua("vgui.Create(\"ow.mainmenu\")")
 end
 
 function GM:StartCommand(ply, cmd)
@@ -12,9 +23,11 @@ function GM:StartCommand(ply, cmd)
 end
 
 function GM:PostPlayerInitialSpawn(ply)
+    -- Do something here
 end
 
 function GM:PlayerDisconnected(ply)
+    -- Do something here
 end
 
 function GM:PlayerSpawn(ply)
