@@ -11,7 +11,6 @@ ow.util:LoadFolder("core/meta")
 ow.util:LoadFolder("core/derma")
 ow.util:LoadFolder("core/hooks")
 ow.util:LoadFolder("core/net")
-ow.util:LoadFolder("core")
 ow.util:Print("Initialized.")
 
 ow.util:Print("Initializing Modules...")
@@ -58,6 +57,11 @@ function GM:OnReloaded()
 
     hook.Run("PostReloaded")
 end
+
+ow.util:LoadFile("core/sh_chat.lua")
+ow.util:LoadFile("core/sh_colors.lua")
+ow.util:LoadFile("core/sh_commands.lua")
+ow.util:LoadFile("core/sh_cami.lua")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(ply, command, arguments)
