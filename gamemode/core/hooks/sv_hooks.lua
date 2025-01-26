@@ -95,3 +95,7 @@ end
 function GM:PlayerSwitchFlashlight(ply, bEnabled)
     return true
 end
+
+function GM:GetFallDamage(ply, speed)
+    return speed / 8
+end
