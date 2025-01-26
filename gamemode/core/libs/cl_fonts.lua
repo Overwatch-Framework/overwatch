@@ -12,7 +12,10 @@ surface.owCreateFont = surface.owCreateFont or surface.CreateFont
 -- @param table data The font data.
 
 function surface.CreateFont(name, data)
-    ow.font.stored[name] = data
+    if ( name:StartsWith("ow") ) then
+        ow.font.stored[name] = data
+    end
+    
     surface.owCreateFont(name, data)
 end
 
