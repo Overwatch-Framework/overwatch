@@ -26,13 +26,10 @@ end
 -- @param name The name of the color.
 -- @return The color.
 function ow.color:Get(name)
-    for k, v in pairs(self.stored) do
-        if ( k == name ) then
-            return v
-        end
+    if ( self.stored[name] ) then
+        return self.stored[name]
     end
 
     ow.util:PrintError("Attempted to get an invalid color!")
-    
     return
 end
