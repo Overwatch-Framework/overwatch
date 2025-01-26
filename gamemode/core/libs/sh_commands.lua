@@ -33,6 +33,13 @@ function ow.command:Register(info)
     uniqueID = info.uniqueID or uniqueID
 
     self.stored[uniqueID] = info
+
+    if ( CAMI ) then
+        CAMI.RegisterPrivilege({
+            Name = "Overwatch - Commands - " .. info.Name,
+            MinAccess = info.MinAccess or "user"
+        })
+    end
 end
 
 --- Unregisters a command.

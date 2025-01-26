@@ -33,8 +33,13 @@ function ow.command:Run(ply, command, arguments)
         return false
     end
 
+    if ( CAMI and !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.Name) ) then
+        ow.util:PrintError("Attempted to run a command without access!", ply)
+        return false
+    end
+
     info:Callback(ply, arguments)
-    return true
+    return true, arguments
 end
 
 concommand.Add("ow_command_run", function(ply, cmd, arguments)

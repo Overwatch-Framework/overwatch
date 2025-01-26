@@ -12,3 +12,8 @@ CAMI.RegisterPrivilege({
     Name = "Overwatch - Physgun",
     MinAccess = "admin"
 })
+
+CAMI.RegisterPrivilege({
+    Name = "Overwatch - Noclip",
+    MinAccess = "admin"
+})
