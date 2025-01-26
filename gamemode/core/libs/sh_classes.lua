@@ -33,7 +33,7 @@ function ow.class:Register(classData)
     local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
     classData.UniqueID = classData.UniqueID or uniqueID
     
-    self.stored[uniqueID] = classData
+    self.stored[classData.UniqueID] = classData
     self.instances[#self.instances + 1] = classData
 
     classData.Index = #self.instances

@@ -43,7 +43,7 @@ function ow.faction:Register(factionData)
     local uniqueID = string.lower(string.gsub(factionData.Name, "%s", "_"))
     factionData.UniqueID = factionData.UniqueID or uniqueID
 
-    self.stored[uniqueID] = factionData
+    self.stored[factionData.UniqueID] = factionData
     self.instances[#self.instances + 1] = factionData
 
     factionData.Index = #self.instances
