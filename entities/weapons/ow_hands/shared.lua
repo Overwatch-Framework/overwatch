@@ -33,7 +33,7 @@ SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
-SWEP.Secondary.Delay = 1
+SWEP.Secondary.Delay = 0.5
 
 SWEP.HoldType = "fist"
 
@@ -43,6 +43,7 @@ end
 
 function SWEP:PrimaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
+    if ( self:GetNextPrimaryFire() > CurTime() ) then return end
 end
 
 function SWEP:GetMaxMassHold()
@@ -67,6 +68,7 @@ end
 
 function SWEP:SecondaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
+    if ( self:GetNextSecondaryFire() > CurTime() ) then return end
 
     local ply = self:GetOwner()
 
@@ -80,15 +82,27 @@ function SWEP:SecondaryAttack()
     if ( !IsValid(ent) ) then return end
 
     if ( ( ent:IsPlayer() or ent:IsNPC() ) and self:CanPush() ) then
-        ply:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 7) .. ".wav")
-        ply:ViewPunch(Angle(-4, 0, 0))
-        ent:SetVelocity(ply:GetAimVector() * self:GetPushForce())
+        if ( CLIENT ) then
+            ply:EmitSound("physics/flesh/flesh_impact_hard" .. math.random(3, 4) .. ".wav")
+        end
 
+        ply:ViewPunch(Angle(-4, 0, 0))
+        
         if ( ent:IsPlayer() ) then
             ent:ViewPunch(Angle(4, 0, 0))
         end
 
+        ent:SetVelocity(ply:GetAimVector() * self:GetPushForce())
+
         hook.Run("OW.HandsPush", ply, ent)
+    elseif ( ent:GetClass():find("door") ) then
+        if ( CLIENT ) then
+            ply:EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(1, 5) .. ".wav")
+        end
+
+        ply:ViewPunch(Angle(2, 0, 0))
+
+        hook.Run("OW.HandsKnock", ply, ent)
     elseif ( SERVER and IsValid(ent:GetPhysicsObject()) and self:CanPickup() ) then
         if ( ent:GetPhysicsObject():GetMass() > self:GetMaxMassHold() ) then return end
 
