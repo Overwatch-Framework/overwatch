@@ -91,3 +91,7 @@ function GM:SetupPlayerVisibility(ply, viewEntity)
         AddOriginToPVS(ow.config.menuCamPos)
     end
 end
+
+function GM:PlayerSwitchFlashlight(ply, bEnabled)
+    return true
+end
