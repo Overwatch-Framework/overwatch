@@ -14,7 +14,10 @@ function PANEL:Init()
 
     ow.gui.mainmenu = self
 
-    chat.Close()
+    if ( IsValid(LocalPlayer()) and LocalPlayer():IsTyping() ) then
+        chat.Close()
+    end
+
     CloseDermaMenus()
     
     if ( system.IsWindows() ) then
@@ -110,7 +113,7 @@ function PANEL:PlayMenuTrack()
     if ( !track or #track == 0 ) then return end
 
     sound.PlayFile("sound/" .. track, "noplay", function(station, errorID, errorName)
-        if ( IsValid(station) ) then
+        if ( IsValid(station) and IsValid(self) ) then
             station:Play()
             self.station = station
         else

@@ -176,3 +176,11 @@ function GM:LoadFonts()
 
     hook.Run("PostLoadFonts")
 end
+
+function GM:OnPauseMenuShow()
+    if ( !IsValid(ow.gui.mainmenu) ) then
+        vgui.Create("ow.mainmenu")
+    end
+
+    return false
+end
