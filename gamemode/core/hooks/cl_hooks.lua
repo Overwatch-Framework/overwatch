@@ -10,6 +10,27 @@ function GM:PlayerEndVoice(ply)
     end
 end
 
+function GM:PostSchemaLoad()
+    if ( LocalPlayer():Team() == 0 and !IsValid(ow.gui.mainmenu) ) then
+        vgui.Create("ow.mainmenu")
+
+        if ( system.IsWindows() ) then
+            system.FlashWindow()
+        end
+    end
+end
+
+function GM:CalcView(ply, pos, angles, fov)
+    if ( IsValid(ow.gui.mainmenu) ) then
+        return {
+            origin = ow.config.menuCamPos or vector_origin,
+            angles = ow.config.menuCamAng or angle_zero,
+            fov = ow.config.menuCamFov or 90,
+            drawviewer = true
+        }
+    end
+end
+
 function GM:HUDPaint()
 end
 
@@ -40,46 +61,56 @@ end
 function GM:LoadFonts()
     surface.CreateFont("ow.fonts.default", {
         font = "Arial",
-        size = 16,
+        size = ScreenScale(8),
         weight = 500
     })
 
     surface.CreateFont("ow.fonts.default.bold", {
         font = "Arial",
-        size = 16,
+        size = ScreenScale(8),
         weight = 700
     })
 
     surface.CreateFont("ow.fonts.default.italic", {
         font = "Arial",
-        size = 16,
+        size = ScreenScale(8),
         weight = 500,
         italic = true
     })
 
     surface.CreateFont("ow.fonts.default.large", {
         font = "Arial",
-        size = 24,
+        size = ScreenScale(10),
         weight = 500
     })
 
     surface.CreateFont("ow.fonts.default.large.bold", {
         font = "Arial",
-        size = 24,
+        size = ScreenScale(10),
         weight = 700
     })
 
     surface.CreateFont("ow.fonts.default.extralarge", {
         font = "Arial",
-        size = 32,
+        size = ScreenScale(12),
         weight = 500
     })
 
     surface.CreateFont("ow.fonts.default.extralarge.bold", {
         font = "Arial",
-        size = 32,
+        size = ScreenScale(12),
         weight = 700
     })
 
-    hook.Run("PostCreateFonts")
+    surface.CreateFont("ow.fonts.title", {
+        font = "K12HL2",
+        size = ScreenScale(24)
+    })
+
+    surface.CreateFont("ow.fonts.subtitle", {
+        font = "K12HL2",
+        size = ScreenScale(16)
+    })
+
+    hook.Run("PostLoadFonts")
 end
