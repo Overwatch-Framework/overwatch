@@ -10,6 +10,12 @@ function PANEL:Init()
 
     ow.gui.mainmenu = self
 
+    chat.Close()
+    
+    if ( system.IsWindows() ) then
+        system.FlashWindow()
+    end
+
     self:SetSize(ScrW(), ScrH())
     self:MakePopup()
 
@@ -92,7 +98,7 @@ end
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
 
 if ( IsValid(ow.gui.mainmenu) ) then
-    ow.gui.mainmenu:Remove()
+    vgui.Create("ow.mainmenu")
 end
 
 -- TODO: add an actual button panel

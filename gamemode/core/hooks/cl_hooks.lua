@@ -11,13 +11,7 @@ function GM:PlayerEndVoice(ply)
 end
 
 function GM:PostSchemaLoad()
-    if ( LocalPlayer():Team() == 0 and !IsValid(ow.gui.mainmenu) ) then
-        vgui.Create("ow.mainmenu")
-
-        if ( system.IsWindows() ) then
-            system.FlashWindow()
-        end
-    end
+    -- Do something here
 end
 
 function GM:CalcView(ply, pos, angles, fov)
