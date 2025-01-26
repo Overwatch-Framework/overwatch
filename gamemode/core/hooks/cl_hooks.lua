@@ -27,8 +27,8 @@ end
 
 function GM:HUDPaint()
     if ( ow.debugMode:GetBool() ) then
-        draw.SimpleText(self.Name .. " - " .. self.Version, "ow.fonts.default.large", 10, 5, ow.config.color)
-        draw.SimpleText("DEBUG MODE ENABLED", "ow.fonts.default.italic", 10, 35, color_white)
+        draw.SimpleText(self.Name:upper(), "ow.fonts.subtitle", ScrW() / 2, ScrH() - 200, ow.config.color, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+        draw.SimpleText("DEBUG MODE ENABLED", "ow.fonts.default.italic", ScrW() / 2, ScrH() - 150, color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
     end
 end
 
