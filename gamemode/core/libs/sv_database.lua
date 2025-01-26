@@ -52,6 +52,14 @@ function ow.database:Initialize()
         query:Create("id", "INT(11) NOT NULL AUTO_INCREMENT")
         query:PrimaryKey("id")
     query:Execute()
+
+    query = mysql:Create("overwatch_inventory")
+        query:Create("id", "INT(11) NOT NULL AUTO_INCREMENT")
+        query:Create("character_id", "INT(11) NOT NULL")
+        query:Create("item_id", "INT(11) NOT NULL")
+        query:Create("data", "TEXT")
+        query:PrimaryKey("id")
+    query:Execute()
 end
 
 function ow.database:Alter(base, field, fieldType)
