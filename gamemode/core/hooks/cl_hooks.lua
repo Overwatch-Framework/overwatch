@@ -29,7 +29,11 @@ function GM:HUDPaint()
     if ( ow.debugMode:GetBool() ) then
         local scrW, scrH = ScrW(), ScrH()
         draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", 16, scrH / 2 + 8, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-        draw.SimpleText("debug mode enabled", "ow.fonts.fancy", 32, scrH / 2 - 8, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText("debug mode enabled", "ow.fonts.fancy", 32, scrH / 2 - 6, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+
+        if ( SCHEMA ) then
+            draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy", 32, scrH / 2 + 40, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+        end
     end
 end
 

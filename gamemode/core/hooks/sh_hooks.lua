@@ -29,3 +29,7 @@ end
 function GM:GetFrameworkColor()
     return ow.config.color or Color(0, 100, 150)
 end
+
+function GM:GetSchemaColor()
+    return ow.config.schemaColor or Color(0, 150, 100)
+end
