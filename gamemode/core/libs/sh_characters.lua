@@ -24,7 +24,7 @@ function ow.character:RegisterVariable(key, data)
         if ( data.OnSet ) then
             self.meta["Set" .. upperKey] = function(self, value)
                 self:SetVariable(key, value)
-                data.OnSet(self, value)
+                data:OnSet(self, value)
             end
         else
             self.meta["Set" .. upperKey] = function(self, value)
