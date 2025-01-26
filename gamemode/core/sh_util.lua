@@ -6,12 +6,15 @@
 -- @param ply Player The player to send the message to.
 -- @param ... any The message to send.
 function ow.util:SendChatText(ply, ...)
-    if ( !IsValid(ply) ) then return end
-
     if ( SERVER ) then
         net.Start("ow.chat.text")
-            net.WriteTable({...})
-        net.Send(ply)
+        net.WriteTable({...})
+        
+        if ( IsValid(ply) ) then
+            net.Send(ply)
+        else
+            net.Broadcast()
+        end
     else
         chat.AddText(...)
     end

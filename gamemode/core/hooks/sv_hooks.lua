@@ -1,26 +1,23 @@
-local loadQueue = {}
 function GM:PlayerInitialSpawn(ply)
-    loadQueue[ply] = true
+    ply:LoadData(function()
+        if ( !IsValid(ply) ) then return end
 
-    ply:SetTeam(0)
-    ply:SetModel("models/player/kleiner.mdl")
+        ply:SetTeam(0)
+        ply:SetModel("models/player/kleiner.mdl")
+    
+        -- Do not render the player, as we are in the main menu
+        -- and we do not have a character loaded yet
+        ply:SetNoDraw(true)
+        ply:SetNotSolid(true)
+        ply:SetMoveType(MOVETYPE_NONE)
+    
+        ply:KillSilent()
+        ply:SendLua("vgui.Create(\"ow.mainmenu\")")
 
-    -- Do not render the player, as we are in the main menu
-    -- and we do not have a character loaded yet
-    ply:SetNoDraw(true)
-    ply:SetNotSolid(true)
-    ply:SetMoveType(MOVETYPE_NONE)
+        ow.util:SendChatText(nil, Color(25, 75, 150), ply:SteamName() .. " has joined the server.")
 
-    ply:KillSilent()
-    ply:SendLua("vgui.Create(\"ow.mainmenu\")")
-end
-
-function GM:StartCommand(ply, cmd)
-    if ( loadQueue[ply] and !cmd:IsForced() ) then
-        loadQueue[ply] = nil
-        
         hook.Run("PostPlayerInitialSpawn", ply)
-    end
+    end)
 end
 
 function GM:PostPlayerInitialSpawn(ply)
@@ -84,7 +81,7 @@ end
 function GM:Initialize()
     ow.schema:Initialize()
 
-    local host, port, database, username, password, module
+    local host, port, database, username, password, adapter
     local config
     if ( SCHEMA and SCHEMA.Folder and file.Exists(SCHEMA.Folder .. "/schema/config/sv_database.lua", "LUA") ) then
         config = include(SCHEMA.Folder .. "/schema/config/sv_database.lua")
@@ -102,9 +99,9 @@ function GM:Initialize()
     database = config.database
     username = config.username
     password = config.password
-    module = config.module
+    adapter = config.adapter
 
-    ow.database:Setup(host, port, database, username, password, module)
+    ow.database:Setup(host, port, database, username, password, adapter)
     ow.database:Initialize()
 end
 

@@ -1,8 +1,9 @@
 --- Database library
 -- @module ow.database
 
-ow.database = {}
+ow.database = ow.database or {}
 ow.database.config = ow.database.config or {}
+ow.database.altered = ow.database.altered or {}
 
 --- Sets up the configuration for the database.
 -- @realm server
@@ -11,15 +12,15 @@ ow.database.config = ow.database.config or {}
 -- @param string database The name of the database.
 -- @param string username The username of the database.
 -- @param string password The password of the database.
--- @param string module The module of the database. (sqlite, mysqloo, etc.)
+-- @param string adapter The adapter of the database. (sqlite, mysqloo, etc.)
 -- @internal
-function ow.database:Setup(host, port, database, username, password, module)
+function ow.database:Setup(host, port, database, username, password, adapter)
     self.config.host = host
     self.config.port = port
     self.config.database = database
     self.config.username = username
     self.config.password = password
-    self.config.module = module
+    self.config.adapter = adapter
 end
 
 --- Initializes the database.
@@ -39,23 +40,39 @@ function ow.database:Initialize()
         return
     end
 
-    local databaseModule = self.config.module
-    if ( databaseModule == "mysqloo" ) then
-        require("mysqloo")
+    local query = mysql:Create("overwatch_players")
+        query:Create("steamid64", "VARCHAR(20) NOT NULL")
+        query:Create("steamname", "VARCHAR(255) NOT NULL")
+        query:Create("data", "TEXT")
+        query:PrimaryKey("steamid64")
+    query:Execute()
 
-        self.db = mysqloo.connect(self.config.host, self.config.username, self.config.password, self.config.database, self.config.port)
+    -- ow.characters.RegisterVariable will take care of the rest of the character data
+    query = mysql:Create("overwatch_characters")
+        query:Create("id", "INT(11) NOT NULL AUTO_INCREMENT")
+        query:PrimaryKey("id")
+    query:Execute()
+end
 
-        self.db.onConnected = function()
-            ow.util:Print(Color(0, 255, 0), "Connected to the database.")
-        end
+function ow.database:Alter(base, field, fieldType)
+    if ( !base or !field or !fieldType ) then return end
 
-        self.db.onConnectionFailed = function(db, error)
-            ow.util:PrintError("Connection to the database failed! Error: " .. error)
-        end
-
-        self.db:connect()
-    else
-        ow.util:PrintError("Database module \"" .. databaseModule .. "\" is not supported!")
-        return false
+    if ( self.altered[field] ) then
+        ow.util:PrintWarning("Field \"" .. field .. "\" has already been altered in the " .. base .. " table.")
+        return
     end
+
+    self.altered[field] = true
+
+    local query = mysql:Alter(base)
+        query:Add(field, fieldType)
+    query:Execute()
+end
+
+--- Connects to the database.
+-- @realm server
+-- @internal
+function ow.database:Connect()
+    mysql:SetModule(self.config.adapter)
+    mysql:Connect(self.config.host, self.config.username, self.config.password, self.config.database, tonumber(self.config.port))
 end
