@@ -56,6 +56,7 @@ function GM:CalcView(ply, pos, angles, fov)
             start = eyePos,
             endpos = eyePos + eyeAng:Forward() * 2,
             filter = ragdoll,
+            mask = MASK_PLAYERSOLID,
             mins = Vector(-2, -2, -2),
             maxs = Vector(2, 2, 2)
         })
@@ -89,7 +90,8 @@ function GM:HUDPaint()
             local trace = util.TraceLine({
                 start = LocalPlayer():GetShootPos(),
                 endpos = LocalPlayer():GetShootPos() + LocalPlayer():GetAimVector() * 8192,
-                filter = LocalPlayer()
+                filter = LocalPlayer(),
+                mask = MASK_SHOT
             })
 
             local screen = trace.HitPos:ToScreen()
