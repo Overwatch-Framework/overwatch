@@ -48,7 +48,7 @@ end
 function ow.util:Print(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", unpack(args))
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", color_white, unpack(args))
 
     return args
 end

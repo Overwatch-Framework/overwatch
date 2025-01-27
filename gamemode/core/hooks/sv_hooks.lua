@@ -54,7 +54,7 @@ function GM:PostPlayerLoadout(ply)
 end
 
 function GM:PlayerDeathThink(ply)
-    if ( ply:KeyPressed(IN_ATTACK) or ply:KeyPressed(IN_ATTACK2) or ply:KeyPressed(IN_JUMP) ) then
+    if ( ply:KeyPressed(IN_ATTACK) or ply:KeyPressed(IN_ATTACK2) or ply:KeyPressed(IN_JUMP) or ply:IsBot() ) then
         ply:Spawn()
     end
 end
