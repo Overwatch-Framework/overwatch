@@ -58,12 +58,15 @@ function MODULE:CalcView(ply, pos, angles, fov)
         maxs = Vector(4, 4, 4)
     })
 
-    local traceData = util.TraceLine({
+    local traceData = util.TraceHull({
         start = pos,
         endpos = pos + (angles:Forward() * 32768),
         filter = ply,
-        mask = MASK_SHOT
+        mask = MASK_SHOT,
+        mins = Vector(-8, -8, -8),
+        maxs = Vector(8, 8, 8)
     })
+
     local shootPos = traceData.HitPos
 
     local viewBob = Angle(0, 0, 0)
