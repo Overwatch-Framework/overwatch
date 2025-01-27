@@ -30,7 +30,7 @@ function ow.command:Register(info)
     end
 
     local uniqueID = string.lower(string.gsub(info.Name, "%s", "_"))
-    uniqueID = info.uniqueID or uniqueID
+    uniqueID = info.UniqueID or uniqueID
 
     self.stored[uniqueID] = info
 
