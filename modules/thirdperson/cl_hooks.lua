@@ -89,7 +89,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
 
     local shootPos = traceData.HitPos
 
-    local viewBob = Angle(0, 0, 0)
+    local viewBob = angle_zero
     viewBob.p = math.sin(CurTime() / 4) / 2
     viewBob.y = math.cos(CurTime()) / 2
     
