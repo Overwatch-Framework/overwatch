@@ -23,19 +23,21 @@ function ow.command:Run(ply, command, arguments)
         return false
     end
 
-    if ( info.AdminOnly and !ply:IsAdmin() ) then
-        ow.util:PrintError("Attempted to run an admin-only command!", ply)
-        return false
-    end
+    if ( !CAMI ) then
+        if ( info.AdminOnly and !ply:IsAdmin() ) then
+            ow.util:PrintError("Attempted to run an admin-only command!", ply)
+            return false
+        end
 
-    if ( info.SuperAdminOnly and !ply:IsSuperAdmin() ) then
-        ow.util:PrintError("Attempted to run a superadmin-only command!", ply)
-        return false
-    end
-
-    if ( CAMI and !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.Name) ) then
-        ow.util:PrintError("Attempted to run a command without access!", ply)
-        return false
+        if ( info.SuperAdminOnly and !ply:IsSuperAdmin() ) then
+            ow.util:PrintError("Attempted to run a superadmin-only command!", ply)
+            return false
+        end
+    else
+        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.Name) ) then
+            ow.util:PrintError("Attempted to run a command without access!", ply)
+            return false
+        end
     end
 
     info:Callback(ply, arguments)
