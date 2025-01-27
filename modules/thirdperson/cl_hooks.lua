@@ -16,6 +16,9 @@ concommand.Add("ow_thirdperson_reset", function()
     RunConsoleCommand("ow_thirdperson_pos_z", 0)
 end, nil, "Reset third person camera position.")
 
+local fakePos
+local fakeAngles
+local fakeFov
 function MODULE:CalcView(ply, pos, angles, fov)
     if ( !self.cvar_thirdperson:GetBool() ) then return end
 
@@ -42,13 +45,32 @@ function MODULE:CalcView(ply, pos, angles, fov)
         start = pos,
         endpos = pos - (angles:Forward() * self.cvar_thirdperson_pos_x:GetInt()) + (angles:Right() * self.cvar_thirdperson_pos_y:GetInt()) + (angles:Up() * self.cvar_thirdperson_pos_z:GetInt()),
         filter = ply,
+        mask = MASK_SHOT,
         mins = Vector(-4, -4, -4),
         maxs = Vector(4, 4, 4)
     })
 
-    view.origin = trace.HitPos
-    view.angles = angles
-    view.fov = fov
+    local traceData = util.TraceLine({
+        start = pos,
+        endpos = pos + (angles:Forward() * 32768),
+        filter = ply,
+        mask = MASK_SHOT
+    })
+    local shootPos = traceData.HitPos
+
+    local viewBob = Angle(0, 0, 0)
+    viewBob.p = math.sin(CurTime() / 4) / 2
+    viewBob.y = math.cos(CurTime()) / 2
+    fakeAngles = LerpAngle(FrameTime() * 8, fakeAngles or angles, (shootPos - trace.HitPos):Angle() + viewBob)
+    fakePos = LerpVector(FrameTime() * 8, fakePos or trace.HitPos, trace.HitPos)
+
+    local distance = pos:Distance(traceData.HitPos) / 64
+    distance = math.Clamp(distance, 0, 50)
+    fakeFov = Lerp(FrameTime(), fakeFov or fov, fov - distance)
+
+    view.origin = fakePos or trace.HitPos
+    view.angles = fakeAngles or angles
+    view.fov = fakeFov or fov
 
     return view
 end
