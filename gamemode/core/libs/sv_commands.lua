@@ -69,11 +69,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
     ow.util:Print("Commands:")
 
     for k, v in pairs(ow.command.stored) do
-        if ( v.AdminOnly and !ply:IsAdmin() ) then
-            continue
-        end
-
-        if ( v.SuperAdminOnly and !ply:IsSuperAdmin() ) then
+        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. v.Name), nil ) then
             continue
         end
 

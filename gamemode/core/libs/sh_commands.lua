@@ -36,7 +36,7 @@ function ow.command:Register(info)
     if ( CAMI ) then
         CAMI.RegisterPrivilege({
             Name = "Overwatch - Commands - " .. info.Name,
-            MinAccess = info.MinAccess or "user"
+            MinAccess = ( info.SuperAdminOnly and "superadmin" ) or ( info.AdminOnly and "admin" ) or ( info.MinAccess or "user" )
         })
     end
 end
