@@ -8,7 +8,21 @@ ow.localization.stored = {}
 -- @param language The language code.
 -- @param data The language data.
 function ow.localization:Register(language, data)
-    self.stored[language] = data
+    if ( !language ) then
+        ow.util:PrintError("Attempted to register a language without a language code!")
+        return
+    end
+
+    if ( !data ) then
+        ow.util:PrintError("Attempted to register a language without data!")
+        return
+    end
+    
+    if ( self.stored[language] ) then
+        self.stored[language] = table.Merge(table.Copy(self.stored[language]), data)
+    else
+        self.stored[language] = data 
+    end
 end
 
 --- Get a language.
