@@ -20,7 +20,13 @@ local fakePos
 local fakeAngles
 local fakeFov
 function MODULE:CalcView(ply, pos, angles, fov)
-    if ( !self.cvar_thirdperson:GetBool() ) then return end
+    if ( !self.cvar_thirdperson:GetBool() ) then
+        fakePos = nil
+        fakeAngles = nil
+        fakeFov = nil
+
+        return
+    end
 
     local view = {}
 
