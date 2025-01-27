@@ -1,20 +1,20 @@
 local MODULE = MODULE
 
-MODULE.cvar_thirdperson = CreateClientConVar("ow_thirdperson", 0, true, false, "Enable third person view.", 0, 1)
-MODULE.cvar_thirdperson_pos_x = CreateClientConVar("ow_thirdperson_pos_x", 50, true, false, "Set the X position of the third person camera.", -100, 100)
-MODULE.cvar_thirdperson_pos_y = CreateClientConVar("ow_thirdperson_pos_y", 15, true, false, "Set the Y position of the third person camera.", -100, 100)
-MODULE.cvar_thirdperson_pos_z = CreateClientConVar("ow_thirdperson_pos_z", 0, true, false, "Set the Z position of the third person camera.", -100, 100)
-MODULE.cvar_thirdperson_follow_head = CreateClientConVar("ow_thirdperson_follow_head", 0, true, false, "Follow the player's head with the third person camera.")
+MODULE.cvar_thirdperson = CreateClientConVar("ow_thirdperson", 0, true, false, ow.localization:GetPhrase("ow.option.thirdperson.enable"), 0, 1)
+MODULE.cvar_thirdperson_pos_x = CreateClientConVar("ow_thirdperson_pos_x", 50, true, false, ow.localization:GetPhrase("ow.options.thirdperson.position.x.help"), -100, 100)
+MODULE.cvar_thirdperson_pos_y = CreateClientConVar("ow_thirdperson_pos_y", 15, true, false, ow.localization:GetPhrase("ow.options.thirdperson.position.y.help"), -100, 100)
+MODULE.cvar_thirdperson_pos_z = CreateClientConVar("ow_thirdperson_pos_z", 0, true, false, ow.localization:GetPhrase("ow.options.thirdperson.position.z.help"), -100, 100)
+MODULE.cvar_thirdperson_follow_head = CreateClientConVar("ow_thirdperson_follow_head", 0, true, false, ow.localization:GetPhrase("ow.options.thirdperson.followhead.help"))
 
 concommand.Add("ow_thirdperson_toggle", function()
     RunConsoleCommand("ow_thirdperson", self.cvar_thirdperson:GetBool() and 0 or 1)
-end, nil, "Toggle third person view.")
+end, nil, ow.localization:GetPhrase("ow.options.thirdperson.toggle"))
 
 concommand.Add("ow_thirdperson_reset", function()
     RunConsoleCommand("ow_thirdperson_pos_x", 0)
     RunConsoleCommand("ow_thirdperson_pos_y", 0)
     RunConsoleCommand("ow_thirdperson_pos_z", 0)
-end, nil, "Reset third person camera position.")
+end, nil, ow.localization:GetPhrase("ow.options.thirdperson.reset"))
 
 local fakePos
 local fakeAngles
@@ -116,12 +116,12 @@ function MODULE:AddToolMenuCategories()
 end
 
 function MODULE:PopulateToolMenu()
-    spawnmenu.AddToolMenuOption("Overwatch", "User", "ow_thirdperson", "Third Person", "", "", function(form)
-        form:CheckBox("Enable Third Person", "ow_thirdperson")
-        form:CheckBox("Follow Head", "ow_thirdperson_follow_head")
+    spawnmenu.AddToolMenuOption("Overwatch", "User", "ow_thirdperson", ow.localization:GetPhrase("ow.option.thirdperson"), "", "", function(form)
+        form:CheckBox(ow.localization:GetPhrase("ow.option.thirdperson.enable"), "ow_thirdperson")
+        form:CheckBox(ow.localization:GetPhrase("ow.options.thirdperson.followhead"), "ow_thirdperson_follow_head")
 
-        form:NumSlider("Position X", "ow_thirdperson_pos_x", -100, 100, 0)
-        form:NumSlider("Position Y", "ow_thirdperson_pos_y", -100, 100, 0)
-        form:NumSlider("Position Z", "ow_thirdperson_pos_z", -100, 100, 0)
+        form:NumSlider(ow.localization:GetPhrase("ow.options.thirdperson.position.x"), "ow_thirdperson_pos_x", -100, 100, 0)
+        form:NumSlider(ow.localization:GetPhrase("ow.options.thirdperson.position.y"), "ow_thirdperson_pos_y", -100, 100, 0)
+        form:NumSlider(ow.localization:GetPhrase("ow.options.thirdperson.position.z"), "ow_thirdperson_pos_z", -100, 100, 0)
     end)
 end

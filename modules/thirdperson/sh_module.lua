@@ -4,18 +4,26 @@ MODULE.Name = "Third Person"
 MODULE.Description = "Allows players to view themselves in third person."
 MODULE.Author = "Riggs"
 
-ow.localization:Register("english", {
+ow.localization:Register("eng", {
     ["ow.option.thirdperson"] = "Third Person",
+
     ["ow.option.thirdperson.enable"] = "Enable Third Person",
     ["ow.option.thirdperson.enable.help"] = "Enable or disable third person view.",
-    ["ow.option.thirdperson.distance"] = "Third Person Distance",
-    ["ow.option.thirdperson.distance.help"] = "Set the distance of the third person camera.",
-    ["ow.option.thirdperson.angles"] = "Third Person Angles",
-    ["ow.option.thirdperson.angles.help"] = "Set the angles of the third person camera.",
-    ["ow.option.thirdperson.angles.pitch"] = "Pitch",
-    ["ow.option.thirdperson.angles.yaw"] = "Yaw",
-    ["ow.option.thirdperson.angles.roll"] = "Roll",
-    ["ow.option.thirdperson.angles.reset"] = "Reset",
+
+    ["ow.options.thirdperson.followhead"] = "Follow Head",
+    ["ow.options.thirdperson.followhead.help"] = "Follow the player's head with the third person camera.",
+
+    ["ow.options.thirdperson.position.x"] = "Position X",
+    ["ow.options.thirdperson.position.x.help"] = "Set the X position of the third person camera.",
+
+    ["ow.options.thirdperson.position.y"] = "Position Y",
+    ["ow.options.thirdperson.position.y.help"] = "Set the Y position of the third person camera.",
+    
+    ["ow.options.thirdperson.position.z"] = "Position Z",
+    ["ow.options.thirdperson.position.z.help"] = "Set the Z position of the third person camera.",
+
+    ["ow.options.thirdperson.reset"] = "Reset third person camera position.",
+    ["ow.options.thirdperson.toggle"] = "Toggle third person view."
 })
 
 ow.util:LoadFile("cl_hooks.lua")

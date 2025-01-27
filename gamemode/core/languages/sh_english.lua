@@ -1,4 +1,4 @@
-ow.localization:Register("english", {
+ow.localization:Register("eng", {
     ["ow.option.title"] = "Options",
     ["ow.inventory.title"] = "Inventory",
     ["ow.character.title"] = "Character",
