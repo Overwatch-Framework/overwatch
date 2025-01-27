@@ -51,6 +51,7 @@ function ow.database:Initialize()
     -- ow.characters.RegisterVariable will take care of the rest of the character data
     query = mysql:Create("overwatch_characters")
         query:Create("id", "INT(11) NOT NULL AUTO_INCREMENT")
+        query:Create("player_id", "VARCHAR(20) NOT NULL")
         query:PrimaryKey("id")
     query:Execute()
 
@@ -62,10 +63,9 @@ function ow.database:Initialize()
     query:Execute()
 
     query = mysql:Create("overwatch_items")
-        query:Create("id", "INT(11) NOT NULL AUTO_INCREMENT")
+        query:Create("owner_id", "INT(11) NOT NULL")
         query:Create("unique_id", "VARCHAR(255) NOT NULL")
         query:Create("data", "TEXT")
-        query:PrimaryKey("id")
     query:Execute()
 end
 

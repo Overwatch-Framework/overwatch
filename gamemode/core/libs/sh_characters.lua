@@ -59,9 +59,9 @@ function ow.character:GetVariable(id, key)
     query:Execute()
 end
 
-function ow.character:Create()
+function ow.character:Create(player)
     local query = mysql:Insert("overwatch_characters")
-        query:Insert("id", 0)
+        query:Insert("player_id", player:SteamID64())
     query:Execute()
 
     local id = query:GetID()
@@ -75,4 +75,48 @@ function ow.character:Create()
     end
 
     return character
+end
+
+function ow.character:Load(id)
+    local query = mysql:Select("overwatch_characters")
+        query:Where("id", id)
+        query:Callback(function(result)
+            if ( !result or !result[1] ) then return end
+
+            local character = setmetatable({
+                id = id
+            }, self.meta)
+
+            for k, v in pairs(self.variables) do
+                character[k] = result[1][v.Field]
+            end
+
+            return character
+        end)
+    query:Execute()
+end
+
+function ow.character:Save(character)
+    local query = mysql:Update("overwatch_characters")
+        for k, v in pairs(self.variables) do
+            query:Update(v.Field, character[k])
+        end
+        query:Where("id", character.id)
+    query:Execute()
+end
+
+function ow.character:Delete(id)
+    local query = mysql:Delete("overwatch_characters")
+        query:Where("id", id)
+    query:Execute()
+end
+
+function ow.character:GetPlayerByCharacter(id)
+    local query = mysql:Select("overwatch_characters")
+        query:Select("player_id")
+        query:Where("id", id)
+        query:Callback(function(result)
+            return player.GetBySteamID64(result[1].player_id)
+        end)
+    query:Execute()
 end
