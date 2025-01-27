@@ -72,6 +72,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
     local viewBob = Angle(0, 0, 0)
     viewBob.p = math.sin(CurTime() / 4) / 2
     viewBob.y = math.cos(CurTime()) / 2
+    
     fakeAngles = LerpAngle(FrameTime() * 8, fakeAngles or angles, (shootPos - trace.HitPos):Angle() + viewBob)
     fakePos = LerpVector(FrameTime() * 8, fakePos or trace.HitPos, trace.HitPos)
 
