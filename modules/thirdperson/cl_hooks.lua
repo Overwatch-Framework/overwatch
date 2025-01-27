@@ -47,6 +47,8 @@ function MODULE:CalcView(ply, pos, angles, fov)
         end
     end
 
+    pos = pos + ply:GetVelocity() / 8
+
     local trace = util.TraceHull({
         start = pos,
         endpos = pos - (angles:Forward() * self.cvar_thirdperson_pos_x:GetInt()) + (angles:Right() * self.cvar_thirdperson_pos_y:GetInt()) + (angles:Up() * self.cvar_thirdperson_pos_z:GetInt()),
