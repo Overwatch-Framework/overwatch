@@ -25,8 +25,7 @@ function ow.command:Register(info)
     end
 
     if ( !info.Prefixes ) then
-        ow.util:PrintError("Attempted to register a command with no prefixes!")
-        return
+        info.Prefixes = {info.Name}
     end
 
     local uniqueID = string.lower(string.gsub(info.Name, "%s", "_"))
