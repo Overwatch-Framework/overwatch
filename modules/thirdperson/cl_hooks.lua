@@ -52,7 +52,17 @@ function MODULE:CalcView(ply, pos, angles, fov)
     local trace = util.TraceHull({
         start = pos,
         endpos = pos - (angles:Forward() * self.cvar_thirdperson_pos_x:GetInt()) + (angles:Right() * self.cvar_thirdperson_pos_y:GetInt()) + (angles:Up() * self.cvar_thirdperson_pos_z:GetInt()),
-        filter = ply,
+        filter = function(ent)
+            if ( ent == ply ) then
+                return true
+            end
+
+            if ( ent:GetClass() == "prop_physics" ) then
+                return true
+            end
+
+            return false
+        end,
         mask = MASK_SHOT,
         mins = Vector(-4, -4, -4),
         maxs = Vector(4, 4, 4)
@@ -61,7 +71,17 @@ function MODULE:CalcView(ply, pos, angles, fov)
     local traceData = util.TraceHull({
         start = pos,
         endpos = pos + (angles:Forward() * 32768),
-        filter = ply,
+        filter = function(ent)
+            if ( ent == ply ) then
+                return true
+            end
+
+            if ( ent:GetClass() == "prop_physics" ) then
+                return true
+            end
+
+            return false
+        end,
         mask = MASK_SHOT,
         mins = Vector(-8, -8, -8),
         maxs = Vector(8, 8, 8)
