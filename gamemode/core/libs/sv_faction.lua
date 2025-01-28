@@ -20,6 +20,6 @@ function ow.faction:Join(ply, factionID)
         faction:OnJoin(ply)
     end
 
-    hook.Run("PlayerJoinedFaction", ply, factionID)
+    hook.Run("PlayerJoinedFaction", ply, factionID, oldFaction.Index)
     return true
 end
