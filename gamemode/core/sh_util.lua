@@ -1,6 +1,119 @@
 --- Utility functions
 -- @module ow.util
 
+ow.types = ow.types or {
+    [2] = "string",
+    [4] = "text",
+    [8] = "number",
+    [16] = "player",
+    [32] = "steamid",
+    [64] = "character",
+    [128] = "bool",
+    [1024] = "color",
+    [2048] = "vector",
+
+    string = 2,
+    text = 4,
+    number = 8,
+    player = 16,
+    steamid = 32,
+    character = 64,
+    bool = 128,
+    color = 1024,
+    vector = 2048,
+
+    optional = 256,
+    array = 512
+}
+
+--- Sanitizes an input value with the given type. This function ensures that a valid type is always returned. If a valid value
+-- could not be found, it will return the default value for the type. This only works for simple types - e.g it does not work
+-- for player, character, or Steam ID types.
+-- @realm shared
+-- @ixtype type Type to check for
+-- @param input Value to sanitize
+-- @return Sanitized value
+-- @see ow.types
+-- @usage print(ow.util:SanitizeType(ow.types.number, "123"))
+-- > 123
+-- print(ow.util:SanitizeType(ow.types.bool, 1))
+-- > true
+function ow.util:SanitizeType(type, input)
+    if ( type == ow.types.string ) then
+        return tostring(input)
+    elseif ( type == ow.types.text ) then
+        return tostring(input)
+    elseif ( type == ow.types.number ) then
+        return tonumber(input or 0) or 0
+    elseif ( type == ow.types.bool ) then
+        return tobool(input)
+    elseif ( type == ow.types.color ) then
+        return istable(input) and Color(tonumber(input.r) or 255, tonumber(input.g) or 255, tonumber(input.b) or 255, tonumber(input.a) or 255) or color_white
+    elseif ( type == ow.types.vector ) then
+        return isvector(input) and input or vector_origin
+    elseif ( type == ow.types.array ) then
+        return input
+    else
+        error("attempted to sanitize " .. ( ow.types[type] and ( "invalid type " .. ow.types[type] ) or "unknown type " .. type ))
+    end
+end
+
+local typeMap = {
+    string = ow.types.string,
+    number = ow.types.number,
+    Player = ow.types.player,
+    boolean = ow.types.bool,
+    Vector = ow.types.vector
+}
+
+local tableMap = {
+    [ow.types.character] = function(value)
+        return getmetatable(value) == ow.character.meta
+    end,
+
+    [ow.types.color] = function(value)
+        return ow.util:IsColor(value)
+    end,
+
+    [ow.types.steamid] = function(value)
+        return isstring(value) and ( value:match("STEAM_(%d+):(%d+):(%d+)") ) != nil
+    end
+}
+
+--- Returns the `ow.types` of the given value.
+-- @realm shared
+-- @param value Value to get the type of
+-- @treturn ow.types Type of value
+-- @see ow.types
+-- @usage print(ow.util:GetTypeFromValue("hello"))
+-- > 2 -- i.e the value of ow.types.string
+function ow.util:GetTypeFromValue(value)
+    local result = typeMap[type(value)]
+    if ( result ) then
+        return result
+    end
+
+    if ( istable(value) ) then
+        for k, v in pairs(tableMap) do
+            if ( v(value) ) then
+                return k
+            end
+        end
+    end
+end
+
+--- Returns whether or not the given value is a color.
+-- @realm shared
+-- @param value Value to check
+-- @treturn boolean Whether or not the value is a color
+-- @usage print(ow.util:IsColor(Color(255, 255, 255)))
+-- > true
+-- @usage print(ow.util:IsColor("hello"))
+-- > false
+function ow.util:IsColor(value)
+    return istable(value) and value.r and value.g and value.b and value.a
+end
+
 --- Sends a chat message to the player.
 -- @realm shared
 -- @param ply Player The player to send the message to.
@@ -192,9 +305,9 @@ end
 -- @param endpos Vector The ending position of the box.
 -- @return Vector The center of the box.
 function ow.util:GetBounds(startpos, endpos)
-	local center = LerpVector(0.5, startpos, endpos)
-	local min = WorldToLocal(startpos, angle_zero, center, angle_zero)
-	local max = WorldToLocal(endpos, angle_zero, center, angle_zero)
+    local center = LerpVector(0.5, startpos, endpos)
+    local min = WorldToLocal(startpos, angle_zero, center, angle_zero)
+    local max = WorldToLocal(endpos, angle_zero, center, angle_zero)
 
     return center, min, max
 end
