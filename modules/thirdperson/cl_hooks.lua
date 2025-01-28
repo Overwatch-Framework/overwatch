@@ -7,7 +7,7 @@ MODULE.cvar_thirdperson_pos_z = CreateClientConVar("ow_thirdperson_pos_z", 0, tr
 MODULE.cvar_thirdperson_follow_head = CreateClientConVar("ow_thirdperson_follow_head", 0, true, false, ow.localization:GetPhrase("ow.options.thirdperson.followhead.help"))
 
 concommand.Add("ow_thirdperson_toggle", function()
-    RunConsoleCommand("ow_thirdperson", self.cvar_thirdperson:GetBool() and 0 or 1)
+    RunConsoleCommand("ow_thirdperson", MODULE.cvar_thirdperson:GetBool() and 0 or 1)
 end, nil, ow.localization:GetPhrase("ow.options.thirdperson.toggle"))
 
 concommand.Add("ow_thirdperson_reset", function()
