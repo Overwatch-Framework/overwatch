@@ -4,6 +4,7 @@ ow.chat:Register("ic", {
     end,
     OnChatAdd = function(speaker, text)
         chat.AddText(ow.color:Get("chat"), speaker:Name() .. " says \"" .. text .. "\"")
+        chat.PlaySound()
     end
 })
 
@@ -14,6 +15,7 @@ ow.chat:Register("whisper", {
     end,
     OnChatAdd = function(speaker, text)
         chat.AddText(ow.color:Get("chat.whisper"), speaker:Name() .. " whispers \"" .. text .. "\"")
+        chat.PlaySound()
     end
 })
 
@@ -24,5 +26,6 @@ ow.chat:Register("yell", {
     end,
     OnChatAdd = function(speaker, text)
         chat.AddText(ow.color:Get("chat.yell"), speaker:Name() .. " yells \"" .. text .. "\"")
+        chat.PlaySound()
     end
 })

@@ -1,3 +1,5 @@
 util.AddNetworkString("ow.chat.text")
 util.AddNetworkString("ow.gesture.play")
 util.AddNetworkString("ow.item.add")
+util.AddNetworkString("ow.config.sync")
+util.AddNetworkString("ow.config.set")

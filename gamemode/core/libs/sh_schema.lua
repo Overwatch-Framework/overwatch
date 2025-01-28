@@ -55,6 +55,10 @@ function ow.schema:Initialize()
     else
         ow.util:PrintError("Failed to find map config for \"" .. map .. "\".")
     end
+    
+    if ( SERVER ) then
+        ow.config:Load()
+    end
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
 

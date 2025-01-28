@@ -17,3 +17,30 @@ net.Receive("ow.item.add", function(len)
 
     ow.item:Add(uniqueID, data)
 end)
+
+net.Receive("ow.config.sync", function(len)
+    local values = net.ReadTable()
+    for key, value in pairs(values) do
+        if ( ow.config.stored[key] ) then
+            ow.config.stored[key].Value = value or ow.config.stored[key].Default
+        end
+    end
+end)
+
+net.Receive("ow.config.set", function(len)
+    local key = net.ReadString()
+    local value = net.ReadType()
+
+    if ( !ow.config.stored[key] ) then return end
+    ow.config.stored[key].Value = value
+end)
+
+net.Receive("ixDataSync", function()
+    ow.localData = net.ReadTable()
+    ow.playTime = net.ReadUInt(32)
+end)
+
+net.Receive("ixData", function()
+    ow.localData = ix.localData or {}
+    ow.localData[net.ReadString()] = net.ReadType()
+end)

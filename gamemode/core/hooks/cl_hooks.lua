@@ -21,11 +21,15 @@ function GM:PostSchemaLoad()
 end
 
 function GM:CalcView(ply, pos, angles, fov)
-    if ( IsValid(ow.gui.mainmenu) and ow.config.menuCamPos and ow.config.menuCamAng ) then
+    if ( IsValid(ow.gui.mainmenu) ) then
+        local menuCamPos = ow.config:Get("menuCamPos", vector_origin)
+        local menuCamAng = ow.config:Get("menuCamAng", angle_zero)
+        local menuCamFov = ow.config:Get("menuCamFov", 90)
+
         return {
-            origin = ow.config.menuCamPos,
-            angles = ow.config.menuCamAng,
-            fov = ow.config.menuCamFov or 90,
+            origin = menuCamPos,
+            angles = menuCamAng,
+            fov = menuCamFov,
             drawviewer = true
         }
     end

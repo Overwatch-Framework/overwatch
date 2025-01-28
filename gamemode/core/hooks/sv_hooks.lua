@@ -14,6 +14,8 @@ function GM:PlayerInitialSpawn(ply)
         ply:KillSilent()
         ply:SendLua("vgui.Create(\"ow.mainmenu\")")
 
+        ow.config:Synchronize(ply)
+
         ow.util:SendChatText(nil, Color(25, 75, 150), ply:SteamName() .. " has joined the server.")
 
         hook.Run("PostPlayerInitialSpawn", ply)
@@ -39,9 +41,9 @@ function GM:PlayerLoadout(ply)
     ply:Give("ow_hands")
     ply:SelectWeapon("ow_hands")
 
-    ply:SetWalkSpeed(ow.config.walkSpeed or 80)
-    ply:SetRunSpeed(ow.config.runSpeed or 180)
-    ply:SetJumpPower(ow.config.jumpPower or 160)
+    ply:SetWalkSpeed(ow.config:Get("walkSpeed", 80))
+    ply:SetRunSpeed(ow.config:Get("runSpeed", 180))
+    ply:SetJumpPower(ow.config:Get("jumpPower", 160))
 
     ply:SetupHands()
 
@@ -68,7 +70,6 @@ function GM:PlayerSay(ply, text, teamChat)
         ow.command:Run(ply, command, arguments)
     else
         ow.chat:Send(ply, "ic", text)
-
     end
 
     return ""
@@ -106,8 +107,8 @@ function GM:Initialize()
 end
 
 function GM:SetupPlayerVisibility(ply, viewEntity)
-    if ( ply:Team() == 0 and ow.config.menuCamPos ) then
-        AddOriginToPVS(ow.config.menuCamPos)
+    if ( ply:Team() == 0 ) then
+        AddOriginToPVS(ow.config:Get("menuCamPos", vector_origin))
     end
 end
 
@@ -133,4 +134,46 @@ end
 
 function GM:PlayerCreatedCharacter(ply, character)
     -- Do something here
+end
+
+local nextThink = 0
+local nextSave = 0
+local playerVoiceListeners = {}
+function GM:Think()
+    if ( CurTime() < nextThink ) then return end
+    nextThink = CurTime() + 1
+
+    for _, ply in player.Iterator() do
+        if ( !IsValid(ply) or !ply:Alive() ) then continue end
+
+        local voiceListeners = {}
+        for _, listener in player.Iterator() do
+            if ( listener == ply ) then continue end
+            if ( listener:EyePos():DistToSqr(ply:EyePos()) > ow.config:Get("voiceDistance", 384) ^ 2 ) then continue end
+
+            voiceListeners[listener] = true
+        end
+
+        playerVoiceListeners[ply] = voiceListeners
+    end
+
+    if ( CurTime() < nextSave ) then return end
+    nextSave = CurTime() + ow.config:Get("saveInterval", 300)
+
+    hook.Run("SaveData")
+end
+
+function GM:SaveData()
+    for _, ply in player.Iterator() do
+        if ( !IsValid(ply) ) then continue end
+
+        ply:SaveData()
+    end
+end
+
+function GM:PlayerCanHearPlayersVoice(listener, talker)
+    if ( !playerVoiceListeners[listener] ) then return false end
+    if ( !playerVoiceListeners[listener][talker] ) then return false end
+
+    return true, true
 end
