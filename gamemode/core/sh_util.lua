@@ -48,7 +48,7 @@ function ow.util:SanitizeType(type, input)
     elseif ( type == ow.type.bool ) then
         return tobool(input)
     elseif ( type == ow.type.color ) then
-        return istable(input) and Color(tonumber(input.r) or 255, tonumber(input.g) or 255, tonumber(input.b) or 255, tonumber(input.a) or 255) or color_white
+        return IsColor(input) and input or color_white
     elseif ( type == ow.type.vector ) then
         return isvector(input) and input or vector_origin
     elseif ( type == ow.type.array ) then
@@ -72,7 +72,7 @@ local tableMap = {
     end,
 
     [ow.type.color] = function(value)
-        return ow.util:IsColor(value)
+        return IsColor(value)
     end,
 
     [ow.type.steamid] = function(value)
@@ -100,18 +100,6 @@ function ow.util:GetTypeFromValue(value)
             end
         end
     end
-end
-
---- Returns whether or not the given value is a color.
--- @realm shared
--- @param value Value to check
--- @treturn boolean Whether or not the value is a color
--- @usage print(ow.util:IsColor(Color(255, 255, 255)))
--- > true
--- @usage print(ow.util:IsColor("hello"))
--- > false
-function ow.util:IsColor(value)
-    return istable(value) and value.r and value.g and value.b and value.a
 end
 
 --- Sends a chat message to the player.
