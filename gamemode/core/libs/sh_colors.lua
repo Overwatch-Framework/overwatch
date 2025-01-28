@@ -7,7 +7,7 @@ ow.color.stored = ow.color.stored or {}
 --- Registers a new color.
 -- @realm shared
 -- @param info A table containing information about the color.
-function ow.color:Register(info)
+function ow.color:Register(name, color)
     if ( !info.Name ) then
         ow.util:PrintError("Attempted to register a color without a name!")
         return
@@ -18,7 +18,7 @@ function ow.color:Register(info)
         return
     end
 
-    self.stored[info.Name] = info.Color
+    self.stored[info] = color
 end
 
 --- Gets a color by its name.
