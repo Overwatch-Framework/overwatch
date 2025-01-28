@@ -12,7 +12,7 @@ function MODULE:SendLog(...)
 
     -- Send to the remote console if we are in a dedicated server
     if ( game.IsDedicated() ) then
-        ow.util:Print(Color(250, 200, 25), "Logging | ", color_white, ...)
+        ow.util:Print(ow.color:Get("ow.log.message") "Logging | ", color_white, ...)
     end
 
     -- Send to clients who are permitted to see the log

@@ -15,6 +15,8 @@ function MODULE:FormatPlayer(ply)
     return ply:SteamName() .. " (" .. ply:SteamID64() .. ")"
 end
 
+ow.color:Register("ow.log.message", Color(250, 200, 25))
+
 ow.util:LoadFile("cl_module.lua")
 ow.util:LoadFile("sv_module.lua")
 

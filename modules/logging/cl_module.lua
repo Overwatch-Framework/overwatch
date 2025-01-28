@@ -5,5 +5,5 @@ net.Receive("ow.logging.send", function()
 end)
 
 function MODULE:SendLog(...)
-    ow.util:Print(Color(250, 200, 25), "Logging | ", color_white, ...)
+    ow.util:Print(ow.color:Get("ow.log.message"), "Logging | ", color_white, ...)
 end
