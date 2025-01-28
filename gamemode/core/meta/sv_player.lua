@@ -53,16 +53,3 @@ function PLAYER:SetData(key, value, bNoNetworking)
 
     hook.Run("PostPlayerDataUpdated", self, key, value)
 end
-
-function PLAYER:GetData(key, default)
-    if ( key == true ) then
-        return self.owData
-    end
-
-    local data = self.owData and self.owData[key]
-    if ( data == nil ) then
-        return default
-    else
-        return data
-    end
-end

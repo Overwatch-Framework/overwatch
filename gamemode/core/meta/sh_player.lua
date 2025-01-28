@@ -45,3 +45,16 @@ function PLAYER:HasWhitelist(identifier, bSchema, bMap)
 
     return true -- DATABVASESAEAEE
 end
+
+function PLAYER:GetData(key, default)
+    if ( key == true ) then
+        return self.owData
+    end
+
+    local data = self.owData and self.owData[key]
+    if ( data == nil ) then
+        return default
+    else
+        return data
+    end
+end
