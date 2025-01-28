@@ -18,6 +18,7 @@ function ow.chat:Register(uniqueID, chatData)
     if ( !chatData.OnChatAdd ) then
         chatData.OnChatAdd = function(speaker, text)
             chat.AddText(color_white, speaker:Name() .. " says \"" .. text .. "\"")
+            chat.PlaySound()
         end
     end
 
