@@ -138,7 +138,7 @@ function ow.config:Synchronize(ply)
         net.WriteTable(values)
     net.Send(ply)
 
-    hook.Run("PostConfigSync", ply)
+    hook.Run("PostConfigSync", ply, values)
 
     return true
 end
