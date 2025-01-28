@@ -6,7 +6,7 @@ ow.module.stored = {}
 
 --- Returns a module by its unique identifier or name.
 -- @realm shared
--- @param string identifier The unique identifier or name of the module.
+-- @string identifier The unique identifier or name of the module.
 -- @return table The module.
 function ow.module:Get(identifier)
     if ( !identifier ) then

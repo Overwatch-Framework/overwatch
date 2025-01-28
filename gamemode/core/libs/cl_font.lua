@@ -8,9 +8,8 @@ surface.owCreateFont = surface.owCreateFont or surface.CreateFont
 
 --- Registers a new font.
 -- @realm client
--- @param string name The name of the font.
--- @param table data The font data.
-
+-- @string name The name of the font.
+-- @tab data The font data.
 function surface.CreateFont(name, data)
     if ( name:StartsWith("ow") ) then
         ow.font.stored[name] = data
@@ -21,8 +20,8 @@ end
 
 --- Returns a font by its name.
 -- @realm shared
--- @param string name The name of the font.
--- @return table The font.
+-- @string name The name of the font.
+-- @return tab The font.
 function ow.font:Get(name)
     return self.stored[name]
 end

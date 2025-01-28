@@ -1,3 +1,13 @@
+--[[--
+Physical representation of connected player.
+
+`Player`s are a type of `Entity`. They are a physical representation of a `Character` - and can possess at most one `Character`
+object at a time that you can interface with.
+
+See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for all other methods that the `Player` class has.
+]]
+-- @classmod Player
+
 local PLAYER = FindMetaTable("Player")
 
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
@@ -14,6 +24,10 @@ function PLAYER:ChatText(...)
     end
 end
 
+--- Plays a gesture animation on the player.
+-- @realm shared
+-- @string name The name of the gesture to play
+-- @usage player:GesturePlay("taunt_laugh")
 function PLAYER:GesturePlay(name)
     if ( SERVER ) then
         net.Start("ow.gesture.play")

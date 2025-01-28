@@ -6,14 +6,14 @@ ow.hooks.stored = {}
 
 --- Registers a new hook type.
 -- @realm shared
--- @param string name The name of the hook type.
+-- @string name The name of the hook type.
 function ow.hooks:Register(name)
     self.stored[name] = true
 end
 
 --- Unregisters a hook type.
 -- @realm shared
--- @param string name The name of the hook type.
+-- @string name The name of the hook type.
 -- @internal
 function ow.hooks:UnRegister(name)
     self.stored[name] = nil

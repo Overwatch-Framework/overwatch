@@ -7,12 +7,12 @@ ow.database.altered = ow.database.altered or {}
 
 --- Sets up the configuration for the database.
 -- @realm server
--- @param string host The host of the database.
--- @param string port The port of the database.
--- @param string database The name of the database.
--- @param string username The username of the database.
--- @param string password The password of the database.
--- @param string adapter The adapter of the database. (sqlite, mysqloo, etc.)
+-- @string host The host of the database.
+-- @string port The port of the database.
+-- @string database The name of the database.
+-- @string username The username of the database.
+-- @string password The password of the database.
+-- @string adapter The adapter of the database. (sqlite, mysqloo, etc.)
 -- @internal
 function ow.database:Setup(host, port, database, username, password, adapter)
     self.config.host = host

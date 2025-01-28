@@ -1,7 +1,7 @@
 --- Utility functions
 -- @module ow.util
 
-ow.types = ow.types or {
+ow.type = ow.type or {
     [2] = "string",
     [4] = "text",
     [8] = "number",
@@ -30,63 +30,63 @@ ow.types = ow.types or {
 -- could not be found, it will return the default value for the type. This only works for simple types - e.g it does not work
 -- for player, character, or Steam ID types.
 -- @realm shared
--- @ixtype type Type to check for
+-- @owtypes type Type to check for
 -- @param input Value to sanitize
 -- @return Sanitized value
--- @see ow.types
--- @usage print(ow.util:SanitizeType(ow.types.number, "123"))
+-- @see ow.type
+-- @usage print(ow.util:SanitizeType(ow.type.number, "123"))
 -- > 123
--- print(ow.util:SanitizeType(ow.types.bool, 1))
+-- print(ow.util:SanitizeType(ow.type.bool, 1))
 -- > true
 function ow.util:SanitizeType(type, input)
-    if ( type == ow.types.string ) then
+    if ( type == ow.type.string ) then
         return tostring(input)
-    elseif ( type == ow.types.text ) then
+    elseif ( type == ow.type.text ) then
         return tostring(input)
-    elseif ( type == ow.types.number ) then
+    elseif ( type == ow.type.number ) then
         return tonumber(input or 0) or 0
-    elseif ( type == ow.types.bool ) then
+    elseif ( type == ow.type.bool ) then
         return tobool(input)
-    elseif ( type == ow.types.color ) then
+    elseif ( type == ow.type.color ) then
         return istable(input) and Color(tonumber(input.r) or 255, tonumber(input.g) or 255, tonumber(input.b) or 255, tonumber(input.a) or 255) or color_white
-    elseif ( type == ow.types.vector ) then
+    elseif ( type == ow.type.vector ) then
         return isvector(input) and input or vector_origin
-    elseif ( type == ow.types.array ) then
+    elseif ( type == ow.type.array ) then
         return input
     else
-        error("attempted to sanitize " .. ( ow.types[type] and ( "invalid type " .. ow.types[type] ) or "unknown type " .. type ))
+        error("attempted to sanitize " .. ( ow.type[type] and ( "invalid type " .. ow.type[type] ) or "unknown type " .. type ))
     end
 end
 
 local typeMap = {
-    string = ow.types.string,
-    number = ow.types.number,
-    Player = ow.types.player,
-    boolean = ow.types.bool,
-    Vector = ow.types.vector
+    string = ow.type.string,
+    number = ow.type.number,
+    Player = ow.type.player,
+    boolean = ow.type.bool,
+    Vector = ow.type.vector
 }
 
 local tableMap = {
-    [ow.types.character] = function(value)
+    [ow.type.character] = function(value)
         return getmetatable(value) == ow.character.meta
     end,
 
-    [ow.types.color] = function(value)
+    [ow.type.color] = function(value)
         return ow.util:IsColor(value)
     end,
 
-    [ow.types.steamid] = function(value)
+    [ow.type.steamid] = function(value)
         return isstring(value) and ( value:match("STEAM_(%d+):(%d+):(%d+)") ) != nil
     end
 }
 
---- Returns the `ow.types` of the given value.
+--- Returns the `ow.type` of the given value.
 -- @realm shared
 -- @param value Value to get the type of
--- @treturn ow.types Type of value
--- @see ow.types
+-- @treturn ow.type Type of value
+-- @see ow.type
 -- @usage print(ow.util:GetTypeFromValue("hello"))
--- > 2 -- i.e the value of ow.types.string
+-- > 2 -- i.e the value of ow.type.string
 function ow.util:GetTypeFromValue(value)
     local result = typeMap[type(value)]
     if ( result ) then
@@ -242,7 +242,9 @@ end
 
 --- Returns the type of a value.
 -- @realm shared
--- @param value any The value to check.
+-- @string str The value to get the type of.
+-- @string find The type to search for.
+-- @bool bPatterns Whether or not to use patterns when searching.
 -- @return string The type of the value.
 function ow.util:FindString(str, find, bPatterns)
     if ( !str or !find ) then return false end
@@ -253,8 +255,8 @@ end
 
 --- Searches a given text for the specified value.
 -- @realm shared
--- @param txt string The text to search.
--- @param find string The value to search for.
+-- @string txt The text to search in.
+-- @string find The value to search for.
 -- @return boolean Whether or not the value was found.
 function ow.util:FindText(txt, find)
     if ( !txt or !find ) then return end

@@ -5,6 +5,7 @@ ow.localization = {}
 ow.localization.stored = {}
 
 --- Register a new language.
+-- @realm shared
 -- @param language The language code.
 -- @param data The language data.
 function ow.localization:Register(language, data)
@@ -26,6 +27,7 @@ function ow.localization:Register(language, data)
 end
 
 --- Get a language.
+-- @realm shared
 -- @param language The language code.
 -- @return The language data.
 function ow.localization:Get(language)
@@ -33,10 +35,10 @@ function ow.localization:Get(language)
 end
 
 --- Get a localized string.
--- @param language The language code.
+-- @realm shared
 -- @param key The key of the string.
+-- @param language The language code.
 -- @return The localized string.
-
 function ow.localization:GetPhrase(key, language)
     if ( language == nil ) then
         -- TODO: Replace with options ;9

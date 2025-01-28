@@ -3,9 +3,9 @@
 
 --- Runs a command.
 -- @realm server
--- @param Player ply The player running the command.
--- @param string command The command to run.
--- @param table arguments The arguments of the command.
+-- @player ply The player running the command.
+-- @string command The command to run.
+-- @tab arguments The arguments of the command.
 function ow.command:Run(ply, command, arguments)
     if ( !IsValid(ply) ) then
         ow.util:PrintError("Attempted to run a command with no player!")
