@@ -23,6 +23,10 @@ function ow.config:Set(key, value)
 
     hook.Run("ConfigValueChanged", key, oldValue, value)
 
+    if ( self.stored[key].OnChange ) then
+        self.stored[key]:OnChange(value, oldValue)
+    end
+
     return true
 end
 

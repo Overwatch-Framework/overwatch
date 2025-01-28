@@ -66,13 +66,5 @@ function ow.config:Register(key, data)
         Value = self.stored[key] and self.stored[key].Value or data.Default
     }
 
-    if ( data.OnChange ) then
-        hook.Add("ConfigValueChanged", "ow.config." .. key, function(k, oldValue, newValue)
-            if ( k == key ) then
-                data.OnChange(oldValue, newValue)
-            end
-        end)
-    end
-
     return true
 end
