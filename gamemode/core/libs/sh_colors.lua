@@ -18,7 +18,7 @@ function ow.color:Register(name, color)
         return
     end
 
-    self.stored[info] = color
+    self.stored[name] = color
 end
 
 --- Gets a color by its name.
