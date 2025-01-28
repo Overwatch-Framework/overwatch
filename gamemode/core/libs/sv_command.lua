@@ -71,7 +71,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
     ow.util:Print("Commands:")
 
     for k, v in pairs(ow.command.stored) do
-        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. v.Name), nil ) then
+        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. v.Name) ) then
             continue
         end
 
