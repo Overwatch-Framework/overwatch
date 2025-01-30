@@ -7,6 +7,8 @@ function ow.chat:Send(speaker, uniqueID, text)
 
     local players = {}
     for k, v in player.Iterator() do
+        if ( !IsValid(v) or !v:Alive() ) then continue end
+
         if ( ( canHear and isfunction(canHear) ) and hook.Run("PlayerCanHearChat", speaker, v, uniqueID) != false ) then
             table.insert(players, v)
         end
