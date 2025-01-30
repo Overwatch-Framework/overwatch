@@ -34,19 +34,28 @@ if ( CLIENT ) then
                 admins = admins + 1
             end
 
-            if ( v == ply ) then continue end
+            if ( v == ply or !v:Alive() ) then continue end
+
+            local headBone = v:LookupBone("ValveBiped.Bip01_Head1")
+            if ( !headBone ) then continue end
+
+            local headPos = v:GetBonePosition(headBone)
+            if ( !headPos ) then continue end
+
+            local screenPos = headPos:ToScreen()
+            if ( !screenPos.visible ) then continue end
 
             local pos = v:GetPos():ToScreen()
-            draw.SimpleText(v:Name(), "DermaDefault", pos.x, pos.y, color_white)
+            draw.SimpleText(v:Name(), "DermaDefault", screenPos.x, screenPos.y, color_white)
 
             local health = v:Health()
             local maxHealth = v:GetMaxHealth()
             local healthText = health .. "/" .. maxHealth
-            draw.SimpleText(healthText, "DermaDefault", pos.x, pos.y + 10, color_white)
+            draw.SimpleText(healthText, "DermaDefault", screenPos.x, screenPos.y + 10, color_white)
             
             local faction = ow.faction:Get(v:Team())
             if ( faction ) then
-                draw.SimpleText(faction.Name, "DermaDefault", pos.x, pos.y + 20, color_white)
+                draw.SimpleText(faction.Name, "DermaDefault", screenPos.x, screenPos.y + 20, faction.Color)
             end
         end
 
