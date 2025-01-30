@@ -12,4 +12,10 @@ if ( CLIENT ) then
             return false
         end
     end
+
+    function MODULE:HUDPaint()
+        local ply = LocalPlayer()
+        if ( !IsValid(ply) or !CAMI.PlayerHasAccess(ply, "Overwatch - Observer") 
+        or !ply:Alive() or ply:GetMoveType() != MOVETYPE_NOCLIP or !ply:GetNoDraw() ) then return end
+    end
 end
