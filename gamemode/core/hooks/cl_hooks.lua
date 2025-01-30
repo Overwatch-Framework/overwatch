@@ -47,7 +47,7 @@ function GM:CalcView(ply, pos, angles, fov)
                 eyePos = attachment.Pos
                 eyeAng = attachment.Ang
             end
-        else 
+        else
             local bone = ragdoll:LookupBone("ValveBiped.Bip01_Head1")
             if ( !bone ) then return end
 
@@ -90,7 +90,7 @@ function GM:HUDPaint()
         local x, y = ScrW() / 2, ScrH() / 2
         local size = 3
 
-        if ( GetConVar("ow_thirdperson"):GetBool() ) then
+        if ( ow.module:Get("thirdperson") and ow.module:Get("thirdperson").cvar_thirdperson:GetBool() ) then
             local trace = util.TraceLine({
                 start = LocalPlayer():GetShootPos(),
                 endpos = LocalPlayer():GetShootPos() + LocalPlayer():GetAimVector() * 8192,

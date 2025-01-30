@@ -42,7 +42,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
         end
 
         if ( head ) then
-            local head_pos, head_ang = ply:GetBonePosition(head)
+            local head_pos = select(1, ply:GetBonePosition(head))
             pos = head_pos
         end
     end
@@ -92,7 +92,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
     local viewBob = angle_zero
     viewBob.p = math.sin(CurTime() / 4) / 2
     viewBob.y = math.cos(CurTime()) / 2
-    
+
     fakeAngles = LerpAngle(FrameTime() * 8, fakeAngles or angles, (shootPos - trace.HitPos):Angle() + viewBob)
     fakePos = LerpVector(FrameTime() * 8, fakePos or trace.HitPos, trace.HitPos)
 

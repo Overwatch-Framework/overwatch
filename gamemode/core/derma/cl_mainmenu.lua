@@ -36,7 +36,7 @@ function PANEL:Init()
     end
 
     CloseDermaMenus()
-    
+
     if ( system.IsWindows() ) then
         system.FlashWindow()
     end
@@ -75,6 +75,7 @@ function PANEL:Init()
     buttons:Dock(FILL)
     buttons:DockMargin(padding * 2, padding, padding * 4, padding)
 
+    ow.util:Print("No main menu buttons, lel!")
     -- TODO: add real buttons like "Create Character", "Select Character", "Settings", "Credits", etc.
 
     local playButton = buttons:Add("DButton")

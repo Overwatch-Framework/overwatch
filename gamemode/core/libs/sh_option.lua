@@ -44,8 +44,29 @@ if ( CLIENT ) then
         return true
     end
 
+    function ow.option:SetDefault(key, default)
+        local stored = self.stored[key]
+        if ( !stored ) then
+            ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+            return false
+        end
+
+        stored.Default = default
+
+        local folder = SCHEMA and SCHEMA.Folder or "core"
+        file.Write("overwatch/" .. folder .. "/options.txt", util.TableToJSON(self.stored))
+
+        return true
+    end
+
     function ow.option:Get(uniqueID)
-        return self.stored[uniqueID]
+        print(table.Count(self.stored))
+
+        timer.Simple(1, function()
+            print(table.Count(self.stored))
+        end)
+
+        -- bloodycop: Bad load times
     end
 
     net.Receive("ow.option.set", function(len)
@@ -78,6 +99,9 @@ function ow.option:Register(uniqueID, data)
         Default = data.Default,
         Value = self.stored[key] and self.stored[key].Value or data.Default
     }
+
+    local folder = SCHEMA and SCHEMA.Folder or "core"
+    file.Write("overwatch/" .. folder .. "/options.txt", util.TableToJSON(self.stored))
 
     hook.Run("PostOptionRegistered", uniqueID, data)
 end

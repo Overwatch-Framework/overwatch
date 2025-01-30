@@ -78,7 +78,7 @@ for k, v in ipairs(files) do
     MODULE = nil
 end
 
-ow.util:Print("Initializing Modules.")
+ow.util:Print("Initialized Modules.")
 
 ow.reloaded = false
 ow.refresh = ow.refresh or {}

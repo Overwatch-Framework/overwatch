@@ -44,7 +44,7 @@ end
 function ow.localization:GetPhrase(key, language)
     if ( language == nil ) then
         -- TODO: Replace with options ;9
-        language = "eng"
+        language = ow.option:Get("language", "en")
     end
 
     return self.stored[language][key]
