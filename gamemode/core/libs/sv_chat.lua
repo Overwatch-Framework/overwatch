@@ -3,11 +3,11 @@
 
 util.AddNetworkString("ow.chat.send")
 function ow.chat:Send(speaker, uniqueID, text)
-    local canHear = self:Get(uniqueID).CanHear or function(speaker, listener) return true end
+    local canHear = self:Get(uniqueID).CanHear
 
     local players = {}
     for k, v in player.Iterator() do
-        if ( canHear(speaker, v) and hook.Run("PlayerCanHearChat", speaker, v, uniqueID) != false ) then
+        if ( ( canHear and isfunction(canHear) ) and hook.Run("PlayerCanHearChat", speaker, v, uniqueID) != false ) then
             table.insert(players, v)
         end
     end
