@@ -53,6 +53,8 @@ function ow.command:Register(info)
             MinAccess = ( info.SuperAdminOnly and "superadmin" ) or ( info.AdminOnly and "admin" ) or ( info.MinAccess or "user" )
         })
     end
+
+    hook.Run("OnCommandRegistered", info)
 end
 
 --- Unregisters a command.
@@ -61,6 +63,7 @@ end
 -- @internal
 function ow.command:UnRegister(name)
     self.stored[name] = nil
+    hook.Run("OnCommandUnRegistered", name)
 end
 
 --- Returns a command by its unique identifier or prefix.

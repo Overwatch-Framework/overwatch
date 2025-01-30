@@ -40,6 +40,8 @@ function ow.faction:Register(factionData)
         end
     end
 
+    hook.Run("PreFactionRegistered", factionData)
+
     local uniqueID = string.lower(string.gsub(factionData.Name, "%s", "_"))
     factionData.UniqueID = factionData.UniqueID or uniqueID
 
@@ -49,6 +51,8 @@ function ow.faction:Register(factionData)
     factionData.Index = #self.instances
 
     team.SetUp(factionData.Index, factionData.Name, factionData.Color, false)
+    hook.Run("PostFactionRegistered", factionData)
+    
     return factionData.Index
 end
 

@@ -18,12 +18,14 @@ function ow.localization:Register(language, data)
         ow.util:PrintError("Attempted to register a language without data!")
         return
     end
-    
+
     if ( self.stored[language] ) then
         self.stored[language] = table.Merge(table.Copy(self.stored[language]), data)
     else
-        self.stored[language] = data 
+        self.stored[language] = data
     end
+
+    hook.Run("OnLanguageRegistered", language, data)
 end
 
 --- Get a language.
@@ -44,6 +46,6 @@ function ow.localization:GetPhrase(key, language)
         -- TODO: Replace with options ;9
         language = "eng"
     end
-    
+
     return self.stored[language][key]
 end

@@ -67,6 +67,8 @@ function ow.database:Initialize()
         query:Create("unique_id", "VARCHAR(255) NOT NULL")
         query:Create("data", "TEXT")
     query:Execute()
+
+    hook.Run("DatabaseInitialized")
 end
 
 function ow.database:Alter(base, field, fieldType)
@@ -82,6 +84,8 @@ function ow.database:Alter(base, field, fieldType)
     local query = mysql:Alter(base)
         query:Add(field, fieldType)
     query:Execute()
+
+    hook.Run("DatabaseAltered", base, field, fieldType)
 end
 
 --- Connects to the database.
@@ -90,4 +94,6 @@ end
 function ow.database:Connect()
     mysql:SetModule(self.config.adapter)
     mysql:Connect(self.config.host, self.config.username, self.config.password, self.config.database, tonumber(self.config.port))
+
+    hook.Run("DatabaseConnected")
 end

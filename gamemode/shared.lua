@@ -71,8 +71,10 @@ for k, v in ipairs(files) do
     end
 
     MODULE = { UniqueID = ModuleUniqueID }
+        hook.Run("PreModuleLoad", ModuleUniqueID, MODULE)
         ow.util:LoadFile("overwatch/modules/" .. v, "shared")
         ow.module.stored[ModuleUniqueID] = MODULE
+        hook.Run("PostModuleLoad", ModuleUniqueID, MODULE)
     MODULE = nil
 end
 

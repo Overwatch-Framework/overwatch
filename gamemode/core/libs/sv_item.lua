@@ -11,19 +11,19 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
 
     local item = table.Copy(self.stored[uniqueID])
     if ( !item ) then return end
-    
+
     item.Data = data.Data
 
     local query = mysql:Create("overwatch_items")
         query:Insert("owner_id", ownerID)
         query:Insert("unique_id", uniqueID)
         query:Insert("data", util.TableToJSON(data or {}))
-    query:Execute(function(data)
+    query:Execute(function(dataReceived)
         local receiver = ow.character:GetPlayerByCharacter(ownerID)
         if ( IsValid(receiver) ) then
             net.Start("ow.item.add")
                 net.WriteString(uniqueID)
-                net.WriteTable(data)
+                net.WriteTable(dataReceived)
             net.Send(receiver)
         end
 
@@ -32,5 +32,6 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
         end
     end)
 
+    hook.Run("OnItemAdded", item, ownerID, uniqueID, data)
     return item
 end

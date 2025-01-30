@@ -28,6 +28,8 @@ function ow.class:Register(classData)
             classData[k] = v
         end
     end
+
+    hook.Run("PreClassRegistered", classData)
     
     local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
     classData.UniqueID = classData.UniqueID or uniqueID
@@ -37,6 +39,8 @@ function ow.class:Register(classData)
 
     classData.Index = #self.instances
 
+    hook.Run("PostClassRegistered", classData)
+    
     faction.Classes = faction.Classes or {}
     faction.Classes[#faction.Classes + 1] = classData
 

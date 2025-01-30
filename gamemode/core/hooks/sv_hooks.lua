@@ -4,13 +4,13 @@ function GM:PlayerInitialSpawn(ply)
 
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
-    
+
         -- Do not render the player, as we are in the main menu
         -- and we do not have a character loaded yet
         ply:SetNoDraw(true)
         ply:SetNotSolid(true)
         ply:SetMoveType(MOVETYPE_NONE)
-    
+
         ply:KillSilent()
         ply:SendLua("vgui.Create(\"ow.mainmenu\")")
 
@@ -124,7 +124,7 @@ function GM:GetFallDamage(ply, speed)
     return speed / 8
 end
 
-function GM:PlayerDeletedCharacter(ply, character)
+function GM:PlayerDeletedCharacter(ply, characterID)
     -- Do something here
 end
 

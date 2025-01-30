@@ -41,6 +41,7 @@ function ow.command:Run(ply, command, arguments)
     end
 
     info:Callback(ply, arguments)
+    hook.Run("OnCommandRun", ply, command, arguments)
     return true, arguments
 end
 

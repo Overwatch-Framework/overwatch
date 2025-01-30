@@ -11,9 +11,9 @@ net.Receive("ow.option.set", function(len, ply)
     local value = net.ReadType()
 
     local stored = ow.option.stored[key]
-    if ( !stored ) then 
-        ow.util:PrintError("Option \"" .. key .. "\" does not exist!") 
-        return 
+    if ( !stored ) then
+        ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+        return
     end
 
     if ( stored.OnChange ) then
@@ -28,17 +28,19 @@ end)
 
 function ow.option:Set(ply, key, value)
     local stored = ow.option.stored[key]
-    if ( !stored ) then 
-        ow.util:PrintError("Option \"" .. key .. "\" does not exist!") 
-        return false 
+    if ( !stored ) then
+        ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+        return false
     end
 
     if ( !IsValid(ply) ) then return false end
-    
+
     net.Start("ow.option.set")
         net.WriteString(key)
         net.WriteType(value)
     net.Send(ply)
-    
+
+    hook.Run("OnOptionChanged", ply, key, value)
+
     return true
 end

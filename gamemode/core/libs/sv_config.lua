@@ -47,7 +47,7 @@ function ow.config:Load()
 
     local config = file.Read("overwatch/" .. folder .. "/config.json", "DATA")
     config = util.JSONToTable(config or "[]")
-    
+
     hook.Run("PreConfigLoad", config)
 
     local values = {}
@@ -60,9 +60,8 @@ function ow.config:Load()
         net.WriteTable(values)
     net.Broadcast()
 
-    hook.Run("PostConfigLoad", config)
-
     ow.util:Print("Configuration loaded.")
+    hook.Run("PostConfigLoad", config)
 
     return true
 end

@@ -6,6 +6,8 @@ function ow.character:SetVariable(id, key, value)
         query:Update(key, value)
         query:Where("id", id)
     query:Execute()
+
+    hook.Run("CharacterVariableSet", id, key, value)
 end
 
 function ow.character:Create(player)
@@ -23,6 +25,7 @@ function ow.character:Create(player)
         character[k] = v.Default
     end
 
+    hook.Run("PlayerCreatedCharacter", player, character)
     return character
 end
 
@@ -52,6 +55,8 @@ function ow.character:Save(character)
         end
         query:Where("id", character.id)
     query:Execute()
+
+    hook.Run("CharacterSaved", character)
 end
 
 function ow.character:Delete(id)

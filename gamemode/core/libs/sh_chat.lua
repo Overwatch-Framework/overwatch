@@ -47,7 +47,7 @@ function ow.chat:Get(uniqueID)
 end
 
 if ( CLIENT ) then
-    net.Receive("ow.chat", function(len)
+    net.Receive("ow.chat.send", function(len)
         local speaker = net.ReadPlayer()
         local uniqueID = net.ReadString()
         local text = net.ReadString()

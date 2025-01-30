@@ -58,6 +58,8 @@ end
 function ow.config:Register(key, data)
     if ( !key or !data ) then return false end
 
+    hook.Run("PreConfigRegistered", key, data)
+
     self.stored[key] = {
         DisplayName = data.DisplayName,
         Description = data.Description,
@@ -65,6 +67,8 @@ function ow.config:Register(key, data)
         Default = data.Default,
         Value = self.stored[key] and self.stored[key].Value or data.Default
     }
+
+    hook.Run("PostConfigRegistered", key, data)
 
     return true
 end

@@ -9,6 +9,7 @@ ow.hooks.stored = {}
 -- @string name The name of the hook type.
 function ow.hooks:Register(name)
     self.stored[name] = true
+    hook.Run("OnHookRegistered", name)
 end
 
 --- Unregisters a hook type.
@@ -17,6 +18,7 @@ end
 -- @internal
 function ow.hooks:UnRegister(name)
     self.stored[name] = nil
+    hook.Run("OnHookUnRegistered", name)
 end
 
 hook.owCall = hook.owCall or hook.Call
@@ -38,13 +40,11 @@ function hook.Call(name, gm, ...)
 
     for k, v in pairs(ow.module.stored) do
         for k2, v2 in pairs(v) do
-            if ( type(v2) == "function" ) then
-                if ( k2 == name ) then
-                    local a, b, c, d, e, f = v2(v, ...)
+            if ( type(v2) == "function" and k2 == name ) then
+                local a, b, c, d, e, f = v2(v, ...)
 
-                    if ( a != nil ) then
-                        return a, b, c, d, e, f
-                    end
+                if ( a != nil ) then
+                    return a, b, c, d, e, f
                 end
             end
         end

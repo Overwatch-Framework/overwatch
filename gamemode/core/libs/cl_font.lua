@@ -14,7 +14,7 @@ function surface.CreateFont(name, data)
     if ( name:StartsWith("ow") ) then
         ow.font.stored[name] = data
     end
-    
+
     surface.owCreateFont(name, data)
 end
 

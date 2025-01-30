@@ -18,7 +18,9 @@ function ow.color:Register(name, color)
         return
     end
 
+    hook.Run("PreColorRegistered", name, color)
     self.stored[name] = color
+    hook.Run("OnColorRegistered", name, color)
 end
 
 --- Gets a color by its name.

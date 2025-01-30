@@ -6,6 +6,8 @@ ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
 
 function ow.item:Register(uniqueID, itemData)
+    hook.Run("PreItemRegistered", uniqueID, itemData)
+
     itemData.Name = itemData.Name or "Unknown Item"
     itemData.Description = itemData.Description or "No description provided."
 
@@ -17,6 +19,8 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Weight = itemData.Weight or 1
     itemData.Category = itemData.Category or "Miscellaneous"
 
+    hook.Run("PostItemRegistered", uniqueID, itemData)
+    
     self.instances[#self.instances + 1] = itemData
     self.stored[uniqueID] = itemData
 end

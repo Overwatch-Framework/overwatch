@@ -21,15 +21,15 @@ function ow.character:RegisterVariable(key, data)
     local upperKey = key:gsub("^%l", string.upper)
 
     if ( SERVER ) then
-        self.meta["Set" .. upperKey] = function(self, value)
+        self.meta["Set" .. upperKey] = function(this, value)
             self:SetVariable(key, value)
 
             if ( data.OnSet ) then
-                data:OnSet(self, value)
+                data:OnSet(this, value)
             end
         end
 
-        self.meta["Get" .. upperKey] = function(self)
+        self.meta["Get" .. upperKey] = function(this)
             return self:GetVariable(key)
         end
 

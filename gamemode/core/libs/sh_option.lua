@@ -6,22 +6,21 @@ ow.option.stored = {}
 
 if ( CLIENT ) then
     function ow.option:Load()
-        hook.Run("PreOptionsLoad", data)
+        hook.Run("PreOptionsLoad")
 
-        for k, v in pairs(data) do
-            if ( self.stored[k] ) then
-                self.stored[k].Value = v
-            end
+        local folder = SCHEMA and SCHEMA.Folder or "core"
+        if ( file.Exists("overwatch/" .. folder .. "/options.txt", "DATA") ) then
+            self.stored = util.JSONToTable(file.Read("overwatch/" .. folder .. "/options.txt", "DATA"))
         end
 
-        hook.Run("PostOptionsLoad", data)
+        hook.Run("PostOptionsLoad", self.stored)
     end
 
     function ow.option:Set(key, value)
         local stored = self.stored[key]
         if ( !stored ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
-            return false 
+            return false
         end
 
         if ( stored.OnChange ) then
@@ -39,6 +38,8 @@ if ( CLIENT ) then
 
         local folder = SCHEMA and SCHEMA.Folder or "core"
         file.Write("overwatch/" .. folder .. "/options.txt", util.TableToJSON(self.stored))
+
+        hook.Run("OnOptionChanged", key, value)
 
         return true
     end
@@ -68,6 +69,8 @@ function ow.option:Register(uniqueID, data)
         file.CreateDir("overwatch/" .. folder)
     end
 
+    hook.Run("PreOptionRegistered", uniqueID, data)
+
     self.stored[uniqueID] = {
         DisplayName = data.DisplayName,
         Description = data.Description,
@@ -75,4 +78,6 @@ function ow.option:Register(uniqueID, data)
         Default = data.Default,
         Value = self.stored[key] and self.stored[key].Value or data.Default
     }
+
+    hook.Run("PostOptionRegistered", uniqueID, data)
 end
