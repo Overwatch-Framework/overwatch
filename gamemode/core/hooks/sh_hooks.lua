@@ -1,5 +1,5 @@
 function GM:CanDrive(ply, entity)
-    return false 
+    return false
 end
 
 function GM:CanPlayerBecomeFaction(ply, factionID)
@@ -39,11 +39,11 @@ function GM:GetMainMenuMusic()
 end
 
 function GM:PlayerGetToolgun(ply)
-    return CAMI.PlayerHasAccess(ply, "Overwatch - Toolgun", nil) 
+    return CAMI.PlayerHasAccess(ply, "Overwatch - Toolgun", nil)
 end
 
 function GM:PlayerGetPhysgun(ply)
-    return CAMI.PlayerHasAccess(ply, "Overwatch - Physgun", nil) 
+    return CAMI.PlayerHasAccess(ply, "Overwatch - Physgun", nil)
 end
 
 function GM:PlayerCanCreateCharacter(ply, character)
