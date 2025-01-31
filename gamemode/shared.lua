@@ -37,6 +37,11 @@ GM.Author = "Riggs & eon (bloodycop)"
 GM.Description = "A roleplaying gamemode for Garry's Mod."
 GM.Version = "Foundation"
 
+function widgets.PlayerTick()
+end
+
+hook.Remove("PlayerTick", "TickWidgets")
+
 ow.util:Print("Initializing...")
 ow.util:LoadFolder("core/libs")
 ow.util:LoadFolder("core/thirdparty")
