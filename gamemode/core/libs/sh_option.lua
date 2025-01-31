@@ -16,6 +16,8 @@ if ( CLIENT ) then
         hook.Run("PostOptionsLoad", self.stored)
     end
 
+    ow.option:Load()
+
     function ow.option:Set(key, value)
         local stored = self.stored[key]
         if ( !stored ) then
@@ -59,14 +61,18 @@ if ( CLIENT ) then
         return true
     end
 
-    function ow.option:Get(uniqueID)
-        print(table.Count(self.stored))
+    function ow.option:Get(key, fallback)
+        local optionData = self.stored[key]
+        if ( !optionData ) then
+            ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+            return fallback or nil
+        end
 
-        timer.Simple(1, function()
-            print(table.Count(self.stored))
-        end)
+        if ( fallback == nil ) then
+            fallback = optionData.Default
+        end
 
-        -- bloodycop: Bad load times
+        return optionData.Value or fallback
     end
 
     net.Receive("ow.option.set", function(len)
@@ -100,8 +106,6 @@ function ow.option:Register(uniqueID, data)
         Value = self.stored[key] and self.stored[key].Value or data.Default
     }
 
-    local folder = SCHEMA and SCHEMA.Folder or "core"
     file.Write("overwatch/" .. folder .. "/options.txt", util.TableToJSON(self.stored))
-
     hook.Run("PostOptionRegistered", uniqueID, data)
 end

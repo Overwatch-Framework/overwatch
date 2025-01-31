@@ -43,9 +43,8 @@ end
 -- @return The localized string.
 function ow.localization:GetPhrase(key, language)
     if ( language == nil ) then
-        -- TODO: Replace with options ;9
-        language = ow.option:Get("language", "en")
+        language = ow.option:Get("language", "eng")
     end
 
-    return self.stored[language][key]
+    return self:Get(language)[key]
 end
