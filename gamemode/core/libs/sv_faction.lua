@@ -1,11 +1,11 @@
 --- Faction library
 -- @module ow.faction
 
-function ow.faction:Join(ply, factionID)
+function ow.faction:Join(ply, factionID, bBypass)
     local faction = self:Get(factionID)
     if ( !faction ) then return ow.util:PrintError("Attempted to join an invalid faction!") end
 
-    if ( !self:CanSwitchTo(ply, factionID) ) then
+    if ( !bBypass and !self:CanSwitchTo(ply, factionID) ) then
         return false
     end
 

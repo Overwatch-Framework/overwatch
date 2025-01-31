@@ -58,7 +58,7 @@ ow.command:Register({
         end
 
         --target:SetFaction(faction.Index)
-        target:SetTeam(faction.Index)
+        ow.faction:Join(target, faction.Index, true)
 
         ow.util:Print(ply, " set the faction of ", target, " to ", faction.Name)
     end
