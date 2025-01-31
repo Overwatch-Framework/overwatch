@@ -113,6 +113,7 @@ ow.util:LoadFile("core/sh_chat.lua")
 ow.util:LoadFile("core/sh_colors.lua")
 ow.util:LoadFile("core/sh_commands.lua")
 ow.util:LoadFile("core/sh_configs.lua")
+ow.util:LoadFile("core/sh_options.lua")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(ply, command, arguments)
