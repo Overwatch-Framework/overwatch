@@ -110,7 +110,7 @@ function ow.util:SendChatText(ply, ...)
     if ( SERVER ) then
         net.Start("ow.chat.text")
         net.WriteTable({...})
-        
+
         if ( IsValid(ply) ) then
             net.Send(ply)
         else
