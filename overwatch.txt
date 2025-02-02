@@ -1,6 +1,6 @@
 "overwatch"
 {
-	"base" 			"sandbox"
-	"title"			"Overwatch"
-	"author" 		"Riggs"
+    "base"              "sandbox"
+    "title"             "Overwatch"
+    "author"            "Riggs"
 }

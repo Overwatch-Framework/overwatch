@@ -53,3 +53,5 @@ ow.config:Register("saveInterval", {
     Type = "Number",
     Default = 300
 })
+
+ow.config.server = ow.yaml.Read("gamemodes/overwatch/config.yml") or {}

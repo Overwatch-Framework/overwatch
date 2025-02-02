@@ -35,7 +35,7 @@ function ow.character:RegisterVariable(key, data)
 
         local field = data.Field
         if ( field ) then
-            ow.database:Alter("overwatch_characters", field, typeTranslator[data.Type] or "TEXT")
+            ow.database:AddToSchema("overwatch_characters", field, typeTranslator[data.Type] or "TEXT")
         end
     end
 

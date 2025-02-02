@@ -81,29 +81,6 @@ end
 
 function GM:Initialize()
     ow.schema:Initialize()
-
-    local host, port, database, username, password, adapter
-    local config
-    if ( SCHEMA and SCHEMA.Folder and file.Exists(SCHEMA.Folder .. "/schema/config/sv_database.lua", "LUA") ) then
-        config = include(SCHEMA.Folder .. "/schema/config/sv_database.lua")
-    else
-        config = include("overwatch/gamemode/core/sv_database.lua")
-    end
-
-    if ( !config ) then
-        ow.util:PrintError("Database configuration not found!")
-        return
-    end
-
-    host = config.host
-    port = config.port
-    database = config.database
-    username = config.username
-    password = config.password
-    adapter = config.adapter
-
-    ow.database:Setup(host, port, database, username, password, adapter)
-    ow.database:Initialize()
 end
 
 function GM:SetupPlayerVisibility(ply, viewEntity)
