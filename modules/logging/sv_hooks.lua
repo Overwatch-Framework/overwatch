@@ -4,7 +4,15 @@ function MODULE:DoPlayerDeath(ply, attacker, dmginfo)
     if ( !IsValid(ply) ) then return end
 
     local attackerName = IsValid(attacker) and attacker:IsPlayer() and attacker:Nick() or "World"
-    local weaponName = IsValid(attacker) and attacker:IsPlayer() and attacker:GetActiveWeapon():GetClass() or "World"
+    local weaponName = "world"
+
+    if ( IsValid(attacker) ) then
+        if ( IsValid(attacker:GetActiveWeapon()) ) then
+            weaponName = attacker:GetActiveWeapon():GetClass()
+        elseif ( attacker:IsPlayer() and attacker:InVehicle() ) then
+            weaponName = attacker:GetVehicle():GetClass()
+        end
+    end
 
     self:SendLog(Color(255, 0, 0), self:FormatPlayer(ply) .. " was killed by " .. attackerName .. " using " .. weaponName)
 end
