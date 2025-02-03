@@ -35,3 +35,14 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
     hook.Run("OnItemAdded", item, ownerID, uniqueID, data)
     return item
 end
+
+function ow.item:Spawn(uniqueID, pos, angles)
+    local item = ents.Create("ow_item")
+    item:SetPos(pos)
+    item:SetAngles(angles or angle_zero)
+    item:SetItem(uniqueID)
+    item:Spawn()
+    item:Activate()
+
+    return item
+end

@@ -1,4 +1,4 @@
-ENT.Base			= "base_gmodentity" 
+ENT.Base			= "base_gmodentity"
 ENT.Type			= "anim"
 ENT.PrintName		= "Item"
 ENT.Author			= "Overwatch Developers"
@@ -9,7 +9,6 @@ ENT.Category 		= "Overwatch"
 ENT.Spawnable = false
 ENT.AdminOnly = false
 
-function ENT:GetItemID()
-    -- bloodycop: Should be implemented when we get the database working and each item has a unique index.
-    --return self:GetInternalVariable("m_iOWItemID") or nil
+function ENT:SetupDataTables()
+    self:NetworkVar("Int", 0, "ItemID")
 end

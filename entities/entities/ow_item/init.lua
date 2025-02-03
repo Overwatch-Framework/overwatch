@@ -20,14 +20,16 @@ function ENT:SetItem(uniqueID)
     self:SetColor(itemData.Color or color_white)
     self:SetMaterial(itemData.Material or "")
 
-    for k, v in pairs(itemData.Bodygroups) do
-        if ( isstring(k) ) then
-            self:SetBodygroup(self:GetBodygroupByName(k), v)
-        elseif ( isnumber(k) ) then
-            self:SetBodygroup(k, v)
+    if ( itemData.Bodygroups ) then
+        for k, v in pairs(itemData.Bodygroups) do
+            if ( isstring(k) ) then
+                self:SetBodygroup(self:GetBodygroupByName(k), v)
+            elseif ( isnumber(k) ) then
+                self:SetBodygroup(k, v)
+            end
         end
     end
 
-    -- bloodycop: Something like netvar or smth in the future
-    --self:SetInternalVariable("m_iOWItemUniqueID", uniqueID)
+    -- bloodycop: Might need an overhaul in the future lol
+    self:SetItemID(math.random(1, 9999))
 end
