@@ -3,9 +3,10 @@
 
 ow.inventory = {}
 ow.inventory.stored = {}
+ow.inventory.meta = ow.inventory.meta or {}
 
 function ow.inventory:Get(index)
-    return self.stored[index] 
+    return self.stored[index]
 end
 
 function ow.inventory:Register(invData)
@@ -14,7 +15,14 @@ function ow.inventory:Register(invData)
     invData.index = #self.stored + 1
     self.stored[invData.index] = invData
 
-    hook.Run("PostInventoryRegistered", invData)
+    local inventory = setmetatable({
+        id = invData.index
+    }, self.meta)
 
-    return invData.index
+    hook.Run("PostInventoryRegistered", inventory)
+    return inventory
+end
+
+function ow.inventory:CalculateWeight(invID)
+
 end

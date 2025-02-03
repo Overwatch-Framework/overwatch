@@ -3,11 +3,17 @@ local MODULE = MODULE
 function MODULE:DoPlayerDeath(ply, attacker, dmginfo)
     if ( !IsValid(ply) ) then return end
 
-    local attackerName = IsValid(attacker) and attacker:IsPlayer() and attacker:Nick() or "World"
+    local attackerName = "world"
     local weaponName = "world"
 
     if ( IsValid(attacker) ) then
-        if ( IsValid(attacker:GetActiveWeapon()) ) then
+        if ( attacker:IsPlayer() ) then
+            attackerName = self:FormatPlayer(attacker)
+        else
+            attackerName = attacker:GetClass()
+        end
+
+        if ( attacker.GetActiveWeapon and IsValid(attacker:GetActiveWeapon()) ) then
             weaponName = attacker:GetActiveWeapon():GetClass()
         elseif ( attacker:IsPlayer() and attacker:InVehicle() ) then
             weaponName = attacker:GetVehicle():GetClass()
