@@ -3,7 +3,12 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-
+    self:SetModel("models/props_junk/watermelon01.mdl")
+    self:SetSolid(SOLID_VPHYSICS)
+    self:PhysicsInit(SOLID_VPHYSICS)
+    self:SetUseType(SIMPLE_USE)
+    self:SetHealth(50)
+    self:PhysWake()
 end
 
 function ENT:SetItem(uniqueID)
@@ -22,7 +27,7 @@ function ENT:SetItem(uniqueID)
             self:SetBodygroup(k, v)
         end
     end
-    
+
     -- bloodycop: Something like netvar or smth in the future
     --self:SetInternalVariable("m_iOWItemUniqueID", uniqueID)
 end

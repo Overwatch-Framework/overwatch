@@ -4,9 +4,20 @@
 ow.item = ow.item or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
+ow.item.bases = ow.item.bases or {}
 
 function ow.item:Register(uniqueID, itemData)
     hook.Run("PreItemRegistered", uniqueID, itemData)
+
+    if ( itemData.Base ) then
+        local baseData = self.bases[itemData.Base]
+        if ( !baseData ) then
+            ErrorNoHalt("Attempted to register item with invalid base: " .. itemData.Base)
+            return
+        end
+
+        itemData = table.Merge(baseData, itemData)
+    end
 
     itemData.Name = itemData.Name or "Unknown Item"
     itemData.Description = itemData.Description or "No description provided."
@@ -20,7 +31,7 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Category = itemData.Category or "Miscellaneous"
 
     hook.Run("PostItemRegistered", uniqueID, itemData)
-    
+
     self.instances[#self.instances + 1] = itemData
     self.stored[uniqueID] = itemData
 end
