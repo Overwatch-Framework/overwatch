@@ -75,7 +75,10 @@ function GM:CalcView(ply, pos, angles, fov)
 end
 
 function GM:HUDPaint()
-    if ( ow.debugMode:GetBool() ) then
+    local ply = LocalPlayer()
+    if ( !IsValid(ply) ) then return end
+
+    if ( ow.debugMode:GetBool() and hook.Run("ShouldDrawDebugHUD") ) then
         local scrW, scrH = ScrW(), ScrH()
 
         draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", 16, scrH / 2 + 8, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
@@ -103,6 +106,17 @@ function GM:HUDPaint()
         end
 
         paint.circles.drawCircle(x, y, size, size, color_white)
+    end
+
+    if ( hook.Run("ShouldDrawAmmoBox") ) then
+        local activeWeapon = LocalPlayer():GetActiveWeapon()
+        if ( !IsValid(activeWeapon) ) then return end
+
+        local ammo = LocalPlayer():GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
+        local clip = activeWeapon:Clip1()
+        local ammoText = clip .. " / " .. ammo
+
+        draw.SimpleText(ammoText, "ow.fonts.default.bold", ScrW() - 16, ScrH() - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
     end
 end
 
@@ -217,5 +231,13 @@ function GM:OnPauseMenuShow()
 end
 
 function GM:ShouldDrawCrosshair()
+    return true
+end
+
+function GM:ShouldDrawAmmoBox()
+    return true
+end
+
+function GM:ShouldDrawDebugHUD()
     return true
 end
