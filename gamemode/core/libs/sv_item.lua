@@ -5,6 +5,12 @@ ow.item = ow.item or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
 
+--- Adds a new item to a character's inventory.
+-- @param string ownerID The owner's character ID.
+-- @param string uniqueID The uniqueID of the item.
+-- @param table data The data to save with the item.
+-- @param function callback The callback function.
+-- @return table The item table.
 function ow.item:Add(ownerID, uniqueID, data, callback)
     if ( !ownerID or !uniqueID ) then return end
     if ( !self.stored[uniqueID] ) then return end
@@ -33,16 +39,26 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
     end)
 
     hook.Run("OnItemAdded", item, ownerID, uniqueID, data)
+    
     return item
 end
 
-function ow.item:Spawn(uniqueID, pos, angles)
+--- Spawns an item entity with the given uniqueID, position and angles.
+-- @param string uniqueID The uniqueID of the item.
+-- @param Vector pos The position of the item.
+-- @param Angle angles The angles of the item.
+-- @param function callback The callback function.
+function ow.item:Spawn(uniqueID, pos, angles, callback)
     local item = ents.Create("ow_item")
     item:SetPos(pos)
     item:SetAngles(angles or angle_zero)
     item:SetItem(uniqueID)
     item:Spawn()
     item:Activate()
+
+    if ( callback ) then
+        callback(item)
+    end
 
     return item
 end
