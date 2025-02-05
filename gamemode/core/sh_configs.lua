@@ -54,4 +54,40 @@ ow.config:Register("saveInterval", {
     Default = 300
 })
 
+ow.config:Register("walkSpeed", {
+    DisplayName = "Walk Speed",
+    Description = "The speed at which players walk.",
+    Type = "Number",
+    Default = 80,
+    OnChange = function(value)
+        for _, ply in player.Iterator() do
+            ply:SetWalkSpeed(value)
+        end
+    end
+})
+
+ow.config:Register("runSpeed", {
+    DisplayName = "Run Speed",
+    Description = "The speed at which players run.",
+    Type = "Number",
+    Default = 180,
+    OnChange = function(value)
+        for _, ply in player.Iterator() do
+            ply:SetRunSpeed(value)
+        end
+    end
+})
+
+ow.config:Register("jumpPower", {
+    DisplayName = "Jump Power",
+    Description = "The power at which players jump.",
+    Type = "Number",
+    Default = 160,
+    OnChange = function(value)
+        for _, ply in player.Iterator() do
+            ply:SetJumpPower(value)
+        end
+    end
+})
+
 ow.config.server = ow.yaml.Read("gamemodes/overwatch/config.yml") or {}
