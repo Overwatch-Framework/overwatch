@@ -15,6 +15,16 @@ function MODULE:FormatPlayer(ply)
     return ply:SteamName() .. " (" .. ply:SteamID64() .. ")"
 end
 
+function MODULE:FormatEntity(ent)
+    if ( !IsValid(ent) ) then return "world" end
+
+    if ( ent:IsPlayer() ) then
+        return self:FormatPlayer(ent)
+    end
+
+    return ent:GetClass() .. " (" .. ent:EntIndex() .. ")"
+end
+
 ow.color:Register("ow.log.message", Color(250, 200, 25))
 
 ow.util:LoadFile("cl_module.lua")

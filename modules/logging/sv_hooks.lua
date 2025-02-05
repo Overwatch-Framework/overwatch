@@ -27,9 +27,9 @@ function MODULE:EntityTakeDamage(ent, dmginfo)
     if ( !IsValid(ent) or !ent:IsPlayer() ) then return end
 
     local attacker = dmginfo:GetAttacker()
-    if ( !IsValid(attacker) or !attacker:IsPlayer() ) then return end
+    if ( !IsValid(attacker) ) then return end
 
-    self:SendLog(Color(255, 150, 0), self:FormatPlayer(ent) .. " took " .. dmginfo:GetDamage() .. " damage from " .. self:FormatPlayer(attacker))
+    self:SendLog(Color(255, 150, 0), self:FormatPlayer(ent) .. " took " .. dmginfo:GetDamage() .. " damage from " .. self:FormatEntity(attacker))
 end
 
 function MODULE:PlayerInitialSpawn(ply)
