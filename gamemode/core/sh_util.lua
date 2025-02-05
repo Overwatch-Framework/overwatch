@@ -422,4 +422,26 @@ if ( CLIENT ) then
         surface.SetFont(font)
         return surface.GetTextSize(text)
     end
+
+    local stored = {}
+
+    --- Returns a material with the given path and parameters.
+    -- @realm client
+    -- @param path string The path to the material.
+    -- @param parameters string The parameters to apply to the material.
+    -- @return Material The material that was created.
+    -- @usage local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png")
+    -- surface.SetMaterial(vignette)
+    function ow.util:GetMaterial(path, parameters)
+        local uniqueID = path .. ( parameters or "" )
+
+        if ( stored[uniqueID] ) then
+            return stored[uniqueID]
+        end
+
+        local mat = Material(path, parameters)
+        stored[uniqueID] = mat
+
+        return mat
+    end
 end
