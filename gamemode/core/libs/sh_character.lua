@@ -5,6 +5,7 @@ ow.character = {}
 ow.character.variables = ow.character.variables or {}
 ow.character.meta = ow.character.meta or {}
 ow.character.fields = ow.character.fields or {}
+ow.character.stored = ow.character.stored or {}
 
 --- Registers a variable for the character.
 -- @realm shared

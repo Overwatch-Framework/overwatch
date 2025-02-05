@@ -1,28 +1,10 @@
 local padding = ScreenScale(32)
+local smallPadding = ScreenScale(16)
 local gradientLeft = Material("vgui/gradient-l")
 
+DEFINE_BASECLASS("EditablePanel")
+
 local PANEL = {}
-
-local color_button = Color(0, 0, 0, 150)
-local color_button_hover = Color(0, 0, 0, 200)
-local color_button_text = color_white
-
-local function ButtonOnCursorEntered(this)
-    surface.PlaySound("ow.button.enter")
-end
-
-local function ButtonPaint(this, width, height)
-    local color = color_button
-    if ( this.Depressed or this:IsSelected() ) then
-        color = color_button_hover
-    elseif ( this.Hovered ) then
-        color = color_button_hover
-    end
-
-    paint.startPanel(this, true, true)
-        paint.roundedBoxes.roundedBox(2, 0, 0, width, height, color)
-    paint.endPanel(true, true)
-end
 
 function PANEL:Init()
     if ( IsValid(ow.gui.mainmenu) ) then
@@ -41,17 +23,22 @@ function PANEL:Init()
         system.FlashWindow()
     end
 
+    self.currentCreatePage = 0
+    self.currentPaylod = {}
+
     self:SetSize(ScrW(), ScrH())
     self:MakePopup()
+
+    self:Populate()
+    self:PlayMenuTrack()
+end
+
+function PANEL:Populate()
+    self:Clear()
 
     local sideButtons = self:Add("EditablePanel")
     sideButtons:Dock(LEFT)
     sideButtons:SetSize(self:GetWide() / 2, self:GetTall())
-    sideButtons.Paint = function(this, width, height)
-        surface.SetDrawColor(0, 0, 0, 255)
-        surface.SetMaterial(gradientLeft)
-        surface.DrawTexturedRect(0, 0, width, height)
-    end
 
     local title = sideButtons:Add("DLabel")
     title:Dock(TOP)
@@ -59,7 +46,7 @@ function PANEL:Init()
     title:SetFont("ow.fonts.title")
     title:SetText("OVERWATCH")
     title:SetTextColor(hook.Run("GetFrameworkColor"))
-    title:SetExpensiveShadow(4, color_button_hover)
+    title:SetExpensiveShadow(4, color_black)
     title:SizeToContents()
 
     local subtitle = sideButtons:Add("DLabel")
@@ -67,57 +54,190 @@ function PANEL:Init()
     subtitle:DockMargin(padding * 1.5, 0, padding, 0)
     subtitle:SetFont("ow.fonts.subtitle")
     subtitle:SetText(string.upper(SCHEMA.Name))
-    subtitle:SetTextColor(color_white)
-    subtitle:SetExpensiveShadow(4, color_button_hover)
+    subtitle:SetTextColor(hook.Run("GetSchemaColor"))
+    subtitle:SetExpensiveShadow(4, color_black)
     subtitle:SizeToContents()
 
     local buttons = sideButtons:Add("EditablePanel")
     buttons:Dock(FILL)
     buttons:DockMargin(padding * 2, padding, padding * 4, padding)
 
-    ow.util:Print("No main menu buttons, lel!")
-    -- TODO: add real buttons like "Create Character", "Select Character", "Settings", "Credits", etc.
-
-    local playButton = buttons:Add("DButton")
-    playButton:Dock(TOP)
-    playButton:SetTall(ScreenScale(14))
-    playButton:SetText("PLAY")
-    playButton:SetFont("ow.fonts.subtitle")
-    playButton:SetTextColor(color_white)
-    playButton:DockMargin(0, 2, 0, 0)
-
-    playButton.Paint = ButtonPaint
-    playButton.OnCursorEntered = ButtonOnCursorEntered
-
-    playButton.DoClick = function()
-        surface.PlaySound("ow.button.click")
-
-        self:Remove()
+    local ply = LocalPlayer()
+    if ( ply.character ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
+        local playButton = buttons:Add("ow.mainmenu.button")
+        playButton:Dock(TOP)
+        playButton:SetText("PLAY")
+        playButton:DockMargin(0, 0, 0, 8)
+    
+        playButton.DoClick = function()
+            self:Remove()
+        end
+    else
+        local createButton = buttons:Add("ow.mainmenu.button")
+        createButton:Dock(TOP)
+        createButton:SetText("CREATE CHARACTER")
+        createButton:DockMargin(0, 0, 0, 8)
+    
+        createButton.DoClick = function()
+            self:PopulateCreateCharacter()
+        end
     end
 
-    local disconnectButton = buttons:Add("DButton")
+    local bHasCharacters = table.Count(ply:GetCharacters()) > 0
+    if ( bHasCharacters ) then
+        local selectButton = buttons:Add("ow.mainmenu.button")
+        selectButton:Dock(TOP)
+        selectButton:SetText("SELECT CHARACTER")
+        selectButton:DockMargin(0, 0, 0, 8)
+    
+        selectButton.DoClick = function()
+            self:PopulateSelectCharacter()
+        end
+    end
+
+    local settingsButton = buttons:Add("ow.mainmenu.button")
+    settingsButton:Dock(TOP)
+    settingsButton:SetText("SETTINGS")
+    settingsButton:DockMargin(0, 0, 0, 8)
+    
+    settingsButton.DoClick = function()
+        self:PopulateSettings()
+    end
+
+    local disconnectButton = buttons:Add("ow.mainmenu.button")
     disconnectButton:Dock(TOP)
-    disconnectButton:SetTall(ScreenScale(14))
     disconnectButton:SetText("DISCONNECT")
-    disconnectButton:SetFont("ow.fonts.subtitle")
-    disconnectButton:SetTextColor(color_white)
-    disconnectButton:DockMargin(0, 2, 0, 0)
-
-    disconnectButton.Paint = ButtonPaint
-    disconnectButton.OnCursorEntered = function(this)
-        ButtonOnCursorEntered(this)
-        surface.PlaySound("ow.button.enter")
-    end
+    disconnectButton:SetTextColor(ow.color:Get("maroon"))
 
     disconnectButton.DoClick = function()
-        surface.PlaySound("ow.button.click")
-
         Derma_Query("Are you sure you want to disconnect?", "Disconnect", "Yes", function()
             RunConsoleCommand("disconnect")
         end, "No")
     end
+end
 
-    self:PlayMenuTrack()
+function PANEL:PopulateCreateCharacter()
+    self:Clear()
+
+    local title = self:Add("DLabel")
+    title:Dock(TOP)
+    title:DockMargin(padding, padding, padding, 0)
+    title:SetFont("ow.fonts.title")
+    title:SetText("CREATE CHARACTER")
+    title:SetTextColor(hook.Run("GetFrameworkColor"))
+    title:SetExpensiveShadow(4, color_black)
+    title:SizeToContents()
+
+    local subtitle = self:Add("DLabel")
+    subtitle:Dock(TOP)
+    subtitle:DockMargin(padding * 1.5, 0, padding, 0)
+    subtitle:SetFont("ow.fonts.subtitle")
+    subtitle:SetText("DEFINE YOUR NAME AND APPEARANCE")
+    subtitle:SetTextColor(color_white)
+    subtitle:SetExpensiveShadow(4, color_black)
+    subtitle:SizeToContents()
+
+    local navigation = self:Add("EditablePanel")
+    navigation:Dock(BOTTOM)
+    navigation:DockMargin(padding, 0, padding, padding)
+    navigation:SetTall(ScreenScale(24))
+
+    local backButton = navigation:Add("ow.mainmenu.button")
+    backButton:Dock(LEFT)
+    backButton:SetText("BACK")
+
+    backButton.DoClick = function()
+        if ( self.currentCreatePage == 0 ) then
+            self:Populate()
+        else
+            self.currentCreatePage = self.currentCreatePage - 1
+            self:PopulateCreateCharacterForm()
+        end
+    end
+
+    local nextButton = navigation:Add("ow.mainmenu.button")
+    nextButton:Dock(RIGHT)
+    nextButton:SetText("NEXT")
+
+    nextButton.DoClick = function()
+        local canContinue = true
+
+        -- TODO: Validate the form data of the current page
+
+        self.currentCreatePage = self.currentCreatePage + 1
+        self:PopulateCreateCharacterForm()
+    end
+
+    self:PopulateCreateCharacterForm()
+end
+
+function PANEL:PopulateCreateCharacterForm()
+    if ( !IsValid(self.characterCreateForm) ) then
+        self.characterCreateForm = self:Add("EditablePanel")
+        self.characterCreateForm:Dock(FILL)
+        self.characterCreateForm:DockMargin(padding * 6, smallPadding, padding * 6, padding)
+    else
+        self.characterCreateForm:Clear()
+    end
+
+    local zPos = 0
+    for k, v in pairs(ow.character.variables) do
+        if ( v.Editable != true ) then continue end
+
+        local page = v.Page or 0
+        if ( page != self.currentCreatePage ) then continue end
+
+        if ( v.OnPopulate ) then
+            v:OnPopulate(self.characterCreateForm)
+            continue
+        end
+
+        if ( v.Type == ow.type.string ) then
+            zPos = zPos + 1 + v.ZPos
+
+            local label = self.characterCreateForm:Add("ow.text")
+            label:Dock(TOP)
+            label:SetText(v.DisplayName or k)
+            label:SetFont("ow.fonts.button")
+            label:SetTextColor(color_white)
+            label:SizeToContents()
+
+            zPos = zPos - 1
+            label:SetZPos(zPos)
+            zPos = zPos + 1
+
+            local entry = self.characterCreateForm:Add("ow.text.entry")
+            entry:Dock(TOP)
+            entry:DockMargin(0, 0, 0, smallPadding)
+            entry:SetFont("ow.fonts.button")
+            entry:SetTextColor(color_white)
+            entry:SetPlaceholderText(v.Default or "")
+            entry:SetZPos(zPos)
+        elseif ( v.Type == ow.type.text ) then
+            zPos = zPos + 1 + v.ZPos
+
+            local label = self.characterCreateForm:Add("ow.text")
+            label:Dock(TOP)
+            label:SetText(v.DisplayName or k)
+            label:SetFont("ow.fonts.button")
+            label:SetTextColor(color_white)
+            label:SizeToContents()
+
+            zPos = zPos - 1
+            label:SetZPos(zPos)
+            zPos = zPos + 1
+
+            local entry = self.characterCreateForm:Add("ow.text.entry")
+            entry:Dock(TOP)
+            entry:DockMargin(0, 0, 0, smallPadding)
+            entry:SetFont("ow.fonts.button")
+            entry:SetTextColor(color_white)
+            entry:SetPlaceholderText(v.Default or "")
+            entry:SetMultiline(true)
+            entry:SetTall(ScreenScale(32))
+            entry:SetZPos(zPos)
+        end
+    end
 end
 
 function PANEL:PlayMenuTrack()
@@ -142,27 +262,18 @@ function PANEL:OnRemove()
     end
 end
 
+function PANEL:Paint(width, height)
+    surface.SetDrawColor(0, 0, 0, 255)
+    surface.SetMaterial(gradientLeft)
+    surface.DrawTexturedRect(0, 0, width / 2, height)
+end
+
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
 
 if ( IsValid(ow.gui.mainmenu) ) then
-    vgui.Create("ow.mainmenu")
+    ow.gui.mainmenu:Remove()
+
+    timer.Simple(0.1, function()
+        vgui.Create("ow.mainmenu")
+    end)
 end
-
--- TODO: add an actual button panel
-sound.Add({
-    name = "ow.button.click",
-    channel = CHAN_STATIC,
-    volume = 0.2,
-    level = 80,
-    pitch = 120,
-    sound = "buttons/button9.wav"
-})
-
-sound.Add({
-    name = "ow.button.enter",
-    channel = CHAN_STATIC,
-    volume = 0.1,
-    level = 80,
-    pitch = 120,
-    sound = "buttons/lightswitch2.wav"
-})

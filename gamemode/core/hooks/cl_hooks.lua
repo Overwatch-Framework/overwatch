@@ -77,6 +77,12 @@ end
 local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png", "noclamp smooth")
 local vignetteColor = Color(0, 0, 0, 255)
 function GM:HUDPaintBackground()
+    if ( hook.Run("ShouldDrawVignette") ) then
+        hook.Run("DrawVignette")
+    end
+end
+
+function GM:DrawVignette()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
@@ -103,7 +109,7 @@ function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
-    if ( ow.debugMode:GetBool() and hook.Run("ShouldDrawDebugHUD") ) then
+    if ( hook.Run("ShouldDrawDebugHUD") ) then
         local scrW, scrH = ScrW(), ScrH()
         local width, height
         local x, y = 16, scrH / 2
@@ -220,6 +226,12 @@ function GM:LoadFonts()
         weight = 700
     })
 
+    surface.CreateFont("ow.fonts.button", {
+        font = "Roboto",
+        size = ScreenScale(8),
+        weight = 800
+    })
+
     surface.CreateFont("ow.fonts.fancy", {
         font = "K12HL2",
         size = ScreenScale(8)
@@ -256,19 +268,35 @@ end
 function GM:OnPauseMenuShow()
     if ( !IsValid(ow.gui.mainmenu) ) then
         vgui.Create("ow.mainmenu")
+    else
+        ow.gui.mainmenu:Remove()
+        return
     end
 
     return false
 end
 
 function GM:ShouldDrawCrosshair()
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+
     return true
 end
 
 function GM:ShouldDrawAmmoBox()
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+
     return true
 end
 
 function GM:ShouldDrawDebugHUD()
+    if ( !ow.debugMode:GetBool() ) then return false end
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+
+    return true
+end
+
+function GM:ShouldDrawVignette()
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+
     return true
 end

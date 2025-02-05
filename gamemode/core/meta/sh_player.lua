@@ -10,6 +10,14 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 
 local PLAYER = FindMetaTable("Player")
 
+function PLAYER:GetCharacter()
+    return self.character
+end
+
+function PLAYER:GetCharacters()
+    return self.characters or {}
+end
+
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
 
 function PLAYER:ChatText(...)
