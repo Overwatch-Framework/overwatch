@@ -74,19 +74,50 @@ function GM:CalcView(ply, pos, angles, fov)
     end
 end
 
+local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png", "noclamp smooth")
+local vignetteColor = Color(0, 0, 0, 255)
+function GM:HUDPaintBackground()
+    local ply = LocalPlayer()
+    if ( !IsValid(ply) ) then return end
+
+    local scrW, scrH = ScrW(), ScrH()
+    local trace = util.TraceLine({
+        start = ply:GetShootPos(),
+        endpos = ply:GetShootPos() + ply:GetAimVector() * 96,
+        filter = ply,
+        mask = MASK_SHOT
+    })
+
+    if ( trace.Hit and trace.HitPos:DistToSqr(ply:GetShootPos()) < 96 ^ 2 ) then
+        vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 255)
+    else
+        vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 100)
+    end
+
+    surface.SetDrawColor(vignetteColor)
+    surface.SetMaterial(vignette)
+    surface.DrawTexturedRect(0, 0, scrW, scrH)
+end
+
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
     if ( ow.debugMode:GetBool() and hook.Run("ShouldDrawDebugHUD") ) then
         local scrW, scrH = ScrW(), ScrH()
+        local width, height
+        local x, y = 16, scrH / 2
 
-        draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", 16, scrH / 2 + 8, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
-        draw.SimpleText("debug mode enabled", "ow.fonts.fancy", 32, scrH / 2 - 6, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        width, height = draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", x, y, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        x, y = x + 16, y + height - 8
 
         if ( SCHEMA ) then
-            draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", 48, scrH / 2 + 48, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_BOTTOM)
+            width, height =  draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            x, y = x + 16, y + height - 16
         end
+
+        width, height = draw.SimpleText("debug mode enabled", "ow.fonts.fancy", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        x, y = x + 16, y + height
     end
 
     if ( hook.Run("ShouldDrawCrosshair") ) then
@@ -95,9 +126,9 @@ function GM:HUDPaint()
 
         if ( ow.module:Get("thirdperson") and ow.module:Get("thirdperson").cvar_thirdperson:GetBool() ) then
             local trace = util.TraceLine({
-                start = LocalPlayer():GetShootPos(),
-                endpos = LocalPlayer():GetShootPos() + LocalPlayer():GetAimVector() * 8192,
-                filter = LocalPlayer(),
+                start = ply:GetShootPos(),
+                endpos = ply:GetShootPos() + ply:GetAimVector() * 8192,
+                filter = ply,
                 mask = MASK_SHOT
             })
 
@@ -109,10 +140,10 @@ function GM:HUDPaint()
     end
 
     if ( hook.Run("ShouldDrawAmmoBox") ) then
-        local activeWeapon = LocalPlayer():GetActiveWeapon()
+        local activeWeapon = ply:GetActiveWeapon()
         if ( !IsValid(activeWeapon) ) then return end
 
-        local ammo = LocalPlayer():GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
+        local ammo = ply:GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
         local clip = activeWeapon:Clip1()
         local ammoText = clip .. " / " .. ammo
 
