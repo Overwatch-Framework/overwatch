@@ -6,13 +6,6 @@ ow.character.variables = ow.character.variables or {}
 ow.character.meta = ow.character.meta or {}
 ow.character.fields = ow.character.fields or {}
 
-local typeTranslator = {
-    ["string"] = "VARCHAR(255)",
-    ["text"] = "TEXT",
-    ["number"] = "INT(11)",
-    ["boolean"] = "TINYINT(1)"
-}
-
 --- Registers a variable for the character.
 -- @realm shared
 function ow.character:RegisterVariable(key, data)
@@ -35,7 +28,7 @@ function ow.character:RegisterVariable(key, data)
 
         local field = data.Field
         if ( field ) then
-            ow.database:AddToSchema("overwatch_characters", field, typeTranslator[data.Type] or "TEXT")
+            ow.database:AddToSchema("overwatch_characters", field, data.Type)
         end
     end
 
