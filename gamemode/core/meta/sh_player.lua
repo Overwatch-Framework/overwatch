@@ -11,11 +11,11 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:GetCharacter()
-    return self.character
+    return self.owCharacter
 end
 
 function PLAYER:GetCharacters()
-    return self.characters or {}
+    return self.owCharacters or {}
 end
 
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
