@@ -75,13 +75,13 @@ hook.Add("Initialize", "ow.character", function()
                     id = v.id
                 }, ow.character.meta)
 
-                for k, v in pairs(ow.character.variables) do
-                    character[k] = v.Default
+                for k2, v2 in pairs(ow.character.variables) do
+                    character[k2] = v2.Default
                 end
 
-                for k, v in pairs(v) do
-                    if ( ow.character.variables[k] ) then
-                        character[k] = v
+                for k2, v2 in pairs(v) do
+                    if ( ow.character.variables[k2] ) then
+                        character[k2] = v2
                     end
                 end
 
