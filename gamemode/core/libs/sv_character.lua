@@ -64,3 +64,29 @@ function ow.character:Delete(id)
         query:Where("id", id)
     query:Execute()
 end
+
+hook.Add("Initialize", "ow.character", function()
+    local query = mysql:Select("overwatch_characters")
+        query:Callback(function(result)
+            if ( !result ) then return end
+
+            for k, v in pairs(result) do
+                local character = setmetatable({
+                    id = v.id
+                }, ow.character.meta)
+
+                for k, v in pairs(ow.character.variables) do
+                    character[k] = v.Default
+                end
+
+                for k, v in pairs(v) do
+                    if ( ow.character.variables[k] ) then
+                        character[k] = v
+                    end
+                end
+
+                ow.character.stored[v.id] = character
+            end
+        end)
+    query:Execute()
+end)

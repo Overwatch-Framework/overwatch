@@ -302,23 +302,6 @@ function ow.util:GetBounds(startpos, endpos)
     return center, min, max
 end
 
---- Converts a vector to a color.
--- @realm shared
--- @param vec Vector The vector to convert.
--- @param alpha number The alpha value of the color.
--- @return Color The color that was created.
-function ow.util:VectorToColor(vec, alpha)
-    return Color(vec.x * 255, vec.y * 255, vec.z * 255, alpha or 255)
-end
-
---- Converts a color to a vector.
--- @realm shared
--- @param col Color The color to convert.
--- @return Vector The vector that was created.
-function ow.util:ColorToVector(col)
-    return Vector(col.r / 255, col.g / 255, col.b / 255)
-end
-
 --- Dims a color by a specified fraction.
 -- @realm shared
 -- @param col Color The color to dim.
@@ -328,16 +311,15 @@ function ow.util:ColorDim(col, frac)
     return Color(col.r * frac, col.g * frac, col.b * frac, col.a)
 end
 
---- Randomizes a color within a specified range.
--- @realm shared
--- @param min number The minimum value of the color.
--- @param max number The maximum value of the color.
--- @return Color The randomized color.
-function ow.util:ColorRandom(min, max)
-    min = min or 0
-    max = max or 255
+function ow.util:GetCharacters()
+    local characters = {}
+    for k, v in player.Iterator() do
+        if ( v:GetCharacter() ) then
+            table.insert(characters, v:GetCharacter())
+        end
+    end
 
-    return Color(math.random(min, max), math.random(min, max), math.random(min, max))
+    return characters
 end
 
 if ( CLIENT ) then
