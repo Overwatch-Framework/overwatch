@@ -20,7 +20,7 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
 
     item.Data = data.Data
 
-    local query = mysql:Create("overwatch_items")
+    local query = mysql:Insert("overwatch_items")
         query:Insert("owner_id", ownerID)
         query:Insert("unique_id", uniqueID)
         query:Insert("data", util.TableToJSON(data or {}))
@@ -39,7 +39,7 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
     end)
 
     hook.Run("OnItemAdded", item, ownerID, uniqueID, data)
-    
+
     return item
 end
 
@@ -52,9 +52,10 @@ function ow.item:Spawn(uniqueID, pos, angles, callback)
     local item = ents.Create("ow_item")
     item:SetPos(pos)
     item:SetAngles(angles or angle_zero)
-    item:SetItem(uniqueID)
     item:Spawn()
+    item:SetItem(uniqueID)
     item:Activate()
+
 
     if ( callback ) then
         callback(item)

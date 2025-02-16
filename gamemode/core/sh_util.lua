@@ -375,7 +375,7 @@ if ( CLIENT ) then
         return mat
     end
 
-    local blur = ix.util.GetMaterial("pp/blurscreen")
+    local blur = ow.util:GetMaterial("pp/blurscreen")
     local defaultAmount = 1
     local defaultPasses = 0.1
 

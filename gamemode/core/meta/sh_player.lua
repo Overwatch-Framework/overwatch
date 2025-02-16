@@ -47,6 +47,18 @@ function PLAYER:GesturePlay(name)
     end
 end
 
+function PLAYER:GetDropPosition(offset)
+    if ( offset == nil ) then offset = 64 end
+
+    local trace = util.TraceLine({
+        start = self:GetShootPos(),
+        endpos = self:GetShootPos() + self:GetAimVector() * offset,
+        filter = self
+    })
+
+    return trace.HitPos + trace.HitNormal
+end
+
 function PLAYER:HasWhitelist(identifier, bSchema, bMap)
     if ( bSchema == nil ) then bSchema = true end
     if ( bMap == nil ) then bMap = false end
