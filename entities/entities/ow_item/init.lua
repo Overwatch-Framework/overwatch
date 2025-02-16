@@ -97,12 +97,12 @@ function ENT:OnRemove()
         itemData:OnRemoved(self)
     end
 
-    for k, v in ipairs(ow.item.instances) do
-        if ( v == self ) then
-            table.remove(ow.item.instances, k)
-            break
-        end
+    if ( #ow.item.instances == 1 ) then
+        ow.item.instances = {}
+        return
     end
+
+    table.remove(ow.item.instances, self:GetItemID())
 end
 
 function ENT:OnTakeDamage(damageInfo)
