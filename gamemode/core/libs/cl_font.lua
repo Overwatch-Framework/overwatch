@@ -28,7 +28,7 @@ end
 
 concommand.Add("ow_font_list", function(ply)
     for name, data in pairs(ow.font.stored) do
-        ow.util:Print("Font: " .. name)
+        ow.util:Print("Font: ", ow.color:Get("cyan"), name)
         PrintTable(data)
     end
 end)
