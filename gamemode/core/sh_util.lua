@@ -323,58 +323,6 @@ function ow.util:GetCharacters()
 end
 
 if ( CLIENT ) then
-    local blur = Material("pp/blurscreen")
-    local defaultAmount = 1
-    local defaultPasses = 0.1
-
-    --- Draws blur on a panel.
-    -- @realm client
-    -- @param panel Panel The panel to draw the blur on.
-    -- @param amount number The amount of blur to apply.
-    -- @param passes number The number of passes to apply.
-    function ow.util:DrawBlur(panel, amount, passes)
-        amount = amount or defaultAmount
-        passes = passes or defaultPasses
-
-        local x, y = panel:LocalToScreen(0, 0)
-        local scrW, scrH = ScrW(), ScrH()
-
-        surface.SetDrawColor(color_white)
-        surface.SetMaterial(blur)
-
-        for i = -passes, 1, 0.2 do
-            blur:SetFloat("$blur", ( i / passes ) * amount)
-            blur:Recompute()
-
-            render.UpdateScreenEffectTexture()
-            surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
-        end
-    end
-
-    --- Draws a blurred rectangle.
-    -- @realm client
-    -- @param x number The x position of the rectangle.
-    -- @param y number The y position of the rectangle.
-    -- @param w number The width of the rectangle.
-    -- @param h number The height of the rectangle.
-    -- @param amount number The amount of blur to apply.
-    -- @param passes number The number of passes to apply.
-    function ow.util:DrawBlurRect(x, y, w, h, amount, passes)
-        amount = amount or defaultAmount
-        passes = passes or defaultPasses
-
-        surface.SetDrawColor(color_white)
-        surface.SetMaterial(blur)
-
-        for i = -passes, 1, 0.2 do
-            blur:SetFloat("$blur", ( i / passes ) * amount)
-            blur:Recompute()
-
-            render.UpdateScreenEffectTexture()
-            surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
-        end
-    end
-
     --- Returns the given text's width.
     -- @realm client
     -- @param font string The font to use.
@@ -425,5 +373,57 @@ if ( CLIENT ) then
         stored[uniqueID] = mat
 
         return mat
+    end
+
+    local blur = ix.util.GetMaterial("pp/blurscreen")
+    local defaultAmount = 1
+    local defaultPasses = 0.1
+
+    --- Draws blur on a panel.
+    -- @realm client
+    -- @param panel Panel The panel to draw the blur on.
+    -- @param amount number The amount of blur to apply.
+    -- @param passes number The number of passes to apply.
+    function ow.util:DrawBlur(panel, amount, passes)
+        amount = amount or defaultAmount
+        passes = passes or defaultPasses
+
+        local x, y = panel:LocalToScreen(0, 0)
+        local scrW, scrH = ScrW(), ScrH()
+
+        surface.SetDrawColor(color_white)
+        surface.SetMaterial(blur)
+
+        for i = -passes, 1, 0.2 do
+            blur:SetFloat("$blur", ( i / passes ) * amount)
+            blur:Recompute()
+
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
+        end
+    end
+
+    --- Draws a blurred rectangle.
+    -- @realm client
+    -- @param x number The x position of the rectangle.
+    -- @param y number The y position of the rectangle.
+    -- @param w number The width of the rectangle.
+    -- @param h number The height of the rectangle.
+    -- @param amount number The amount of blur to apply.
+    -- @param passes number The number of passes to apply.
+    function ow.util:DrawBlurRect(x, y, w, h, amount, passes)
+        amount = amount or defaultAmount
+        passes = passes or defaultPasses
+
+        surface.SetDrawColor(color_white)
+        surface.SetMaterial(blur)
+
+        for i = -passes, 1, 0.2 do
+            blur:SetFloat("$blur", ( i / passes ) * amount)
+            blur:Recompute()
+
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
+        end
     end
 end
