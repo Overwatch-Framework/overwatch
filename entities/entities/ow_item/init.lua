@@ -68,7 +68,7 @@ function ENT:SetItem(uniqueID)
     end
 
     -- bloodycop: Might need an overhaul in the future lol
-    self:SetItemID(#ow.item.instances + 1)
+    self:SetItemID(#ow.item.instances)
     self:SetItemUniqueID(uniqueID)
 end
 
@@ -97,7 +97,12 @@ function ENT:OnRemove()
         itemData:OnRemoved(self)
     end
 
-    table.RemoveByValue(ow.item.instances, self)
+    for k, v in ipairs(ow.item.instances) do
+        if ( v == self ) then
+            table.remove(ow.item.instances, k)
+            break
+        end
+    end
 end
 
 function ENT:OnTakeDamage(damageInfo)
