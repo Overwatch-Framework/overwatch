@@ -1,10 +1,6 @@
 --- Item library
 -- @module ow.item
 
-ow.item = ow.item or {}
-ow.item.stored = ow.item.stored or {}
-ow.item.instances = ow.item.instances or {}
-
 --- Adds a new item to a character's inventory.
 -- @param string ownerID The owner's character ID.
 -- @param string uniqueID The uniqueID of the item.
@@ -56,6 +52,7 @@ function ow.item:Spawn(uniqueID, pos, angles, callback)
     item:SetItem(uniqueID)
     item:Activate()
 
+    self.instances[#self.instances + 1] = item
 
     if ( callback ) then
         callback(item)

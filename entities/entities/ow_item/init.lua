@@ -16,10 +16,31 @@ function ENT:SetItem(uniqueID)
     if ( !itemData ) then return false end
 
     self:SetModel(Model(itemData.Model))
-    self:SetSkin(itemData.Skin or 0)
-    self:SetColor(itemData.Color or color_white)
-    self:SetMaterial(itemData.Material or "")
-    self:SetModelScale(itemData.Scale or 1)
+
+    local iSkin = itemData.Skin or 0
+    if ( isfunction(itemData.GetSkin) ) then
+        iSkin = itemData:GetSkin(self)
+    end
+
+    local cColor = itemData.Color or color_white
+    if ( isfunction(itemData.GetColor) ) then
+        cColor = itemData:GetColor(self)
+    end
+
+    local sMaterial = itemData.Material or ""
+    if ( isfunction(itemData.GetMaterial) ) then
+        sMaterial = itemData:GetMaterial(self)
+    end
+
+    local fScale = itemData.Scale or 1
+    if ( isfunction(itemData.GetScale) ) then
+        fScale = itemData:GetScale(self)
+    end
+
+    self:SetSkin(iSkin)
+    self:SetColor(cColor)
+    self:SetMaterial(sMaterial)
+    self:SetModelScale(fScale)
     -- self:SetCollisionGroup(COLLISION_GROUP_WEAPON) bloodycop: Wondering if we should do this
 
     self:SetSolid(SOLID_VPHYSICS)
@@ -47,5 +68,45 @@ function ENT:SetItem(uniqueID)
     end
 
     -- bloodycop: Might need an overhaul in the future lol
-    self:SetItemID(math.random(1, 9999))
+    self:SetItemID(#ow.item.instances + 1)
+    self:SetItemUniqueID(uniqueID)
+end
+
+function ENT:Use(ply)
+    if ( !IsValid(ply) or !ply:IsPlayer() ) then return end
+
+    if ( hook.Run("CanPlayerTakeItem", ply, self) == false ) then return end
+
+    local itemData = ow.item:Get(self:GetItemID())
+    if ( !itemData ) then return end
+
+    if ( itemData.OnTaken ) then
+        itemData:OnTaken(ply, self)
+    end
+
+    SafeRemoveEntity(self)
+
+    hook.Run("PlayerTookItem", ply, self)
+end
+
+function ENT:OnRemove()
+    local itemData = ow.item:Get(self:GetItemID())
+    if ( !itemData ) then return end
+
+    if ( itemData.OnRemoved ) then
+        itemData:OnRemoved(self)
+    end
+
+    table.RemoveByValue(ow.item.instances, self)
+end
+
+function ENT:OnTakeDamage(damageInfo)
+    local itemData = ow.item:Get(self:GetItemID())
+    if ( !itemData ) then return end
+
+    self:SetHealth(self:Health() - damageInfo:GetDamage())
+
+    if ( self:Health() <= 0 and hook.Run("ItemCanBeDestroyed", self, damageInfo) != false ) then
+        SafeRemoveEntity(self)
+    end
 end

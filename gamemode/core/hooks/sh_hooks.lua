@@ -57,3 +57,11 @@ end
 function GM:PlayerCanLoadCharacter(ply, character, currentCharacter)
     return true
 end
+
+function GM:CanPlayerTakeItem(ply, item)
+    return true
+end
+
+function GM:ItemCanBeDestroyed(item, damageInfo)
+    return true
+end

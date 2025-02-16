@@ -32,7 +32,6 @@ function ow.item:Register(uniqueID, itemData)
 
     hook.Run("PostItemRegistered", uniqueID, itemData)
 
-    self.instances[#self.instances + 1] = itemData
     self.stored[uniqueID] = itemData
 end
 
@@ -47,7 +46,7 @@ function ow.item:Get(look)
 end
 
 function ow.item:GetAll()
-    return self.instances
+    return self.stored
 end
 
 if ( CLIENT ) then
