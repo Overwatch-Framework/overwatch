@@ -112,6 +112,8 @@ function ow.sqlite:LoadRow(query, key, value, callback)
         end
 
         self:Insert(query, row)
+
+        return
     else
         for k, v in pairs(row) do
             if ( v == nil ) then
