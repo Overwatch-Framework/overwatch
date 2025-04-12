@@ -216,8 +216,10 @@ function SWEP:Think()
 end
 
 function SWEP:OnRemove()
-    SafeRemoveEntity(self:GetConstraint())
-    SafeRemoveEntity(self:GetConstraintTarget())
+    if ( SERVER ) then
+        SafeRemoveEntity(self:GetConstraint())
+        SafeRemoveEntity(self:GetConstraintTarget())
+    end
 
     self:SetDragging(false)
     self:SetDraggingTarget(nil)
