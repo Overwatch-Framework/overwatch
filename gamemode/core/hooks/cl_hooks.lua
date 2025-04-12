@@ -160,7 +160,7 @@ function GM:HUDPaint()
         local clip = activeWeapon:Clip1()
         local ammoText = clip .. " / " .. ammo
 
-        draw.SimpleText(ammoText, "ow.fonts.default.bold", ScrW() - 16, ScrH() - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM)
+        draw.SimpleTextOutlined(ammoText, "ow.fonts.default.bold", ScrW() - 16, ScrH() - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
     end
 end
 
