@@ -1,5 +1,5 @@
 function GM:PlayerInitialSpawn(ply)
-    ow.sqlite:LoadRow("players", ply:SteamID(), function(data)
+    ow.sqlite:LoadRow("players", "steamid", ply:SteamID(), function(data)
         if ( !IsValid(ply) ) then return end
 
         ply.owDatabase = data
