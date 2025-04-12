@@ -14,8 +14,8 @@ function ow.config:Set(key, value)
     local stored = self.stored[key]
     if ( stored == nil or !istable(stored) ) then return false end
 
-    local oldValue = stored[key]
-    stored[key].Value = value
+    local oldValue = stored.Value
+    stored.Value = value
 
     net.Start("ow.config.set")
         net.WriteString(key)
@@ -24,8 +24,8 @@ function ow.config:Set(key, value)
 
     hook.Run("ConfigValueChanged", key, oldValue, value)
 
-    if ( stored[key].OnChange ) then
-        stored[key]:OnChange(value, oldValue)
+    if ( stored.OnChange ) then
+        stored:OnChange(value, oldValue)
     end
 
     return true
