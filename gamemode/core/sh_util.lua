@@ -297,6 +297,37 @@ function ow.util:FindPlayer(identifier)
     return nil
 end
 
+--- Wraps text to fit within a specified width.
+-- @realm shared
+-- @param text string The text to wrap.
+-- @param font string The font to use for wrapping.
+-- @param maxWidth number The maximum width of the text.
+-- @return table A table containing the wrapped lines of text.
+-- @usage local lines = ow.util:WrapText("This is a long line of text that needs to be wrapped.", "Default", 200)
+-- > lines = {"This is a long line of text", "that needs to be wrapped."}
+function ow.util:WrapText(text, font, maxWidth)
+    surface.SetFont(font)
+
+    local words = string.Explode(" ", text)
+    local lines = {}
+    local line = ""
+    for k, v in ipairs(words) do
+        local w = surface.GetTextSize(v)
+        local lw = surface.GetTextSize(line)
+
+        if ( lw + w > maxWidth ) then
+            table.insert(lines, line)
+            line = ""
+        end
+
+        line = line .. v .. " "
+    end
+
+    table.insert(lines, line)
+
+    return lines
+end
+
 --- Gets the bounds of a box, providing the center, minimum, and maximum points.
 -- @realm shared
 -- @param startpos Vector The starting position of the box.
