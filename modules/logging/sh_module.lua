@@ -22,7 +22,7 @@ function MODULE:FormatEntity(ent)
         return self:FormatPlayer(ent)
     end
 
-    return ent:GetClass() .. " (" .. ent:EntIndex() .. ")"
+    return ent:GetClass() .. " (" .. ent:GetModel() .. " :: " .. ent:EntIndex() .. ")"
 end
 
 ow.color:Register("ow.log.message", Color(250, 200, 25))
