@@ -147,13 +147,19 @@ function ow.util:PreparePackage(...)
     return package
 end
 
+local serverErrorColour = Color(136, 221, 255, 255)
+local clientErrorColour = Color(255, 221, 102, 255)
+
+local serverMsgColour = Color(156, 241, 255, 200)
+local clientMsgColour = Color(255, 241, 122, 200)
+
 --- Prints a message to the console.
 -- @realm shared
 -- @param ... any The message to print.
 function ow.util:Print(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", color_white, unpack(args))
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", SERVER and serverMsgColour or clientMsgColour, unpack(args))
 
     return args
 end
@@ -164,7 +170,7 @@ end
 function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", SERVER and gmod.console.error.server or gmod.console.error.client, "Error | ", color_white, unpack(args))
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", SERVER and serverErrorColour or clientErrorColour, "Error | ", color_white, unpack(args))
 
     return args
 end
@@ -238,7 +244,7 @@ end
 -- @string find The type to search for.
 -- @return string The type of the value.
 function ow.util:FindString(str, find)
-    if ( !str or !find ) then
+    if ( str == nil or find == nil ) then
         print("Attempted to find a string with no value", str, find)
         return false
     end
@@ -285,7 +291,7 @@ function ow.util:FindPlayer(identifier)
     end
 
     if ( self:FindString(identifierType, "string") ) then
-        for k, v in ipairs(player.GetAll()) do
+        for _, v in player.Iterator() do
             if ( self:FindString(v:Name(), identifier) or self:FindString(v:SteamID(), identifier) or self:FindString(v:SteamID64(), identifier) ) then
                 return v
             end
@@ -315,6 +321,7 @@ function ow.util:WrapText(text, font, maxWidth)
     local words = string.Explode(" ", text)
     local lines = {}
     local line = ""
+
     for k, v in ipairs(words) do
         local w = surface.GetTextSize(v)
         local lw = surface.GetTextSize(line)
@@ -343,15 +350,6 @@ function ow.util:GetBounds(startpos, endpos)
     local max = WorldToLocal(endpos, angle_zero, center, angle_zero)
 
     return center, min, max
-end
-
---- Dims a color by a specified fraction.
--- @realm shared
--- @param col Color The color to dim.
--- @param frac number The fraction to dim the color by.
--- @return Color The dimmed color.
-function ow.util:ColorDim(col, frac)
-    return Color(col.r * frac, col.g * frac, col.b * frac, col.a)
 end
 
 function ow.util:GetCharacters()
