@@ -232,13 +232,17 @@ end
 -- @realm shared
 -- @string str The value to get the type of.
 -- @string find The type to search for.
--- @bool bPatterns Whether or not to use patterns when searching.
 -- @return string The type of the value.
-function ow.util:FindString(str, find, bPatterns)
-    if ( !str or !find ) then return false end
-    if ( bPatterns == nil ) then bPatterns = true end
+function ow.util:FindString(str, find)
+    if ( !str or !find ) then
+        print("Attempted to find a string with no value", str, find)
+        return false
+    end
 
-    return tobool(string.find(string.lower(str), string.lower(find), 1, bPatterns))
+    str = string.lower(str)
+    find = string.lower(find)
+
+    return string.find(str, find) != nil
 end
 
 --- Searches a given text for the specified value.
@@ -264,29 +268,33 @@ end
 -- @param identifier any The identifier to search for.
 -- @return Player The player that was found.
 function ow.util:FindPlayer(identifier)
-    if ( !identifier ) then return end
+    if ( !identifier ) then return nil end
 
-    if ( type(identifier) == "Player" ) then
+    local identifierType = type(identifier)
+
+    if ( self:FindString(identifierType, "player" ) ) then
         return identifier
     end
 
-    if ( type(identifier) == "string" ) then
-        for k, v in player.Iterator() do
+    if ( self:FindString(identifierType, "number") ) then
+        return Player(identifier)
+    end
+
+    if ( self:FindString(identifierType, "string") ) then
+        for k, v in ipairs(player.GetAll()) do
             if ( self:FindString(v:Name(), identifier) or self:FindString(v:SteamID(), identifier) or self:FindString(v:SteamID64(), identifier) ) then
                 return v
             end
         end
     end
 
-    if ( type(identifier) == "number" ) then
-        return Player(identifier)
-    end
-
-    if ( type(identifier) == "table" ) then
+    if ( self:FindString(identifierType, "table") ) then
         for k, v in ipairs(identifier) do
-            return self:FindPlayer(v)
+            return self:FindString(v)
         end
     end
+
+    return nil
 end
 
 --- Gets the bounds of a box, providing the center, minimum, and maximum points.
