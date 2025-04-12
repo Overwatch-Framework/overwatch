@@ -12,7 +12,7 @@ CAMI.RegisterPrivilege({
 function MODULE:FormatPlayer(ply)
     if ( !IsValid(ply) ) then return "Console" end
 
-    return ply:SteamName() .. " (" .. ply:SteamID64() .. ")"
+    return ply:SteamName() .. " (" .. ply:Name() .. " :: " .. ply:SteamID64() .. ")"
 end
 
 function MODULE:FormatEntity(ent)
