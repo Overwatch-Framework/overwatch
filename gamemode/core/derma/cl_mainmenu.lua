@@ -24,7 +24,7 @@ function PANEL:Init()
     end
 
     self.currentCreatePage = 0
-    self.currentPaylod = {}
+    self.currentCreatePayload = {}
 
     self:SetSize(ScrW(), ScrH())
     self:MakePopup()
@@ -68,7 +68,7 @@ function PANEL:Populate()
         playButton:Dock(TOP)
         playButton:SetText("PLAY")
         playButton:DockMargin(0, 0, 0, 8)
-    
+
         playButton.DoClick = function()
             self:Remove()
         end
@@ -77,9 +77,21 @@ function PANEL:Populate()
         createButton:Dock(TOP)
         createButton:SetText("CREATE CHARACTER")
         createButton:DockMargin(0, 0, 0, 8)
-    
+
         createButton.DoClick = function()
-            self:PopulateCreateCharacter()
+            local hasMultipleOptions = false
+            for k, v in pairs(ow.faction:GetAll()) do
+                if ( ow.faction:CanSwitchTo(ply, v.Index) ) then
+                    hasMultipleOptions = true
+                    break
+                end
+            end
+
+            if ( hasMultipleOptions ) then
+                self:PopulateFactionSelect()
+            else
+                self:PopulateCreateCharacter()
+            end
         end
     end
 
@@ -89,7 +101,7 @@ function PANEL:Populate()
         selectButton:Dock(TOP)
         selectButton:SetText("SELECT CHARACTER")
         selectButton:DockMargin(0, 0, 0, 8)
-    
+
         selectButton.DoClick = function()
             self:PopulateSelectCharacter()
         end
@@ -99,7 +111,7 @@ function PANEL:Populate()
     settingsButton:Dock(TOP)
     settingsButton:SetText("SETTINGS")
     settingsButton:DockMargin(0, 0, 0, 8)
-    
+
     settingsButton.DoClick = function()
         self:PopulateSettings()
     end
@@ -113,6 +125,62 @@ function PANEL:Populate()
         Derma_Query("Are you sure you want to disconnect?", "Disconnect", "Yes", function()
             RunConsoleCommand("disconnect")
         end, "No")
+    end
+end
+
+function PANEL:PopulateFactionSelect()
+    self:Clear()
+
+    local title = self:Add("DLabel")
+    title:Dock(TOP)
+    title:DockMargin(padding, padding, padding, 0)
+    title:SetFont("ow.fonts.title")
+    title:SetText("CREATE CHARACTER")
+    title:SetTextColor(hook.Run("GetFrameworkColor"))
+    title:SetExpensiveShadow(4, color_black)
+    title:SizeToContents()
+
+    local subtitle = self:Add("DLabel")
+    subtitle:Dock(TOP)
+    subtitle:DockMargin(padding * 1.5, 0, padding, 0)
+    subtitle:SetFont("ow.fonts.subtitle")
+    subtitle:SetText("SELECT YOUR FACTION")
+    subtitle:SetTextColor(color_white)
+    subtitle:SetExpensiveShadow(4, color_black)
+    subtitle:SizeToContents()
+
+    local navigation = self:Add("EditablePanel")
+    navigation:Dock(BOTTOM)
+    navigation:DockMargin(padding, 0, padding, padding)
+    navigation:SetTall(ScreenScale(24))
+
+    local backButton = navigation:Add("ow.mainmenu.button")
+    backButton:Dock(LEFT)
+    backButton:SetText("BACK")
+    backButton.DoClick = function()
+        self:Populate()
+    end
+
+    local factionList = self:Add("DPanel")
+    factionList:Dock(FILL)
+    factionList:DockMargin(padding * 2, padding, padding * 2, padding)
+    factionList.Paint = nil
+
+    for k, v in ipairs(ow.faction:GetAll()) do
+        if ( !ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then continue end
+
+        local factionButton = factionList:Add("ow.mainmenu.button")
+        factionButton:Dock(LEFT)
+        factionButton:SetText(v.Name or "Unknown Faction")
+        factionButton:SetWide(self:GetWide() / 2 - padding * 4)
+
+        factionButton.DoClick = function()
+            self.currentCreatePage = 0
+            self.currentCreatePayload = {}
+            self.currentCreatePayload.factionIndex = v.Index
+
+            self:PopulateCreateCharacter()
+        end
     end
 end
 
@@ -148,7 +216,19 @@ function PANEL:PopulateCreateCharacter()
 
     backButton.DoClick = function()
         if ( self.currentCreatePage == 0 ) then
-            self:Populate()
+            local hasMultipleOptions = false
+            for k, v in pairs(ow.faction:GetAll()) do
+                if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
+                    hasMultipleOptions = true
+                    break
+                end
+            end
+
+            if ( hasMultipleOptions ) then
+                self:PopulateFactionSelect()
+            else
+                self:Populate()
+            end
         else
             self.currentCreatePage = self.currentCreatePage - 1
             self:PopulateCreateCharacterForm()
@@ -160,8 +240,6 @@ function PANEL:PopulateCreateCharacter()
     nextButton:SetText("NEXT")
 
     nextButton.DoClick = function()
-        local canContinue = true
-
         -- TODO: Validate the form data of the current page
 
         self.currentCreatePage = self.currentCreatePage + 1
@@ -188,7 +266,7 @@ function PANEL:PopulateCreateCharacterForm()
         if ( page != self.currentCreatePage ) then continue end
 
         if ( v.OnPopulate ) then
-            v:OnPopulate(self.characterCreateForm)
+            v:OnPopulate(self.characterCreateForm, self.currentCreatePayload)
             continue
         end
 

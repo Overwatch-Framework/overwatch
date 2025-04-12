@@ -8,7 +8,7 @@ function PANEL:Init()
     self:SetContentAlignment(5)
     self:SetExpensiveShadow(1, color_black)
     self:SetTall(ScreenScale(14))
-    self:SetTextInset(self:GetTall() / 2, 0)
+    self:SetTextInset(0, 0)
 end
 
 function PANEL:SetText(text)
@@ -21,7 +21,6 @@ end
 
 local color_button = Color(0, 0, 0, 150)
 local color_button_hover = Color(0, 0, 0, 200)
-local color_button_text = color_white
 function PANEL:Paint(width, height)
     local color = color_button
     if ( self.Depressed or self:IsSelected() ) then
