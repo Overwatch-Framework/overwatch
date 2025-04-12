@@ -1,5 +1,5 @@
 
---- Top-level library containing all Helix libraries. A large majority of the framework is split into respective libraries that
+--- Top-level library containing all Overwatch libraries. A large majority of the framework is split into respective libraries that
 -- reside within `ow`.
 -- @module ow
 

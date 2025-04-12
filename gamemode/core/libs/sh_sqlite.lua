@@ -7,6 +7,7 @@ ow.sqlite.tables = {}
 
 --- Registers a variable for a table to be included in table creation and loading.
 -- It will also automatically add the column to the table in the database if it doesn't exist.
+-- @realm shared
 -- @tparam string tableName The name of the table (e.g. "users", "characters")
 -- @tparam string key The name of the variable (e.g. "credits", "xp")
 -- @tparam any default The default value for the variable
@@ -18,6 +19,7 @@ function ow.sqlite:RegisterVar(tableName, key, default)
 end
 
 --- Adds a column to an existing table if the column doesn't already exist.
+-- @realm shared
 -- @tparam string tableName The name of the table (e.g. "users", "characters")
 -- @tparam string columnName The name of the column to add
 -- @tparam string columnType The type of the column (e.g. "INTEGER", "TEXT")
@@ -47,6 +49,7 @@ function ow.sqlite:AddColumn(tableName, columnName, columnType, defaultValue)
 end
 
 --- Returns a default row based on registered variables for a table.
+-- @realm shared
 -- @tparam string query The table name
 -- @tparam table[opt] override Optional overrides to apply to default row
 -- @treturn table The default row with values
@@ -60,6 +63,7 @@ function ow.sqlite:GetDefaultRow(query, override)
 end
 
 --- Initializes a table by creating it in SQLite with registered and extra schema fields.
+-- @realm shared
 -- @tparam string query The table name
 -- @tparam table[opt] extraSchema Extra schema definitions (e.g. primary key)
 function ow.sqlite:InitializeTable(query, extraSchema)
@@ -89,6 +93,7 @@ function ow.sqlite:InitializeTable(query, extraSchema)
 end
 
 --- Loads a row from a table, or inserts a default if not found.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam string key Column to match (e.g. "steamid")
 -- @tparam any value Value to match (e.g. player's SteamID)
@@ -119,6 +124,7 @@ function ow.sqlite:LoadRow(query, key, value, callback)
 end
 
 --- Saves a full data row back into the table using a key match.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam table data The row data to save
 -- @tparam string key Column name to use for matching
@@ -128,6 +134,7 @@ function ow.sqlite:SaveRow(query, data, key)
 end
 
 --- Creates a table with a given schema if it doesn't already exist.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam table schema Column definitions
 function ow.sqlite:CreateTable(query, schema)
@@ -141,6 +148,7 @@ function ow.sqlite:CreateTable(query, schema)
 end
 
 --- Inserts a row into a table.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam table data Row data
 function ow.sqlite:Insert(query, data)
@@ -157,6 +165,7 @@ function ow.sqlite:Insert(query, data)
 end
 
 --- Updates a row in a table based on a condition.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam table data Row data to update
 -- @tparam string condition WHERE clause condition
@@ -172,6 +181,7 @@ function ow.sqlite:Update(query, data, condition)
 end
 
 --- Selects rows from a table matching a condition.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam table[opt] columns Array of column names or nil for all
 -- @tparam string[opt] condition WHERE clause
@@ -188,6 +198,7 @@ function ow.sqlite:Select(query, columns, condition)
 end
 
 --- Returns the number of rows in a table.
+-- @realm shared
 -- @tparam string query Table name
 -- @tparam string[opt] condition WHERE clause
 -- @treturn number Number of rows

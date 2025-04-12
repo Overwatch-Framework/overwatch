@@ -44,7 +44,7 @@ end
         {% if (mod) then %}
             <meta property="og:description" content="{{moduleDescription(mod)}}" />
         {% else %}
-            <meta property="og:description" content="Documentation and function reference for the Helix framework." />
+            <meta property="og:description" content="Documentation for {{ldoc.title}}" />
         {% end %}
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />

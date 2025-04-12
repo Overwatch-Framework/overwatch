@@ -2,6 +2,7 @@
 -- @module ow.item
 
 --- Adds a new item to a character's inventory.
+-- @realm server
 -- @param string ownerID The owner's character ID.
 -- @param string uniqueID The uniqueID of the item.
 -- @param table data The data to save with the item.
@@ -40,6 +41,7 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
 end
 
 --- Spawns an item entity with the given uniqueID, position and angles.
+-- @realm server
 -- @param string uniqueID The uniqueID of the item.
 -- @param Vector pos The position of the item.
 -- @param Angle angles The angles of the item.
