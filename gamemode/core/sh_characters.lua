@@ -38,7 +38,7 @@ ow.character:RegisterVariable("model", {
     Editable = true,
     ZPos = 0,
     DisplayName = "Model",
-    OnPopulate = function(self, parent)
+    OnPopulate = function(self, parent, payload)
         local label = parent:Add("DLabel")
         label:Dock(TOP)
         label:SetText(self.DisplayName or k)
@@ -54,13 +54,17 @@ ow.character:RegisterVariable("model", {
         local layout = scroller:Add("DIconLayout")
         layout:Dock(FILL)
 
-        for k, v in SortedPairs(player_manager.AllValidModels()) do
-            local icon = layout:Add("SpawnIcon")
-            icon:SetModel(v)
-            icon:SetSize(64, 128)
-            icon:SetTooltip(v)
-            icon.DoClick = function()
-                notification.AddLegacy("Model set to " .. v, NOTIFY_GENERIC, 5)
+        local factionIndex = payload.factionIndex or 1
+        local faction = ow.faction:Get(factionIndex)
+        if ( faction and faction.Models ) then
+            for _, v in SortedPairs(faction.Models) do
+                local icon = layout:Add("SpawnIcon")
+                icon:SetModel(v)
+                icon:SetSize(64, 128)
+                icon:SetTooltip(v)
+                icon.DoClick = function()
+                    notification.AddLegacy("Model set to " .. v, NOTIFY_GENERIC, 5)
+                end
             end
         end
     end

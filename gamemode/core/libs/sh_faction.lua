@@ -80,11 +80,13 @@ function ow.faction:CanSwitchTo(ply, factionID)
     local faction = self:Get(factionID)
     if ( !faction ) then return false end
 
-    local oldFaction = ply:Team()
-    if ( oldFaction == faction.Index ) then return false end
+    local oldFaction = self:Get(ply:Team())
+    if ( oldFaction ) then
+        if ( oldFaction.Index == faction.Index ) then return false end
 
-    if ( oldFaction.CanLeave and !oldFaction:CanLeave(ply) ) then
-        return false
+        if ( oldFaction.CanLeave and !oldFaction:CanLeave(ply) ) then
+            return false
+        end
     end
 
     local hookRun = hook.Run("CanPlayerBecomeFaction", ply, factionID)
@@ -94,7 +96,13 @@ function ow.faction:CanSwitchTo(ply, factionID)
         return false
     end
 
-    if ( !faction.IsDefault ) then return false end
+    if ( !faction.IsDefault and !ply:HasWhitelist(faction.UniqueID) ) then
+        return false
+    end
 
     return true
+end
+
+function ow.faction:GetAll()
+    return self.instances
 end
