@@ -60,6 +60,7 @@ function GM:PostPlayerLoadout(ply)
 end
 
 function GM:PlayerDeathThink(ply)
+    -- TODO: uh, some happy day this should be replaced
     if ( ply:KeyPressed(IN_ATTACK) or ply:KeyPressed(IN_ATTACK2) or ply:KeyPressed(IN_JUMP) or ply:IsBot() ) then
         ply:Spawn()
     end
