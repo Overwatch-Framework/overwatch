@@ -37,10 +37,10 @@ function ow.sqlite:AddColumn(tableName, columnName, columnType, defaultValue)
 
         if ( !columnExists ) then
             local query = string.format(
-                "ALTER TABLE %s ADD COLUMN %s %s DEFAULT %s;", 
-                tableName, 
-                columnName, 
-                columnType, 
+                "ALTER TABLE %s ADD COLUMN %s %s DEFAULT %s;",
+                tableName,
+                columnName,
+                columnType,
                 sql.SQLStr(defaultValue)
             )
             sql.Query(query)
