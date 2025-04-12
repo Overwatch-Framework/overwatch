@@ -35,7 +35,7 @@ function ow.character:Create(ply, query)
     end
 
     insertQuery.id = id
-    insertQuery.steamid = ply:SteamID()
+    insertQuery.steamid = ply:SteamID64()
     insertQuery.schema = SCHEMA.Folder
 
     ow.sqlite:Insert("characters", insertQuery)
