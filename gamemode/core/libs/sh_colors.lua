@@ -2,7 +2,7 @@
 -- @module ow.color
 
 ow.color = {}
-ow.color.stored = ow.color.stored or {}
+ow.color.stored = {}
 
 --- Registers a new color.
 -- @realm shared
@@ -34,4 +34,13 @@ function ow.color:Get(name)
 
     ow.util:PrintError("Attempted to get an invalid color!")
     return
+end
+
+--- Dims a color by a specified fraction.
+-- @realm shared
+-- @param col Color The color to dim.
+-- @param frac number The fraction to dim the color by.
+-- @return Color The dimmed color.
+function ow.color:Dim(col, frac)
+    return Color(col.r * frac, col.g * frac, col.b * frac, col.a)
 end
