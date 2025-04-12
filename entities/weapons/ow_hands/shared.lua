@@ -53,12 +53,9 @@ function SWEP:PrimaryAttack()
     if ( self:GetNextPrimaryFire() > CurTime() ) then return end
 
     if ( self:GetDragging() ) then
-        if ( IsValid(self:GetConstraint()) ) then
-            self:GetConstraint():Remove()
-        end
-
-        if ( IsValid(self:GetConstraintTarget()) ) then
-            self:GetConstraintTarget():Remove()
+        if ( SERVER ) then
+            SafeRemoveEntity(self:GetConstraint())
+            SafeRemoveEntity(self:GetConstraintTarget())
         end
 
         self:SetDragging(false)
