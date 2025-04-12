@@ -159,3 +159,7 @@ function GM:PlayerCanHearPlayersVoice(listener, talker)
 
     return true, true
 end
+
+function GM:CanPlayerSuicide(ply)
+    return false
+end
