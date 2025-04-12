@@ -42,7 +42,7 @@ function meta:Distance(other)
     local x, y, z = self.x, self.y, self.z
     local x2, y2, z2 = other.x, other.y, other.z
 
-    return math.sqrt((x - x2)^2 + (y - y2)^2 + (z - z2)^2)
+    return math.sqrt((x - x2) ^ 2 + (y - y2) ^ 2 + (z - z2) ^ 2)
 end
 
 local CrossProduct = meta.Cross
