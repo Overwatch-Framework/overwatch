@@ -166,12 +166,9 @@ function SWEP:SecondaryAttack()
             self:SetDragging(true)
             self:SetDraggingTarget(ent)
         else
-            if ( IsValid(self:GetConstraint()) ) then
-                self:GetConstraint():Remove()
-            end
-
-            if ( IsValid(self:GetConstraintTarget()) ) then
-                self:GetConstraintTarget():Remove()
+            if ( SERVER ) then
+                SafeRemoveEntity(self:GetConstraint())
+                SafeRemoveEntity(self:GetConstraintTarget())
             end
 
             self:SetDragging(false)
