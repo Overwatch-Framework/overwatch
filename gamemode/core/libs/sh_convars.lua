@@ -17,4 +17,11 @@ function ow.convars:Create(name, default, flags, help, min, max)
     self.stored[name] = convar
 end
 
+function ow.convars:CreateClient(name, default, shouldsave, userinfo, helptext, min, max)
+    if ( self.stored[name] ) then return end
+
+    local convar = CreateClientConVar(name, default, shouldsave, userinfo, helptext, min, max)
+    self.stored[name] = convar
+end
+
 ow.convars:Create("ow_debug", "0", {FCVAR_REPLICATED, FCVAR_ARCHIVE}, "Enable debug mode.", 0, 1)
