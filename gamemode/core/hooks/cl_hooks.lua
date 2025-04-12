@@ -20,6 +20,10 @@ function GM:InitPostEntity()
     ow.localClient = LocalPlayer()
 end
 
+function GM:OnCloseCaptionEmit()
+    return true
+end
+
 function GM:PostSchemaLoad()
     -- Do something here
 end
