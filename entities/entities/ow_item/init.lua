@@ -41,7 +41,7 @@ function ENT:SetItem(uniqueID)
     self:SetColor(cColor)
     self:SetMaterial(sMaterial)
     self:SetModelScale(fScale)
-    -- self:SetCollisionGroup(COLLISION_GROUP_WEAPON) bloodycop: Wondering if we should do this
+    -- self:SetCollisionGroup(COLLISION_GROUP_WEAPON) -- TODO: Wondering if we should do this
 
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
