@@ -104,12 +104,18 @@ function ow.sqlite:LoadRow(query, key, value, callback)
 
     local row = result and result[1]
     if ( !row ) then
-        row = self:GetDefaultRow(query, {[key] = value})
+        row = self:GetDefaultRow(query)
+        row[key] = value
+
+        if ( isfunction(callback) ) then
+            callback(row)
+        end
+
         self:Insert(query, row)
     else
-        for k, v in pairs(self.tables[query] or {}) do
-            if ( row[k] == nil ) then
-                row[k] = v
+        for k, v in pairs(row) do
+            if ( v == nil ) then
+                row[k] = self.tables[query][k]
             end
         end
     end
