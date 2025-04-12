@@ -70,9 +70,7 @@ end
 for k, v in ipairs(files) do
     local ModuleUniqueID = string.StripExtension(v)
     if ( string.sub(v, 1, 3) == "cl_" or string.sub(v, 1, 3) == "sv_" or string.sub(v, 1, 3) == "sh_" ) then
-        ModuleUniqueID = string.gsub(ModuleUniqueID, "cl_", "")
-        ModuleUniqueID = string.gsub(ModuleUniqueID, "sv_", "")
-        ModuleUniqueID = string.gsub(ModuleUniqueID, "sh_", "")
+        ModuleUniqueID = string.sub(v, 4)
     end
 
     MODULE = { UniqueID = ModuleUniqueID }
