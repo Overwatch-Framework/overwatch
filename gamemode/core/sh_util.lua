@@ -238,7 +238,11 @@ function ow.util:FindString(str, find, bPatterns)
     if ( !str or !find ) then return false end
     if ( bPatterns == nil ) then bPatterns = true end
 
-    return tobool(string.find(string.lower(str), string.lower(find), 1, bPatterns))
+    local lower = string.lower(str)
+    local lowerFind = string.lower(find)
+    if ( lower == lowerFind ) then return true end
+
+    return tobool(string.find(lower, lowerFind, 1, bPatterns))
 end
 
 --- Searches a given text for the specified value.
