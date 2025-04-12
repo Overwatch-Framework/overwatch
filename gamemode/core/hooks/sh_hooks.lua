@@ -19,7 +19,7 @@ function GM:GetPlayerHandsPushForce(ply)
 end
 
 function GM:GetPlayerHandsReachDistance(ply)
-    return 96
+    return 64
 end
 
 function GM:GetPlayerHandsMaxMass(ply)
