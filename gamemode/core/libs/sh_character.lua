@@ -3,9 +3,22 @@
 
 ow.character = {}
 ow.character.variables = ow.character.variables or {}
-ow.character.meta = ow.character.meta or {}
 ow.character.fields = ow.character.fields or {}
 ow.character.stored = ow.character.stored or {}
+ow.character.cache = ow.character.cache or {}
+
+ow.character.meta = ow.character.meta or {}
+ow.character.meta.__index = ow.character.meta
+ow.character.meta.__tostring = function(this)
+    return "Character: " .. this.name .. " (" .. this.id .. ")"
+end
+
+ow.character.meta.__eq = function(this, other)
+    return this.id == other.id
+end
+ow.character.meta.__lt = function(this, other)
+    return this.id < other.id
+end
 
 --- Registers a variable for the character.
 -- @realm shared
@@ -29,29 +42,35 @@ function ow.character:RegisterVariable(key, data)
 
         local field = data.Field
         if ( field ) then
-            ow.database:AddToSchema("overwatch_characters", field, data.Type)
+            -- Add the field to the database table
         end
     end
 
     self.variables[key] = data
 end
 
-function ow.character:GetVariable(id, key)
-    local query = mysql:Select("overwatch_characters")
-        query:Select(key)
-        query:Where("id", id)
-        query:Callback(function(result)
-            return result[1][key]
-        end)
-    query:Execute()
-end
+function ow.character:GetVariable(id, key, callback, bNoCache)
+    if ( !self.variables[id] ) then
+        return false, "Variable not found"
+    end
 
-function ow.character:GetPlayerByCharacter(id)
-    local query = mysql:Select("overwatch_characters")
-        query:Select("player_id")
-        query:Where("id", id)
-        query:Callback(function(result)
-            return player.GetBySteamID64(result[1].player_id)
-        end)
-    query:Execute()
+    if ( self.cache[key] and !bNoCache ) then
+        return self.cache[key]
+    end
+
+    local data = self.variables[id]
+
+    if ( SERVER ) then
+        local field = data.Field
+        if ( field ) then
+            -- Get the field from the database table
+            
+        else
+            callback(self.cache[key])
+        end
+    else
+        callback(self.cache[key])
+    end
+
+    return true, nil
 end

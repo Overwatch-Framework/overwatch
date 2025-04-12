@@ -1,6 +1,8 @@
 function GM:PlayerInitialSpawn(ply)
-    ply:LoadData(function()
+    ow.sqlite:LoadRow("players", ply:SteamID(), function(data)
         if ( !IsValid(ply) ) then return end
+
+        ply.owDatabase = data
 
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
@@ -27,7 +29,9 @@ function GM:PostPlayerInitialSpawn(ply)
 end
 
 function GM:PlayerDisconnected(ply)
-    -- Do something here
+    if ( ply.owDatabase ) then
+        ow.sqlite:SaveRow("users", ply.owDatabase, "steamid")
+    end
 end
 
 function GM:PlayerSpawn(ply)
@@ -142,11 +146,11 @@ function GM:Think()
 end
 
 function GM:SaveData()
-    for _, ply in player.Iterator() do
-        if ( !IsValid(ply) ) then continue end
+    ow.util:Print("Saving data...")
 
-        ply:SaveData()
-    end
+    -- Do something here
+
+    ow.util:Print("Data saved.")
 end
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)

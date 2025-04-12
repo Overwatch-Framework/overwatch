@@ -2,20 +2,31 @@
 -- @module ow.character
 
 function ow.character:SetVariable(id, key, value)
-    local query = mysql:Update("overwatch_characters")
-        query:Update(key, value)
-        query:Where("id", id)
-    query:Execute()
-
     hook.Run("CharacterVariableSet", id, key, value)
 end
 
-function ow.character:Create(player)
-    local query = mysql:Insert("overwatch_characters")
-        query:Insert("player_id", player:SteamID64())
-    query:Execute()
+function ow.character:Create(player, query)
+    if not player or not IsValid(player) then return end
+    if not query or not istable(query) then return end
 
-    local id = query:GetID()
+    print("Creating character for player: " .. player:Nick())
+
+    local insertQuery = {
+        steamid = player:SteamID(),
+        name = player:Nick()
+    }
+
+    for k, v in pairs(self.variables) do
+        if v.Default then
+            insertQuery[k] = v.Default
+        end
+    end
+    
+    local id = ow.sqlite:Insert("characters", insertQuery)
+    if not id then
+        print("Failed to create character for player: " .. player:Nick())
+        return
+    end
 
     local character = setmetatable({
         id = id
@@ -25,68 +36,23 @@ function ow.character:Create(player)
         character[k] = v.Default
     end
 
-    hook.Run("PlayerCreatedCharacter", player, character)
+    hook.Run("PlayerCreatedCharacter", player, character, query)
+
     return character
 end
 
 function ow.character:Load(id)
-    local query = mysql:Select("overwatch_characters")
-        query:Where("id", id)
-        query:Callback(function(result)
-            if ( !result or !result[1] ) then return end
-
-            local character = setmetatable({
-                id = id
-            }, self.meta)
-
-            for k, v in pairs(self.variables) do
-                character[k] = result[1][v.Field]
-            end
-
-            return character
-        end)
-    query:Execute()
+    print("Loading character with ID: " .. id)
 end
 
 function ow.character:Save(character)
-    local query = mysql:Update("overwatch_characters")
-        for k, v in pairs(self.variables) do
-            query:Update(v.Field, character[k])
-        end
-        query:Where("id", character.id)
-    query:Execute()
-
-    hook.Run("CharacterSaved", character)
+    print("Saving character with ID: " .. character.id)
 end
 
 function ow.character:Delete(id)
-    local query = mysql:Delete("overwatch_characters")
-        query:Where("id", id)
-    query:Execute()
+    print("Deleting character with ID: " .. id)
 end
 
 hook.Add("Initialize", "ow.character", function()
-    local query = mysql:Select("overwatch_characters")
-        query:Callback(function(result)
-            if ( !result ) then return end
-
-            for k, v in pairs(result) do
-                local character = setmetatable({
-                    id = v.id
-                }, ow.character.meta)
-
-                for k2, v2 in pairs(ow.character.variables) do
-                    character[k2] = v2.Default
-                end
-
-                for k2, v2 in pairs(v) do
-                    if ( ow.character.variables[k2] ) then
-                        character[k2] = v2
-                    end
-                end
-
-                ow.character.stored[v.id] = character
-            end
-        end)
-    query:Execute()
+    
 end)

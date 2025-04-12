@@ -1,0 +1,156 @@
+--- SQLite Utility Library for Overwatch
+-- Provides dynamic variable registration and row management per table.
+-- Designed for frameworks with multiple data tables like `users`, `characters`, etc.
+
+ow.sqlite = ow.sqlite or {}
+ow.sqlite.tables = {}
+
+--- Registers a variable for a table to be included in table creation and loading.
+-- @tparam string query The name of the table (e.g. "users", "characters")
+-- @tparam string key The name of the variable (e.g. "credits", "xp")
+-- @tparam any default The default value for the variable
+function ow.sqlite:RegisterVar(query, key, default)
+    self.tables[query] = self.tables[query] or {}
+    self.tables[query][key] = default
+end
+
+--- Returns a default row based on registered variables for a table.
+-- @tparam string query The table name
+-- @tparam table[opt] override Optional overrides to apply to default row
+-- @treturn table The default row with values
+function ow.sqlite:GetDefaultRow(query, override)
+    local data = table.Copy(self.tables[query] or {})
+    for k, v in pairs(override or {}) do
+        data[k] = v
+    end
+
+    return data
+end
+
+--- Initializes a table by creating it in SQLite with registered and extra schema fields.
+-- @tparam string query The table name
+-- @tparam table[opt] extraSchema Extra schema definitions (e.g. primary key)
+function ow.sqlite:InitializeTable(query, extraSchema)
+    local schema = {
+        steamid = "TEXT PRIMARY KEY"
+    }
+
+    for k, v in pairs(self.tables[query] or {}) do
+        if ( isnumber(v) ) then
+            schema[k] = "INTEGER"
+        elseif ( isstring(v) ) then
+            schema[k] = "TEXT"
+        elseif ( isbool(v) ) then
+            schema[k] = "BOOLEAN"
+        else
+            schema[k] = "TEXT"
+        end
+    end
+
+    if ( extraSchema ) then
+        for k, v in pairs(extraSchema) do
+            schema[k] = v
+        end
+    end
+
+    self:CreateTable(query, schema)
+end
+
+--- Loads a row from a table, or inserts a default if not found.
+-- @tparam string query Table name
+-- @tparam string key Column to match (e.g. "steamid")
+-- @tparam any value Value to match (e.g. player's SteamID)
+-- @tparam function callback Function to run with resulting data row
+function ow.sqlite:LoadRow(query, key, value, callback)
+    local condition = string.format("%s = %s", key, sql.SQLStr(value))
+    local result = self:Select(query, nil, condition)
+
+    local row = result and result[1]
+    if ( !row ) then
+        row = self:GetDefaultRow(query, {[key] = value})
+        self:Insert(query, row)
+    else
+        for k, v in pairs(self.tables[query] or {}) do
+            if row[k] == nil then
+                row[k] = v
+            end
+        end
+    end
+
+    if ( callback ) then
+        if ( isfunction(callback) ) then
+            callback(row)
+        else
+            error("Callback must be a function")
+        end
+    end
+end
+
+--- Saves a full data row back into the table using a key match.
+-- @tparam string query Table name
+-- @tparam table data The row data to save
+-- @tparam string key Column name to use for matching
+function ow.sqlite:SaveRow(query, data, key)
+    local condition = string.format("%s = %s", key, sql.SQLStr(data[key]))
+    self:Update(table, data, condition)
+end
+
+--- Creates a table with a given schema if it doesn't already exist.
+-- @tparam string query Table name
+-- @tparam table schema Column definitions
+function ow.sqlite:CreateTable(query, schema)
+    local parts = {}
+    for column, columnType in pairs(schema) do
+        parts[#parts + 1] = string.format("%s %s", column, columnType)
+    end
+
+    local query = string.format("CREATE TABLE IF NOT EXISTS %s (%s);", query, table.concat(parts, ", "))
+    sql.Query(query)
+end
+
+--- Inserts a row into a table.
+-- @tparam string query Table name
+-- @tparam table data Row data
+function ow.sqlite:Insert(query, data)
+    local keys, values = {}, {}
+
+    for k, v in pairs(data) do
+        keys[#keys + 1] = k
+        values[#values + 1] = sql.SQLStr(v)
+    end
+
+    local query = string.format("INSERT INTO %s (%s) VALUES (%s);",
+        query, table.concat(keys, ", "), table.concat(values, ", "))
+    sql.Query(query)
+end
+
+--- Updates a row in a table based on a condition.
+-- @tparam string query Table name
+-- @tparam table data Row data to update
+-- @tparam string condition WHERE clause condition
+function ow.sqlite:Update(query, data, condition)
+    local updates = {}
+    for k, v in pairs(data) do
+        updates[#updates + 1] = string.format("%s = %s", k, sql.SQLStr(v))
+    end
+
+    local query = string.format("UPDATE %s SET %s WHERE %s;",
+        query, table.concat(updates, ", "), condition)
+    sql.Query(query)
+end
+
+--- Selects rows from a table matching a condition.
+-- @tparam string query Table name
+-- @tparam table[opt] columns Array of column names or nil for all
+-- @tparam string[opt] condition WHERE clause
+-- @treturn table|nil Resulting rows or nil
+function ow.sqlite:Select(query, columns, condition)
+    local cols = columns and table.concat(columns, ", ") or "*"
+    local query = string.format("SELECT %s FROM %s", cols, query)
+
+    if ( condition ) then
+        query = query .. " WHERE " .. condition
+    end
+
+    return sql.Query(query)
+end

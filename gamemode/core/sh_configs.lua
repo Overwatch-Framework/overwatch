@@ -89,5 +89,3 @@ ow.config:Register("jumpPower", {
         end
     end
 })
-
-ow.config.server = ow.yaml.Read("gamemodes/overwatch/config.yml") or {}
