@@ -41,7 +41,7 @@ if ( CLIENT ) then
         local folder = SCHEMA and SCHEMA.Folder or "core"
         file.Write("overwatch/" .. folder .. "/options.txt", util.TableToJSON(self.stored))
 
-        hook.Run("OnOptionChanged", key, value)
+        hook.Run("OnOptionChanged", LocalPlayer(), key, value)
 
         return true
     end
