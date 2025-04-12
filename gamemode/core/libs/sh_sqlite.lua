@@ -103,7 +103,7 @@ function ow.sqlite:LoadRow(query, key, value, callback)
         self:Insert(query, row)
     else
         for k, v in pairs(self.tables[query] or {}) do
-            if row[k] == nil then
+            if ( row[k] == nil ) then
                 row[k] = v
             end
         end
