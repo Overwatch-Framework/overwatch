@@ -164,7 +164,7 @@ end
 function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", Color(200, 0, 0), "Error | ", color_white, unpack(args))
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch | ", SERVER and gmod.console.error.server or gmod.console.error.client, "Error | ", color_white, unpack(args))
 
     return args
 end
