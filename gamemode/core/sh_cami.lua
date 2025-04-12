@@ -14,6 +14,6 @@ CAMI.RegisterPrivilege({
 })
 
 CAMI.RegisterPrivilege({
-    Name = "Overwatch - Noclip",
+    Name = "Overwatch - Manage Flags",
     MinAccess = "admin"
 })
