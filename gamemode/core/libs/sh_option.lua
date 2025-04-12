@@ -63,7 +63,7 @@ if ( CLIENT ) then
 
     function ow.option:Get(key, fallback)
         local optionData = self.stored[key]
-        if ( !optionData ) then
+        if ( !optionData or !istable(optionData) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
             return fallback or nil
         end
