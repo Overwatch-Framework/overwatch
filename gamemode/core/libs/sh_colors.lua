@@ -10,12 +10,12 @@ ow.color.stored = {}
 function ow.color:Register(name, color)
     if ( name == nil or #name < 1 ) then
         ow.util:PrintError("Attempted to register a color without a name!")
-        return
+        return false
     end
 
     if ( color == nil or !IsColor(color) ) then
         ow.util:PrintError("Attempted to register a color without a color!")
-        return
+        return false
     end
 
     hook.Run("PreColorRegistered", name, color)

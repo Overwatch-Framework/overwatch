@@ -23,22 +23,22 @@ ow.command.stored = {}
 --     MinAccess = "user"
 -- })
 function ow.command:Register(info)
-    if ( !info ) then
+    if ( info == nil ) then
         ow.util:PrintError("Attempted to register an invalid command!")
         return
     end
 
-    if ( !info.Name ) then
+    if ( info.Name == nil ) then
         ow.util:PrintError("Attempted to register a command with no name!")
         return
     end
 
-    if ( !info.Callback ) then
+    if ( info.Callback == nil ) then
         ow.util:PrintError("Attempted to register a command with no callback!")
         return
     end
 
-    if ( !info.Prefixes ) then
+    if ( info.Prefixes == nil ) then
         info.Prefixes = {info.Name}
     end
 
@@ -73,7 +73,7 @@ end
 function ow.command:Get(identifier)
     if ( !identifier ) then
         ow.util:PrintError("Attempted to get an invalid command!")
-        return
+        return false
     end
 
     if ( self.stored[identifier] ) then

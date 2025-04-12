@@ -11,12 +11,12 @@ ow.localization.stored = {}
 function ow.localization:Register(language, data)
     if ( language == nil or !isstring(language) ) then
         ow.util:PrintError("Attempted to register a language without a language code!")
-        return
+        return false
     end
 
     if ( data == nil or !istable(data) ) then
         ow.util:PrintError("Attempted to register a language without data!")
-        return
+        return false
     end
 
     if ( self.stored[language] ) then

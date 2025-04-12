@@ -20,7 +20,7 @@ if ( CLIENT ) then
 
     function ow.option:Set(key, value)
         local stored = self.stored[key]
-        if ( !stored ) then
+        if ( stored == nil or !istable(stored) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
             return false
         end
@@ -48,7 +48,7 @@ if ( CLIENT ) then
 
     function ow.option:SetDefault(key, default)
         local stored = self.stored[key]
-        if ( !stored ) then
+        if ( stored == nil or !istable(stored) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
             return false
         end

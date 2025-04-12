@@ -7,12 +7,12 @@ ow.chat.classes = {}
 function ow.chat:Register(uniqueID, chatData)
     if ( !uniqueID ) then
         ow.util:PrintError("Attempted to register a chat class without a unique ID!")
-        return
+        return false
     end
 
     if ( !chatData ) then
         ow.util:PrintError("Attempted to register a chat class without data!")
-        return
+        return false
     end
 
     if ( !chatData.OnChatAdd ) then
@@ -29,9 +29,9 @@ function ow.chat:Register(uniqueID, chatData)
             Callback = function(info, ply, arguments)
                 local text = table.concat(arguments, " ")
 
-                if ( !text or text == "" ) then
+                if ( text == nil or text == "" ) then
                     ow.util:PrintError("Attempted to send an empty chat message!", ply)
-                    return
+                    return false
                 end
 
                 self:Send(ply, uniqueID, text)

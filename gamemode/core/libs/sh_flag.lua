@@ -4,12 +4,12 @@ ow.flag.stored = {}
 function ow.flag:Register(flagChar, giveFunction, takeFunction)
     if ( flagChar == nil or !isstring(flagChar) ) then
         ow.util:PrintError("Attempted to register a flag without a flag character!")
-        return
+        return false
     end
 
     if ( self.stored[flagChar] ) then
         ow.util:PrintError("Attempted to register a flag that already exists!")
-        return
+        return false
     end
 
     self.stored[flagChar] = {

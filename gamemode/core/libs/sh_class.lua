@@ -15,12 +15,14 @@ local default = {
 
 function ow.class:Register(classData)
     if ( classData.faction == nil or !isnumber(classData.faction) ) then
-        return ow.util:PrintError("Attempted to register a class without a valid faction!")
+        ow.util:PrintError("Attempted to register a class without a valid faction!")
+        return false
     end
 
     local faction = ow.faction:Get(classData.faction)
     if ( faction == nil ) then
-        return ow.util:PrintError("Attempted to register a class for an invalid faction!")
+        ow.util:PrintError("Attempted to register a class for an invalid faction!")
+        return false
     end
 
     for k, v in pairs(default) do
@@ -30,17 +32,17 @@ function ow.class:Register(classData)
     end
 
     hook.Run("PreClassRegistered", classData)
-    
+
     local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
     classData.UniqueID = classData.UniqueID or uniqueID
-    
+
     self.stored[classData.UniqueID] = classData
     self.instances[#self.instances + 1] = classData
 
     classData.Index = #self.instances
 
     hook.Run("PostClassRegistered", classData)
-    
+
     faction.Classes = faction.Classes or {}
     faction.Classes[#faction.Classes + 1] = classData
 
@@ -49,7 +51,8 @@ end
 
 function ow.class:Get(identifier)
     if ( !identifier ) then
-        return ow.util:PrintError("Attempted to get an invalid faction!")
+        ow.util:PrintError("Attempted to get an invalid faction!")
+        return false
     end
 
     if ( self.stored[identifier] ) then
@@ -78,8 +81,8 @@ function ow.class:CanSwitchTo(ply, classID)
         return false
     end
 
-    if ( !class.IsDefault ) then 
-        return false 
+    if ( !class.IsDefault ) then
+        return false
     end
 
     return true

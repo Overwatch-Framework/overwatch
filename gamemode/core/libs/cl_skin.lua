@@ -18,21 +18,25 @@ SKIN.Colours.Button.Disabled = Color(0, 0, 0, 100)
 
 SKIN.Colours.Label.Highlight = Color(90, 200, 250, 255)
 
+local lightGrayColorMoreTransparent = Color(100, 100, 100, 150)
+local lightGrayColorLessTransparent = Color(100, 100, 100, 200)
+local grayColor = Color(50, 50, 50, 150)
+
 function SKIN:PaintFrame(panel, width, height)
     ow.util:DrawBlur(panel)
 
-    draw.RoundedBox(0, 0, 0, width, height, Color(50, 50, 50, 150))
-    draw.RoundedBox(0, 0, 0, width, 24, Color(100, 100, 100, 150))
+    draw.RoundedBox(0, 0, 0, width, height, grayColor)
+    draw.RoundedBox(0, 0, 0, width, 24, lightGrayColorMoreTransparent)
 end
 
 function SKIN:PaintButton(panel, width, height)
-    local color = Color(100, 100, 100, 150)
+    local color = lightGrayColorMoreTransparent
     if ( panel:GetDisabled() ) then
-        color = Color(50, 50, 50, 150)
+        color = grayColor
     elseif ( panel.Depressed or panel:IsSelected() ) then
-        color =  Color(100, 100, 100, 200)
+        color =  lightGrayColorLessTransparent
     elseif ( panel.Hovered ) then
-        color = Color(100, 100, 100, 200)
+        color = lightGrayColorLessTransparent
     end
 
     if ( !panel.owLerpColor ) then
@@ -51,13 +55,13 @@ function SKIN:PaintWindowMaximizeButton(panel, width, height)
 end
 
 function SKIN:PaintComboBox(panel, width, height)
-    local color = Color(100, 100, 100, 150)
+    local color = lightGrayColorMoreTransparent
     if ( panel:GetDisabled() ) then
-        color = Color(50, 50, 50, 150)
+        color = grayColor
     elseif ( panel.Depressed or panel:IsSelected() ) then
-        color =  Color(100, 100, 100, 200)
+        color =  lightGrayColorLessTransparent
     elseif ( panel.Hovered ) then
-        color = Color(100, 100, 100, 200)
+        color = lightGrayColorLessTransparent
     end
 
     if ( !panel.owLerpColor ) then
@@ -71,17 +75,17 @@ end
 
 
 function SKIN:PaintMenu(panel, width, height)
-    draw.RoundedBox(0, 0, 0, width, height, Color(50, 50, 50, 150))
+    draw.RoundedBox(0, 0, 0, width, height, grayColor)
 end
 
 function SKIN:PaintMenuOption(panel, width, height)
-    local color = Color(100, 100, 100, 150)
+    local color = lightGrayColorMoreTransparent
     if ( panel:GetDisabled() ) then
-        color = Color(50, 50, 50, 150)
+        color = grayColor
     elseif ( panel.Depressed or panel:IsSelected() ) then
-        color =  Color(100, 100, 100, 200)
+        color =  lightGrayColorLessTransparent
     elseif ( panel.Hovered ) then
-        color = Color(100, 100, 100, 200)
+        color = lightGrayColorLessTransparent
     end
 
     if ( !panel.owLerpColor ) then

@@ -93,3 +93,4 @@ end--[[, function(cmd, argStr, args)
 
     return commands
 end, "Lists all available commands."]])
+-- TODO: Add auto-complete for commands

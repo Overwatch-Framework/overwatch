@@ -11,10 +11,11 @@ ow.config.stored = ow.config.stored or {}
 -- @treturn boolean Whether the configuration was successfully set.
 -- @usage ow.config.Set("schemaColor", Color(0, 100, 150)) -- Sets the color of the schema.
 function ow.config:Set(key, value)
-    if ( !self.stored[key] ) then return false end
+    local stored = self.stored[key]
+    if ( stored == nil or !istable(stored) ) then return false end
 
-    local oldValue = self.stored[key]
-    self.stored[key].Value = value
+    local oldValue = stored[key]
+    stored[key].Value = value
 
     net.Start("ow.config.set")
         net.WriteString(key)
@@ -23,8 +24,8 @@ function ow.config:Set(key, value)
 
     hook.Run("ConfigValueChanged", key, oldValue, value)
 
-    if ( self.stored[key].OnChange ) then
-        self.stored[key]:OnChange(value, oldValue)
+    if ( stored[key].OnChange ) then
+        stored[key]:OnChange(value, oldValue)
     end
 
     return true

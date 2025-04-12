@@ -3,7 +3,10 @@
 
 function ow.faction:Join(ply, factionID, bBypass)
     local faction = self:Get(factionID)
-    if ( !faction ) then return ow.util:PrintError("Attempted to join an invalid faction!") end
+    if ( faction == nil or !istable(faction) ) then
+        ow.util:PrintError("Attempted to join an invalid faction!")
+        return false
+    end
 
     if ( !bBypass and !self:CanSwitchTo(ply, factionID) ) then
         return false

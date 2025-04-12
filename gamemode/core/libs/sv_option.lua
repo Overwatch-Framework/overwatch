@@ -11,7 +11,7 @@ net.Receive("ow.option.set", function(len, ply)
     local value = net.ReadType()
 
     local stored = ow.option.stored[key]
-    if ( !stored ) then
+    if ( stored == nil or !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return
     end
@@ -28,7 +28,7 @@ end)
 
 function ow.option:Set(ply, key, value)
     local stored = ow.option.stored[key]
-    if ( !stored ) then
+    if ( stored == nil or !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return false
     end

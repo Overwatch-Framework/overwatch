@@ -13,7 +13,7 @@ function ow.item:Register(uniqueID, itemData)
         local baseData = self.bases[itemData.Base]
         if ( !baseData ) then
             ErrorNoHalt("Attempted to register item with invalid base: " .. itemData.Base)
-            return
+            return false
         end
 
         itemData = table.Merge(baseData, itemData)

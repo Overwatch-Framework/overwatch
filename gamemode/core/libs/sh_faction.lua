@@ -58,7 +58,8 @@ end
 
 function ow.faction:Get(identifier)
     if ( !identifier ) then
-        return ow.util:PrintError("Attempted to get an invalid faction!")
+        ow.util:PrintError("Attempted to get an invalid faction!")
+        return nil
     end
 
     if ( self.stored[identifier] ) then

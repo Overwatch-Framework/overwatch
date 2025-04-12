@@ -47,18 +47,5 @@ end
 -- @param Angle angles The angles of the item.
 -- @param function callback The callback function.
 function ow.item:Spawn(uniqueID, pos, angles, callback)
-    local item = ents.Create("ow_item")
-    item:SetPos(pos)
-    item:SetAngles(angles or angle_zero)
-    item:Spawn()
-    item:SetItem(uniqueID)
-    item:Activate()
-
-    self.instances[#self.instances + 1] = item
-
-    if ( callback ) then
-        callback(item)
-    end
-
-    return item
+    -- TODO: Rework this shit
 end

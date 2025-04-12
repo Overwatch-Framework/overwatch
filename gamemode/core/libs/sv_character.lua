@@ -8,12 +8,12 @@ end
 function ow.character:Create(ply, query)
     if ( !IsValid(ply) or !ply:IsPlayer() ) then
         ErrorNoHalt("Attempted to create character for invalid player (" .. tostring(ply) .. ")")
-        return
+        return false
     end
 
     if ( !query or !istable(query) ) then
         ErrorNoHalt("Attempted to create character with invalid query (" .. tostring(query) .. ")")
-        return
+        return false
     end
 
     print("Creating character for player (" .. tostring(ply) .. ")")
@@ -31,7 +31,7 @@ function ow.character:Create(ply, query)
     local id = ow.sqlite:Count("characters") + 1
     if ( !id ) then
         print("Failed to get new character ID")
-        return
+        return false
     end
 
     insertQuery.id = id

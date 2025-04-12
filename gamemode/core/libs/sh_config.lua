@@ -26,7 +26,7 @@ end
 -- @treturn boolean Whether the default value of the configuration was successfully set.
 -- @usage ow.config.SetDefault("schemaColor", Color(0, 100, 150)) -- Sets the default color of the schema.
 function ow.config:SetDefault(key, value)
-    if ( !self.stored[key] ) then
+    if ( self.stored[key] == nil ) then
         ErrorNoHalt("Configuration \"" .. key .. "\" does not exist!\n")
         return false
     end
@@ -56,7 +56,7 @@ end
 --     end
 -- })
 function ow.config:Register(key, data)
-    if ( !key or !data ) then return false end
+    if ( key == nil or data == nil ) then return false end
 
     hook.Run("PreConfigRegistered", key, data)
 
