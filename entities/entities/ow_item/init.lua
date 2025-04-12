@@ -67,14 +67,11 @@ function ENT:SetItem(uniqueID)
         itemData:OnSpawned(self)
     end
 
-    -- bloodycop: Might need an overhaul in the future lol
-    self:SetItemID(#ow.item.instances)
-    self:SetItemUniqueID(uniqueID)
+    -- TODO: Assign item ID and uniqu
 end
 
 function ENT:Use(ply)
     if ( !IsValid(ply) or !ply:IsPlayer() ) then return end
-
     if ( hook.Run("CanPlayerTakeItem", ply, self) == false ) then return end
 
     local itemData = ow.item:Get(self:GetItemID())
@@ -96,13 +93,6 @@ function ENT:OnRemove()
     if ( itemData.OnRemoved ) then
         itemData:OnRemoved(self)
     end
-
-    if ( #ow.item.instances == 1 ) then
-        ow.item.instances = {}
-        return
-    end
-
-    table.remove(ow.item.instances, self:GetItemID())
 end
 
 function ENT:OnTakeDamage(damageInfo)
