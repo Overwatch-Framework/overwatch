@@ -293,7 +293,7 @@ function GM:ShouldDrawAmmoBox()
 end
 
 function GM:ShouldDrawDebugHUD()
-    if ( !ow.debugMode:GetBool() ) then return false end
+    if ( !ow.convars:Get("ow_debug"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
 
     return true
