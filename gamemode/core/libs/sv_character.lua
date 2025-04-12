@@ -72,7 +72,3 @@ end
 function ow.character:Delete(id)
     print("Deleting character with ID: " .. id)
 end
-
-hook.Add("Initialize", "ow.character", function()
-    
-end)
