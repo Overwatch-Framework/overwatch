@@ -29,7 +29,7 @@ end
 -- @return The color.
 function ow.color:Get(name)
     if ( self.stored[name] ) then
-        return self.stored[name]
+        return table.Copy(self.stored[name])
     end
 
     ow.util:PrintError("Attempted to get an invalid color!")
