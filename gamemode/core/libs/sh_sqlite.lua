@@ -36,14 +36,14 @@ function ow.sqlite:AddColumn(tableName, columnName, columnType, defaultValue)
         end
 
         if ( !columnExists ) then
-            local query = string.format(
+            local insertQuery = string.format(
                 "ALTER TABLE %s ADD COLUMN %s %s DEFAULT %s;",
                 tableName,
                 columnName,
                 columnType,
                 sql.SQLStr(defaultValue)
             )
-            sql.Query(query)
+            sql.Query(insertQuery)
         end
     end
 end
@@ -151,8 +151,8 @@ function ow.sqlite:CreateTable(query, schema)
         parts[#parts + 1] = string.format("%s %s", column, columnType)
     end
 
-    local query = string.format("CREATE TABLE IF NOT EXISTS %s (%s);", query, table.concat(parts, ", "))
-    sql.Query(query)
+    local insertQuery = string.format("CREATE TABLE IF NOT EXISTS %s (%s);", query, table.concat(parts, ", "))
+    sql.Query(insertQuery)
 end
 
 --- Inserts a row into a table.
@@ -167,9 +167,8 @@ function ow.sqlite:Insert(query, data)
         values[#values + 1] = sql.SQLStr(v)
     end
 
-    local query = string.format("INSERT INTO %s (%s) VALUES (%s);",
-        query, table.concat(keys, ", "), table.concat(values, ", "))
-    sql.Query(query)
+    local insertQuery = string.format("INSERT INTO %s (%s) VALUES (%s);", query, table.concat(keys, ", "), table.concat(values, ", "))
+    sql.Query(insertQuery)
 end
 
 --- Updates a row in a table based on a condition.
@@ -183,9 +182,8 @@ function ow.sqlite:Update(query, data, condition)
         updates[#updates + 1] = string.format("%s = %s", k, sql.SQLStr(v))
     end
 
-    local query = string.format("UPDATE %s SET %s WHERE %s;",
-        query, table.concat(updates, ", "), condition)
-    sql.Query(query)
+    local insertQuery = string.format("UPDATE %s SET %s WHERE %s;", query, table.concat(updates, ", "), condition)
+    sql.Query(insertQuery)
 end
 
 --- Selects rows from a table matching a condition.
@@ -196,13 +194,13 @@ end
 -- @treturn table|nil Resulting rows or nil
 function ow.sqlite:Select(query, columns, condition)
     local cols = columns and table.concat(columns, ", ") or "*"
-    local query = string.format("SELECT %s FROM %s", cols, query)
+    local insertQuery = string.format("SELECT %s FROM %s", cols, query)
 
     if ( condition ) then
-        query = query .. " WHERE " .. condition
+        insertQuery = insertQuery .. " WHERE " .. condition
     end
 
-    return sql.Query(query)
+    return sql.Query(insertQuery)
 end
 
 --- Returns the number of rows in a table.
@@ -211,13 +209,13 @@ end
 -- @tparam string[opt] condition WHERE clause
 -- @treturn number Number of rows
 function ow.sqlite:Count(query, condition)
-    local query = string.format("SELECT COUNT(*) FROM %s", query)
+    local insertQuery = string.format("SELECT COUNT(*) FROM %s", query)
 
     if ( condition ) then
-        query = query .. " WHERE " .. condition
+        insertQuery = insertQuery .. " WHERE " .. condition
     end
 
-    local result = sql.Query(query)
+    local result = sql.Query(insertQuery)
     return result and result[1]["COUNT(*)"] or 0
 end
 
