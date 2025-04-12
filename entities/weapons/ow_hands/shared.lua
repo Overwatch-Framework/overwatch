@@ -124,7 +124,7 @@ function SWEP:SecondaryAttack()
         end
 
         ply:ViewPunch(Angle(-4, 0, 0))
-        
+
         if ( ent:IsPlayer() ) then
             ent:ViewPunch(Angle(4, 0, 0))
         end
@@ -216,13 +216,8 @@ function SWEP:Think()
 end
 
 function SWEP:OnRemove()
-    if ( IsValid(self:GetConstraint()) ) then
-        self:GetConstraint():Remove()
-    end
-
-    if ( IsValid(self:GetConstraintTarget()) ) then
-        self:GetConstraintTarget():Remove()
-    end
+    SafeRemoveEntity(self:GetConstraint())
+    SafeRemoveEntity(self:GetConstraintTarget())
 
     self:SetDragging(false)
     self:SetDraggingTarget(nil)
