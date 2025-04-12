@@ -68,7 +68,7 @@ function PANEL:Populate()
         playButton:Dock(TOP)
         playButton:SetText("PLAY")
         playButton:DockMargin(0, 0, 0, 8)
-
+    
         playButton.DoClick = function()
             self:Remove()
         end
@@ -77,7 +77,7 @@ function PANEL:Populate()
         createButton:Dock(TOP)
         createButton:SetText("CREATE CHARACTER")
         createButton:DockMargin(0, 0, 0, 8)
-
+    
         createButton.DoClick = function()
             self:PopulateCreateCharacter()
         end
@@ -89,7 +89,7 @@ function PANEL:Populate()
         selectButton:Dock(TOP)
         selectButton:SetText("SELECT CHARACTER")
         selectButton:DockMargin(0, 0, 0, 8)
-
+    
         selectButton.DoClick = function()
             self:PopulateSelectCharacter()
         end
@@ -99,7 +99,7 @@ function PANEL:Populate()
     settingsButton:Dock(TOP)
     settingsButton:SetText("SETTINGS")
     settingsButton:DockMargin(0, 0, 0, 8)
-
+    
     settingsButton.DoClick = function()
         self:PopulateSettings()
     end
@@ -114,30 +114,6 @@ function PANEL:Populate()
             RunConsoleCommand("disconnect")
         end, "No")
     end
-end
-
-function PANEL:PopulateSettings()
-    self:Clear()
-
-    local title = self:Add("DLabel")
-    title:Dock(TOP)
-    title:DockMargin(padding, padding, padding, 0)
-    title:SetFont("ow.fonts.title")
-    title:SetText("SETTINGS")
-    title:SetTextColor(hook.Run("GetFrameworkColor"))
-    title:SetExpensiveShadow(4, color_black)
-    title:SizeToContents()
-
-    local subtitle = self:Add("DLabel")
-    subtitle:Dock(TOP)
-    subtitle:DockMargin(padding * 1.5, 0, padding, 0)
-    subtitle:SetFont("ow.fonts.subtitle")
-    subtitle:SetText("CONFIGURE YOUR GAME SETTINGS")
-    subtitle:SetTextColor(color_white)
-    subtitle:SetExpensiveShadow(4, color_black)
-    subtitle:SizeToContents()
-
-    -- TODO: RIGGS MAGIC DIJHAJIDHAIHDA
 end
 
 function PANEL:PopulateCreateCharacter()
