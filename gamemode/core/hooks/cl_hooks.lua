@@ -16,6 +16,10 @@ function GM:Initialize()
     hook.Run("LoadFonts")
 end
 
+function GM:InitPostEntity()
+    ow.localClient = LocalPlayer()
+end
+
 function GM:PostSchemaLoad()
     -- Do something here
 end
