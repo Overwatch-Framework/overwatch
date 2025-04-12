@@ -8,7 +8,7 @@ ow.color.stored = {}
 -- @realm shared
 -- @param info A table containing information about the color.
 function ow.color:Register(name, color)
-    if ( name == nil or #name < 1 ) then
+    if ( name == nil or !isstring(name) or #name < 1 ) then
         ow.util:PrintError("Attempted to register a color without a name!")
         return false
     end
