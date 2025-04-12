@@ -21,6 +21,7 @@ ow.type = ow.type or {
     bool = 128,
     color = 1024,
     vector = 2048,
+    angle = 4096,
 
     optional = 256,
     array = 512
@@ -51,6 +52,8 @@ function ow.util:SanitizeType(type, input)
         return IsColor(input) and input or color_white
     elseif ( type == ow.type.vector ) then
         return isvector(input) and input or vector_origin
+    elseif ( type == ow.type.angle ) then
+        return isangle(input) and input or angle_zero
     elseif ( type == ow.type.array ) then
         return input
     else
@@ -63,7 +66,8 @@ local typeMap = {
     number = ow.type.number,
     Player = ow.type.player,
     boolean = ow.type.bool,
-    Vector = ow.type.vector
+    Vector = ow.type.vector,
+    Angle = ow.type.angle,
 }
 
 local tableMap = {
