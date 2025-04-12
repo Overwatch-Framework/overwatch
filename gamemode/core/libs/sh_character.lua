@@ -42,7 +42,8 @@ function ow.character:RegisterVariable(key, data)
 
         local field = data.Field
         if ( field ) then
-            -- Add the field to the database table
+            ow.sqlite:RegisterVar("characters", key, data.Default or nil)
+            self.fields[key] = field
         end
     end
 

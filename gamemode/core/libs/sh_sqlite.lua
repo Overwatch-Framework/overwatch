@@ -6,12 +6,44 @@ ow.sqlite = ow.sqlite or {}
 ow.sqlite.tables = {}
 
 --- Registers a variable for a table to be included in table creation and loading.
--- @tparam string query The name of the table (e.g. "users", "characters")
+-- It will also automatically add the column to the table in the database if it doesn't exist.
+-- @tparam string tableName The name of the table (e.g. "users", "characters")
 -- @tparam string key The name of the variable (e.g. "credits", "xp")
 -- @tparam any default The default value for the variable
-function ow.sqlite:RegisterVar(query, key, default)
-    self.tables[query] = self.tables[query] or {}
-    self.tables[query][key] = default
+function ow.sqlite:RegisterVar(tableName, key, default)
+    self.tables[tableName] = self.tables[tableName] or {}
+    self.tables[tableName][key] = default
+
+    self:AddColumn(tableName, key, type(default) == "number" and "INTEGER" or "TEXT", default)
+end
+
+--- Adds a column to an existing table if the column doesn't already exist.
+-- @tparam string tableName The name of the table (e.g. "users", "characters")
+-- @tparam string columnName The name of the column to add
+-- @tparam string columnType The type of the column (e.g. "INTEGER", "TEXT")
+-- @tparam any defaultValue The default value to set if the column is added
+function ow.sqlite:AddColumn(tableName, columnName, columnType, defaultValue)
+    local result = sql.Query(string.format("PRAGMA table_info(%s);", tableName))
+    if ( result ) then
+        local columnExists = false
+        for _, column in ipairs(result) do
+            if ( column.name == columnName ) then
+                columnExists = true
+                break
+            end
+        end
+
+        if ( !columnExists ) then
+            local query = string.format(
+                "ALTER TABLE %s ADD COLUMN %s %s DEFAULT %s;", 
+                tableName, 
+                columnName, 
+                columnType, 
+                sql.SQLStr(defaultValue)
+            )
+            sql.Query(query)
+        end
+    end
 end
 
 --- Returns a default row based on registered variables for a table.
@@ -154,3 +186,29 @@ function ow.sqlite:Select(query, columns, condition)
 
     return sql.Query(query)
 end
+
+--- Returns the number of rows in a table.
+-- @tparam string query Table name
+-- @tparam string[opt] condition WHERE clause
+-- @treturn number Number of rows
+function ow.sqlite:Count(query, condition)
+    local query = string.format("SELECT COUNT(*) FROM %s", query)
+
+    if ( condition ) then
+        query = query .. " WHERE " .. condition
+    end
+
+    local result = sql.Query(query)
+    return result and result[1]["COUNT(*)"] or 0
+end
+
+ow.sqlite:CreateTable("characters", {
+    id = "INTEGER PRIMARY KEY AUTOINCREMENT",
+    steamid = "TEXT",
+    name = "TEXT"
+})
+
+ow.sqlite:CreateTable("users", {
+    steamid = "TEXT PRIMARY KEY",
+    name = "TEXT"
+})

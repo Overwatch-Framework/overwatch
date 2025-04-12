@@ -5,28 +5,42 @@ function ow.character:SetVariable(id, key, value)
     hook.Run("CharacterVariableSet", id, key, value)
 end
 
-function ow.character:Create(player, query)
-    if not player or not IsValid(player) then return end
-    if not query or not istable(query) then return end
+function ow.character:Create(ply, query)
+    if ( !IsValid(ply) or !ply:IsPlayer() ) then
+        ErrorNoHalt("Attempted to create character for invalid player (" .. tostring(ply) .. ")")
+        return
+    end
 
-    print("Creating character for player: " .. player:Nick())
+    if ( !query or !istable(query) ) then
+        ErrorNoHalt("Attempted to create character with invalid query (" .. tostring(query) .. ")")
+        return
+    end
 
-    local insertQuery = {
-        steamid = player:SteamID(),
-        name = player:Nick()
-    }
+    print("Creating character for player (" .. tostring(ply) .. ")")
+    print("Query: " .. util.TableToJSON(query))
 
+    local insertQuery = {}
     for k, v in pairs(self.variables) do
-        if v.Default then
+        if ( query[k] ) then
+            insertQuery[k] = query[k]
+        elseif ( v.Default ) then
             insertQuery[k] = v.Default
         end
     end
-    
-    local id = ow.sqlite:Insert("characters", insertQuery)
-    if not id then
-        print("Failed to create character for player: " .. player:Nick())
+
+    local id = ow.sqlite:Count("characters") + 1
+    if ( !id ) then
+        print("Failed to get new character ID")
         return
     end
+
+    insertQuery.id = id
+    insertQuery.steamid = ply:SteamID()
+    insertQuery.schema = SCHEMA.Folder
+
+    ow.sqlite:Insert("characters", insertQuery)
+
+    print("Created character with ID " .. id .. " for player " .. ply:Nick())
 
     local character = setmetatable({
         id = id
@@ -36,10 +50,16 @@ function ow.character:Create(player, query)
         character[k] = v.Default
     end
 
-    hook.Run("PlayerCreatedCharacter", player, character, query)
+    hook.Run("PlayerCreatedCharacter", ply, character, query)
 
     return character
 end
+
+concommand.Add("ow_character_test_create", function(ply, cmd, args)
+    ow.character:Create(ply, {
+        name = "Test Character"
+    })
+end)
 
 function ow.character:Load(id)
     print("Loading character with ID: " .. id)

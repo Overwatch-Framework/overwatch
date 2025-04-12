@@ -1,3 +1,15 @@
+ow.character:RegisterVariable("steamid", {
+    Type = ow.type.string,
+    Field = "steamid",
+    Default = "STEAM_0:0:00000000"
+})
+
+ow.character:RegisterVariable("schema", {
+    Type = ow.type.string,
+    Field = "schema",
+    Default = "overwatch"
+})
+
 ow.character:RegisterVariable("name", {
     Type = ow.type.string,
     Field = "name",
