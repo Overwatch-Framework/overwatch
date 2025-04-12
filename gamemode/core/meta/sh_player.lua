@@ -63,7 +63,7 @@ function PLAYER:HasWhitelist(identifier, bSchema, bMap)
     if ( bSchema == nil ) then bSchema = true end
     if ( bMap == nil ) then bMap = false end
 
-    return true -- DATABVASESAEAEE
+    return true -- TODO: Implement DB support
 end
 
 function PLAYER:GetData(key, default)

@@ -7,19 +7,6 @@ ow.character.fields = ow.character.fields or {}
 ow.character.stored = ow.character.stored or {}
 ow.character.cache = ow.character.cache or {}
 
-ow.character.meta = ow.character.meta or {}
-ow.character.meta.__index = ow.character.meta
-ow.character.meta.__tostring = function(this)
-    return "Character: " .. this.name .. " (" .. this.id .. ")"
-end
-
-ow.character.meta.__eq = function(this, other)
-    return this.id == other.id
-end
-ow.character.meta.__lt = function(this, other)
-    return this.id < other.id
-end
-
 --- Registers a variable for the character.
 -- @realm shared
 function ow.character:RegisterVariable(key, data)
@@ -36,15 +23,15 @@ function ow.character:RegisterVariable(key, data)
             end
         end
 
-        self.meta["Get" .. upperKey] = function(this)
-            return self:GetVariable(key)
-        end
-
         local field = data.Field
         if ( field ) then
             ow.sqlite:RegisterVar("characters", key, data.Default or nil)
             self.fields[key] = field
         end
+    end
+
+    self.meta["Get" .. upperKey] = function(this)
+        return self:GetVariable(key)
     end
 
     self.variables[key] = data
@@ -65,7 +52,7 @@ function ow.character:GetVariable(id, key, callback, bNoCache)
         local field = data.Field
         if ( field ) then
             -- Get the field from the database table
-            
+
         else
             callback(self.cache[key])
         end
