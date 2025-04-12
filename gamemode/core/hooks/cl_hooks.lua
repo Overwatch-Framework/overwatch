@@ -137,7 +137,7 @@ function GM:HUDPaint()
         local x, y = ScrW() / 2, ScrH() / 2
         local size = 3
 
-        if ( ow.module:Get("thirdperson") and ow.module:Get("thirdperson").cvar_thirdperson:GetBool() ) then
+        if ( ow.module:Get("thirdperson") and ow.option:Get("thirdperson", false) ) then
             local trace = util.TraceLine({
                 start = ply:GetShootPos(),
                 endpos = ply:GetShootPos() + ply:GetAimVector() * 8192,
