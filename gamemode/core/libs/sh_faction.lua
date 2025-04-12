@@ -52,7 +52,7 @@ function ow.faction:Register(factionData)
 
     team.SetUp(factionData.Index, factionData.Name, factionData.Color, false)
     hook.Run("PostFactionRegistered", factionData)
-    
+
     return factionData.Index
 end
 
