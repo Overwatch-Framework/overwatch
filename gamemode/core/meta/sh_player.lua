@@ -20,6 +20,14 @@ end
 
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
 
+function PLAYER:Name()
+    if ( self.owCharacter ) then
+        return self.owCharacter:GetName()
+    end
+
+    return self:SteamName()
+end
+
 function PLAYER:ChatText(...)
     local args = {...}
 
