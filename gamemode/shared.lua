@@ -30,8 +30,6 @@
 -- -- getting name of type
 -- print(ow.type[ow.type.string])
 -- > "string"
-ow.type = ow.type or {}
-
 GM.Name = "Overwatch"
 GM.Author = "Riggs & eon (bloodycop)"
 GM.Description = "A roleplaying gamemode for Garry's Mod."

@@ -1,26 +1,20 @@
 local MODULE = MODULE
 
-MODULE.cvar_thirdperson = CreateClientConVar("ow_thirdperson", 0, true, false, ow.localization:GetPhrase("ow.option.thirdperson.enable"), 0, 1)
-MODULE.cvar_thirdperson_pos_x = CreateClientConVar("ow_thirdperson_pos_x", 50, true, false, ow.localization:GetPhrase("ow.options.thirdperson.position.x.help"), -100, 100)
-MODULE.cvar_thirdperson_pos_y = CreateClientConVar("ow_thirdperson_pos_y", 15, true, false, ow.localization:GetPhrase("ow.options.thirdperson.position.y.help"), -100, 100)
-MODULE.cvar_thirdperson_pos_z = CreateClientConVar("ow_thirdperson_pos_z", 0, true, false, ow.localization:GetPhrase("ow.options.thirdperson.position.z.help"), -100, 100)
-MODULE.cvar_thirdperson_follow_head = CreateClientConVar("ow_thirdperson_follow_head", 0, true, false, ow.localization:GetPhrase("ow.options.thirdperson.followhead.help"))
-
 concommand.Add("ow_thirdperson_toggle", function()
-    RunConsoleCommand("ow_thirdperson", MODULE.cvar_thirdperson:GetBool() and 0 or 1)
+    ow.option:Set("thirdperson", !ow.option:Get("thirdperson", false))
 end, nil, ow.localization:GetPhrase("ow.options.thirdperson.toggle"))
 
 concommand.Add("ow_thirdperson_reset", function()
-    RunConsoleCommand("ow_thirdperson_pos_x", 0)
-    RunConsoleCommand("ow_thirdperson_pos_y", 0)
-    RunConsoleCommand("ow_thirdperson_pos_z", 0)
+    ow.option:Set("thirdperson.position.x", 0)
+    ow.option:Set("thirdperson.position.y", 0)
+    ow.option:Set("thirdperson.position.z", 0)
 end, nil, ow.localization:GetPhrase("ow.options.thirdperson.reset"))
 
 local fakePos
 local fakeAngles
 local fakeFov
 function MODULE:CalcView(ply, pos, angles, fov)
-    if ( !self.cvar_thirdperson:GetBool() ) then
+    if ( !ow.option:Get("thirdperson", false) ) then
         fakePos = nil
         fakeAngles = nil
         fakeFov = nil
@@ -30,7 +24,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
 
     local view = {}
 
-    if ( self.cvar_thirdperson_follow_head:GetBool() ) then
+    if ( ow.option:Get("thirdperson.followhead", false) ) then
         local head
 
         for i = 0, ply:GetBoneCount() do
@@ -51,7 +45,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
 
     local trace = util.TraceHull({
         start = pos,
-        endpos = pos - (angles:Forward() * self.cvar_thirdperson_pos_x:GetInt()) + (angles:Right() * self.cvar_thirdperson_pos_y:GetInt()) + (angles:Up() * self.cvar_thirdperson_pos_z:GetInt()),
+        endpos = pos - (angles:Forward() * ow.option:Get("thirdperson.position.x", 0)) + (angles:Right() * ow.option:Get("thirdperson.position.y", 0)) + (angles:Up() * ow.option:Get("thirdperson.position.z", 0)),
         filter = function(ent)
             if ( ent == ply ) then
                 return true
@@ -108,20 +102,9 @@ function MODULE:CalcView(ply, pos, angles, fov)
 end
 
 function MODULE:ShouldDrawLocalPlayer(ply)
-    return self.cvar_thirdperson:GetBool()
+    return ow.option:Get("thirdperson", false)
 end
 
 function MODULE:AddToolMenuCategories()
     spawnmenu.AddToolCategory("Overwatch", "User", "User")
-end
-
-function MODULE:PopulateToolMenu()
-    spawnmenu.AddToolMenuOption("Overwatch", "User", "ow_thirdperson", ow.localization:GetPhrase("ow.option.thirdperson"), "", "", function(form)
-        form:CheckBox(ow.localization:GetPhrase("ow.option.thirdperson.enable"), "ow_thirdperson")
-        form:CheckBox(ow.localization:GetPhrase("ow.options.thirdperson.followhead"), "ow_thirdperson_follow_head")
-
-        form:NumSlider(ow.localization:GetPhrase("ow.options.thirdperson.position.x"), "ow_thirdperson_pos_x", -100, 100, 0)
-        form:NumSlider(ow.localization:GetPhrase("ow.options.thirdperson.position.y"), "ow_thirdperson_pos_y", -100, 100, 0)
-        form:NumSlider(ow.localization:GetPhrase("ow.options.thirdperson.position.z"), "ow_thirdperson_pos_z", -100, 100, 0)
-    end)
 end

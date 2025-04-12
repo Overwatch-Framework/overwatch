@@ -120,18 +120,17 @@ function GM:HUDPaint()
     if ( hook.Run("ShouldDrawDebugHUD") ) then
         local scrW, scrH = ScrW(), ScrH()
         local width, height
-        local x, y = 16, scrH / 2
+        local x, y = ScrW() / 2 - 400, scrH - 100
 
         width, height = draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", x, y, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-        x, y = x + 16, y + height - 8
+        x, y = x + 16, y + 10
 
         if ( SCHEMA ) then
-            width, height =  draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            x, y = x + 16, y + height - 16
+            width, height =  draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x + width, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            x, y = x + 16, y + height
         end
 
-        width, height = draw.SimpleText("debug mode enabled", "ow.fonts.fancy", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-        x, y = x + 16, y + height
+        width, height = draw.SimpleText("FPS: " .. math.Round(1 / FrameTime()), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
     if ( hook.Run("ShouldDrawCrosshair") ) then
