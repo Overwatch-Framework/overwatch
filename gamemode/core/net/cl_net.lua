@@ -1,5 +1,5 @@
 net.Receive("ow.chat.text", function(len)
-    local receivedTable = util.Decompress(net.ReadData(len / 8))
+    local receivedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
     chat.AddText(unpack(receivedTable))
 end)
