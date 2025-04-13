@@ -126,11 +126,11 @@ function GM:HUDPaint()
         x, y = x + 16, y + 10
 
         if ( SCHEMA ) then
-            width, height =  draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x + width, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            width, height = draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x + width, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             x, y = x + 16, y + height
         end
 
-        width, height = draw.SimpleText("FPS: " .. math.Round(1 / FrameTime()), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        width, height = draw.SimpleText(Format("FPS: %s :: LATENCY: %s", math.Round(1 / FrameTime()), ply:Ping()), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
     if ( hook.Run("ShouldDrawCrosshair") ) then
