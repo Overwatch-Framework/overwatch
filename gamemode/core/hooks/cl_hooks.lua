@@ -108,16 +108,12 @@ function GM:DrawVignette()
         vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 100)
     end
 
-    surface.SetDrawColor(vignetteColor)
-    surface.SetMaterial(vignette)
-    surface.DrawTexturedRect(0, 0, scrW, scrH)
+    paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
 end
 
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
-
-    ow.util:DrawBlurRect(0, 0, ScrW(), ScrH(), 5, 5)
 
     if ( hook.Run("ShouldDrawDebugHUD") ) then
         local _, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used

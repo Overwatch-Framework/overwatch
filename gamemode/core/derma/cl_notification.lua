@@ -55,6 +55,8 @@ function PANEL:OrderNotifications()
 
     if ( self.notifications[1] == nil ) then return end
 
+    local count = #self.notifications
+
     for _, v in ipairs(self.notifications) do
         if ( IsValid(v) ) then
             v:MoveTo(x, y + ((v:GetTall() + ScreenScale(4)) * count), 0.5, 0, 1, function()
@@ -118,7 +120,7 @@ function PANEL:SetMessage(message)
             end
         end
 
-        self:SetTall(self:GetTall() + (table.Count(wrapped) - 1) * (self.message:GetTall() + ScreenScale(2)))
+        self:SetTall(self:GetTall() + (#wrapped - 1) * (self.message:GetTall() + ScreenScale(2)))
     else
         self.message:SetText(message)
         self.message:SizeToContents()
