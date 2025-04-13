@@ -159,7 +159,8 @@ end
 -- @realm shared
 -- @tparam string query Table name
 -- @tparam table data Row data
-function ow.sqlite:Insert(query, data)
+-- @tparam function[opt] callback Optional callback function to run after insertion
+function ow.sqlite:Insert(query, data, callback)
     local keys, values = {}, {}
 
     for k, v in pairs(data) do
@@ -169,6 +170,13 @@ function ow.sqlite:Insert(query, data)
 
     local insertQuery = string.format("INSERT INTO %s (%s) VALUES (%s);", query, table.concat(keys, ", "), table.concat(values, ", "))
     sql.Query(insertQuery)
+
+    if ( callback ) then
+        local result = sql.QueryRow("SELECT last_insert_rowid();")
+        if ( result ) then
+            callback(result["last_insert_rowid()"])
+        end
+    end
 end
 
 --- Updates a row in a table based on a condition.
@@ -228,4 +236,18 @@ ow.sqlite:CreateTable("characters", {
 ow.sqlite:CreateTable("users", {
     steamid = "TEXT PRIMARY KEY",
     name = "TEXT"
+})
+
+ow.sqlite:CreateTable("inventories", {
+    inventory_id = "INTEGER PRIMARY KEY AUTOINCREMENT",
+    character_id = "INTEGER",
+    inventory_type = "TEXT",
+    data = "TEXT"
+})
+
+ow.sqlite:CreateTable("items", {
+    id = "INTEGER PRIMARY KEY AUTOINCREMENT",
+    owner_id = "INTEGER",
+    unique_id = "TEXT",
+    data = "TEXT"
 })

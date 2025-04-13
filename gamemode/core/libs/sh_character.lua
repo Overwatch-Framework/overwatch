@@ -51,8 +51,18 @@ function ow.character:GetVariable(id, key, callback, bNoCache)
     if ( SERVER ) then
         local field = data.Field
         if ( field ) then
-            -- Get the field from the database table
+            local query = string.format("%s = %s", field, sql.SQLStr(key))
+            local result = ow.sqlite:Select("characters", nil, query)
 
+            if ( result and result[1] ) then
+                self.cache[key] = result[1]
+            else
+                self.cache[key] = {}
+            end
+
+            if ( callback ) then
+                callback(self.cache[key])
+            end
         else
             callback(self.cache[key])
         end

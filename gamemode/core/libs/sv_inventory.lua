@@ -7,18 +7,19 @@ function ow.inventory:Register(invData)
     invData.index = #self.stored + 1
     self.stored[invData.index] = invData
 
-    local query = mysql:Insert("overwatch_inventories")
-        query:Insert("inventory_id", invData.index)
-        query:Insert("character_id", invData.charID)
-        query:Insert("inventory_type", invData.type)
-        query:Insert("data", util.TableToJSON(invData.data or {}))
-    query:Execute()
+    ow.sqlite:Insert("inventories", {
+        inventory_id = invData.index,
+        character_id = invData.charID,
+        inventory_type = invData.type,
+        data = util.TableToJSON(invData.data or {})
+    })
 
     local inventory = setmetatable({
         id = invData.index
     }, self.meta)
 
     hook.Run("PostInventoryRegistered", inventory)
+
     return inventory
 end
 
