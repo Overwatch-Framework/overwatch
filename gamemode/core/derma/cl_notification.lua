@@ -56,7 +56,7 @@ function PANEL:OrderNotifications()
     local count = table.Count(self.notifications)
     if ( count == 0 ) then return end
 
-    for _, v in pairs(self.notifications) do
+    for _, v in ipairs(self.notifications) do
         if ( IsValid(v) ) then
             v:MoveTo(x, y + ((v:GetTall() + ScreenScale(4)) * count), 0.5, 0, 1, function()
                 -- This is where we can add any additional logic after the notification has moved
@@ -68,7 +68,7 @@ function PANEL:OrderNotifications()
 end
 
 function PANEL:ClearNotifications()
-    for k, v in pairs(self.notifications) do
+    for k, v in ipairs(self.notifications) do
         if ( IsValid(v) ) then
             v:Remove()
         end
@@ -141,16 +141,17 @@ function PANEL:SetIcon(icon)
     self.message:SetPos(self.icon:GetWide() + 20, self:GetTall() / 2 - self.message:GetTall() / 2)
 end
 
+local darkColor = Color(0, 0, 0, 150)
 function PANEL:Paint(width, height)
     local fraction = 0
     if ( self.created and self.duration ) then
         fraction = math.Clamp((CurTime() - self.created) / self.duration, 0, 1)
     end
 
-    surface.SetDrawColor(0, 0, 0, 150)
+    surface.SetDrawColor(darkColor)
     surface.DrawRect(0, 0, width, height)
 
-    surface.SetDrawColor(255, 255, 255, 255)
+    surface.SetDrawColor(color_white)
     surface.DrawRect(0, height - 1, width - width * fraction, 1)
 end
 
