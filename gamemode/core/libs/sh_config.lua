@@ -56,7 +56,7 @@ end
 --     end
 -- })
 function ow.config:Register(key, data)
-    if ( key == nil or data == nil ) then return false end
+    if ( key == nil or data == nil or !isstring(key) or !istable(data) ) then return false end
 
     hook.Run("PreConfigRegistered", key, data)
 
