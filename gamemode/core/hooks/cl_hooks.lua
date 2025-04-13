@@ -118,7 +118,7 @@ function GM:HUDPaint()
     if ( !IsValid(ply) ) then return end
 
     if ( hook.Run("ShouldDrawDebugHUD") ) then
-        local scrW, scrH = ScrW(), ScrH()
+        local _, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
         local width, height
         local x, y = ScrW() / 2 - 400, scrH - 100
 
