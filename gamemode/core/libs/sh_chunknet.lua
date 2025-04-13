@@ -8,6 +8,11 @@ ow.chunknet = ow.chunknet or {}
 
 local CHUNK_SIZE = 4096 -- 4KB
 
+--- Splits a string into smaller chunks of a specified size.
+-- @realm shared
+-- @tparam string data The data to split
+-- @tparam number size The size of each chunk
+-- @treturn table A table containing the chunks
 function ow.chunknet:SplitChunks(data, size)
     local chunks = {}
     for i = 1, #data, size do
@@ -17,6 +22,11 @@ function ow.chunknet:SplitChunks(data, size)
     return chunks
 end
 
+--- Serializes data into a string format.
+-- Automatically handles tables and strings.
+-- @realm shared
+-- @tparam any data The data to serialize (string or table)
+-- @treturn string The serialized data
 function ow.chunknet:Serialize(data)
     if ( istable(data) ) then
         return util.TableToJSON(data)
@@ -27,6 +37,11 @@ function ow.chunknet:Serialize(data)
     end
 end
 
+--- Deserializes data from a string format.
+-- Automatically handles JSON strings and returns the original data.
+-- @realm shared
+-- @tparam string data The data to deserialize (string)
+-- @treturn any The deserialized data (string or table)
 function ow.chunknet:Deserialize(data)
     local tbl = util.JSONToTable(data)
     return tbl or data
