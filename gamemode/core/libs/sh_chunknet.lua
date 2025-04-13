@@ -120,8 +120,8 @@ function ow.chunknet:Receive(id, callback)
             local decoded = util.Base64Decode(fullData)
             local decompressed = util.Decompress(decoded)
 
-            if ( decompressed == nil ) then
-                ErrorNoHalt("[ow.chunknet] Failed to decompress payload for id '" .. id .. "'\n")
+            if ( decompressed == nil or !isstring(decompressed) ) then
+                ErrorNoHalt("[ow.chunknet] Failed to decompress payload for id \"" .. id .. "\"\n")
                 return
             end
 
