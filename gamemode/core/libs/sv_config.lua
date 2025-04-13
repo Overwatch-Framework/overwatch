@@ -57,8 +57,10 @@ function ow.config:Load()
         values[key] = self.stored[key].Value
     end
 
+    local compressed = util.Compress(util.TableToJSON(values))
+
     net.Start("ow.config.sync")
-        net.WriteTable(values)
+        net.WriteData(compressed, #compressed)
     net.Broadcast()
 
     ow.util:Print("Configuration loaded.")
@@ -110,8 +112,10 @@ function ow.config:Reset()
 
     file.Write("overwatch/" .. (SCHEMA and SCHEMA.Folder or "core") .. "/config.json", util.TableToJSON(values))
 
+    local compressed = util.Compress(util.TableToJSON(values))
+
     net.Start("ow.config.sync")
-        net.WriteTable(values)
+        net.WriteData(compressed, #compressed)
     net.Broadcast()
 
     hook.Run("PostConfigReset", values)
@@ -134,8 +138,10 @@ function ow.config:Synchronize(ply)
         values[key] = data.Value or data.Default
     end
 
+    local compressed = util.Compress(util.TableToJSON(values))
+
     net.Start("ow.config.sync")
-        net.WriteTable(values)
+        net.WriteData(compressed, #compressed)
     net.Send(ply)
 
     hook.Run("PostConfigSync", ply, values)

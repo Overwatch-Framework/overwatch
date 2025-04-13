@@ -32,8 +32,10 @@ function PLAYER:ChatText(...)
     local args = {...}
 
     if ( SERVER ) then
+        local compressed = util.Compress(util.TableToJSON(args))
+
         net.Start("ow.chat.text")
-            net.WriteTable(args)
+            net.WriteData(compressed, #compressed)
         net.Send(self)
     else
         chat.AddText(unpack(args))

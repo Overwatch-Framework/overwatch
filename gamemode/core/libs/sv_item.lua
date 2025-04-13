@@ -24,9 +24,11 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
     }, function(dataReceived)
         local receiver = ow.character:GetPlayerByCharacter(ownerID)
         if ( IsValid(receiver) ) then
+            local compressed = util.Compress(util.TableToJSON(dataReceived))
+
             net.Start("ow.item.add")
                 net.WriteString(uniqueID)
-                net.WriteTable(dataReceived)
+                net.WriteData(compressed, #compressed)
             net.Send(receiver)
         end
 

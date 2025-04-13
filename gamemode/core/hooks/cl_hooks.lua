@@ -130,7 +130,7 @@ function GM:HUDPaint()
             x, y = x + 16, y + height
         end
 
-        width, height = draw.SimpleText(Format("FPS: %s :: LATENCY: %s", math.Round(1 / FrameTime()), ply:Ping()), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
     if ( hook.Run("ShouldDrawCrosshair") ) then
