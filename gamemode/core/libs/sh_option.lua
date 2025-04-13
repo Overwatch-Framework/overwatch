@@ -96,7 +96,8 @@ function ow.option:Register(uniqueID, data)
         file.CreateDir("overwatch/" .. folder)
     end
 
-    hook.Run("PreOptionRegistered", uniqueID, data)
+    local bResult = hook.Run("PreOptionRegistered", uniqueID, data)
+    if ( bResult == false ) then return false end
 
     self.stored[uniqueID] = {
         DisplayName = data.DisplayName,

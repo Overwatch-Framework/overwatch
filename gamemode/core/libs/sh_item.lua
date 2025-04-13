@@ -7,7 +7,8 @@ ow.item.instances = ow.item.instances or {}
 ow.item.bases = ow.item.bases or {}
 
 function ow.item:Register(uniqueID, itemData)
-    hook.Run("PreItemRegistered", uniqueID, itemData)
+    local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
+    if ( bResult == false ) then return false end
 
     if ( itemData.Base ) then
         local baseData = self.bases[itemData.Base]

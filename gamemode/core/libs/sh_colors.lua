@@ -18,7 +18,9 @@ function ow.color:Register(name, color)
         return false
     end
 
-    hook.Run("PreColorRegistered", name, color)
+    local bResult = hook.Run("PreColorRegistered", name, color)
+    if ( bResult == false ) then return false end
+
     self.stored[name] = color
     hook.Run("OnColorRegistered", name, color)
 end

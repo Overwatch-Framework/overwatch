@@ -65,18 +65,3 @@ end
 function GM:ItemCanBeDestroyed(item, damageInfo)
     return true
 end
-
-local folder
-function GM:PreModuleLoad(moduleName, moduleTable)
-    print("PreModuleLoad", moduleName, moduleTable)
-    if ( folder == nil ) then
-        folder = SCHEMA and SCHEMA.Folder or "core"
-    end
-
-    local disabledPlugins = file.Read("overwatch/" .. folder .. "/disabled_modules.txt", "DATA")
-    disabledPlugins = util.JSONToTable(disabledPlugins or "[]")
-    if ( disabledPlugins[moduleName] ) then
-        ow.util:PrintWarning("Module \"" .. moduleName .. "\" is disabled.")
-        return false
-    end
-end

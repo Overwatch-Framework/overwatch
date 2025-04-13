@@ -31,7 +31,8 @@ function ow.class:Register(classData)
         end
     end
 
-    hook.Run("PreClassRegistered", classData)
+    local bResult = hook.Run("PreClassRegistered", classData)
+    if ( bResult == false ) then return false end
 
     local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
     classData.UniqueID = classData.UniqueID or uniqueID

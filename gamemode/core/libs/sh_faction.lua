@@ -40,7 +40,8 @@ function ow.faction:Register(factionData)
         end
     end
 
-    hook.Run("PreFactionRegistered", factionData)
+    local bResult = hook.Run("PreFactionRegistered", factionData)
+    if ( bResult == false ) then return false end
 
     local uniqueID = string.lower(string.gsub(factionData.Name, "%s", "_"))
     factionData.UniqueID = factionData.UniqueID or uniqueID

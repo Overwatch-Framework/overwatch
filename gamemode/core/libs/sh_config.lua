@@ -58,7 +58,8 @@ end
 function ow.config:Register(key, data)
     if ( key == nil or data == nil or !isstring(key) or !istable(data) ) then return false end
 
-    hook.Run("PreConfigRegistered", key, data)
+    local bResult = hook.Run("PreConfigRegistered", key, data)
+    if ( bResult == false ) then return false end
 
     self.stored[key] = {
         DisplayName = data.DisplayName,
