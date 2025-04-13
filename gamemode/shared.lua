@@ -57,6 +57,9 @@ local files, directories = file.Find("overwatch/modules/*", "LUA")
 for k, v in ipairs(directories) do
     if ( file.Exists("overwatch/modules/" .. v .. "/sh_module.lua", "LUA") ) then
         MODULE = { UniqueID = v }
+            local bResult = hook.Run("PreModuleLoad", v, MODULE)
+            if ( bResult == false ) then continue end
+
             ow.util:LoadFile("overwatch/modules/" .. v .. "/sh_module.lua")
             ow.module.stored[v] = MODULE
         MODULE = nil
@@ -72,7 +75,9 @@ for k, v in ipairs(files) do
     end
 
     MODULE = { UniqueID = ModuleUniqueID }
-        hook.Run("PreModuleLoad", ModuleUniqueID, MODULE)
+        local bResult = hook.Run("PreModuleLoad", ModuleUniqueID, MODULE)
+        if ( bResult == false ) then continue end
+
         ow.util:LoadFile("overwatch/modules/" .. v, "shared")
         ow.module.stored[ModuleUniqueID] = MODULE
         hook.Run("PostModuleLoad", ModuleUniqueID, MODULE)

@@ -3,6 +3,7 @@
 
 ow.module = {}
 ow.module.stored = {}
+ow.module.disabled = {}
 
 --- Returns a module by its unique identifier or name.
 -- @realm shared
