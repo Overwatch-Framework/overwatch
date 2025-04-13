@@ -53,8 +53,7 @@ function PANEL:OrderNotifications()
     local x, y = self:GetPos()
     y = y - ScreenScale(12) -- Adjust the y position to account for the notification height
 
-    local count = table.Count(self.notifications)
-    if ( count == 0 ) then return end
+    if ( self.notifications[1] == nil ) then return end
 
     for _, v in ipairs(self.notifications) do
         if ( IsValid(v) ) then
@@ -102,10 +101,10 @@ function PANEL:SetMessage(message)
     if ( message == self.message:GetText() ) then return end
 
     local wrapped = ow.util:WrapText(message, "ow.fonts.default.bold", self:GetWide() - ScreenScale(20))
-    if ( table.Count(wrapped) > 1 ) then
+    if ( #wrapped > 1 ) then
         self.message:SetText("")
 
-        for k, v in pairs(wrapped) do
+        for k, v in ipairs(wrapped) do
             if ( k == 1 ) then
                 self.message:SetText(v)
                 self.message:SizeToContents()
