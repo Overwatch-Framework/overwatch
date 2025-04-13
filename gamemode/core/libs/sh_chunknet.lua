@@ -110,18 +110,18 @@ function ow.chunknet:Receive(id, callback)
         local chunk = net.ReadString()
 
         local key = SERVER and ply:SteamID64() or "local"
-        buffer[key] = buffer[key] or {}
-        buffer[key][index] = chunk
+        local bufferKey = buffer[key] or {}
+        bufferKey[index] = chunk
 
-        if ( table.Count(buffer[key]) == total ) then
-            local fullData = table.concat(buffer[key])
-            buffer[key] = nil
+        if ( table.Count(bufferKey) == total ) then
+            local fullData = table.concat(bufferKey)
+            bufferKey = nil
 
             local decoded = util.Base64Decode(fullData)
             local decompressed = util.Decompress(decoded)
 
-            if ( decompressed == nil ) then
-                ErrorNoHalt("[ow.chunknet] Failed to decompress payload for id '" .. id .. "'\n")
+            if ( decompressed == nil or !isstring(decompressed) ) then
+                ErrorNoHalt("[ow.chunknet] Failed to decompress payload for id \"" .. id .. "\"\n")
                 return
             end
 

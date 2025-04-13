@@ -53,10 +53,9 @@ function PANEL:OrderNotifications()
     local x, y = self:GetPos()
     y = y - ScreenScale(12) -- Adjust the y position to account for the notification height
 
-    local count = table.Count(self.notifications)
-    if ( count == 0 ) then return end
+    if ( self.notifications[1] == nil ) then return end
 
-    for _, v in pairs(self.notifications) do
+    for _, v in ipairs(self.notifications) do
         if ( IsValid(v) ) then
             v:MoveTo(x, y + ((v:GetTall() + ScreenScale(4)) * count), 0.5, 0, 1, function()
                 -- This is where we can add any additional logic after the notification has moved
@@ -68,7 +67,7 @@ function PANEL:OrderNotifications()
 end
 
 function PANEL:ClearNotifications()
-    for k, v in pairs(self.notifications) do
+    for k, v in ipairs(self.notifications) do
         if ( IsValid(v) ) then
             v:Remove()
         end
@@ -91,7 +90,7 @@ function PANEL:Init()
 
     self.message = self:Add("DLabel")
     self.message:SetText("Notification Message")
-    self.message:SetTextColor(Color(255, 255, 255, 255))
+    self.message:SetTextColor(color_white)
     self.message:SetFont("ow.fonts.default.bold")
     self.message:SizeToContents()
     self.message:SetPos(10, self:GetTall() / 2 - self.message:GetTall() / 2)
@@ -102,17 +101,17 @@ function PANEL:SetMessage(message)
     if ( message == self.message:GetText() ) then return end
 
     local wrapped = ow.util:WrapText(message, "ow.fonts.default.bold", self:GetWide() - ScreenScale(20))
-    if ( table.Count(wrapped) > 1 ) then
+    if ( #wrapped > 1 ) then
         self.message:SetText("")
 
-        for k, v in pairs(wrapped) do
+        for k, v in ipairs(wrapped) do
             if ( k == 1 ) then
                 self.message:SetText(v)
                 self.message:SizeToContents()
             else
                 local newLabel = self:Add("DLabel")
                 newLabel:SetText(v)
-                newLabel:SetTextColor(Color(255, 255, 255, 255))
+                newLabel:SetTextColor(color_white)
                 newLabel:SetFont("ow.fonts.default.bold")
                 newLabel:SizeToContents()
                 newLabel:SetPos(10, self:GetTall() / 2 - self.message:GetTall() / 2 + (k - 1) * (self.message:GetTall() + ScreenScale(2)))
@@ -141,16 +140,17 @@ function PANEL:SetIcon(icon)
     self.message:SetPos(self.icon:GetWide() + 20, self:GetTall() / 2 - self.message:GetTall() / 2)
 end
 
+local darkColor = Color(0, 0, 0, 150)
 function PANEL:Paint(width, height)
     local fraction = 0
     if ( self.created and self.duration ) then
         fraction = math.Clamp((CurTime() - self.created) / self.duration, 0, 1)
     end
 
-    surface.SetDrawColor(0, 0, 0, 150)
+    surface.SetDrawColor(darkColor)
     surface.DrawRect(0, 0, width, height)
 
-    surface.SetDrawColor(255, 255, 255, 255)
+    surface.SetDrawColor(color_white)
     surface.DrawRect(0, height - 1, width - width * fraction, 1)
 end
 
