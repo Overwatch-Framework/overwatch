@@ -129,7 +129,7 @@ function SWEP:SecondaryAttack()
         ent:SetVelocity(ply:GetAimVector() * self:GetPushForce())
 
         hook.Run("OWHandsPush", ply, ent)
-    elseif ( ent:GetClass():find("door") ) then
+    elseif ( ent:GetClass():find("door") != nil ) then
         if ( SERVER ) then
             ply:EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(1, 5) .. ".wav")
         end
