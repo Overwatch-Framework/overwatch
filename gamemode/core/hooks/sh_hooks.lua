@@ -6,11 +6,11 @@ function GM:CanPlayerBecomeFaction(ply, factionID)
     return true
 end
 
-function GM:CanPlayerHandsPickup(ply, ent)
+function GM:PrePlayerHandsPickup(ply, ent)
     return true
 end
 
-function GM:CanPlayerHandsPush(ply, ent)
+function GM:PrePlayerHandsPush(ply, ent)
     return true
 end
 

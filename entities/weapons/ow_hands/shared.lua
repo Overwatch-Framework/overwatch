@@ -77,11 +77,11 @@ function SWEP:GetPushForce()
 end
 
 function SWEP:CanPush(ent)
-    return hook.Run("CanPlayerHandsPush", self:GetOwner(), ent)
+    return hook.Run("PrePlayerHandsPush", self:GetOwner(), ent)
 end
 
 function SWEP:CanPickup(ent)
-    return hook.Run("CanPlayerHandsPickup", self:GetOwner(), ent)
+    return hook.Run("PrePlayerHandsPickup", self:GetOwner(), ent)
 end
 
 function SWEP:SecondaryAttack()
