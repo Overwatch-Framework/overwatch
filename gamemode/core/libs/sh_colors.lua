@@ -33,7 +33,7 @@ function ow.color:Get(name)
     end
 
     ow.util:PrintError("Attempted to get an invalid color!")
-    return
+    return false
 end
 
 --- Dims a color by a specified fraction.
