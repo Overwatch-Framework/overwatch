@@ -2,21 +2,29 @@ function GM:PlayerInitialSpawn(ply)
     ow.sqlite:LoadRow("players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
 
-        data.steamid = ply:SteamID64()
-        data.last_played = os.time()
-        data.ip = ply:IPAddress()
-        data.name = ply:SteamName()
-        data.play_time = 0
+        -- data.steamid = ply:SteamID64()
+        -- data.last_played = os.time()
+        -- data.ip = ply:IPAddress()
+        -- data.name = ply:SteamName()
+        -- data.play_time = 0
 
-        local sqlData = data.data
-        if ( isstring(sqlData) ) then
-            sqlData = util.JSONToTable(sqlData)
-        end
-        if ( !sqlData ) then sqlData = {} end
+        -- local sqlData = data.data
+        -- if ( isstring(sqlData) ) then
+        --     sqlData = util.JSONToTable(sqlData)
+        -- end
+        -- if ( !sqlData ) then sqlData = {} end
 
-        data.data = util.TableToJSON(sqlData)
+        -- data.data = util.TableToJSON(sqlData)
 
-        ow.sqlite:SaveRow("players", data, "steamid")
+        -- ow.sqlite:SaveRow("players", data, "steamid")
+
+        ply:SetDBVar("name", ply:SteamName())
+        ply:SetDBVar("ip", ply:IPAddress())
+        ply:SetDBVar("play_time", 0)
+        ply:SetDBVar("last_played", os.time())
+        ply:SetDBVar("data", data.data or "[]")
+
+        ply:SaveDB()
 
         ply.owDatabase = data
 
