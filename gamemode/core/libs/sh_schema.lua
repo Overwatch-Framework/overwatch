@@ -24,7 +24,7 @@ function ow.schema:Initialize()
     local bSuccess = file.Exists(path, "LUA")
     if ( !bSuccess ) then
         ow.util:PrintError("Schema not found!")
-        return
+        return false
     else
         SCHEMA.Folder = folder
 
