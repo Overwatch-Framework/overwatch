@@ -20,7 +20,7 @@ function ow.class:Register(classData)
     end
 
     local faction = ow.faction:Get(classData.faction)
-    if ( faction == nil ) then
+    if ( faction == nil or !istable(faction) ) then
         ow.util:PrintError("Attempted to register a class for an invalid faction!")
         return false
     end
