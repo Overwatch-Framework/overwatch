@@ -2,7 +2,8 @@
 -- @module ow.inventory
 
 function ow.inventory:Register(invData)
-    hook.Run("PreInventoryRegistered", invData)
+    local bResult = hook.Run("PreInventoryRegistered", invData)
+    if ( bResult == false ) then return false end
 
     invData.index = #self.stored + 1
     self.stored[invData.index] = invData
