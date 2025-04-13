@@ -33,7 +33,7 @@ function ow.chunknet:Serialize(data)
     elseif ( isstring(data) ) then
         return data
     else
-        error("ow.chunknet:serialize() only accepts tables or strings!")
+        error("ow.chunknet:Serialize() only accepts tables or strings!")
     end
 end
 
@@ -120,7 +120,7 @@ function ow.chunknet:Receive(id, callback)
             local decoded = util.Base64Decode(fullData)
             local decompressed = util.Decompress(decoded)
 
-            if ( !decompressed ) then
+            if ( decompressed == nil ) then
                 ErrorNoHalt("[ow.chunknet] Failed to decompress payload for id '" .. id .. "'\n")
                 return
             end
