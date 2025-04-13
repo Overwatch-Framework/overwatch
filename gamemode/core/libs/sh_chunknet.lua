@@ -1,4 +1,5 @@
---- Chunknet is a library for sending large data over the network in chunks.
+--- Chunknet
+-- Chunknet is a library for sending large data over the network in chunks.
 -- It handles the serialization and deserialization of data, as well as the splitting
 -- and compression of large payloads.
 -- @module ow.chunknet
@@ -7,7 +8,7 @@ ow.chunknet = ow.chunknet or {}
 
 local CHUNK_SIZE = 4096 -- 4KB
 
-local function splitChunks(data, size)
+function ow.chunknet:SplitChunks(data, size)
     local chunks = {}
     for i = 1, #data, size do
         table.insert(chunks, data:sub(i, i + size - 1))
@@ -16,17 +17,17 @@ local function splitChunks(data, size)
     return chunks
 end
 
-local function serialize(data)
+function ow.chunknet:Serialize(data)
     if ( istable(data) ) then
         return util.TableToJSON(data)
     elseif ( isstring(data) ) then
         return data
     else
-        error("chunknet can only send strings or tables!")
+        error("ow.chunknet:serialize() only accepts tables or strings!")
     end
 end
 
-local function deserialize(data)
+function ow.chunknet:Deserialize(data)
     local tbl = util.JSONToTable(data)
     return tbl or data
 end
@@ -38,10 +39,10 @@ end
 -- @tparam string id The identifier for the data being sent
 -- @tparam any data The data to send (string or table)
 function ow.chunknet:Send(ply, id, data)
-    local serialized = serialize(data)
+    local serialized = self:Serialize(data)
     local compressed = util.Compress(serialized)
     local encoded = util.Base64Encode(compressed)
-    local chunks = splitChunks(encoded, CHUNK_SIZE)
+    local chunks = self:SplitChunks(encoded, CHUNK_SIZE)
 
     for i, chunk in ipairs(chunks) do
         net.Start("ow.chunknet." .. id)
@@ -63,13 +64,13 @@ end
 -- @tparam any data The data to send (string or table)
 function ow.chunknet:Broadcast(id, data)
     if ( CLIENT ) then
-        error("ow.chunknet:Broadcast can only be called on the server!")
+        error("ow.chunknet:Broadcast() can only be called on the server!")
     end
 
-    local serialized = serialize(data)
+    local serialized = self:Serialize(data)
     local compressed = util.Compress(serialized)
     local encoded = util.Base64Encode(compressed)
-    local chunks = splitChunks(encoded, CHUNK_SIZE)
+    local chunks = self:SplitChunks(encoded, CHUNK_SIZE)
 
     for i, chunk in ipairs(chunks) do
         net.Start("ow.chunknet." .. id)
@@ -104,12 +105,12 @@ function ow.chunknet:Receive(id, callback)
             local decoded = util.Base64Decode(fullData)
             local decompressed = util.Decompress(decoded)
 
-            if ( not decompressed ) then
+            if ( !decompressed ) then
                 ErrorNoHalt("[ow.chunknet] Failed to decompress payload for id '" .. id .. "'\n")
                 return
             end
 
-            local result = deserialize(decompressed)
+            local result = self:Deserialize(decompressed)
             callback(result, ply)
         end
     end)
