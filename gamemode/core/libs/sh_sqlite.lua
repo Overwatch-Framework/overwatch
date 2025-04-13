@@ -1,6 +1,7 @@
 --- SQLite Utility Library for Overwatch
 -- Provides dynamic variable registration and row management per table.
 -- Designed for frameworks with multiple data tables like `users`, `characters`, etc.
+-- @module ow.sqlite
 
 ow.sqlite = ow.sqlite or {}
 ow.sqlite.tables = {}
