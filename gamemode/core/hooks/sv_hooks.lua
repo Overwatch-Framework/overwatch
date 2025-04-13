@@ -164,3 +164,7 @@ end
 function GM:CanPlayerSuicide(ply)
     return false
 end
+
+function GM:PlayerDeathSound(ply)
+    return true
+end

@@ -112,8 +112,10 @@ end
 -- @param ... any The message to send.
 function ow.util:SendChatText(ply, ...)
     if ( SERVER ) then
+        local compressed = util.Compress(util.TableToJSON({...}))
+
         net.Start("ow.chat.text")
-        net.WriteTable({...})
+        net.WriteData(compressed, #compressed)
 
         if ( IsValid(ply) ) then
             net.Send(ply)
