@@ -139,7 +139,7 @@ end
 -- @tparam string key Column name to use for matching
 function ow.sqlite:SaveRow(query, data, key)
     local condition = string.format("%s = %s", key, sql.SQLStr(data[key]))
-    self:Update(table, data, condition)
+    self:Update(query, data, condition)
 end
 
 --- Creates a table with a given schema if it doesn't already exist.
@@ -228,15 +228,21 @@ function ow.sqlite:Count(query, condition)
     return result and result[1]["COUNT(*)"] or 0
 end
 
+if ( CLIENT ) then return end
+
 ow.sqlite:CreateTable("characters", {
     id = "INTEGER PRIMARY KEY AUTOINCREMENT",
     steamid = "TEXT",
     name = "TEXT"
 })
 
-ow.sqlite:CreateTable("users", {
+ow.sqlite:CreateTable("players", {
     steamid = "TEXT PRIMARY KEY",
-    name = "TEXT"
+    name = "TEXT",
+    ip = "TEXT",
+    play_time = "INTEGER",
+    last_played = "INTEGER",
+    data = "TEXT",
 })
 
 ow.sqlite:CreateTable("inventories", {

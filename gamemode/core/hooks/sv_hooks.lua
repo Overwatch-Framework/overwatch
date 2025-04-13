@@ -1,6 +1,22 @@
 function GM:PlayerInitialSpawn(ply)
-    ow.sqlite:LoadRow("players", "steamid", ply:SteamID(), function(data)
+    ow.sqlite:LoadRow("players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
+
+        data.steamid = ply:SteamID64()
+        data.last_played = os.time()
+        data.ip = ply:IPAddress()
+        data.name = ply:SteamName()
+        data.play_time = 0
+
+        local sqlData = data.data
+        if ( isstring(sqlData) ) then
+            sqlData = util.JSONToTable(sqlData)
+        end
+        if ( !sqlData ) then sqlData = {} end
+
+        data.data = util.TableToJSON(sqlData)
+
+        ow.sqlite:SaveRow("players", data, "steamid")
 
         ply.owDatabase = data
 
@@ -30,6 +46,9 @@ end
 
 function GM:PlayerDisconnected(ply)
     if ( ply.owDatabase ) then
+        ply.owDatabase.play_time = ply.owDatabase.play_time + math.floor(CurTime() - ply.owDatabase.last_played)
+        ply.owDatabase.last_played = os.time()
+
         ow.sqlite:SaveRow("users", ply.owDatabase, "steamid")
     end
 end
