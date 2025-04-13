@@ -3,7 +3,7 @@
 
 --- Adds a new item to a character's inventory.
 -- @realm server
--- @param string ownerID The owner's character ID.
+-- @param number ownerID The ID of the character who owns the item.
 -- @param string uniqueID The uniqueID of the item.
 -- @param table data The data to save with the item.
 -- @param function callback The callback function.
@@ -17,11 +17,11 @@ function ow.item:Add(ownerID, uniqueID, data, callback)
 
     item.Data = data.Data
 
-    local query = mysql:Insert("overwatch_items")
-        query:Insert("owner_id", ownerID)
-        query:Insert("unique_id", uniqueID)
-        query:Insert("data", util.TableToJSON(data or {}))
-    query:Execute(function(dataReceived)
+    ow.sqlite:Insert("items", {
+        owner_id = ownerID,
+        unique_id = uniqueID,
+        data = util.TableToJSON(data or {})
+    }, function(dataReceived)
         local receiver = ow.character:GetPlayerByCharacter(ownerID)
         if ( IsValid(receiver) ) then
             net.Start("ow.item.add")

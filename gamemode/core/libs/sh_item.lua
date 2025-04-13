@@ -22,7 +22,7 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Name = itemData.Name or "Unknown Item"
     itemData.Description = itemData.Description or "No description provided."
 
-    itemData.Model = itemData.Model or "models/props_junk/watermelon01.mdl"
+    itemData.Model = itemData.Model or Model("models/props_junk/watermelon01.mdl")
     util.PrecacheModel(itemData.Model)
 
     itemData.Stackable = itemData.Stackable or false
