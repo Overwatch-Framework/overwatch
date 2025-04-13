@@ -117,6 +117,8 @@ function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
+    ow.util:DrawBlurRect(0, 0, ScrW(), ScrH(), 5, 5)
+
     if ( hook.Run("ShouldDrawDebugHUD") ) then
         local _, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
         local width, height

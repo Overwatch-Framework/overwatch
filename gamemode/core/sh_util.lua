@@ -434,15 +434,12 @@ if ( CLIENT ) then
         local x, y = panel:LocalToScreen(0, 0)
         local scrW, scrH = ScrW(), ScrH()
 
-        surface.SetDrawColor(color_white)
-        surface.SetMaterial(blur)
-
         for i = -passes, 1, 0.2 do
             blur:SetFloat("$blur", ( i / passes ) * amount)
             blur:Recompute()
 
             render.UpdateScreenEffectTexture()
-            surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
+            paint.rects.drawRect(x * -1, y * -1, scrW, scrH, color_white, blur)
         end
     end
 
@@ -458,15 +455,12 @@ if ( CLIENT ) then
         amount = amount or defaultAmount
         passes = passes or defaultPasses
 
-        surface.SetDrawColor(color_white)
-        surface.SetMaterial(blur)
-
         for i = -passes, 1, 0.2 do
             blur:SetFloat("$blur", ( i / passes ) * amount)
             blur:Recompute()
 
             render.UpdateScreenEffectTexture()
-            surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
+            paint.rects.drawRect(x * -1, y * -1, w, h, color_white, blur)
         end
     end
 end

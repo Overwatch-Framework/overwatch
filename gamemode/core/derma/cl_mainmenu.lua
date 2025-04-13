@@ -1,6 +1,6 @@
 local padding = ScreenScale(32)
 local smallPadding = ScreenScale(16)
-local gradientLeft = Material("vgui/gradient-l")
+local gradientLeft = ow.util:GetMaterial("vgui/gradient-l")
 
 DEFINE_BASECLASS("EditablePanel")
 
@@ -341,9 +341,7 @@ function PANEL:OnRemove()
 end
 
 function PANEL:Paint(width, height)
-    surface.SetDrawColor(0, 0, 0, 255)
-    surface.SetMaterial(gradientLeft)
-    surface.DrawTexturedRect(0, 0, width / 2, height)
+    paint.rects.drawRect(0, 0, width / 2, height, color_black, gradientLeft)
 end
 
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
