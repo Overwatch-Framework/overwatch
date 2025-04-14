@@ -30,6 +30,7 @@ function PANEL:Init()
     self.currentCreatePayload = {}
 
     self:SetSize(ScrW(), ScrH())
+    self:SetPos(0, 0)
     self:MakePopup()
 
     self:Populate()
@@ -344,7 +345,8 @@ function PANEL:OnRemove()
 end
 
 function PANEL:Paint(width, height)
-    paint.rects.drawRect(0, 0, width / 2, height, color_black, gradientLeft)
+    -- For some reason the gradient sticks out a bit
+    paint.rects.drawRect(-2, 0, width, height, color_black, gradientLeft)
 end
 
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
