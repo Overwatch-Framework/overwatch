@@ -6,7 +6,7 @@ ow.option.stored = {}
 
 function ow.option:SetDefault(key, default)
     local stored = self.stored[key]
-    if ( stored == nil or !istable(stored) ) then
+    if ( !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return false
     end
@@ -38,7 +38,7 @@ if ( CLIENT ) then
 
     function ow.option:Set(key, value)
         local stored = self.stored[key]
-        if ( stored == nil or !istable(stored) ) then
+        if ( !istable(stored) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
             return false
         end
@@ -114,7 +114,6 @@ function ow.option:Register(uniqueID, data)
         Description = data.Description,
         Type = data.Type,
         Default = data.Default,
-        Value = self.stored[key] and self.stored[key].Value or data.Default
     }
 
     self.stored[uniqueID] = table.Merge(self.stored[uniqueID], data)
