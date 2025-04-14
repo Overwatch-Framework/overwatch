@@ -81,6 +81,10 @@ if ( CLIENT ) then
         return self.localClient[key] or fallback
     end
 
+    function ow.option:ResetAll()
+        self.localClient = {}
+    end
+
     net.Receive("ow.option.set", function(len)
         local key = net.ReadString()
         local value = net.ReadType()
