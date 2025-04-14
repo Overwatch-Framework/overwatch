@@ -4,6 +4,18 @@
 ow.option = {}
 ow.option.stored = {}
 
+function ow.option:SetDefault(key, default)
+    local stored = self.stored[key]
+    if ( stored == nil or !istable(stored) ) then
+        ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+        return false
+    end
+
+    stored.Default = default
+
+    return true
+end
+
 if ( CLIENT ) then
     ow.option.localClient = ow.option.localClient or {}
 
@@ -51,18 +63,6 @@ if ( CLIENT ) then
         end
 
         hook.Run("OnOptionChanged", LocalPlayer(), key, value)
-
-        return true
-    end
-
-    function ow.option:SetDefault(key, default)
-        local stored = self.stored[key]
-        if ( stored == nil or !istable(stored) ) then
-            ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
-            return false
-        end
-
-        stored.Default = default
 
         return true
     end
