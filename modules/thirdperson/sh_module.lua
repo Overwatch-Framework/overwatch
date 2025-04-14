@@ -68,4 +68,9 @@ ow.option:Register("thirdperson.position.z", {
     Category = "ow.category.thirdperson"
 })
 
+local meta = FindMetaTable("Player")
+function meta:InThirdperson()
+    return SERVER and ow.option:Get(self, "thirdperson", false) or ow.option:Get("thirdperson", false)
+end
+
 ow.util:LoadFile("cl_hooks.lua")

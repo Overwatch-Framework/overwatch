@@ -1,7 +1,7 @@
 --- Options library
 -- @module ow.option
 
-ow.option.stored = {}
+ow.option.clients = {}
 
 util.AddNetworkString("ow.option.set")
 net.Receive("ow.option.set", function(len, ply)
@@ -21,8 +21,32 @@ net.Receive("ow.option.set", function(len, ply)
     end
 
     if ( !stored.bNoNetworking ) then
-        ow.option.stored[ply] = ow.option.stored[ply] or {}
-        ow.option.stored[ply][key] = value
+        ow.option.clients[ply] = ow.option.clients[ply] or {}
+        ow.option.clients[ply][key] = value
+    end
+end)
+
+util.AddNetworkString("ow.option.syncServer")
+net.Receive("ow.option.syncServer", function(len, ply)
+    if ( !IsValid(ply) ) then return end
+
+    local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
+    if ( !istable(data) ) then return end
+
+    for k, v in pairs(data) do
+        local stored = ow.option.stored[k]
+        if ( !istable(stored) ) then
+            ow.util:PrintError("Option \"" .. k .. "\" does not exist!")
+            continue
+        end
+
+        if ( !stored.bNoNetworking ) then
+            if ( ow.option.clients[ply] == nil ) then
+                ow.option.clients[ply] = {}
+            end
+
+            ow.option.clients[ply][k] = v
+        end
     end
 end)
 
@@ -43,4 +67,28 @@ function ow.option:Set(ply, key, value)
     hook.Run("OnOptionChanged", ply, key, value)
 
     return true
+end
+
+function ow.option:Get(ply, key, default)
+    if ( !IsValid(ply) ) then return default end
+
+    local stored = ow.option.stored[key]
+    if ( stored == nil or !istable(stored) ) then
+        ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+        return default
+    end
+
+    if ( stored.bNoNetworking ) then
+        ow.util:PrintWarning("Option \"" .. key .. "\" is not networked!")
+        return default
+    end
+
+    local plyStored = ow.option.clients[ply]
+    if ( !istable(plyStored) ) then
+        return stored.Value or default
+    end
+
+    print("plyStored", plyStored, key, plyStored[key], default, stored.Default)
+
+    return plyStored[key] or default or stored.Default
 end

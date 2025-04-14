@@ -18,6 +18,7 @@ end
 
 function GM:InitPostEntity()
     ow.localClient = LocalPlayer()
+    ow.option:Load()
 end
 
 function GM:OnCloseCaptionEmit()

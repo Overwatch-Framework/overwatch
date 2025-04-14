@@ -31,7 +31,7 @@
 -- print(ow.type[ow.type.string])
 -- > "string"
 GM.Name = "Overwatch"
-GM.Author = "Riggs & eon (bloodycop)"
+GM.Author = "Riggs & bloodycop"
 GM.Description = "A roleplaying gamemode for Garry's Mod."
 GM.Version = "Foundation"
 
@@ -93,6 +93,9 @@ function GM:OnReloaded()
     ow.reloaded = true
 
     ow.schema:Initialize()
+    if ( CLIENT ) then
+        ow.option:Load()
+    end
 
     hook.Run("LoadFonts")
 

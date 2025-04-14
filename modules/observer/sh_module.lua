@@ -1,7 +1,7 @@
 local MODULE = MODULE
 
 MODULE.Name = "Observer"
-MODULE.Author = "Riggs & eon (bloodycop)"
+MODULE.Author = "Riggs & bloodycop"
 MODULE.Description = "Provides a system for observer mode."
 
 CAMI.RegisterPrivilege({
