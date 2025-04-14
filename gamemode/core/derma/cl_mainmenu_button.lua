@@ -29,9 +29,9 @@ function PANEL:Paint(width, height)
         color = color_button_hover
     end
 
-    paint.startPanel(self, true, true)
+    paint.startVGUI()
         paint.roundedBoxes.roundedBox(8, 0, 0, width, height, color)
-    paint.endPanel(true, true)
+    paint.endVGUI()
 end
 
 function PANEL:OnCursorEntered()

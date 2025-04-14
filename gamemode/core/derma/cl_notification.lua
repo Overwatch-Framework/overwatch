@@ -149,10 +149,10 @@ function PANEL:Paint(width, height)
         fraction = math.Clamp((CurTime() - self.created) / self.duration, 0, 1)
     end
 
-    paint.startPanel(self, true, true)
+    paint.startVGUI()
         paint.rects.drawRect(0, 0, width, height, darkColor)
         paint.rects.drawRect(0, height - 1, width - width * fraction, 1, color_white)
-    paint.endPanel(true, true)
+    paint.endVGUI()
 end
 
 vgui.Register("ow.notification", PANEL, "DPanel")
