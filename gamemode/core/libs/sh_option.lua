@@ -23,8 +23,8 @@ if ( CLIENT ) then
         hook.Run("PreOptionsLoad")
 
         local folder = SCHEMA and SCHEMA.Folder or "core"
-        if ( file.Exists("overwatch/" .. folder .. "/options.txt", "DATA") ) then
-            self.localClient = util.JSONToTable(file.Read("overwatch/" .. folder .. "/options.txt", "DATA"))
+        if ( file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
+            self.localClient = util.JSONToTable(file.Read("overwatch/" .. folder .. "/options.json", "DATA"))
         end
 
         local compressed = util.Compress(util.TableToJSON(self.localClient))
@@ -58,8 +58,8 @@ if ( CLIENT ) then
 
         local folder = SCHEMA and SCHEMA.Folder or "core"
 
-        if ( file.Exists("overwatch/" .. folder .. "/options.txt", "DATA") ) then
-            file.Write("overwatch/" .. folder .. "/options.txt", util.TableToJSON(self.localClient))
+        if ( file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
+            file.Write("overwatch/" .. folder .. "/options.json", util.TableToJSON(self.localClient))
         end
 
         hook.Run("OnOptionChanged", LocalPlayer(), key, value)
@@ -118,8 +118,8 @@ function ow.option:Register(uniqueID, data)
 
     self.stored[uniqueID] = table.Merge(self.stored[uniqueID], data)
 
-    if ( !file.Exists("overwatch/" .. folder .. "/options.txt", "DATA") ) then
-        file.Write("overwatch/" .. folder .. "/options.txt", "[]")
+    if ( !file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
+        file.Write("overwatch/" .. folder .. "/options.json", "[]")
     end
 
     hook.Run("PostOptionRegistered", uniqueID, data)

@@ -23,12 +23,7 @@ end)
 net.Receive("ow.config.sync", function(len)
     local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
-    for key, value in pairs(compressedTable) do
-        local stored = ow.config.stored[key]
-        if ( stored ) then
-            stored.Value = value or stored.Default
-        end
-    end
+    ow.config.values = compressedTable
 end)
 
 net.Receive("ow.config.set", function(len)

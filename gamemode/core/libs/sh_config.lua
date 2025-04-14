@@ -3,6 +3,7 @@
 
 ow.config = ow.config or {}
 ow.config.stored = ow.config.stored or {}
+ow.config.values = ow.config.values or {}
 
 --- Gets the current value of the specified configuration.
 -- @realm shared
@@ -12,11 +13,13 @@ ow.config.stored = ow.config.stored or {}
 -- @usage local color = ow.config.Get("schemaColor", Color(0, 100, 150))
 -- print(color) -- Prints the color of the schema.
 function ow.config:Get(key, default)
-    if ( self.stored[key] ) then
-        return self.stored[key].Value
-    else
-        return default
+    local value = self.values[key]
+    if ( !istable(self.stored[key]) ) then
+        ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
+        return nil
     end
+
+    return value or default or self.stored[key].Default
 end
 
 --- Sets the default value of the specified configuration.
@@ -66,7 +69,6 @@ function ow.config:Register(key, data)
         Description = data.Description,
         Type = data.Type,
         Default = data.Default,
-        Value = self.stored[key] and self.stored[key].Value or data.Default
     }
 
     hook.Run("PostConfigRegistered", key, data)
