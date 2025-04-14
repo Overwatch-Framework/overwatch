@@ -25,3 +25,16 @@ Overwatch was created by [Riggs](https://minerva-servers.com/porfolio/riggs9162)
     ![Character Selection](image-4.png)
     ![Options One](image-1.png)
     ![Options Two](image-2.png)
+- ### Inventory System
+    - Weight Based Inventory System
+    - Storage System
+    - Item System
+    - Item Pickup System
+- ### Character System
+    - Character Creation System
+    - Character Selection System
+    - Character Deletion System
+    - Character Saving System
+    - Character Loading System
+- ### Player System
+    - Player Data System
