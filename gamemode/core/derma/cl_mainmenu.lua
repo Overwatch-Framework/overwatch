@@ -345,9 +345,10 @@ function PANEL:OnRemove()
 end
 
 function PANEL:Paint(width, height)
-    paint.startPanel(self, true, true)
-        paint.rects.drawRect(0, 0, width, height, color_black, gradientLeft)
-    paint.endPanel(true, true)
+    surface.SetDrawColor(ow.color:Get("black"))
+    surface.SetMaterial(gradientLeft)
+    surface.DrawTexturedRect(0, 0, width / 2, height)
+    surface.DrawTexturedRect(0, 0, width / 2, height)
 end
 
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
