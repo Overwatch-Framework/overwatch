@@ -1,5 +1,3 @@
-local gradientLeft = Material("vgui/gradient-l")
-
 DEFINE_BASECLASS("DTextEntry")
 
 local PANEL = {}
