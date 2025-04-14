@@ -35,14 +35,3 @@ net.Receive("ow.config.set", function(len)
 
     stored.Value = value
 end)
-
-net.Receive("ixDataSync", function(len)
-    local localData = util.JSONToTable(util.Decompress(net.ReadData(len / 8))) or {}
-    ow.localData = localData
-    ow.playTime = net.ReadUInt(32)
-end)
-
-net.Receive("ixData", function()
-    ow.localData = ow.localData or {}
-    ow.localData[net.ReadString()] = net.ReadType()
-end)
