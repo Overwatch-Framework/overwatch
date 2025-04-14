@@ -2,6 +2,8 @@ local padding = ScreenScale(32)
 local smallPadding = ScreenScale(16)
 local gradientLeft = ow.util:GetMaterial("vgui/gradient-l")
 
+-- TODO: Full on localization support
+
 DEFINE_BASECLASS("EditablePanel")
 
 local PANEL = {}
@@ -75,7 +77,7 @@ function PANEL:Populate()
     else
         local createButton = buttons:Add("ow.mainmenu.button")
         createButton:Dock(TOP)
-        createButton:SetText(ow.localization:GetPhrase("ow.mainmenu.character.create"):upper())
+        createButton:SetText(ow.localization:GetPhrase("ow.mainmenu.charactercreate"):upper())
         createButton:DockMargin(0, 0, 0, 8)
 
         createButton.DoClick = function()
@@ -99,7 +101,7 @@ function PANEL:Populate()
     if ( bHasCharacters ) then
         local selectButton = buttons:Add("ow.mainmenu.button")
         selectButton:Dock(TOP)
-        selectButton:SetText(ow.localization:GetPhrase("ow.mainmenu.character.select"):upper())
+        selectButton:SetText(ow.localization:GetPhrase("ow.mainmenu.characterselect"):upper())
         selectButton:DockMargin(0, 0, 0, 8)
 
         selectButton.DoClick = function()
@@ -118,7 +120,7 @@ function PANEL:Populate()
 
     local disconnectButton = buttons:Add("ow.mainmenu.button")
     disconnectButton:Dock(TOP)
-    disconnectButton:SetText("DISCONNECT")
+    disconnectButton:SetText(ow.localization:GetPhrase("ow.mainmenu.leave"):upper())
     disconnectButton:SetTextColor(ow.color:Get("maroon"))
 
     disconnectButton.DoClick = function()
