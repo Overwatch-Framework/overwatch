@@ -75,7 +75,7 @@ function PANEL:Populate()
     else
         local createButton = buttons:Add("ow.mainmenu.button")
         createButton:Dock(TOP)
-        createButton:SetText("CREATE CHARACTER")
+        createButton:SetText(ow.localization:GetPhrase("ow.mainmenu.character.create"):upper())
         createButton:DockMargin(0, 0, 0, 8)
 
         createButton.DoClick = function()
@@ -99,7 +99,7 @@ function PANEL:Populate()
     if ( bHasCharacters ) then
         local selectButton = buttons:Add("ow.mainmenu.button")
         selectButton:Dock(TOP)
-        selectButton:SetText("SELECT CHARACTER")
+        selectButton:SetText(ow.localization:GetPhrase("ow.mainmenu.character.select"):upper())
         selectButton:DockMargin(0, 0, 0, 8)
 
         selectButton.DoClick = function()
@@ -109,7 +109,7 @@ function PANEL:Populate()
 
     local settingsButton = buttons:Add("ow.mainmenu.button")
     settingsButton:Dock(TOP)
-    settingsButton:SetText("SETTINGS")
+    settingsButton:SetText(ow.localization:GetPhrase("ow.mainmenu.settings"):upper())
     settingsButton:DockMargin(0, 0, 0, 8)
 
     settingsButton.DoClick = function()

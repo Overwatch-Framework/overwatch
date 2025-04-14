@@ -8,8 +8,8 @@ ow.localization.stored = {}
 -- @realm shared
 -- @param language The language code.
 -- @param data The language data.
-function ow.localization:Register(language, data)
-    if ( language == nil or !isstring(language) ) then
+function ow.localization:Register(languageName, data)
+    if ( languageName == nil or !isstring(languageName) ) then
         ow.util:PrintError("Attempted to register a language without a language code!")
         return false
     end
@@ -19,21 +19,22 @@ function ow.localization:Register(language, data)
         return false
     end
 
-    if ( self.stored[language] ) then
-        self.stored[language] = table.Merge(table.Copy(self.stored[language]), data)
-    else
-        self.stored[language] = data
+    local stored = self.stored[languageName]
+    if ( stored == nil ) then
+        self.stored[languageName] = {}
     end
 
-    hook.Run("OnLanguageRegistered", language, data)
+    self.stored[languageName] = table.Merge(table.Copy(self.stored[languageName]), data)
+
+    hook.Run("OnLanguageRegistered", languageName, data)
 end
 
 --- Get a language.
 -- @realm shared
 -- @param language The language code.
 -- @return The language data.
-function ow.localization:Get(language)
-    return self.stored[language]
+function ow.localization:Get(languageName)
+    return self.stored[languageName]
 end
 
 --- Get a localized string.
@@ -41,10 +42,8 @@ end
 -- @param key The key of the string.
 -- @param language The language code.
 -- @return The localized string.
-function ow.localization:GetPhrase(key, language)
-    if ( language == nil ) then
-        language = ow.option:Get("language", "eng")
+if ( CLIENT ) then
+    function ow.localization:GetPhrase(key, languageName)
+        return self:Get(GetConVar("gmod_language"):GetString())[key]
     end
-
-    return self:Get(language)[key]
 end

@@ -4,7 +4,7 @@ MODULE.Name = "Third Person"
 MODULE.Description = "Allows players to view themselves in third person."
 MODULE.Author = "Riggs"
 
-ow.localization:Register("eng", {
+ow.localization:Register("en", {
     ["ow.option.thirdperson"] = "Third Person",
 
     ["ow.option.thirdperson.enable"] = "Enable Third Person",
