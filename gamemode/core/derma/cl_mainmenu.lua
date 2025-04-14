@@ -15,7 +15,8 @@ function PANEL:Init()
 
     ow.gui.mainmenu = self
 
-    if ( IsValid(LocalPlayer()) and LocalPlayer():IsTyping() ) then
+    local ply = LocalPlayer()
+    if ( ply:IsTyping() ) then
         chat.Close()
     end
 
