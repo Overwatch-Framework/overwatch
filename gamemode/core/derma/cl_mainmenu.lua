@@ -345,8 +345,9 @@ function PANEL:OnRemove()
 end
 
 function PANEL:Paint(width, height)
-    -- For some reason the gradient sticks out a bit
-    paint.rects.drawRect(-2, 0, width, height, color_black, gradientLeft)
+    paint.startPanel(self, true, true)
+        paint.rects.drawRect(0, 0, width, height, color_black, gradientLeft)
+    paint.endPanel(true, true)
 end
 
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
