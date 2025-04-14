@@ -69,7 +69,7 @@ function PANEL:Populate()
     if ( ply.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
         local playButton = buttons:Add("ow.mainmenu.button")
         playButton:Dock(TOP)
-        playButton:SetText("PLAY")
+        playButton:SetText(ow.localization:GetPhrase("ow.mainmenu.play"):upper())
         playButton:DockMargin(0, 0, 0, 8)
 
         playButton.DoClick = function()
