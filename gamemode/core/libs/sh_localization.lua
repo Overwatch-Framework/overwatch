@@ -43,7 +43,9 @@ end
 -- @param language The language code.
 -- @return The localized string.
 if ( CLIENT ) then
+    local gmod_language = GetConVar("gmod_language")
     function ow.localization:GetPhrase(key, languageName)
-        return self:Get(GetConVar("gmod_language"):GetString())[key]
+        languageName = languageName or ( gmod_language and gmod_language:GetString() ) or "en"
+        return self:Get(languageName)[key]
     end
 end
