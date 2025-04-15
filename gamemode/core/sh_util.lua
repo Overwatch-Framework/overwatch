@@ -172,7 +172,7 @@ end
 function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
-    MsgC(SERVER and serverErrorColour or clientErrorColour, "[ERROR] ", hook.Run("GetFrameworkColor"), "Overwatch :: ", color_white, unpack(args))
+    MsgC(SERVER and serverErrorColour or clientErrorColour, "[ERROR] ", hook.Run("GetFrameworkColor"), "Overwatch >> ", color_white, unpack(args))
 
     return args
 end
@@ -184,7 +184,7 @@ local colorWarning = Color(255, 200, 120)
 function ow.util:PrintWarning(...)
     local args = self:PreparePackage(...)
 
-    MsgC(colorWarning, "[WARNING] ", hook.Run("GetFrameworkColor"), "Overwatch :: ", color_white, unpack(args))
+    MsgC(colorWarning, "[WARNING] ", hook.Run("GetFrameworkColor"), "Overwatch >> ", color_white, unpack(args))
 
     return args
 end
