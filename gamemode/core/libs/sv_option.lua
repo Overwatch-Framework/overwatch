@@ -20,6 +20,8 @@ net.Receive("ow.option.set", function(len, ply)
         stored:OnChange(value, stored.Value, ply)
     end
 
+    hook.Run("OnOptionChanged", ply, key, value)
+
     if ( !stored.bNoNetworking ) then
         ow.option.clients[ply] = ow.option.clients[ply] or {}
         ow.option.clients[ply][key] = value
