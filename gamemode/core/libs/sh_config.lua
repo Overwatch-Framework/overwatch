@@ -16,10 +16,10 @@ function ow.config:Get(key, default)
     local value = self.values[key]
     if ( !istable(self.stored[key]) ) then
         ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
-        return nil
+        return default or nil
     end
 
-    return value or default or self.stored[key].Default
+    return value or self.stored[key].Default
 end
 
 --- Sets the default value of the specified configuration.
