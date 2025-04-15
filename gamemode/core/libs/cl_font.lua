@@ -11,7 +11,7 @@ surface.owCreateFont = surface.owCreateFont or surface.CreateFont
 -- @string name The name of the font.
 -- @tab data The font data.
 function surface.CreateFont(name, data)
-    if ( name:StartsWith("ow") ) then
+    if ( string.sub(name, 1, 2) == "ow" ) then
         ow.font.stored[name] = data
     end
 

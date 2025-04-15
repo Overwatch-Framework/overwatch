@@ -29,7 +29,7 @@ ow.localization:Register("en", {
 })
 
 ow.option:Register("thirdperson", {
-    Name = "ow.option.thirdperson",
+    DisplayName = "ow.option.thirdperson",
     Type = ow.type.bool,
     Default = false,
     Description = "ow.option.thirdperson.enable.help",
@@ -37,7 +37,7 @@ ow.option:Register("thirdperson", {
 })
 
 ow.option:Register("thirdperson.followhead", {
-    Name = "ow.options.thirdperson.followhead",
+    DisplayName = "ow.options.thirdperson.followhead",
     Type = ow.type.bool,
     Default = false,
     Description = "ow.options.thirdperson.followhead.help",
@@ -45,7 +45,7 @@ ow.option:Register("thirdperson.followhead", {
 })
 
 ow.option:Register("thirdperson.position.x", {
-    Name = "ow.options.thirdperson.position.x",
+    DisplayName = "ow.options.thirdperson.position.x",
     Type = ow.type.number,
     Default = 0,
     Description = "ow.options.thirdperson.position.x.help",
@@ -53,7 +53,7 @@ ow.option:Register("thirdperson.position.x", {
 })
 
 ow.option:Register("thirdperson.position.y", {
-    Name = "ow.options.thirdperson.position.y",
+    DisplayName = "ow.options.thirdperson.position.y",
     Type = ow.type.number,
     Default = 0,
     Description = "ow.options.thirdperson.position.y.help",
@@ -61,7 +61,7 @@ ow.option:Register("thirdperson.position.y", {
 })
 
 ow.option:Register("thirdperson.position.z", {
-    Name = "ow.options.thirdperson.position.z",
+    DisplayName = "ow.options.thirdperson.position.z",
     Type = ow.type.number,
     Default = 0,
     Description = "ow.options.thirdperson.position.z.help",
