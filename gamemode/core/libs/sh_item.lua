@@ -10,41 +10,30 @@ function ow.item:Register(uniqueID, itemData)
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
 
-    if ( istable(itemData.base) ) then
-        for _, base in ipairs(itemData.base) do
-            local baseData = ow.item.bases[base]
-            if ( istable(baseData) ) then
-                itemData = table.Inherit(itemData, baseData)
-            end
-        end
-    elseif ( isstring(itemData.base) ) then
-        local baseData = ow.item.bases[itemData.base]
-        if ( istable(baseData) ) then
-            itemData = table.Inherit(itemData, baseData)
-        end
-    end
+    local ITEM = {}
 
-    itemData.Name = itemData.Name or "Unknown Item"
-    itemData.Description = itemData.Description or "No description provided."
+    -- TODO: Add Inheritance Support in Future
 
-    itemData.Model = itemData.Model or Model("models/props_junk/watermelon01.mdl")
+    ITEM.Name = itemData.Name or "Unknown Item"
+    ITEM.Description = itemData.Description or "No description provided."
+
+    ITEM.Model = itemData.Model or Model("models/props_junk/watermelon01.mdl")
     util.PrecacheModel(itemData.Model)
 
-    itemData.Stackable = itemData.Stackable or false
-    itemData.MaxStack = itemData.MaxStack or 1
-    itemData.Weight = itemData.Weight or 1
-    itemData.Category = itemData.Category or "Miscellaneous"
+    ITEM.Stackable = itemData.Stackable or false
+    ITEM.MaxStack = itemData.MaxStack or 1
+    ITEM.Weight = itemData.Weight or 1
+    ITEM.Category = itemData.Category or "Miscellaneous"
 
+    self.stored[uniqueID] = ITEM
     hook.Run("PostItemRegistered", uniqueID, itemData)
-
-    self.stored[uniqueID] = itemData
 end
 
-function ow.item:Get(look)
-    if ( isstring(look) ) then
-        return self.stored[look]
-    elseif ( isnumber(look) ) then
-        return self.instances[look]
+function ow.item:Get(identifier)
+    if ( isstring(identifier) ) then
+        return self.stored[identifier]
+    elseif ( isnumber(identifier) ) then
+        return self.instances[identifier]
     end
 
     return nil
