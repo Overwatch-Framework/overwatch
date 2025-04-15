@@ -5,27 +5,28 @@ ow.option.clients = {}
 
 util.AddNetworkString("ow.option.set")
 net.Receive("ow.option.set", function(len, ply)
-    if ( !IsValid(ply) ) then return end
-
     local key = net.ReadString()
     local value = net.ReadType()
 
+    local bResult = hook.Run("PreOptionChanged", ply, key, value)
+    if ( bResult == false ) then return false end
+
     local stored = ow.option.stored[key]
-    if ( stored == nil or !istable(stored) ) then
+    if ( !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return
     end
 
     if ( stored.OnChange ) then
-        stored:OnChange(value, stored.Value, ply)
+        stored:OnChange(value, ply)
     end
-
-    hook.Run("OnOptionChanged", ply, key, value)
 
     if ( !stored.bNoNetworking ) then
         ow.option.clients[ply] = ow.option.clients[ply] or {}
         ow.option.clients[ply][key] = value
     end
+
+    hook.Run("PostOptionChanged", ply, key, value)
 end)
 
 util.AddNetworkString("ow.option.syncServer")

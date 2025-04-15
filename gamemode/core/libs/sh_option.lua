@@ -37,14 +37,19 @@ if ( CLIENT ) then
     end
 
     function ow.option:Set(key, value)
+        local ply = LocalPlayer()
+
+        local bResult = hook.Run("PreOptionChanged", ply, key, value)
+        if ( bResult == false ) then return false end
+
         local stored = self.stored[key]
         if ( !istable(stored) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
             return false
         end
 
-        if ( stored.OnChange ) then
-            stored:OnChange(value, stored.Value)
+        if ( isfunction(stored.OnChange) ) then
+            stored:OnChange(value, ply)
         end
 
         self.localClient[key] = value
@@ -62,7 +67,7 @@ if ( CLIENT ) then
             file.Write("overwatch/" .. folder .. "/options.json", util.TableToJSON(self.localClient))
         end
 
-        hook.Run("OnOptionChanged", LocalPlayer(), key, value)
+        hook.Run("PostOptionChanged", ply, key, value)
 
         return true
     end
@@ -83,6 +88,16 @@ if ( CLIENT ) then
 
     function ow.option:ResetAll()
         self.localClient = {}
+
+        local folder = SCHEMA and SCHEMA.Folder or "core"
+        if ( file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
+            file.Write("overwatch/" .. folder .. "/options.json", "[]")
+        end
+
+        local compressed = util.Compress("[]")
+        net.Start("ow.option.syncServer")
+            net.WriteData(compressed, #compressed)
+        net.SendToServer()
     end
 
     net.Receive("ow.option.set", function(len)
