@@ -4,38 +4,74 @@ local PANEL = {}
 
 function PANEL:Init()
     self:SetFont("ow.fonts.button")
-    self:SetTextColor(color_white)
-    self:SetContentAlignment(5)
-    self:SetExpensiveShadow(1, color_black)
-    self:SetTall(ScreenScale(14))
-    self:SetTextInset(0, 0)
+    self:SetTextColorProperty(color_white)
+    self:SetContentAlignment(4)
+    self:SetTall(ScreenScale(18))
+    self:SetTextInset(ScreenScale(2), 0)
+
+    self.inertia = 0
+    self.inertiaTarget = 0
+
+    self.baseHeight = self:GetTall()
+    self.baseTextColor = self:GetTextColor()
+    self.height = 0
+    self.heightTarget = self.baseHeight
+    self.textColor = color_white
+    self.textColorTarget = color_white
+    self.textInset = {0, 0}
+    self.textInsetTarget = {0, 0}
 end
 
-function PANEL:SetText(text)
-    BaseClass.SetText(self, text)
-    self:SizeToContentsX()
-
-    local width = self:GetWide()
-    self:SetWide(width + self:GetTall())
+function PANEL:SetTextColorProperty(color)
+    self.baseTextColor = color
+    self:SetTextColor(color)
 end
 
-local color_button = Color(0, 0, 0, 150)
-local color_button_hover = Color(0, 0, 0, 200)
 function PANEL:Paint(width, height)
-    local color = color_button
-    if ( self.Depressed or self:IsSelected() ) then
-        color = color_button_hover
-    elseif ( self.Hovered ) then
-        color = color_button_hover
-    end
+    local ft = FrameTime()
+    local time = ft * 10
 
-    paint.startVGUI()
-        paint.roundedBoxes.roundedBox(8, 0, 0, width, height, color)
-    paint.endVGUI()
+    self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
+    self.height = Lerp(time, self.height, self.heightTarget)
+    self.textColor = self.textColor:Lerp(self.textColorTarget, time)
+    self.textInset[1] = Lerp(time, self.textInset[1], self.textInsetTarget[1])
+    self.textInset[2] = Lerp(time, self.textInset[2], self.textInsetTarget[2])
+
+    surface.SetDrawColor(ColorAlpha(color_black, 50 * self.inertia))
+    surface.DrawRect(0, 0, width, height)
+
+    surface.SetDrawColor(ColorAlpha(self.textColor, 200 * self.inertia))
+    surface.DrawRect(0, 0, ScreenScale(4) * self.inertia, height)
+end
+
+function PANEL:Think()
+    if ( self.inertia > 0 ) then
+        self:SetTall(self.height)
+        self:SetTextColor(self.textColor)
+        self:SetTextInset(self.textInset[1], self.textInset[2])
+    end
 end
 
 function PANEL:OnCursorEntered()
+    self:SetFont("ow.fonts.button.hover")
+
+    self.heightTarget = self.baseHeight * 1.25
+    self.textColorTarget = hook.Run("GetSchemaColor")
+    self.textInsetTarget = {ScreenScale(8), 0}
+
     surface.PlaySound("ow.button.enter")
+
+    self.inertiaTarget = 1
+end
+
+function PANEL:OnCursorExited()
+    self:SetFont("ow.fonts.button")
+
+    self.heightTarget = self.baseHeight
+    self.textColorTarget = self.baseTextColor or color_white
+    self.textInsetTarget = {ScreenScale(2), 0}
+
+    self.inertiaTarget = 0
 end
 
 function PANEL:OnMousePressed(key)
@@ -50,14 +86,13 @@ end
 
 vgui.Register("ow.mainmenu.button", PANEL, "DButton")
 
-
 sound.Add({
     name = "ow.button.click",
     channel = CHAN_STATIC,
     volume = 0.2,
     level = 80,
     pitch = 120,
-    sound = "buttons/button9.wav"
+    sound = "ui/buttonrelease.wav"
 })
 
 sound.Add({
@@ -66,5 +101,5 @@ sound.Add({
     volume = 0.1,
     level = 80,
     pitch = 120,
-    sound = "buttons/lightswitch2.wav"
+    sound = "ui/buttonrollover.wav"
 })
