@@ -77,7 +77,7 @@ function ow.config:Register(key, data)
     local bResult = hook.Run("PreConfigRegistered", key, data)
     if ( bResult == false ) then return false end
 
-    local CONFIG = data
+    local CONFIG = table.Copy(data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
             ow.util:PrintError("Configuration \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")

@@ -131,7 +131,7 @@ function ow.option:Register(key, data)
         file.Write("overwatch/" .. folder .. "/options.json", "[]")
     end
 
-    local OPTION = data
+    local OPTION = table.Copy(data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
             print("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!")
