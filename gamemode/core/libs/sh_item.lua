@@ -10,14 +10,18 @@ function ow.item:Register(uniqueID, itemData)
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
 
-    if ( itemData.Base ) then
-        local baseData = self.bases[itemData.Base]
-        if ( !baseData ) then
-            ErrorNoHalt("Attempted to register item with invalid base: " .. itemData.Base)
-            return false
+    if ( istable(itemData.base) ) then
+        for _, base in ipairs(itemData.base) do
+            local baseData = ow.item.bases[base]
+            if ( istable(baseData) ) then
+                itemData = table.Inherit(itemData, baseData)
+            end
         end
-
-        itemData = table.Merge(baseData, itemData)
+    elseif ( isstring(itemData.base) ) then
+        local baseData = ow.item.bases[itemData.base]
+        if ( istable(baseData) ) then
+            itemData = table.Inherit(itemData, baseData)
+        end
     end
 
     itemData.Name = itemData.Name or "Unknown Item"
