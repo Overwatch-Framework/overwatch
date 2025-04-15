@@ -96,7 +96,17 @@ if ( CLIENT ) then
     end)
 end
 
-function ow.option:Register(uniqueID, data)
+local requiredFields = {
+    "DisplayName",
+    "Description",
+    "Type",
+    "Default"
+}
+
+function ow.option:Register(key, data)
+    local bResult = hook.Run("PreOptionRegistered", key, data)
+    if ( bResult == false ) then return false end
+
     if ( !file.Exists("overwatch", "DATA") ) then
         file.CreateDir("overwatch")
     end
@@ -106,21 +116,22 @@ function ow.option:Register(uniqueID, data)
         file.CreateDir("overwatch/" .. folder)
     end
 
-    local bResult = hook.Run("PreOptionRegistered", uniqueID, data)
-    if ( bResult == false ) then return false end
-
-    self.stored[uniqueID] = {
-        DisplayName = data.DisplayName,
-        Description = data.Description,
-        Type = data.Type,
-        Default = data.Default,
-    }
-
-    self.stored[uniqueID] = table.Merge(self.stored[uniqueID], data)
-
     if ( !file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
         file.Write("overwatch/" .. folder .. "/options.json", "[]")
     end
 
-    hook.Run("PostOptionRegistered", uniqueID, data)
+    local OPTION = data
+    for _, v in pairs(requiredFields) do
+        if ( data[v] == nil ) then
+            print("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!")
+            ow.util:PrintError("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
+            return false
+        end
+    end
+
+    print("Defining", key)
+    self.stored[key] = OPTION
+    hook.Run("PostOptionRegistered", key, data, OPTION)
+
+    return true
 end

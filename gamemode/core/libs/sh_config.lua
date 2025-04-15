@@ -12,11 +12,16 @@ ow.config.values = ow.config.values or {}
 -- @return The value of the configuration.
 -- @usage local color = ow.config.Get("schemaColor", Color(0, 100, 150))
 -- print(color) -- Prints the color of the schema.
-function ow.config:Get(key, default)
+function ow.config:Get(key, fallback)
     local value = self.values[key]
     if ( !istable(self.stored[key]) ) then
         ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
-        return default or nil
+        return fallback or nil
+    end
+
+    local defaultValue = self.stored[key].Default
+    if ( defaultValue == nil ) then
+        return fallback
     end
 
     return value or self.stored[key].Default
@@ -58,20 +63,30 @@ end
 --         print("Schema color changed from " .. tostring(oldValue) .. " to " .. tostring(newValue))
 --     end
 -- })
+
+local requiredFields = {
+    "DisplayName",
+    "Description",
+    "Type",
+    "Default"
+}
+
 function ow.config:Register(key, data)
     if ( key == nil or data == nil or !isstring(key) or !istable(data) ) then return false end
 
     local bResult = hook.Run("PreConfigRegistered", key, data)
     if ( bResult == false ) then return false end
 
-    self.stored[key] = {
-        DisplayName = data.DisplayName,
-        Description = data.Description,
-        Type = data.Type,
-        Default = data.Default,
-    }
+    local CONFIG = data
+    for _, v in pairs(requiredFields) do
+        if ( data[v] == nil ) then
+            ow.util:PrintError("Configuration \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
+            return false
+        end
+    end
 
-    hook.Run("PostConfigRegistered", key, data)
+    self.stored[key] = CONFIG
+    hook.Run("PostConfigRegistered", key, data, CONFIG)
 
     return true
 end

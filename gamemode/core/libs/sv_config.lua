@@ -12,7 +12,10 @@ ow.config.stored = ow.config.stored or {}
 -- @usage ow.config.Set("schemaColor", Color(0, 100, 150)) -- Sets the color of the schema.
 function ow.config:Set(key, value)
     local stored = self.stored[key]
-    if ( stored == nil or !istable(stored) ) then return false end
+    if ( !istable(stored) ) then
+        ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
+        return false
+    end
 
     local oldValue = self.values[key]
     self.values[key] = value
