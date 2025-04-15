@@ -10,37 +10,30 @@ function ow.item:Register(uniqueID, itemData)
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
 
-    if ( itemData.Base ) then
-        local baseData = self.bases[itemData.Base]
-        if ( !baseData ) then
-            ErrorNoHalt("Attempted to register item with invalid base: " .. itemData.Base)
-            return false
-        end
+    local ITEM = {}
 
-        itemData = table.Merge(baseData, itemData)
-    end
+    -- TODO: Add Inheritance Support in Future
 
-    itemData.Name = itemData.Name or "Unknown Item"
-    itemData.Description = itemData.Description or "No description provided."
+    ITEM.Name = itemData.Name or "Unknown Item"
+    ITEM.Description = itemData.Description or "No description provided."
 
-    itemData.Model = itemData.Model or Model("models/props_junk/watermelon01.mdl")
+    ITEM.Model = itemData.Model or Model("models/props_junk/watermelon01.mdl")
     util.PrecacheModel(itemData.Model)
 
-    itemData.Stackable = itemData.Stackable or false
-    itemData.MaxStack = itemData.MaxStack or 1
-    itemData.Weight = itemData.Weight or 1
-    itemData.Category = itemData.Category or "Miscellaneous"
+    ITEM.Stackable = itemData.Stackable or false
+    ITEM.MaxStack = itemData.MaxStack or 1
+    ITEM.Weight = itemData.Weight or 1
+    ITEM.Category = itemData.Category or "Miscellaneous"
 
+    self.stored[uniqueID] = ITEM
     hook.Run("PostItemRegistered", uniqueID, itemData)
-
-    self.stored[uniqueID] = itemData
 end
 
-function ow.item:Get(look)
-    if ( isstring(look) ) then
-        return self.stored[look]
-    elseif ( isnumber(look) ) then
-        return self.instances[look]
+function ow.item:Get(identifier)
+    if ( isstring(identifier) ) then
+        return self.stored[identifier]
+    elseif ( isnumber(identifier) ) then
+        return self.instances[identifier]
     end
 
     return nil

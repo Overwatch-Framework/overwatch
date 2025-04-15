@@ -14,8 +14,8 @@ function ow.config:Set(key, value)
     local stored = self.stored[key]
     if ( stored == nil or !istable(stored) ) then return false end
 
-    local oldValue = stored.Value
-    stored.Value = value
+    local oldValue = self.values[key]
+    self.values[key] = value
 
     net.Start("ow.config.set")
         net.WriteString(key)
@@ -49,15 +49,11 @@ function ow.config:Load()
     local config = file.Read("overwatch/" .. folder .. "/config.json", "DATA")
     config = util.JSONToTable(config or "[]")
 
+    self.values = config
+
     hook.Run("PreConfigLoad", config)
 
-    local values = {}
-    for key, data in pairs(self.stored) do
-        self.stored[key].Value = config[key] or data.Default
-        values[key] = self.stored[key].Value
-    end
-
-    local compressed = util.Compress(util.TableToJSON(values))
+    local compressed = util.Compress(util.TableToJSON(config))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
@@ -78,12 +74,8 @@ function ow.config:Save()
     hook.Run("PreConfigSave")
 
     local folder = SCHEMA and SCHEMA.Folder or "core"
-    local values = {}
-    for key, data in pairs(self.stored) do
-        values[key] = data.Value or data.Default
-    end
 
-    file.Write("overwatch/" .. folder .. "/config.json", util.TableToJSON(values))
+    file.Write("overwatch/" .. folder .. "/config.json", util.TableToJSON(self.values))
 
     hook.Run("PostConfigSave", values)
 
@@ -99,20 +91,11 @@ end
 function ow.config:Reset()
     hook.Run("PreConfigReset")
 
-    file.Write("overwatch/" .. (SCHEMA and SCHEMA.Folder or "core") .. "/config.json", "")
+    self.values = {}
 
-    for key, data in pairs(self.stored) do
-        self.stored[key].Value = data.Default
-    end
+    file.Write("overwatch/" .. (SCHEMA and SCHEMA.Folder or "core") .. "/config.json", self.values)
 
-    local values = {}
-    for key, data in pairs(self.stored) do
-        values[key] = data.Value or data.Default
-    end
-
-    file.Write("overwatch/" .. (SCHEMA and SCHEMA.Folder or "core") .. "/config.json", util.TableToJSON(values))
-
-    local compressed = util.Compress(util.TableToJSON(values))
+    local compressed = util.Compress(util.TableToJSON(self.values))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
@@ -133,12 +116,7 @@ function ow.config:Synchronize(ply)
 
     hook.Run("PreConfigSync", ply)
 
-    local values = {}
-    for key, data in pairs(self.stored) do
-        values[key] = data.Value or data.Default
-    end
-
-    local compressed = util.Compress(util.TableToJSON(values))
+    local compressed = util.Compress(util.TableToJSON(self.values))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)

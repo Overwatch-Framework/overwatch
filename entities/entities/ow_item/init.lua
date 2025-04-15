@@ -67,7 +67,7 @@ function ENT:SetItem(uniqueID)
         itemData:OnSpawned(self)
     end
 
-    -- TODO: Assign item ID and uniqu
+    -- TODO: Assign item ID and unique ID
 end
 
 function ENT:Use(ply)
@@ -77,9 +77,12 @@ function ENT:Use(ply)
     local itemData = ow.item:Get(self:GetItemID())
     if ( !itemData ) then return end
 
+    -- TODO: Should probably move this into some Inventory Action System
+    --[[
     if ( itemData.OnTaken ) then
         itemData:OnTaken(ply, self)
     end
+    ]]
 
     SafeRemoveEntity(self)
 

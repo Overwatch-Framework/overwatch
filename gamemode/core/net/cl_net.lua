@@ -23,12 +23,7 @@ end)
 net.Receive("ow.config.sync", function(len)
     local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
-    for key, value in pairs(compressedTable) do
-        local stored = ow.config.stored[key]
-        if ( stored ) then
-            stored.Value = value or stored.Default
-        end
-    end
+    ow.config.values = compressedTable
 end)
 
 net.Receive("ow.config.set", function(len)
@@ -39,15 +34,4 @@ net.Receive("ow.config.set", function(len)
     if ( stored == nil or !istable(stored) ) then return end
 
     stored.Value = value
-end)
-
-net.Receive("ixDataSync", function(len)
-    local localData = util.JSONToTable(util.Decompress(net.ReadData(len / 8))) or {}
-    ow.localData = localData
-    ow.playTime = net.ReadUInt(32)
-end)
-
-net.Receive("ixData", function()
-    ow.localData = ow.localData or {}
-    ow.localData[net.ReadString()] = net.ReadType()
 end)

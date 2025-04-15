@@ -29,3 +29,5 @@ ow.chat:Register("yell", {
         chat.PlaySound()
     end
 })
+
+hook.Run("PostRegisterChatClasses")

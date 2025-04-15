@@ -1,5 +1,3 @@
-local gradientLeft = Material("vgui/gradient-l")
-
 DEFINE_BASECLASS("DTextEntry")
 
 local PANEL = {}
@@ -25,10 +23,10 @@ end
 
 local color = Color(0, 0, 0, 150)
 function PANEL:Paint(width, height)
-    paint.startPanel(self, true, true)
+    paint.startVGUI()
         paint.blur.requestBlur("default")
         paint.roundedBoxes.roundedBox(8, 0, 0, width, height, color)
-    paint.endPanel(true, true)
+    paint.endVGUI()
 
     BaseClass.Paint(self, width, height)
 end
