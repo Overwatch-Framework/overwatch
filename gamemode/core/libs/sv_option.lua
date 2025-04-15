@@ -76,14 +76,14 @@ function ow.option:Get(ply, key, default)
     if ( !IsValid(ply) ) then return default end
 
     local stored = ow.option.stored[key]
-    if ( stored == nil or !istable(stored) ) then
+    if ( !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return default
     end
 
     if ( stored.bNoNetworking ) then
         ow.util:PrintWarning("Option \"" .. key .. "\" is not networked!")
-        return default
+        return nil
     end
 
     local plyStored = ow.option.clients[ply]
@@ -91,7 +91,5 @@ function ow.option:Get(ply, key, default)
         return stored.Value or default
     end
 
-    print("plyStored", plyStored, key, plyStored[key], default, stored.Default)
-
-    return plyStored[key] or default or stored.Default
+    return plyStored[key] or stored.Default
 end

@@ -11,6 +11,9 @@ ow.config.stored = ow.config.stored or {}
 -- @treturn boolean Whether the configuration was successfully set.
 -- @usage ow.config.Set("schemaColor", Color(0, 100, 150)) -- Sets the color of the schema.
 function ow.config:Set(key, value)
+    local bResult = hook.Run("PreConfigChanged", key, value)
+    if ( bResult == false ) then return false end
+
     local stored = self.stored[key]
     if ( !istable(stored) ) then
         ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
@@ -25,11 +28,11 @@ function ow.config:Set(key, value)
         net.WriteType(value)
     net.Broadcast()
 
-    hook.Run("ConfigValueChanged", key, oldValue, value)
-
     if ( stored.OnChange ) then
         stored:OnChange(value, oldValue)
     end
+
+    hook.Run("PostConfigChanged", key, oldValue, value)
 
     return true
 end
@@ -52,9 +55,9 @@ function ow.config:Load()
     local config = file.Read("overwatch/" .. folder .. "/config.json", "DATA")
     config = util.JSONToTable(config or "[]")
 
-    self.values = config
-
     hook.Run("PreConfigLoad", config)
+
+    self.values = config
 
     local compressed = util.Compress(util.TableToJSON(config))
 
@@ -77,11 +80,9 @@ function ow.config:Save()
     hook.Run("PreConfigSave")
 
     local folder = SCHEMA and SCHEMA.Folder or "core"
-
     file.Write("overwatch/" .. folder .. "/config.json", util.TableToJSON(self.values))
 
     hook.Run("PostConfigSave", values)
-
     ow.util:Print("Configuration saved.")
 
     return true
@@ -95,7 +96,6 @@ function ow.config:Reset()
     hook.Run("PreConfigReset")
 
     self.values = {}
-
     file.Write("overwatch/" .. (SCHEMA and SCHEMA.Folder or "core") .. "/config.json", self.values)
 
     local compressed = util.Compress(util.TableToJSON(self.values))

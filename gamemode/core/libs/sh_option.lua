@@ -79,11 +79,7 @@ if ( CLIENT ) then
             return fallback or nil
         end
 
-        if ( fallback == nil ) then
-            fallback = optionData.Default
-        end
-
-        return self.localClient[key] or fallback
+        return self.localClient[key] or optionData.Default
     end
 
     function ow.option:ResetAll()
@@ -144,7 +140,6 @@ function ow.option:Register(key, data)
         end
     end
 
-    print("Defining", key)
     self.stored[key] = OPTION
     hook.Run("PostOptionRegistered", key, data, OPTION)
 
