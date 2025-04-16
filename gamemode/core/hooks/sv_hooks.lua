@@ -192,7 +192,7 @@ function GM:PlayerHurt(ply, attacker, healthRemaining, damageTaken)
     end
 end
 
-function GM:PlayerDeath(ply, inflictor, attacker)
+function GM:PlayerDeath(ply, inflictor, attacker) -- Test
     local deathSound = hook.Run("GetPlayerDeathSound", ply, inflictor, attacker)
     if ( deathSound and deathSound != "" and !ply:InObserver() ) then
         if ( !file.Exists("sound/" .. deathSound, "GAME") ) then
