@@ -9,5 +9,3 @@ local oldLocalPlayer = LocalPlayer
 function LocalPlayer()
     return ow.localClient or oldLocalPlayer()
 end
-
--- multi file testdad
