@@ -112,3 +112,7 @@ function ENTITY:IsLocked()
 
     return false
 end
+
+function ENTITY:GetSpawnEffect()
+    return self:GetInternalVariable("ow.m_bSpawnEffect") or false
+end

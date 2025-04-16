@@ -203,3 +203,17 @@ function GM:PlayerDeath(ply, inflictor, attacker) -- Test
         ply:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
     end
 end
+
+local function IsAdmin(_, ply)
+    return ply:IsAdmin()
+end
+
+GM.PlayerSpawnEffect = IsAdmin
+GM.PlayerSpawnNPC = IsAdmin
+GM.PlayerSpawnObject = IsAdmin
+GM.PlayerSpawnProp = IsAdmin
+GM.PlayerSpawnRagdoll = IsAdmin
+GM.PlayerSpawnSENT = IsAdmin
+GM.PlayerSpawnSWEP = IsAdmin
+GM.PlayerGiveSWEP = IsAdmin
+GM.PlayerSpawnVehicle = IsAdmin
