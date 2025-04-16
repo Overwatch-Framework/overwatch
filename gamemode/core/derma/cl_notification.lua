@@ -133,7 +133,7 @@ function PANEL:SetIcon(icon)
 
     if ( !self.icon ) then
         self.icon = self:Add("DImage")
-        self.icon:SetSize(ScreenScale(12), ScreenScale(12))
+        self.icon:SetSize(ScreenScale(10), ScreenScale(10))
         self.icon:SetPos(10, 10)
     end
 
