@@ -87,7 +87,6 @@ vgui.Register("ow.notification.core", PANEL, "DPanel")
 PANEL = {}
 
 function PANEL:Init()
-    -- Play a sound when the notification is created
     LocalPlayer():EmitSound("garrysmod/balloon_pop_cute.wav", 75, math.random(90, 110), 0.5)
 
     self.message = self:Add("DLabel")
