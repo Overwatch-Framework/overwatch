@@ -99,7 +99,7 @@ sound.Add({
     volume = 0.2,
     level = 80,
     pitch = 120,
-    sound = "ui/buttonrelease.wav"
+    sound = "ui/buttonclickrelease.wav"
 })
 
 sound.Add({
