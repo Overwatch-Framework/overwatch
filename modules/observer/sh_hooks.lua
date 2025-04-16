@@ -44,17 +44,24 @@ if ( CLIENT ) then
             local screenPos = headPos:ToScreen()
             if ( !screenPos.visible ) then continue end
 
-            local pos = v:GetPos():ToScreen()
-            draw.SimpleText(v:Name(), "DermaDefault", screenPos.x, screenPos.y, color_white)
+            local y = screenPos.y
+            local _, h = draw.SimpleText(v:Name(), "DermaDefault", screenPos.x, y, color_white)
+            y = y + h + 2
 
             local health = v:Health()
             local maxHealth = v:GetMaxHealth()
             local healthText = health .. "/" .. maxHealth
-            draw.SimpleText(healthText, "DermaDefault", screenPos.x, screenPos.y + 10, color_white)
+            if ( health <= 0 ) then
+                healthText = "DEAD"
+            end
+
+            _, h = draw.SimpleText(healthText, "DermaDefault", screenPos.x, y, color_white)
+            y = y + h + 2
 
             local faction = ow.faction:Get(v:Team())
             if ( faction ) then
-                draw.SimpleText(faction.Name, "DermaDefault", screenPos.x, screenPos.y + 20, faction.Color)
+                _, h = draw.SimpleText(faction.Name, "DermaDefault", screenPos.x, y, faction.Color)
+                y = y + h + 2
             end
         end
 
