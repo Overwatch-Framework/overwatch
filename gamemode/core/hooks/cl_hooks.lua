@@ -241,7 +241,7 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.button.hover", {
         font = "GorDIN Bold",
-        size = ScreenScale(18),
+        size = ScreenScale(16),
         weight = 700,
         antialias = true
     })
