@@ -35,12 +35,6 @@ function PANEL:Paint(width, height)
     self.height = Lerp(time, self.height, self.heightTarget)
     self.textColor = self.textColor:Lerp(self.textColorTarget, time)
 
-    if ( self.inertiaTarget and !self:IsHovered() ) then
-        self.textColorTarget = self.baseTextColor
-        self.textInsetTarget = {ScreenScale(2), 0}
-        self.heightTarget = self.baseHeight
-    end
-
     self.textInset[1] = Lerp(time, self.textInset[1], self.textInsetTarget[1])
     self.textInset[2] = Lerp(time, self.textInset[2], self.textInsetTarget[2])
 
@@ -52,6 +46,12 @@ function PANEL:Paint(width, height)
 end
 
 function PANEL:Think()
+    if ( self.inertiaTarget > 0 and !self:IsHovered() ) then
+        self.textColorTarget = self.baseTextColor
+        self.textInsetTarget = {ScreenScale(2), 0}
+        self.heightTarget = self.baseHeight
+    end
+
     if ( self.inertia > 0 ) then
         self:SetTall(self.height)
         self:SetTextColor(self.textColor)
