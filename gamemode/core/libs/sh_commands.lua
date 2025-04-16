@@ -71,8 +71,8 @@ end
 -- @string identifier The unique identifier or prefix of the command.
 -- @return table The command.
 function ow.command:Get(identifier)
-    if ( !identifier ) then
-        ow.util:PrintError("Attempted to get an invalid command!")
+    if ( !isstring(identifier) ) then
+        ow.util:PrintError("Attempted to get a command with invalid identifier!")
         return false
     end
 
@@ -88,6 +88,6 @@ function ow.command:Get(identifier)
         end
     end
 
-    ow.util:PrintError("Attempted to get an invalid command!")
+    ow.util:PrintError("Attempted to get a command with invalid identifier!")
     return nil
 end

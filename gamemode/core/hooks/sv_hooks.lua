@@ -83,6 +83,8 @@ function GM:PlayerSay(ply, text, teamChat)
         local command = arguments[1]
         table.remove(arguments, 1)
 
+        -- TODO: Arguments such as "bloody cop" "bloody" cop, don't work correctly
+
         ow.command:Run(ply, command, arguments)
     else
         ow.chat:Send(ply, "ic", text)

@@ -282,19 +282,18 @@ end
 -- @param identifier any The identifier to search for.
 -- @return Player The player that was found.
 function ow.util:FindPlayer(identifier)
-    if ( !identifier ) then return nil end
+    if ( identifier == nil ) then return nil end
 
     local identifierType = type(identifier)
-
-    if ( self:FindString(identifierType, "player" ) ) then
+    if ( identifierType == "Player" ) then
         return identifier
     end
 
-    if ( self:FindString(identifierType, "number") ) then
+    if ( isnumber(identifier) ) then
         return Player(identifier)
     end
 
-    if ( self:FindString(identifierType, "string") ) then
+    if ( isstring(identifierType) ) then
         for _, v in player.Iterator() do
             if ( self:FindString(v:Name(), identifier) or self:FindString(v:SteamID(), identifier) or self:FindString(v:SteamID64(), identifier) ) then
                 return v
@@ -304,7 +303,10 @@ function ow.util:FindPlayer(identifier)
 
     if ( self:FindString(identifierType, "table") ) then
         for k, v in ipairs(identifier) do
-            return self:FindString(v)
+            local foundPlayer = self:FindPlayer(v)  -- Update to call FindPlayer recursively
+            if foundPlayer then
+                return foundPlayer
+            end
         end
     end
 

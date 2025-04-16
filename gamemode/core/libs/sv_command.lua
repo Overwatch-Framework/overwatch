@@ -12,18 +12,18 @@ function ow.command:Run(ply, command, arguments)
         return false
     end
 
-    if ( !command ) then
+    if ( !isstring(command) ) then
         ow.util:PrintError("Attempted to run a command with no command!", ply)
         return false
     end
 
     local info = self:Get(command)
-    if ( !info ) then
+    if ( !istable(info) ) then
         ow.util:PrintError("Attempted to run an invalid command!", ply)
         return false
     end
 
-    if ( !CAMI ) then
+    if ( CAMI == nil ) then
         if ( info.AdminOnly and !ply:IsAdmin() ) then
             ow.util:PrintError("Attempted to run an admin-only command!", ply)
             return false
