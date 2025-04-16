@@ -58,8 +58,13 @@ if ( CLIENT ) then
             end
         end
 
-        draw.SimpleText("Players: " .. playerCount, "DermaDefault", 10, 10, color_white)
-        draw.SimpleText("Admins: " .. admins, "DermaDefault", 10, 25, color_white)
+        local y = 10
+
+        local _, h = draw.SimpleText("Players: " .. playerCount, "DermaDefault", 10, y, color_white)
+        y = y + h + 2
+
+        _, h = draw.SimpleText("Admins: " .. admins, "DermaDefault", 10, y, color_white)
+        y = y + h + 2
 
         hook.Run("PostDrawObserverHUD", ply)
     end
