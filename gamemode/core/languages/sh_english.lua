@@ -1,7 +1,7 @@
 ow.localization:Register("en", {
-    ["ow.mainmenu.play"] = "Play",
-    ["ow.mainmenu.charactercreate"] = "Create Character",
-    ["ow.mainmenu.characterselect"] = "Select Character",
-    ["ow.mainmenu.settings"] = "Settings",
-    ["ow.mainmenu.leave"] = "Disconnect",
+    ["mainmenu.play"] = "Play",
+    ["mainmenu.charactercreate"] = "Create Character",
+    ["mainmenu.characterselect"] = "Select Character",
+    ["mainmenu.settings"] = "Settings",
+    ["mainmenu.leave"] = "Disconnect",
 })

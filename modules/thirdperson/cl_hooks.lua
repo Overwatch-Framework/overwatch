@@ -2,13 +2,13 @@ local MODULE = MODULE
 
 concommand.Add("ow_thirdperson_toggle", function()
     ow.option:Set("thirdperson", !ow.option:Get("thirdperson", false))
-end, nil, ow.localization:GetPhrase("ow.options.thirdperson.toggle"))
+end, nil, ow.localization:GetPhrase("options.thirdperson.toggle"))
 
 concommand.Add("ow_thirdperson_reset", function()
     ow.option:Set("thirdperson.position.x", 0)
     ow.option:Set("thirdperson.position.y", 0)
     ow.option:Set("thirdperson.position.z", 0)
-end, nil, ow.localization:GetPhrase("ow.options.thirdperson.reset"))
+end, nil, ow.localization:GetPhrase("options.thirdperson.reset"))
 
 local fakePos
 local fakeAngles
