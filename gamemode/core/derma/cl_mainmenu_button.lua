@@ -46,7 +46,7 @@ function PANEL:Paint(width, height)
 end
 
 function PANEL:Think()
-    if ( self.inertiaTarget > 0 and !self:IsHovered() ) then
+    if ( !self:IsHovered() and ( self.textColorTarget != self.baseTextColor or self.heightTarget != self.baseHeight) ) then
         self.textColorTarget = self.baseTextColor
         self.textInsetTarget = {ScreenScale(2), 0}
         self.heightTarget = self.baseHeight

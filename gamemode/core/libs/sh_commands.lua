@@ -47,7 +47,7 @@ function ow.command:Register(info)
 
     self.stored[uniqueID] = info
 
-    if ( CAMI ) then
+    if ( CAMI != nil ) then
         CAMI.RegisterPrivilege({
             Name = "Overwatch - Commands - " .. info.Name,
             MinAccess = ( info.SuperAdminOnly and "superadmin" ) or ( info.AdminOnly and "admin" ) or ( info.MinAccess or "user" )
@@ -89,6 +89,5 @@ function ow.command:Get(identifier)
     end
 
     ow.util:PrintError("Attempted to get an invalid command!")
-
-    return
+    return nil
 end

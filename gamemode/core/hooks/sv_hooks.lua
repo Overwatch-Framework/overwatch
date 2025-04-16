@@ -179,3 +179,27 @@ end
 function GM:PlayerDeathSound(ply)
     return true
 end
+
+function GM:PlayerHurt(ply, attacker, healthRemaining, damageTaken)
+    local painSound = hook.Run("GetPlayerPainSound", ply, attacker, healthRemaining, damageTaken)
+    if ( painSound and painSound != "" and !ply:InObserver() ) then
+        if ( !file.Exists("sound/" .. painSound, "GAME") ) then
+            ow.util:PrintWarning("PlayerPainSound: Sound file does not exist! " .. painSound)
+            return false
+        end
+
+        ply:EmitSound(painSound, 75, 100, 1, CHAN_VOICE)
+    end
+end
+
+function GM:PlayerDeath(ply, inflictor, attacker) -- Test
+    local deathSound = hook.Run("GetPlayerDeathSound", ply, inflictor, attacker)
+    if ( deathSound and deathSound != "" and !ply:InObserver() ) then
+        if ( !file.Exists("sound/" .. deathSound, "GAME") ) then
+            ow.util:PrintWarning("PlayerDeathSound: Sound file does not exist! " .. deathSound)
+            return false
+        end
+
+        ply:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
+    end
+end
