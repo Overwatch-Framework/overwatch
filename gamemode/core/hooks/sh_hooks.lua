@@ -65,3 +65,9 @@ end
 function GM:ItemCanBeDestroyed(item, damageInfo)
     return true
 end
+
+function GM:GetPlayerPainSound(ply)
+end
+
+function GM:GetPlayerDeathSound(ply)
+end
