@@ -58,7 +58,7 @@ function ow.faction:Register(factionData)
 end
 
 function ow.faction:Get(identifier)
-    if ( !identifier ) then
+    if ( identifier == nil ) then
         ow.util:PrintError("Attempted to get an invalid faction!")
         return nil
     end
@@ -76,6 +76,8 @@ function ow.faction:Get(identifier)
             return v
         end
     end
+
+    return nil
 end
 
 function ow.faction:CanSwitchTo(ply, factionID)

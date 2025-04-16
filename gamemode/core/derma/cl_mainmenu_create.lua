@@ -112,7 +112,7 @@ function PANEL:PopulateCreateCharacter()
     backButton.DoClick = function()
         if ( self.currentCreatePage == 0 ) then
             local hasMultipleOptions = false
-            for k, v in pairs(ow.faction:GetAll()) do
+            for k, v in ipairs(ow.faction:GetAll()) do
                 if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
                     hasMultipleOptions = true
                     break

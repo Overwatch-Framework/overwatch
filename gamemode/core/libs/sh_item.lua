@@ -7,10 +7,8 @@ ow.item.instances = ow.item.instances or {}
 ow.item.bases = ow.item.bases or {}
 
 local requiredFields = {
-    "DisplayName",
+    "Name",
     "Description",
-    "Type",
-    "Default"
 }
 
 function ow.item:Register(uniqueID, itemData)

@@ -13,7 +13,7 @@ function ow.color:Register(name, color)
         return false
     end
 
-    if ( color == nil or !IsColor(color) ) then
+    if ( !IsColor(color) ) then
         ow.util:PrintError("Attempted to register a color without a color!")
         return false
     end

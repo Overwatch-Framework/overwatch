@@ -112,7 +112,7 @@ function PANEL:Populate()
 
         createButton.DoClick = function()
             local hasMultipleOptions = false
-            for k, v in pairs(ow.faction:GetAll()) do
+            for k, v in ipairs(ow.faction:GetAll()) do
                 if ( ow.faction:CanSwitchTo(ply, v.Index) ) then
                     hasMultipleOptions = true
                     break

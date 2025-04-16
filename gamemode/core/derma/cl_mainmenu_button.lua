@@ -34,13 +34,20 @@ function PANEL:Paint(width, height)
     self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
     self.height = Lerp(time, self.height, self.heightTarget)
     self.textColor = self.textColor:Lerp(self.textColorTarget, time)
+
+    if ( self.inertiaTarget and !self:IsHovered() ) then
+        self.textColorTarget = self.baseTextColor
+        self.textInsetTarget = {ScreenScale(2), 0}
+        self.heightTarget = self.baseHeight
+    end
+
     self.textInset[1] = Lerp(time, self.textInset[1], self.textInsetTarget[1])
     self.textInset[2] = Lerp(time, self.textInset[2], self.textInsetTarget[2])
 
-    surface.SetDrawColor(ColorAlpha(color_black, 50 * self.inertia))
+    surface.SetDrawColor(0, 0, 0, 50 * self.inertia)
     surface.DrawRect(0, 0, width, height)
 
-    surface.SetDrawColor(ColorAlpha(self.textColor, 200 * self.inertia))
+    surface.SetDrawColor(self.textColor.r, self.textColor.g, self.textColor.b, 200 * self.inertia)
     surface.DrawRect(0, 0, ScreenScale(4) * self.inertia, height)
 end
 
