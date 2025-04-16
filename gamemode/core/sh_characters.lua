@@ -1,7 +1,7 @@
 ow.character:RegisterVariable("steamid", {
     Type = ow.type.string,
     Field = "steamid",
-    Default = "STEAM_0:0:00000000"
+    Default = ""
 })
 
 ow.character:RegisterVariable("schema", {
