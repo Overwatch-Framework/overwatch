@@ -72,7 +72,7 @@ function PANEL:PopulateFactionSelect()
         local factionButton = factionList:Add("DButton")
         factionButton:Dock(LEFT)
         factionButton:SetText(v.Name or "Unknown Faction")
-        factionButton:SetWide(self:GetWide() / 2 - padding * 4)
+        factionButton:SetWide(self:GetWide() / 2 - padding * 4) -- In HL2 the create background images are 2048x1024
 
         factionButton.DoClick = function()
             self.currentCreatePage = 0
