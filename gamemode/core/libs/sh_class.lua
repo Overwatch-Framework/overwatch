@@ -69,6 +69,8 @@ function ow.class:Get(identifier)
             return v
         end
     end
+
+    return nil
 end
 
 function ow.class:CanSwitchTo(ply, classID)
