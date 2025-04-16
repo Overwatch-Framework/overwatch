@@ -32,7 +32,7 @@ function ow.schema:Initialize()
         ow.util:LoadFile(path)
     end
 
-    hook.Run("PreSchemaLoad", nil, path, SCHEMA)
+    hook.Run("PreSchemaLoad", SCHEMA, path)
 
     for k, v in pairs(default) do
         if ( !SCHEMA[k] ) then
@@ -62,7 +62,7 @@ function ow.schema:Initialize()
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
 
-    hook.Run("PostSchemaLoad", nil, path, SCHEMA)
+    hook.Run("PostSchemaLoad", SCHEMA, path)
 
     return true
 end

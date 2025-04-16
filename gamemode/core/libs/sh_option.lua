@@ -134,7 +134,6 @@ function ow.option:Register(key, data)
     local OPTION = table.Copy(data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
-            print("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!")
             ow.util:PrintError("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
             return false
         end
