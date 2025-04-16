@@ -19,8 +19,7 @@ if ( CLIENT ) then
 
     function MODULE:HUDPaint()
         local ply = LocalPlayer()
-        if ( !IsValid(ply) or !CAMI.PlayerHasAccess(ply, "Overwatch - Observer") 
-        or !ply:Alive() or ply:GetMoveType() != MOVETYPE_NOCLIP or !ply:GetNoDraw() ) then return end
+        if ( !IsValid(ply) or !ply:InObserver() or !ply:Alive() or !ply:GetNoDraw() ) then return end
 
         if ( !hook.Run("ShouldDrawObserverHUD", ply) ) then return end
 
@@ -52,7 +51,7 @@ if ( CLIENT ) then
             local maxHealth = v:GetMaxHealth()
             local healthText = health .. "/" .. maxHealth
             draw.SimpleText(healthText, "DermaDefault", screenPos.x, screenPos.y + 10, color_white)
-            
+
             local faction = ow.faction:Get(v:Team())
             if ( faction ) then
                 draw.SimpleText(faction.Name, "DermaDefault", screenPos.x, screenPos.y + 20, faction.Color)
