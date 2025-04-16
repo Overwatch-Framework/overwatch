@@ -233,9 +233,17 @@ function GM:LoadFonts()
     })
 
     surface.CreateFont("ow.fonts.button", {
-        font = "Roboto",
-        size = ScreenScale(8),
-        weight = 800
+        font = "GorDIN SemiBold",
+        size = ScreenScale(16),
+        weight = 600,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.button.hover", {
+        font = "GorDIN Bold",
+        size = ScreenScale(18),
+        weight = 700,
+        antialias = true
     })
 
     surface.CreateFont("ow.fonts.fancy", {
