@@ -1,5 +1,4 @@
 local padding = ScreenScale(32)
-local smallPadding = ScreenScale(16)
 
 DEFINE_BASECLASS("EditablePanel")
 

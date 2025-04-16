@@ -1,5 +1,4 @@
 local padding = ScreenScale(32)
-local smallPadding = ScreenScale(16)
 local gradientLeft = ow.util:GetMaterial("vgui/gradient-l")
 local gradientRight = ow.util:GetMaterial("vgui/gradient-r")
 local gradientTop = ow.util:GetMaterial("vgui/gradient-u")
