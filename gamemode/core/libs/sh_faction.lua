@@ -81,6 +81,8 @@ function ow.faction:Get(identifier)
 end
 
 function ow.faction:CanSwitchTo(ply, factionID)
+    if ( !IsValid(ply) ) then return false end
+
     local faction = self:Get(factionID)
     if ( !faction ) then return false end
 

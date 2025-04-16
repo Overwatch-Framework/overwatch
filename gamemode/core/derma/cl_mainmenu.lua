@@ -52,12 +52,16 @@ function PANEL:Init()
     self.gradientTopTarget = 0
     self.gradientBottomTarget = 0
 
-    self.createPanel = self:Add("ow.mainmenu.create")
-    self.createPanel:SetVisible(false)
-
     self:SetSize(ScrW(), ScrH())
     self:SetPos(0, 0)
     self:MakePopup()
+
+    self.createPanel = self:Add("ow.mainmenu.create")
+    self.settingsPanel = self:Add("ow.mainmenu.settings")
+
+    self.container = self:Add("EditablePanel")
+    self.container:SetSize(self:GetWide(), self:GetTall())
+    self.container:SetPos(0, 0)
 
     self:Populate()
     self:PlayMenuTrack()
@@ -69,12 +73,13 @@ function PANEL:Populate()
     self:SetGradientTopTarget(0)
     self:SetGradientBottomTarget(0)
 
-    self:Clear()
+    self.container:Clear()
+    self.container:SetVisible(true)
 
-    local sideButtons = self:Add("EditablePanel")
+    local sideButtons = self.container:Add("EditablePanel")
     sideButtons:Dock(LEFT)
     sideButtons:DockMargin(padding * 3, padding, 0, 0)
-    sideButtons:SetSize(self:GetWide() / 3, self:GetTall() - padding * 2)
+    sideButtons:SetSize(self.container:GetWide() / 3, self.container:GetTall() - padding * 2)
 
     local title = sideButtons:Add("DLabel")
     title:Dock(TOP)
@@ -102,7 +107,7 @@ function PANEL:Populate()
         playButton:Dock(TOP)
         playButton:SetText(ow.localization:GetPhrase("ow.mainmenu.play"):upper())
 
-        playButton.DoClick = function()
+        playButton.DoClick = function(this)
             self:Remove()
         end
     else
@@ -110,7 +115,7 @@ function PANEL:Populate()
         createButton:Dock(TOP)
         createButton:SetText(ow.localization:GetPhrase("ow.mainmenu.charactercreate"):upper())
 
-        createButton.DoClick = function()
+        createButton.DoClick = function(this)
             local hasMultipleOptions = false
             for k, v in ipairs(ow.faction:GetAll()) do
                 if ( ow.faction:CanSwitchTo(ply, v.Index) ) then
@@ -120,9 +125,9 @@ function PANEL:Populate()
             end
 
             if ( hasMultipleOptions ) then
-                self:PopulateFactionSelect()
+                self.createPanel:PopulateFactionSelect()
             else
-                self:PopulateCreateCharacter()
+                self.createPanel:PopulateCreateCharacter()
             end
         end
     end
@@ -134,7 +139,7 @@ function PANEL:Populate()
         selectButton:SetText(ow.localization:GetPhrase("ow.mainmenu.characterselect"):upper())
 
         selectButton.DoClick = function()
-            self:PopulateSelectCharacter()
+            self.createPanel:PopulateSelectCharacter()
         end
     end
 
@@ -143,7 +148,7 @@ function PANEL:Populate()
     settingsButton:SetText(ow.localization:GetPhrase("ow.mainmenu.settings"):upper())
 
     settingsButton.DoClick = function()
-        self:PopulateSettings()
+        self.settingsPanel:Populate()
     end
 
     local disconnectButton = buttons:Add("ow.mainmenu.button")

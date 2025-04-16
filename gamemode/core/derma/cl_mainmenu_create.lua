@@ -6,8 +6,9 @@ DEFINE_BASECLASS("EditablePanel")
 local PANEL = {}
 
 function PANEL:Init()
-    self:SetSize(self:GetWide(), self:GetTall())
+    self:SetSize(ScrW(), ScrH())
     self:SetPos(0, 0)
+    self:SetVisible(false)
 
     self.currentCreatePage = 0
     self.currentCreatePayload = {}
@@ -19,7 +20,11 @@ function PANEL:PopulateFactionSelect()
     parent:SetGradientRightTarget(0)
     parent:SetGradientTopTarget(1)
     parent:SetGradientBottomTarget(1)
-    parent:Clear()
+    parent.container:Clear()
+    parent.container:SetVisible(false)
+
+    self:Clear()
+    self:SetVisible(true)
 
     local title = self:Add("DLabel")
     title:Dock(TOP)
@@ -44,11 +49,16 @@ function PANEL:PopulateFactionSelect()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("ow.mainmenu.button")
+    local backButton = navigation:Add("DButton")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
     backButton.DoClick = function()
-        self:Populate()
+        self.currentCreatePage = 0
+        self.currentCreatePayload = {}
+        parent:Populate()
+
+        self:Clear()
+        self:SetVisible(false)
     end
 
     local factionList = self:Add("DPanel")
@@ -59,7 +69,7 @@ function PANEL:PopulateFactionSelect()
     for k, v in ipairs(ow.faction:GetAll()) do
         if ( !ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then continue end
 
-        local factionButton = factionList:Add("ow.mainmenu.button")
+        local factionButton = factionList:Add("DButton")
         factionButton:Dock(LEFT)
         factionButton:SetText(v.Name or "Unknown Faction")
         factionButton:SetWide(self:GetWide() / 2 - padding * 4)
@@ -80,7 +90,11 @@ function PANEL:PopulateCreateCharacter()
     parent:SetGradientRightTarget(0)
     parent:SetGradientTopTarget(1)
     parent:SetGradientBottomTarget(1)
-    parent:Clear()
+    parent.container:Clear()
+    parent.container:SetVisible(false)
+
+    self:Clear()
+    self:SetVisible(true)
 
     local title = self:Add("DLabel")
     title:Dock(TOP)
@@ -105,7 +119,7 @@ function PANEL:PopulateCreateCharacter()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("ow.mainmenu.button")
+    local backButton = navigation:Add("DButton")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
 
@@ -130,7 +144,7 @@ function PANEL:PopulateCreateCharacter()
         end
     end
 
-    local nextButton = navigation:Add("ow.mainmenu.button")
+    local nextButton = navigation:Add("DButton")
     nextButton:Dock(RIGHT)
     nextButton:SetText("NEXT")
 
@@ -145,6 +159,8 @@ function PANEL:PopulateCreateCharacter()
 end
 
 function PANEL:PopulateCreateCharacterForm()
+    self:SetVisible(true)
+
     if ( !IsValid(self.characterCreateForm) ) then
         self.characterCreateForm = self:Add("EditablePanel")
         self.characterCreateForm:Dock(FILL)
