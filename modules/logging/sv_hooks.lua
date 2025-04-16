@@ -47,3 +47,33 @@ end
 function MODULE:PlayerSpawn(ply)
     self:SendLog(self:FormatPlayer(ply) .. " spawned")
 end
+
+function MODULE:PlayerSpawnedProp(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned a prop (" .. self:FormatEntity(entity) .. ")")
+end
+
+function MODULE:PlayerSpawnedSENT(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned a SENT (" .. self:FormatEntity(entity) .. ")")
+end
+
+function MODULE:PlayerSpawnedRagdoll(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned a ragdoll (" .. self:FormatEntity(entity) .. ")")
+end
+
+function MODULE:PlayerSpawnedVehicle(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned a vehicle (" .. self:FormatEntity(entity) .. ")")
+end
+
+function MODULE:PlayerSpawnedEffect(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned an effect (" .. self:FormatEntity(entity) .. ")")
+end
+
+function MODULE:PlayerSpawnedNPC(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned an NPC (" .. self:FormatEntity(entity) .. ")")
+end
+
+function MODULE:PlayerSpawnedSWEP(ply, model, entity)
+    self:SendLog(self:FormatPlayer(ply) .. " spawned a SWEP (" .. self:FormatEntity(entity) .. ")")
+end
+
+MODULE.PlayerGiveSWEP = MODULE.PlayerSpawnedSWEP

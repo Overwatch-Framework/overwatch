@@ -12,7 +12,7 @@ CAMI.RegisterPrivilege({
 function MODULE:FormatPlayer(ply)
     if ( !IsValid(ply) ) then return "Console" end
 
-    return ply:SteamName() .. " (" .. ply:Name() .. " :: " .. ply:SteamID64() .. ")"
+    return ply:SteamName() .. " (" .. ply:Name() .. " / " .. ply:SteamID64() .. ")"
 end
 
 function MODULE:FormatEntity(ent)
@@ -22,7 +22,7 @@ function MODULE:FormatEntity(ent)
         return self:FormatPlayer(ent)
     end
 
-    return ent:GetClass() .. " (" .. ent:GetModel() .. " :: " .. ent:EntIndex() .. ")"
+    return ent:GetClass() .. " (" .. ent:GetModel() .. " / " .. ent:EntIndex() .. ")"
 end
 
 ow.color:Register("ow.log.message", Color(250, 200, 25))
