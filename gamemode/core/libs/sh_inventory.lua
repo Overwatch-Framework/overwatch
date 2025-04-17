@@ -10,5 +10,6 @@ function ow.inventory:Get(index)
 end
 
 function ow.inventory:CalculateWeight(invID)
-
+    -- TODO: Implement weight calculation
+    return 0
 end
