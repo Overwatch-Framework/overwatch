@@ -79,7 +79,7 @@ if ( CLIENT ) then
             return fallback or nil
         end
 
-        return self.localClient[key] or optionData.Default
+        return self.localClient[key] == nil and optionData.Default or self.localClient[key]
     end
 
     function ow.option:ResetAll()
