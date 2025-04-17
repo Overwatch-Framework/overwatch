@@ -25,7 +25,6 @@ function ow.localization:Register(languageName, data)
     end
 
     self.stored[languageName] = table.Merge(table.Copy(self.stored[languageName]), data)
-
     hook.Run("OnLanguageRegistered", languageName, data)
 end
 
@@ -34,6 +33,12 @@ end
 -- @param language The language code.
 -- @return The language data.
 function ow.localization:Get(languageName)
+    local stored = self.stored[languageName]
+    if ( !istable(stored))  then
+        ow.util:PrintError("Attempted to get localisation data that doesn't exist! Language: " .. languageName)
+        return false
+    end
+
     return self.stored[languageName]
 end
 
