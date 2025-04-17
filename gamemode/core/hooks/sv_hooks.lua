@@ -37,7 +37,7 @@ function GM:PostPlayerInitialSpawn(ply)
 end
 
 function GM:PlayerDisconnected(ply)
-    if ( ply.owDatabase ) then
+    if ( ply.owDatabase and !ply:IsBot() ) then
         ply.owDatabase.play_time = ply.owDatabase.play_time + math.floor(CurTime() - ply.owDatabase.last_played)
         ply.owDatabase.last_played = os.time()
 
