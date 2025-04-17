@@ -26,7 +26,7 @@ function GM:OnCloseCaptionEmit()
 end
 
 function GM:PostSchemaLoad()
-    -- Do something here
+    -- TODO: Empty hook, MAYBE implement somthing in the future
 end
 
 function GM:CalcView(ply, pos, angles, fov)
@@ -313,4 +313,8 @@ function GM:ShouldDrawVignette()
     if ( IsValid(ow.gui.mainmenu) ) then return false end
 
     return true
+end
+
+function GM:GetCharacterName(ply, target)
+    -- TODO: Empty hook, implement this in the future
 end

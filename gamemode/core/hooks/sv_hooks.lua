@@ -121,15 +121,15 @@ function GM:GetFallDamage(ply, speed)
 end
 
 function GM:PlayerDeletedCharacter(ply, characterID)
-    -- Do something here
+    -- TODO: Empty hook, implement this in the future
 end
 
 function GM:PlayerLoadedCharacter(ply, character, previousCharacter)
-    -- Do something here
+    -- TODO: Empty hook, implement this in the future
 end
 
 function GM:PlayerCreatedCharacter(ply, character)
-    -- Do something here
+    -- TODO: Empty hook, implement this in the future
 end
 
 local nextThink = 0
@@ -162,7 +162,7 @@ end
 function GM:SaveData()
     ow.util:Print("Saving data...")
 
-    -- Do something here
+    -- TODO: Empty hook, implement this in the future
 
     ow.util:Print("Data saved.")
 end

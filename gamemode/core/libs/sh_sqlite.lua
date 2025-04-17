@@ -152,7 +152,7 @@ function ow.sqlite:CreateTable(query, schema)
         parts[#parts + 1] = string.format("%s %s", column, columnType)
     end
 
-    local insertQuery = string.format("CREATE TABLE IF NOT EXISTS %s (%s);", query, table.concat(parts, ", "))
+    local insertQuery = string.format("CREATE TABLE IF NOT EXISTS ow_%s (%s);", query, table.concat(parts, ", "))
     sql.Query(insertQuery)
 end
 
