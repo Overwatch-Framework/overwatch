@@ -311,6 +311,7 @@ end
 
 function GM:ShouldDrawVignette()
     if ( IsValid(ow.gui.mainmenu) ) then return false end
+    if ( !ow.option:Get("vignette", true) ) then return false end
 
     return true
 end

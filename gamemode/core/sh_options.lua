@@ -4,3 +4,10 @@ ow.option:Register("language", {
     Type = ow.type.string,
     Default = "en"
 })
+
+ow.option:Register("vignette", {
+    DisplayName = "Vignette",
+    Description = "The vignette effect.",
+    Type = ow.type.bool,
+    Default = true
+})
