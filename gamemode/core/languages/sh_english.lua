@@ -4,4 +4,7 @@ ow.localization:Register("en", {
     ["mainmenu.characterselect"] = "Select Character",
     ["mainmenu.settings"] = "Settings",
     ["mainmenu.leave"] = "Disconnect",
+    ["quit"] = "Quit",
+    ["back"] = "Back",
+
 })
