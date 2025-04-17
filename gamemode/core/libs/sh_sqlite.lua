@@ -26,7 +26,7 @@ end
 -- @tparam string columnType The type of the column (e.g. "INTEGER", "TEXT")
 -- @tparam any defaultValue The default value to set if the column is added
 function ow.sqlite:AddColumn(tableName, columnName, columnType, defaultValue)
-    local result = sql.Query(string.format("PRAGMA table_info(%s);", tableName))
+    local result = sql.Query(string.format("PRAGMA table_info(ow_%s);", tableName))
     if ( result ) then
         local columnExists = false
         for _, column in ipairs(result) do
@@ -38,7 +38,7 @@ function ow.sqlite:AddColumn(tableName, columnName, columnType, defaultValue)
 
         if ( !columnExists ) then
             local insertQuery = string.format(
-                "ALTER TABLE %s ADD COLUMN %s %s DEFAULT %s;",
+                "ALTER TABLE ow_%s ADD COLUMN %s %s DEFAULT %s;",
                 tableName,
                 columnName,
                 columnType,
@@ -100,7 +100,7 @@ end
 -- @tparam any value Value to match (e.g. player's SteamID)
 -- @tparam function callback Function to run with resulting data row
 function ow.sqlite:LoadRow(query, key, value, callback)
-    local condition = string.format("%s = %s", key, sql.SQLStr(value))
+    local condition = string.format("ow_%s = %s", key, sql.SQLStr(value))
     local result = self:Select(query, nil, condition)
 
     local row = result and result[1]
@@ -138,7 +138,7 @@ end
 -- @tparam table data The row data to save
 -- @tparam string key Column name to use for matching
 function ow.sqlite:SaveRow(query, data, key)
-    local condition = string.format("%s = %s", key, sql.SQLStr(data[key]))
+    local condition = string.format("ow_%s = %s", key, sql.SQLStr(data[key]))
     self:Update(query, data, condition)
 end
 
@@ -169,7 +169,7 @@ function ow.sqlite:Insert(query, data, callback)
         values[#values + 1] = sql.SQLStr(v)
     end
 
-    local insertQuery = string.format("INSERT INTO %s (%s) VALUES (%s);", query, table.concat(keys, ", "), table.concat(values, ", "))
+    local insertQuery = string.format("INSERT INTO ow_%s (%s) VALUES (%s);", query, table.concat(keys, ", "), table.concat(values, ", "))
     sql.Query(insertQuery)
 
     if ( callback ) then
@@ -188,10 +188,10 @@ end
 function ow.sqlite:Update(query, data, condition)
     local updates = {}
     for k, v in pairs(data) do
-        updates[#updates + 1] = string.format("%s = %s", k, sql.SQLStr(v))
+        updates[#updates + 1] = string.format("ow_%s = %s", k, sql.SQLStr(v))
     end
 
-    local insertQuery = string.format("UPDATE %s SET %s WHERE %s;", query, table.concat(updates, ", "), condition)
+    local insertQuery = string.format("UPDATE ow_%s SET %s WHERE %s;", query, table.concat(updates, ", "), condition)
     sql.Query(insertQuery)
 end
 
@@ -203,7 +203,7 @@ end
 -- @treturn table|nil Resulting rows or nil
 function ow.sqlite:Select(query, columns, condition)
     local cols = columns and table.concat(columns, ", ") or "*"
-    local insertQuery = string.format("SELECT %s FROM %s", cols, query)
+    local insertQuery = string.format("SELECT ow_%s FROM %s", cols, query)
 
     if ( condition ) then
         insertQuery = insertQuery .. " WHERE " .. condition
@@ -218,7 +218,7 @@ end
 -- @tparam string[opt] condition WHERE clause
 -- @treturn number Number of rows
 function ow.sqlite:Count(query, condition)
-    local insertQuery = string.format("SELECT COUNT(*) FROM %s", query)
+    local insertQuery = string.format("SELECT COUNT(*) FROM ow_%s", query)
 
     if ( condition ) then
         insertQuery = insertQuery .. " WHERE " .. condition

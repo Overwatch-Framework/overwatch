@@ -2,6 +2,8 @@ local INV = ow.inventory.meta or {}
 INV.__index = INV
 INV.id = 0
 
+-- TODO: I believe a sequential table with the value being the item's ID
+
 --- Returns the inventory's ID.
 -- @treturn number The inventory's ID.
 function INV:GetID()
