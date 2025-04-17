@@ -71,3 +71,9 @@ end
 
 function GM:GetPlayerDeathSound(ply)
 end
+
+function GM:PreOptionChanged(ply, key, value)
+end
+
+function GM:PostOptionChanged(ply, key, value)
+end
