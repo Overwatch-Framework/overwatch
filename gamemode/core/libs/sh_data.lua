@@ -21,7 +21,6 @@ end
 function ow.data:Get(key, fallback, bGlobal, bMap, bRefresh)
     local stored = self.stored[key]
     if ( !bRefresh and stored != nil ) then
-        print("Using stored data for " .. key)
         return stored
     end
 

@@ -249,7 +249,7 @@ end
 -- @return string The type of the value.
 function ow.util:FindString(str, find)
     if ( str == nil or find == nil ) then
-        print("Attempted to find a string with no value", str, find)
+        ow.util:PrintError("Attempted to find a string with no value", str, find)
         return false
     end
 
