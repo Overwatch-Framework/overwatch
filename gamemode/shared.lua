@@ -40,6 +40,19 @@ end
 
 hook.Remove("PlayerTick", "TickWidgets")
 
+function team.NumPlayers( index )
+	local players = 0
+
+	for _, ply in player.Iterator() do
+		if ( ply:Team() == index ) then
+			players = players + 1
+		end
+	end
+
+	return players
+end
+
+
 ow.util:Print("Initializing...")
 ow.util:LoadFolder("core/libs")
 ow.util:LoadFolder("core/thirdparty")
@@ -55,29 +68,29 @@ ow.util:Print("Initializing Modules...")
 
 local files, directories = file.Find("overwatch/modules/*", "LUA")
 for k, v in ipairs(directories) do
-    if ( file.Exists("overwatch/modules/" .. v .. "/sh_module.lua", "LUA") ) then
-        MODULE = { UniqueID = v }
-            hook.Run("PreModuleLoad", v, MODULE)
-            ow.util:LoadFile("overwatch/modules/" .. v .. "/sh_module.lua")
-            ow.module.stored[v] = MODULE
-        MODULE = nil
-    else
-        ow.util:PrintError("Module " .. v .. " is missing a shared module file.")
-    end
+	if ( file.Exists("overwatch/modules/" .. v .. "/sh_module.lua", "LUA") ) then
+		MODULE = { UniqueID = v }
+			hook.Run("PreModuleLoad", v, MODULE)
+			ow.util:LoadFile("overwatch/modules/" .. v .. "/sh_module.lua")
+			ow.module.stored[v] = MODULE
+		MODULE = nil
+	else
+		ow.util:PrintError("Module " .. v .. " is missing a shared module file.")
+	end
 end
 
 for k, v in ipairs(files) do
-    local ModuleUniqueID = string.StripExtension(v)
-    if ( string.sub(v, 1, 3) == "cl_" or string.sub(v, 1, 3) == "sv_" or string.sub(v, 1, 3) == "sh_" ) then
-        ModuleUniqueID = string.sub(v, 4)
-    end
+	local ModuleUniqueID = string.StripExtension(v)
+	if ( string.sub(v, 1, 3) == "cl_" or string.sub(v, 1, 3) == "sv_" or string.sub(v, 1, 3) == "sh_" ) then
+		ModuleUniqueID = string.sub(v, 4)
+	end
 
-    MODULE = { UniqueID = ModuleUniqueID }
-        hook.Run("PreModuleLoad", ModuleUniqueID, MODULE)
-        ow.util:LoadFile("overwatch/modules/" .. v, "shared")
-        ow.module.stored[ModuleUniqueID] = MODULE
-        hook.Run("PostModuleLoad", ModuleUniqueID, MODULE)
-    MODULE = nil
+	MODULE = { UniqueID = ModuleUniqueID }
+		hook.Run("PreModuleLoad", ModuleUniqueID, MODULE)
+		ow.util:LoadFile("overwatch/modules/" .. v, "shared")
+		ow.module.stored[ModuleUniqueID] = MODULE
+		hook.Run("PostModuleLoad", ModuleUniqueID, MODULE)
+	MODULE = nil
 end
 
 ow.util:Print("Initialized Modules.")
@@ -88,23 +101,23 @@ ow.refresh.count = ow.refresh.count or 0
 ow.refresh.time = SysTime()
 
 function GM:OnReloaded()
-    if ( ow.reloaded ) then return end
+	if ( ow.reloaded ) then return end
 
-    ow.reloaded = true
+	ow.reloaded = true
 
-    ow.schema:Initialize()
-    if ( CLIENT ) then
-        ow.option:Load()
-    end
+	ow.schema:Initialize()
+	if ( CLIENT ) then
+		ow.option:Load()
+	end
 
-    hook.Run("LoadFonts")
+	hook.Run("LoadFonts")
 
-    ow.refresh.count = ow.refresh.count + 1
-    ow.refresh.time = SysTime() - ow.refresh.time
+	ow.refresh.count = ow.refresh.count + 1
+	ow.refresh.time = SysTime() - ow.refresh.time
 
-    ow.util:Print("Reloaded Files (Refreshes: " .. ow.refresh.count .. ", Time: " .. ow.refresh.time .. "s)")
+	ow.util:Print("Reloaded Files (Refreshes: " .. ow.refresh.count .. ", Time: " .. ow.refresh.time .. "s)")
 
-    hook.Run("PostReloaded")
+	hook.Run("PostReloaded")
 end
 
 ow.util:LoadFile("core/sh_cami.lua")
@@ -117,7 +130,7 @@ ow.util:LoadFile("core/sh_options.lua")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(ply, command, arguments)
-    ow.util:PrintError("This command has been disabled.", ply)
+	ow.util:PrintError("This command has been disabled.", ply)
 end)
 
 -- concommand.Remove("gm_admin_cleanup")
