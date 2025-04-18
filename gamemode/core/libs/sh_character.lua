@@ -49,7 +49,7 @@ function ow.character:RegisterVariable(key, data)
             end
         end
     elseif ( istable(data.Alias) ) then
-        for k, v in ipairs(data.Alias) then
+        for k, v in ipairs(data.Alias) do
             self.meta["Get" .. v] = function(this)
                 return self:GetVariable(key)
             end
