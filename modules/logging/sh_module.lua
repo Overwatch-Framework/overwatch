@@ -16,7 +16,7 @@ function MODULE:FormatPlayer(ply)
 end
 
 function MODULE:FormatEntity(ent)
-    if ( !IsValid(ent) ) then return "world" end
+    if ( !IsValid(ent) or ent == Entity(0) ) then return "world" end
 
     if ( ent:IsPlayer() ) then
         return self:FormatPlayer(ent)
