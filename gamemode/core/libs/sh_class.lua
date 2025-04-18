@@ -90,9 +90,3 @@ function ow.class:CanSwitchTo(ply, classID)
 
     return true
 end
-
-ow.character:RegisterVariable("class", {
-    Type = ow.type.number,
-    Field = "class",
-    Default = 0
-})

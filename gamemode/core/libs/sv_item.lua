@@ -110,16 +110,3 @@ function ow.item:New(uniqueID, id)
 
     return ITEM
 end
-
-ow.character:RegisterVariable("inventory", {
-    bNoNetworking = true,
-    bNoDisplay = true,
-    --[[OnGet = function(character, index) -- TODO, we need the bloody OnGet and OnSet support
-        if (index and !isnumber(index)) then
-            return character.vars.inv or {}
-        end
-
-        return character.vars.inv and character.vars.inv[index or 1]
-    end,]]
-    alias = "Inv"
-})

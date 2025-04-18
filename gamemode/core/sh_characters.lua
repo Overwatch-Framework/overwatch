@@ -75,3 +75,22 @@ ow.character:RegisterVariable("money", {
     Field = "money",
     Default = 0
 })
+
+ow.character:RegisterVariable("class", {
+    Type = ow.type.number,
+    Field = "class",
+    Default = 0
+})
+
+ow.character:RegisterVariable("inventory", {
+    bNoNetworking = true,
+    bNoDisplay = true,
+    --[[OnGet = function(character, index) -- TODO, we need the bloody OnGet and OnSet support
+        if (index and !isnumber(index)) then
+            return character.vars.inv or {}
+        end
+
+        return character.vars.inv and character.vars.inv[index or 1]
+    end,]]
+    alias = "Inv"
+})
