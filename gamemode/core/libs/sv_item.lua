@@ -49,7 +49,7 @@ end
 -- @param Angle angles The angles of the item.
 -- @param function callback The callback function.
 function ow.item:Spawn(uniqueID, position, angles, callback, data)
-    self:Instance(0, uniqueID, data or {}, 1, 1, function(item)
+    self:Instance(0, uniqueID, data or {}, 1, function(item)
         local entity = item:Spawn(position, angles)
 
         if ( callback ) then
@@ -58,7 +58,7 @@ function ow.item:Spawn(uniqueID, position, angles, callback, data)
     end)
 end
 
-function ow.item:Instance(index, uniqueID, data, callback, charID)
+function ow.item:Instance(index, uniqueID, data, charID, callback)
     if ( !self.stored[uniqueID] ) then return end
 
     local itemTable = table.Copy(self.stored[uniqueID])

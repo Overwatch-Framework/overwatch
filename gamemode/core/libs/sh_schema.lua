@@ -19,6 +19,8 @@ function ow.schema:Initialize()
     local folder = engine.ActiveGamemode()
     local path = folder .. "/schema/sh_schema.lua"
 
+    file.CreateDir("overwatch/" .. folder)
+
     ow.util:Print("Searching for schema...")
 
     local bSuccess = file.Exists(path, "LUA")

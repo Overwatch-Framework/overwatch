@@ -20,8 +20,8 @@ function ow.config:Set(key, value)
         return false
     end
 
-    local oldValue = self.values[key]
-    self.values[key] = value
+    local oldValue = stored.Value or stored.Default
+    stored.Value = value
 
     net.Start("ow.config.set")
         net.WriteString(key)
@@ -43,23 +43,17 @@ end
 -- @usage ow.config:Load()
 -- @internal
 function ow.config:Load()
-    if ( !file.Exists("overwatch", "DATA") ) then
-        file.CreateDir("overwatch")
-    end
-
-    local folder = SCHEMA and SCHEMA.Folder or "core"
-    if ( !file.Exists("overwatch/" .. folder, "DATA") ) then
-        file.CreateDir("overwatch/" .. folder)
-    end
-
-    local config = file.Read("overwatch/" .. folder .. "/config.json", "DATA")
-    config = util.JSONToTable(config or "[]")
+    local config = ow.data:Get("config", {}, true, false)
 
     hook.Run("PreConfigLoad", config)
 
-    self.values = config
+    for k, v in pairs(self.stored) do
+        if ( config[k] != nil ) then
+            v.Value = config[k]
+        end
+    end
 
-    local compressed = util.Compress(util.TableToJSON(config))
+    local compressed = util.Compress(util.TableToJSON(self.stored))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
@@ -71,6 +65,17 @@ function ow.config:Load()
     return true
 end
 
+function ow.config:GetSaveData()
+    local saveData = {}
+    for k, v in pairs(self.stored) do
+        if ( v.Value and v.Value != v.Default ) then
+            saveData[k] = v.Value
+        end
+    end
+
+    return saveData
+end
+
 --- Saves the configuration to the file.
 -- @realm server
 -- @return Whether or not the configuration was saved.
@@ -79,8 +84,8 @@ end
 function ow.config:Save()
     hook.Run("PreConfigSave")
 
-    local folder = SCHEMA and SCHEMA.Folder or "core"
-    file.Write("overwatch/" .. folder .. "/config.json", util.TableToJSON(self.values))
+    local values = self:GetSaveData()
+    ow.data:Set("config", values, true, false)
 
     hook.Run("PostConfigSave", values)
     ow.util:Print("Configuration saved.")
@@ -95,16 +100,19 @@ end
 function ow.config:Reset()
     hook.Run("PreConfigReset")
 
-    self.values = {}
-    file.Write("overwatch/" .. (SCHEMA and SCHEMA.Folder or "core") .. "/config.json", self.values)
+    for k, v in pairs(self.stored) do
+        if ( v.Default != nil ) then
+            v.Value = v.Default
+        end
+    end
 
-    local compressed = util.Compress(util.TableToJSON(self.values))
+    local compressed = util.Compress(util.TableToJSON(self.stored))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
     net.Broadcast()
 
-    hook.Run("PostConfigReset", values)
+    hook.Run("PostConfigReset")
 
     return true
 end
@@ -119,7 +127,7 @@ function ow.config:Synchronize(ply)
 
     hook.Run("PreConfigSync", ply)
 
-    local compressed = util.Compress(util.TableToJSON(self.values))
+    local compressed = util.Compress(util.TableToJSON(self.stored))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)

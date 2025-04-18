@@ -22,18 +22,30 @@ if ( CLIENT ) then
     function ow.option:Load()
         hook.Run("PreOptionsLoad")
 
-        local folder = SCHEMA and SCHEMA.Folder or "core"
-        if ( file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
-            self.localClient = util.JSONToTable(file.Read("overwatch/" .. folder .. "/options.json", "DATA"))
+        for k, v in pairs(ow.data:Get("options", {}, true, false)) do
+            if ( self.stored[k] != nil ) then
+                self.stored[k].Value = v
+            end
         end
 
-        local compressed = util.Compress(util.TableToJSON(self.localClient))
+        local compressed = util.Compress(util.TableToJSON(self:GetSaveData()))
 
         net.Start("ow.option.syncServer")
             net.WriteData(compressed, #compressed)
         net.SendToServer()
 
         hook.Run("PostOptionsLoad", self.stored)
+    end
+
+    function ow.option:GetSaveData()
+        local data = {}
+        for k, v in pairs(self.stored) do
+            if ( v.Value and v.Value != v.Default ) then
+                data[k] = v.Value
+            end
+        end
+
+        return data
     end
 
     function ow.option:Set(key, value)
@@ -52,7 +64,7 @@ if ( CLIENT ) then
             stored:OnChange(value, ply)
         end
 
-        self.localClient[key] = value
+        stored.Value = value
 
         if ( !stored.bNoNetworking ) then
             net.Start("ow.option.set")
@@ -61,11 +73,7 @@ if ( CLIENT ) then
             net.SendToServer()
         end
 
-        local folder = SCHEMA and SCHEMA.Folder or "core"
-
-        if ( file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
-            file.Write("overwatch/" .. folder .. "/options.json", util.TableToJSON(self.localClient))
-        end
+        ow.data:Set("options", self:GetSaveData(), true, false)
 
         hook.Run("PostOptionChanged", ply, key, value)
 
@@ -76,19 +84,18 @@ if ( CLIENT ) then
         local optionData = self.stored[key]
         if ( !istable(optionData) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
-            return fallback or nil
+            return fallback
         end
 
-        return self.localClient[key] == nil and optionData.Default or self.localClient[key]
+        return optionData.Value == nil and optionData.Default or optionData.Value
     end
 
     function ow.option:ResetAll()
-        self.localClient = {}
-
-        local folder = SCHEMA and SCHEMA.Folder or "core"
-        if ( file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
-            file.Write("overwatch/" .. folder .. "/options.json", "[]")
+        for k, v in pairs(self.stored) do
+            v.Value = nil
         end
+
+        ow.data:Set("options", {}, true, false)
 
         local compressed = util.Compress("[]")
         net.Start("ow.option.syncServer")
@@ -117,19 +124,6 @@ local requiredFields = {
 function ow.option:Register(key, data)
     local bResult = hook.Run("PreOptionRegistered", key, data)
     if ( bResult == false ) then return false end
-
-    if ( !file.Exists("overwatch", "DATA") ) then
-        file.CreateDir("overwatch")
-    end
-
-    local folder = SCHEMA and SCHEMA.Folder or "core"
-    if ( !file.Exists("overwatch/" .. folder, "DATA") ) then
-        file.CreateDir("overwatch/" .. folder)
-    end
-
-    if ( !file.Exists("overwatch/" .. folder .. "/options.json", "DATA") ) then
-        file.Write("overwatch/" .. folder .. "/options.json", "[]")
-    end
 
     local OPTION = table.Copy(data)
     for _, v in pairs(requiredFields) do

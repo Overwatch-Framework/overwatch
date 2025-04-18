@@ -3,6 +3,8 @@ local MODULE = MODULE
 util.AddNetworkString("ow.logging.send")
 
 function MODULE:SendLog(...)
+    if ( !ow.config:Get("logging", true) ) then return end
+
     local receivers = {}
     for k, v in player.Iterator() do
         if ( !CAMI.PlayerHasAccess(v, "Overwatch - Logging") ) then continue end

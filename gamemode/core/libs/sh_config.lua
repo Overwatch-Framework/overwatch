@@ -3,7 +3,6 @@
 
 ow.config = ow.config or {}
 ow.config.stored = ow.config.stored or {}
-ow.config.values = ow.config.values or {}
 
 --- Gets the current value of the specified configuration.
 -- @realm shared
@@ -13,18 +12,20 @@ ow.config.values = ow.config.values or {}
 -- @usage local color = ow.config.Get("schemaColor", Color(0, 100, 150))
 -- print(color) -- Prints the color of the schema.
 function ow.config:Get(key, fallback)
-    local value = self.values[key]
-    if ( !istable(self.stored[key]) ) then
+    local stored = self.stored[key]
+    if ( !istable(stored) ) then
         ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
         return fallback or nil
     end
 
-    local defaultValue = self.stored[key].Default
+    local value = stored.Value
+
+    local defaultValue = stored.Default
     if ( defaultValue == nil ) then
         return fallback
     end
 
-    return value or self.stored[key].Default
+    return value != nil and value or defaultValue
 end
 
 --- Sets the default value of the specified configuration.
@@ -34,12 +35,13 @@ end
 -- @treturn boolean Whether the default value of the configuration was successfully set.
 -- @usage ow.config.SetDefault("schemaColor", Color(0, 100, 150)) -- Sets the default color of the schema.
 function ow.config:SetDefault(key, value)
-    if ( self.stored[key] == nil ) then
+    local stored = self.stored[key]
+    if ( !istable(stored) ) then
         ErrorNoHalt("Configuration \"" .. key .. "\" does not exist!\n")
         return false
     end
 
-    self.stored[key].Default = value
+    stored.Default = value
 
     return true
 end

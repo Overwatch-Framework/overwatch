@@ -36,19 +36,13 @@ net.Receive("ow.option.syncServer", function(len, ply)
     local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(data) ) then return end
 
-    for k, v in pairs(data) do
-        local stored = ow.option.stored[k]
-        if ( !istable(stored) ) then
-            ow.util:PrintError("Option \"" .. k .. "\" does not exist!")
-            continue
-        end
-
-        if ( !stored.bNoNetworking ) then
+    for k, v in pairs(ow.option.stored) do
+        if ( data[k] != nil ) then
             if ( ow.option.clients[ply] == nil ) then
                 ow.option.clients[ply] = {}
             end
 
-            ow.option.clients[ply][k] = v
+            ow.option.clients[ply][k] = data[k]
         end
     end
 end)
@@ -66,6 +60,18 @@ function ow.option:Set(ply, key, value)
         net.WriteString(key)
         net.WriteType(value)
     net.Send(ply)
+
+    if ( isfunction(stored.OnChange) ) then
+        stored:OnChange(value, ply)
+    end
+
+    if ( !stored.bNoNetworking ) then
+        if ( ow.option.clients[ply] == nil ) then
+            ow.option.clients[ply] = {}
+        end
+
+        ow.option.clients[ply][key] = value
+    end
 
     hook.Run("OnOptionChanged", ply, key, value)
 

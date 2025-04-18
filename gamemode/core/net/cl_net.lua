@@ -23,7 +23,7 @@ end)
 net.Receive("ow.config.sync", function(len)
     local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
-    ow.config.values = compressedTable
+    ow.config.stored = compressedTable
 end)
 
 net.Receive("ow.config.set", function(len)
@@ -31,7 +31,8 @@ net.Receive("ow.config.set", function(len)
     local value = net.ReadType()
 
     local stored = ow.config.stored[key]
-    if ( stored == nil or !istable(stored) ) then return end
+    if ( !istable(stored) ) then return end
 
-    stored.Value = value
+    ow.config:Set(key, value)
+    print("Config " .. key .. " set to " .. tostring(value))
 end)

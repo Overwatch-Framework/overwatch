@@ -1,5 +1,4 @@
 {
-    "Lua.runtime.version": "LuaJIT",
     "Lua.workspace.checkThirdParty": false,
     "Lua.diagnostics.disable": [
         "undefined-global"

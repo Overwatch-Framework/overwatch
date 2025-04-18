@@ -4,6 +4,13 @@ MODULE.Name = "Logging"
 MODULE.Description = "Adds some sort of logging system."
 MODULE.Author = "Riggs, bloodycop"
 
+ow.config:Register("logging", {
+    DisplayName = "Logging",
+    Description = "Enable or disable the logging system.",
+    Type = ow.type.bool,
+    Default = true
+})
+
 CAMI.RegisterPrivilege({
     Name = "Overwatch - Logging",
     MinAccess = "admin"

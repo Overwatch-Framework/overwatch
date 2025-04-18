@@ -11,8 +11,8 @@ function ow.convars:Get(name)
 end
 
 function ow.convars:Create(name, default, flags, help, min, max)
-    if ( self.stored[name] ) then
-        ow.util:PrintError(Format("Attempted to create a client convar that already exists! \"%s\"", name))
+    if ( self.stored[name] != nil ) then
+        ow.util:PrintWarning(Format("Attempted to create a client convar that already exists! \"%s\"", name))
         return false
     end
 
@@ -21,8 +21,8 @@ function ow.convars:Create(name, default, flags, help, min, max)
 end
 
 function ow.convars:CreateClient(name, default, shouldsave, userinfo, helptext, min, max)
-    if ( self.stored[name] ) then
-        ow.util:PrintError(Format("Attempted to create a client convar that already exists! \"%s\"", name))
+    if ( self.stored[name] != nil ) then
+        ow.util:PrintWarning(Format("Attempted to create a client convar that already exists! \"%s\"", name))
         return false
     end
 
