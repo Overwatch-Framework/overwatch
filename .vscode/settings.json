@@ -1,7 +1,4 @@
 {
-    "Lua.workspace.library": [
-        "${addons}/garrysmod/module/library"
-    ],
     "Lua.runtime.version": "LuaJIT",
     "Lua.workspace.checkThirdParty": false,
     "Lua.diagnostics.disable": [
