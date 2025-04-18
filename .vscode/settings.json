@@ -1,0 +1,22 @@
+{
+    "Lua.workspace.library": [
+        "${addons}/garrysmod/module/library"
+    ],
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.workspace.checkThirdParty": false,
+    "Lua.diagnostics.disable": [
+        "undefined-global"
+    ],
+    "Lua.runtime.special": {
+        "include": "require",
+        "IncludeCS": "require"
+    },
+    "Lua.runtime.nonstandardSymbol": [
+        "continue",
+        "&&",
+        "||",
+        "!=",
+        "!",
+        "//"
+    ]
+}
