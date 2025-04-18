@@ -77,3 +77,6 @@ end
 
 function GM:PostOptionChanged(ply, key, value)
 end
+
+function GM:PlayerCanHearChat(ply, listener, uniqueID, text)
+end

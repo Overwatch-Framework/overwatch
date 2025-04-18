@@ -29,6 +29,8 @@ function GM:PostSchemaLoad()
     -- TODO: Empty hook, MAYBE implement somthing in the future
 end
 
+local eyeTraceHullMin = Vector(-2, -2, -2)
+local eyeTraceHullMax = Vector(2, 2, 2)
 function GM:CalcView(ply, pos, angles, fov)
     if ( IsValid(ow.gui.mainmenu) ) then
         local menuCamPos = ow.config:Get("menuCamPos", vector_origin)
@@ -70,8 +72,8 @@ function GM:CalcView(ply, pos, angles, fov)
             endpos = eyePos + eyeAng:Forward() * 2,
             filter = ragdoll,
             mask = MASK_PLAYERSOLID,
-            mins = Vector(-2, -2, -2),
-            maxs = Vector(2, 2, 2)
+            mins = eyeTraceHullMin,
+            maxs = eyeTraceHullMax
         })
 
         return {

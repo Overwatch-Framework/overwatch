@@ -256,5 +256,6 @@ ow.sqlite:CreateTable("items", {
     id = "INTEGER PRIMARY KEY AUTOINCREMENT",
     owner_id = "INTEGER",
     unique_id = "TEXT",
-    data = "TEXT"
+    data = "TEXT",
+    inv_id = "INTEGER",
 })

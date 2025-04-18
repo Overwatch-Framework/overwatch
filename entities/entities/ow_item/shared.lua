@@ -11,7 +11,6 @@ ENT.AdminOnly = false
 
 function ENT:SetupDataTables()
     self:NetworkVar("Int", 0, "ItemID")
-    self:NetworkVar("String", 0, "ItemUniqueID")
 end
 
 function ENT:GetItemData()

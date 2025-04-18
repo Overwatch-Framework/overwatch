@@ -14,6 +14,7 @@ function ow.character:RegisterVariable(key, data)
     data.Index = table.Count(self.variables) + 1
 
     local upperKey = key:gsub("^%l", string.upper)
+    -- TODO, add support for custom OnGet and OnSet methods.
 
     if ( SERVER ) then
         self.meta["Set" .. upperKey] = function(this, value)
@@ -33,6 +34,34 @@ function ow.character:RegisterVariable(key, data)
 
     self.meta["Get" .. upperKey] = function(this)
         return self:GetVariable(key)
+    end
+
+    if ( isstring(data.Alias) ) then
+        self.meta["Get" .. data.Alias] = function(this)
+            return self:GetVariable(key)
+        end
+
+        self.meta["Set" .. data.Alias] = function(this, value)
+            self:SetVariable(key, value)
+
+            if ( data.OnSet ) then
+                data:OnSet(this, value)
+            end
+        end
+    elseif ( istable(data.Alias) ) then
+        for k, v in ipairs(data.Alias) then
+            self.meta["Get" .. v] = function(this)
+                return self:GetVariable(key)
+            end
+
+            self.meta["Set" .. v] = function(this, value)
+                self:SetVariable(key, value)
+
+                if ( data.OnSet ) then
+                    data:OnSet(this, value)
+                end
+            end
+        end
     end
 
     self.variables[key] = data
