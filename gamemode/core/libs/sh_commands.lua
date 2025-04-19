@@ -22,39 +22,33 @@ ow.command.stored = {}
 --     Prefixes = {"example", "ex"},
 --     MinAccess = "user"
 -- })
-function ow.command:Register(info)
-    if ( info == nil ) then
+function ow.command:Register(commandName, info)
+    if ( !isstring(commandName) ) then
         ow.util:PrintError("Attempted to register an invalid command!")
         return
     end
 
-    if ( info.Name == nil ) then
-        ow.util:PrintError("Attempted to register a command with no name!")
-        return
-    end
-
-    if ( info.Callback == nil ) then
+    if ( !isfunction(info.Callback) ) then
         ow.util:PrintError("Attempted to register a command with no callback!")
         return
     end
 
-    if ( info.Prefixes == nil ) then
-        info.Prefixes = {info.Name}
+    if ( !istable(info.Prefixes) ) then
+        info.Prefixes = { commandName }
     end
 
-    local uniqueID = string.lower(string.gsub(info.Name, "%s", "_"))
-    uniqueID = info.UniqueID or uniqueID
+    local uniqueID = string.lower(string.gsub(commandName, "%s", ""))
 
     self.stored[uniqueID] = info
 
     if ( CAMI != nil ) then
         CAMI.RegisterPrivilege({
-            Name = "Overwatch - Commands - " .. info.Name,
+            Name = "Overwatch - Commands - " .. commandName,
             MinAccess = ( info.SuperAdminOnly and "superadmin" ) or ( info.AdminOnly and "admin" ) or ( info.MinAccess or "user" )
         })
     end
 
-    hook.Run("OnCommandRegistered", info)
+    hook.Run("OnCommandRegistered", commandName, info)
 end
 
 --- Unregisters a command.
