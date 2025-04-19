@@ -53,7 +53,7 @@ function PANEL:OrderNotifications()
     local x, y = self:GetPos()
     y = y - ScreenScale(12) -- Adjust the y position to account for the notification height
 
-    if ( self.notifications[1] == nil ) then return end
+    if ( !IsValid(self.notifications[1]) ) then return end
 
     local count = #self.notifications
 
