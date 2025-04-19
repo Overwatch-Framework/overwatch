@@ -2,7 +2,7 @@ DeriveGamemode("sandbox")
 
 ow = ow or {util = {}, gui = {}, meta = {}, config = {}}
 
-include("core/sh_util.lua")
+include("framework/sh_util.lua")
 include("shared.lua")
 
 local oldLocalPlayer = LocalPlayer
