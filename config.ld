@@ -2,15 +2,15 @@
 file = {
     "gamemode",
     "modules",
-    exclude = {"gamemode/core/thirdparty"}
+    exclude = {"gamemode/framework/thirdparty"}
 }
 
 module_file = {
-    Character = "gamemode/core/meta/sh_character.lua",
-    Entity = "gamemode/core/meta/sh_entity.lua",
-    Player = "gamemode/core/meta/cl_player.lua",
-    Player = "gamemode/core/meta/sh_player.lua",
-    Player = "gamemode/core/meta/sv_player.lua",
+    Character = "gamemode/framework/meta/sh_character.lua",
+    Entity = "gamemode/framework/meta/sh_entity.lua",
+    Player = "gamemode/framework/meta/cl_player.lua",
+    Player = "gamemode/framework/meta/sh_player.lua",
+    Player = "gamemode/framework/meta/sv_player.lua",
 }
 
 dir = "docs/html"
