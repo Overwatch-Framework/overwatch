@@ -18,5 +18,5 @@ function ow.chat:Send(speaker, uniqueID, text)
         net.WriteString(text)
     net.Send(players)
 
-    hook.Run("OnChatSent", speaker, uniqueID, text)
+    hook.Run("OnChatMessageSent", speaker, uniqueID, text)
 end
