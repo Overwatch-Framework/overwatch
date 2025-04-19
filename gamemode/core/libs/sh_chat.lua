@@ -5,17 +5,17 @@ ow.chat = {}
 ow.chat.classes = {}
 
 function ow.chat:Register(uniqueID, chatData)
-    if ( !uniqueID ) then
+    if ( !isstring(uniqueID) ) then
         ow.util:PrintError("Attempted to register a chat class without a unique ID!")
         return false
     end
 
-    if ( !chatData ) then
+    if ( !istable(chatData) ) then
         ow.util:PrintError("Attempted to register a chat class without data!")
         return false
     end
 
-    if ( !chatData.OnChatAdd ) then
+    if ( !isfunction(chatData.OnChatAdd) ) then
         chatData.OnChatAdd = function(speaker, text)
             chat.AddText(color_white, speaker:Name() .. " says \"" .. text .. "\"")
             chat.PlaySound()
