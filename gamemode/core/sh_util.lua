@@ -248,7 +248,7 @@ end
 -- @string find The type to search for.
 -- @return string The type of the value.
 function ow.util:FindString(str, find)
-    if ( str == nil or find == nil ) then
+    if ( !isstring(str) or !isstring(find) ) then
         ow.util:PrintError("Attempted to find a string with no value", str, find)
         return false
     end

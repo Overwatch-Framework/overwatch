@@ -29,7 +29,7 @@ function ow.chat:Register(uniqueID, chatData)
             Callback = function(info, ply, arguments)
                 local text = table.concat(arguments, " ")
 
-                if ( text == nil or text == "" ) then
+                if ( !isstring(text) or #text < 1 ) then
                     ow.util:PrintError("Attempted to send an empty chat message!", ply)
                     return false
                 end
