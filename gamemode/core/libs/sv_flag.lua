@@ -6,6 +6,8 @@ function ow.flag:Give(ply, flagChar)
         flagData:Give(ply, flagChar)
     end
 
+    -- TODO: ply data saving for this
+
     hook.Run("OnFlagGiven", ply, flagChar)
 end
 
@@ -16,6 +18,8 @@ function ow.flag:Take(ply, flagChar)
     if ( isfunction(flagData.Take) ) then
         flagData:Take(ply, flagChar)
     end
+
+    -- TODO: ply data saving for this
 
     hook.Run("OnFlagTaken", ply, flagChar)
 end
