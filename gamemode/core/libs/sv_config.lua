@@ -10,14 +10,16 @@ ow.config.stored = ow.config.stored or {}
 -- @param value The value of the configuration.
 -- @treturn boolean Whether the configuration was successfully set.
 -- @usage ow.config.Set("schemaColor", Color(0, 100, 150)) -- Sets the color of the schema.
-function ow.config:Set(key, value)
-    local bResult = hook.Run("PreConfigChanged", key, value)
-    if ( bResult == false ) then return false end
-
+function ow.config:Set(key, value, ply)
     local stored = self.stored[key]
     if ( !istable(stored) ) then
         ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
         return false
+    end
+
+    if ( ow.util:SanitizeType(value) != stored.Type ) then
+        ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
+        return
     end
 
     local oldValue = stored.Value or stored.Default
@@ -28,12 +30,11 @@ function ow.config:Set(key, value)
         net.WriteType(value)
     net.Broadcast()
 
-    if ( stored.OnChange ) then
-        stored:OnChange(value, oldValue)
+    if ( isfunction(stored.OnChange) ) then
+        stored:OnChange(value, oldValue, ply)
     end
 
-    hook.Run("PostConfigChanged", key, oldValue, value)
-
+    hook.Run("PostConfigChanged", key, value, oldValue, ply)
     return true
 end
 

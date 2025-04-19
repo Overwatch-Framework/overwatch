@@ -88,3 +88,9 @@ function GM:PlayerCanHearChat(ply, listener, uniqueID, text)
 
     return true
 end
+
+function GM:PreConfigChanged(key, value, oldValue, ply)
+end
+
+function GM:PostConfigChanged(key, value, oldValue, ply) -- ply can be nil :D
+end

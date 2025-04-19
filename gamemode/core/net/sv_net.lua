@@ -13,24 +13,10 @@ net.Receive("ow.config.set", function(len, ply)
     local value = net.ReadType()
     if ( value == nil ) then return end
 
-    if ( ow.util:SanitizeType(value) != stored.Type ) then
-        ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
-        return
-    end
+    local oldValue = ow.config:Get(key)
 
-    local bResult = hook.Run9("PreConfigChanged", ply, key, value)
+    local bResult = hook.Run("PreConfigChanged", key, value, oldValue, ply)
     if ( tobool(bResult) == false ) then return end
 
-    stored.Value = value
-
-    net.Start("ow.config.set")
-        net.WriteString(key)
-        net.WriteType(value)
-    net.Broadcast()
-
-    if ( isfunction(stored.OnChange) ) then
-        stored:OnChange(value, ply)
-    end
-
-    hook.Run("PostConfigChanged", ply, key, value)
+    ow.config:Set(key, value, ply)
 end)
