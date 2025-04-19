@@ -10,6 +10,14 @@ ow.character:RegisterVariable("schema", {
     Default = "overwatch"
 })
 
+--[[ -- TODO: when OnGet and OnSet overrides are implemented, we can remove this
+ow.character:RegisterVariable("data", {
+    Type = ow.type.string,
+    Field = "schema",
+    Default = "[]"
+})
+]]
+
 ow.character:RegisterVariable("name", {
     Type = ow.type.string,
     Field = "name",

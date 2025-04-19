@@ -1,9 +1,13 @@
 local ITEM = ow.meta.item or {}
 ITEM.__index = ITEM
-ITEM.name = "Undefined"
-ITEM.description = ITEM.description || "An item that is undefined."
-ITEM.id = ITEM.id || 0
-ITEM.uniqueID = "undefined"
+ITEM.Name = "Undefined"
+ITEM.Description = ITEM.Description or "An item that is undefined."
+ITEM.ID = ITEM.ID or 0
+
+function ITEM:__tostring()
+    return Format("Item: %s (%s)", self.Name, self.ID)
+end
+
 
 function ITEM:Spawn(position, angles)
     if (ow.item.instances[self.id]) then
@@ -11,7 +15,7 @@ function ITEM:Spawn(position, angles)
 
         local entity = ents.Create("ow_item")
         entity:Spawn()
-        entity:SetAngles(angles || angle_zero)
+        entity:SetAngles(angles or angle_zero)
         entity:SetItemID(self.id)
 
         -- If the first argument is a player, then we will find a position to drop

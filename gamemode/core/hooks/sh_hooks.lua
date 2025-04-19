@@ -79,4 +79,12 @@ function GM:PostOptionChanged(ply, key, value)
 end
 
 function GM:PlayerCanHearChat(ply, listener, uniqueID, text)
+    local canHear = ow.chat:Get(uniqueID).CanHear
+    if ( isboolean(canHear) ) then
+        return canHear
+    elseif ( isfunction(canHear) ) then
+        return canHear(ply, listener, text)
+    end
+
+    return true
 end

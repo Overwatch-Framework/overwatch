@@ -1,35 +1,40 @@
-local INV = ow.inventory.meta or {}
+local INV = ow.meta.inventory or {}
 INV.__index = INV
-INV.id = 0
+INV.ID = 0
 
 -- TODO: I believe a sequential table with the value being the item's ID
 
 --- Returns the inventory's ID.
 -- @treturn number The inventory's ID.
 function INV:GetID()
-    return self.id
+    return self.ID
 end
 
 --- Returns the inventory's name.
 -- @treturn string The inventory's name.
 function INV:GetName()
-    return self.name
+    return self.Name or Format("Inventory %s", self:GetID())
 end
 
---- Returns the inventory's owner.
--- @treturn number The inventory's owner.
+--- Returns the character that the inventory belongs to.
+-- @treturn number The character's ID.
 function INV:GetOwner()
-    return self.owner
+    return self.OwnerID -- TODO: Use whatever ow.character table we use to store character IDs | ow.character.cache[self.OwnerID]? Not sure
 end
 
 --- Returns the inventory's weight.
 -- @treturn number The inventory's weight.
 function INV:GetWeight()
+    local weight = 0
     for k, v in pairs(self.items) do
-        self.weight = self.weight + v.Weight
+        weight = weight + v:GetWeight()
     end
+
+    return self.weight or 0
 end
 
 function INV:GetItems()
     return self.items
 end
+
+ow.meta.inventory = INV
