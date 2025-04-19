@@ -1,7 +1,6 @@
 {
-    "Lua.workspace.checkThirdParty": false,
     "Lua.diagnostics.disable": [
-        "undefined-global"
+	    "undefined-global"
     ],
     "Lua.runtime.special": {
         "include": "require",
