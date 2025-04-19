@@ -68,7 +68,7 @@ function ow.character:RegisterVariable(key, data)
 end
 
 function ow.character:GetVariable(id, key, callback, bNoCache)
-    if ( !self.variables[id] ) then
+    if ( !istable(self.variables[id]) ) then
         return false, "Variable not found"
     end
 
