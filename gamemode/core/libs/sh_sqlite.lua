@@ -233,7 +233,8 @@ if ( CLIENT ) then return end
 ow.sqlite:CreateTable("characters", {
     id = "INTEGER PRIMARY KEY AUTOINCREMENT",
     steamid = "TEXT",
-    name = "TEXT"
+    name = "TEXT",
+    data = "TEXT",
 })
 
 ow.sqlite:CreateTable("players", {
