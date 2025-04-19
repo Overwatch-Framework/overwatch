@@ -11,6 +11,7 @@ local requiredFields = {
     "Description",
 }
 
+-- TODO: Base Items support
 function ow.item:Register(uniqueID, itemData)
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
@@ -26,6 +27,9 @@ function ow.item:Register(uniqueID, itemData)
             return false
         end
     end
+
+    ITEM.Weight = ITEM.Weight or 0
+    ITEM.Category = ITEM.Category or "Miscellaneous"
 
     ITEM.functions = ITEM.functions or {}
     ITEM.functions.drop = ITEM.functions.drop or {
