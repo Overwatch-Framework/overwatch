@@ -27,6 +27,25 @@ function ow.item:Register(uniqueID, itemData)
         end
     end
 
+    ITEM.functions = ITEM.functions or {}
+    ITEM.functions.drop = ITEM.functions.drop or {
+        Name = "Drop",
+        OnRun = function(item)
+            -- TODO: Yeah yeah, this
+        end,
+        OnCanRun = function(item)
+        end
+    }
+
+    ITEM.functions.take = ITEM.functions.take or {
+        Name = "Take",
+        OnRun = function(item)
+            -- TODO: Yeah yeah, this
+        end,
+        OnCanRun = function(item)
+        end
+    }
+
     self.stored[uniqueID] = ITEM
     hook.Run("PostItemRegistered", uniqueID, itemData)
 end
