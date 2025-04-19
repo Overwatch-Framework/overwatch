@@ -42,7 +42,18 @@ net.Receive("ow.option.syncServer", function(len, ply)
     if ( !istable(data) ) then return end
 
     for k, v in pairs(ow.option.stored) do
-        if ( data[k] != nil and type(data[k]) == ) then
+        local stored = ow.option.stored[k]
+        if ( !istable(stored) ) then
+            ow.util:PrintError("Option \"" .. k .. "\" does not exist!")
+            return
+        end
+
+        if ( data[k] != nil ) then
+            if ( ow.util:SanitizeType(data[k]) != stored.Type ) then
+                ow.util:PrintError("Option \"" .. k .. "\" is not of type \"" .. stored.Type .. "\"!")
+                return
+            end
+
             if ( ow.option.clients[ply] == nil ) then
                 ow.option.clients[ply] = {}
             end
