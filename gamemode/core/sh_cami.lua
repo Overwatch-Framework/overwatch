@@ -17,3 +17,8 @@ CAMI.RegisterPrivilege({
     Name = "Overwatch - Manage Flags",
     MinAccess = "admin"
 })
+
+CAMI.RegisterPrivilege({
+    Name = "Overwatch - Manage Config",
+    MinAccess = "superadmin",
+})

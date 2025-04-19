@@ -80,7 +80,7 @@ local tableMap = {
     end,
 
     [ow.type.steamid] = function(value)
-        return isstring(value) and ( value:match("STEAM_(%d+):(%d+):(%d+)") ) != nil
+        return isstring(value) and ( value:match("^%d+$") and #value == 17 )
     end
 }
 
@@ -409,8 +409,15 @@ if ( CLIENT ) then
     -- @return Material The material that was created.
     -- @usage local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png")
     -- surface.SetMaterial(vignette)
+
     function ow.util:GetMaterial(path, parameters)
-        local uniqueID = path .. ( parameters or "" )
+        if ( !tostring(path) ) then
+            ow.util:PrintError("Attempted to get a material with no path", path, parameters)
+            return false
+        end
+
+        parameters = tostring(parameters or "")
+        local uniqueID = Format("ow.mat.%s.%s", path, parameters)
 
         if ( stored[uniqueID] ) then
             return stored[uniqueID]

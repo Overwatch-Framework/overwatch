@@ -34,5 +34,4 @@ net.Receive("ow.config.set", function(len)
     if ( !istable(stored) ) then return end
 
     ow.config:Set(key, value)
-    print("Config " .. key .. " set to " .. tostring(value))
 end)

@@ -8,22 +8,27 @@ net.Receive("ow.option.set", function(len, ply)
     local key = net.ReadString()
     local value = net.ReadType()
 
-    local bResult = hook.Run("PreOptionChanged", ply, key, value)
-    if ( bResult == false ) then return false end
-
     local stored = ow.option.stored[key]
     if ( !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return
     end
 
-    if ( stored.OnChange ) then
-        stored:OnChange(value, ply)
+    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
+        ow.util:PrintError("Option \"" .. key .. "\" is not of type \"" .. stored.Type .. "\"!")
+        return
     end
+
+    local bResult = hook.Run("PreOptionChanged", ply, key, value)
+    if ( bResult == false ) then return false end
 
     if ( !stored.bNoNetworking ) then
         ow.option.clients[ply] = ow.option.clients[ply] or {}
         ow.option.clients[ply][key] = value
+    end
+
+    if ( stored.OnChange ) then
+        stored:OnChange(value, ply)
     end
 
     hook.Run("PostOptionChanged", ply, key, value)
@@ -37,7 +42,7 @@ net.Receive("ow.option.syncServer", function(len, ply)
     if ( !istable(data) ) then return end
 
     for k, v in pairs(ow.option.stored) do
-        if ( data[k] != nil ) then
+        if ( data[k] != nil and type(data[k]) == ) then
             if ( ow.option.clients[ply] == nil ) then
                 ow.option.clients[ply] = {}
             end

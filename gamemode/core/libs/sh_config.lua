@@ -92,11 +92,3 @@ function ow.config:Register(key, data)
 
     return true
 end
-
-if CAMI != nil then
-    CAMI.RegisterPrivilege({
-        Name = "Overwatch - Manage Config",
-        MinAccess = "superadmin",
-        Description = "Allows the user to manage the configuration of the gamemode."
-    })
-end
