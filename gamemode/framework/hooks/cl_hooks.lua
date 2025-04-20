@@ -124,7 +124,8 @@ function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
-    if ( hook.Run("ShouldDrawDebugHUD") ) then
+    local shouldDraw = hook.Run("ShouldDrawDebugHUD")
+    if ( shouldDraw != nil and shouldDraw != false ) then
         local _, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
         local width, height
         local x, y = ScrW() / 2 - 400, scrH - 100
@@ -143,7 +144,8 @@ function GM:HUDPaint()
         width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
-    if ( hook.Run("ShouldDrawCrosshair") ) then
+    shouldDraw = hook.Run("ShouldDrawCrosshair")
+    if ( shouldDraw != nil and shouldDraw != false ) then
         local x, y = ScrW() / 2, ScrH() / 2
         local size = 3
 
@@ -162,7 +164,8 @@ function GM:HUDPaint()
         paint.circles.drawCircle(x, y, size, size, color_white)
     end
 
-    if ( hook.Run("ShouldDrawAmmoBox") ) then
+    shouldDraw = hook.Run("ShouldDrawAmmoBox")
+    if ( shouldDraw != nil and shouldDraw != false ) then
         local activeWeapon = ply:GetActiveWeapon()
         if ( !IsValid(activeWeapon) ) then return end
 
