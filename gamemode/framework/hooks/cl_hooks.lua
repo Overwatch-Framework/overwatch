@@ -111,9 +111,15 @@ function GM:DrawVignette()
         vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 100)
     end
 
+    local result = hook.Run("GetVignetteColor")
+    if ( result != nil and IsColor(result) ) then
+        vignetteColor = result
+    end
+
     paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
 end
 
+local overWatchLogo = ow.util:GetMaterial("overwatch/gui/logo_tone_x512.png", "noclamp smooth")
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
@@ -123,11 +129,14 @@ function GM:HUDPaint()
         local width, height
         local x, y = ScrW() / 2 - 400, scrH - 100
 
-        width, height = draw.SimpleText(self.Name:upper(), "ow.fonts.fancy.large", x, y, hook.Run("GetFrameworkColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-        x, y = x + 16, y + 10
+        local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
+
+        surface.SetDrawColor(color_white)
+        surface.SetMaterial(overWatchLogo)
+        surface.DrawTexturedRect(x - logoWidth, y - 30, logoWidth, logoHeight)
 
         if ( SCHEMA ) then
-            width, height = draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x + width, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            width, height = draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             x, y = x + 16, y + height
         end
 

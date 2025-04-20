@@ -49,7 +49,7 @@ net.Receive("ow.option.syncServer", function(len, ply)
         end
 
         if ( data[k] != nil ) then
-            if ( ow.util:SanitizeType(data[k]) != stored.Type ) then
+            if ( ow.util:GetTypeFromValue(data[k]) != stored.Type ) then
                 ow.util:PrintError("Option \"" .. k .. "\" is not of type \"" .. stored.Type .. "\"!")
                 return
             end
