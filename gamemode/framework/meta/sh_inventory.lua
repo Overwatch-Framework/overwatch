@@ -32,15 +32,15 @@ function INV:GetWeight()
         [1] = 252,
         [2] = 323,
     ]]
-    for k, v in ipairs(self.items) do
+    for k, v in ipairs(self:GetItems()) do
         weight = weight + v:GetWeight()
     end
 
-    return self.weight or 0
+    return weight
 end
 
 function INV:GetItems()
-    return self.items
+    return self.Items
 end
 
 ow.meta.inventory = INV
