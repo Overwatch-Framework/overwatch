@@ -36,20 +36,22 @@ function ow.character:RegisterVariable(key, data)
         return self:GetVariable(key)
     end
 
-    if ( isstring(data.Alias) ) then
-        data.Alias = { data.Alias }
-    end
-
-    for k, v in ipairs(data.Alias) do
-        self.meta["Get" .. v] = function(this)
-            return self:GetVariable(key)
+    if ( data.Alias != nil ) then
+        if ( isstring(data.Alias) ) then
+            data.Alias = { data.Alias }
         end
 
-        self.meta["Set" .. v] = function(this, value)
-            self:SetVariable(key, value)
+        for k, v in ipairs(data.Alias) do
+            self.meta["Get" .. v] = function(this)
+                return self:GetVariable(key)
+            end
 
-            if ( data.OnSet ) then
-                data:OnSet(this, value)
+            self.meta["Set" .. v] = function(this, value)
+                self:SetVariable(key, value)
+
+                if ( data.OnSet ) then
+                    data:OnSet(this, value)
+                end
             end
         end
     end
