@@ -11,5 +11,5 @@ function LocalPlayer()
         return ow.localClient
     end
 
-    ow.localClient = oldLocalPlayer()
+    return oldLocalPlayer()
 end

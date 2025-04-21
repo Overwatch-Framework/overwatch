@@ -1,6 +1,7 @@
 local INV = ow.meta.inventory or {}
 INV.__index = INV
 INV.ID = 0
+INV.Items = {}
 
 -- TODO: I believe a sequential table with the value being the item's ID
 
@@ -26,7 +27,12 @@ end
 -- @treturn number The inventory's weight.
 function INV:GetWeight()
     local weight = 0
-    for k, v in pairs(self.items) do
+
+    --[[ -- This is an example of the Inventory's "Items" table
+        [1] = 252,
+        [2] = 323,
+    ]]
+    for k, v in ipairs(self.items) do
         weight = weight + v:GetWeight()
     end
 
