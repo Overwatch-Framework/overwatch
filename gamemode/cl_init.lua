@@ -7,5 +7,9 @@ include("shared.lua")
 
 local oldLocalPlayer = LocalPlayer
 function LocalPlayer()
-    return ow.localClient or oldLocalPlayer()
+    if ( IsValid(ow.localClient) ) then
+        return ow.localClient
+    end
+
+    ow.localClient = oldLocalPlayer()
 end
