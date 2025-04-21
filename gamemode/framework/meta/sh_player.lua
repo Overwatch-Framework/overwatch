@@ -73,7 +73,14 @@ function PLAYER:HasWhitelist(identifier, bSchema, bMap)
     if ( bSchema == nil ) then bSchema = true end
     if ( bMap == nil ) then bMap = false end
 
-    return true -- TODO: Implement DB support
+    local key = "whitelists"
+    if ( bSchema ) then key = key .. "_" .. SCHEMA.Folder end
+    if ( bMap ) then key = key .. "_" .. game.GetMap() end
+
+    local whitelists = self:GetData(key, {}) or {}
+    local whitelist = whitelists[identifier]
+
+    return whitelist != nil and whitelist != false
 end
 
 function PLAYER:GetData(key, default)

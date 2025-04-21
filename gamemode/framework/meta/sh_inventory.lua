@@ -3,6 +3,10 @@ INV.__index = INV
 INV.ID = 0
 INV.Items = {}
 
+function INV:__tostring()
+    return "inventory[" .. self:GetID().. "]"
+end
+
 -- TODO: I believe a sequential table with the value being the item's ID
 
 --- Returns the inventory's ID.
