@@ -19,7 +19,7 @@ function ow.config:Set(key, value, ply)
 
     if ( ow.util:SanitizeType(value) != stored.Type ) then
         ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
-        return
+        return false
     end
 
     local oldValue = stored.Value or stored.Default
