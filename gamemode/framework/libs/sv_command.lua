@@ -34,14 +34,13 @@ function ow.command:Run(ply, command, arguments)
             return false
         end
     else
-        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.Name) ) then
-            ow.util:PrintError("Attempted to run a command without access!", ply)
+        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.uniqueID) ) then
             return false
         end
     end
 
     info:Callback(ply, arguments)
-    hook.Run("OnCommandRun", ply, command, arguments)
+    hook.Run("OnCommandRan", ply, command, arguments)
     return true, arguments
 end
 
@@ -72,7 +71,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
     ow.util:Print("Commands:")
 
     for k, v in pairs(ow.command.stored) do
-        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. v.Name) ) then
+        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. k) ) then
             continue
         end
 

@@ -28,6 +28,8 @@ function ow.command:Register(commandName, info)
         return
     end
 
+    commandName = string.gsub(commandName, "%s+", " ")
+
     if ( !isfunction(info.Callback) ) then
         ow.util:PrintError("Attempted to register a command with no callback!")
         return
@@ -37,9 +39,8 @@ function ow.command:Register(commandName, info)
         info.Prefixes = { commandName }
     end
 
-    local uniqueID = string.lower(string.gsub(commandName, "%s", ""))
-
-    self.stored[uniqueID] = info
+    info.uniqueID = commandName
+    self.stored[commandName] = info
 
     if ( CAMI != nil ) then
         CAMI.RegisterPrivilege({
@@ -74,8 +75,8 @@ function ow.command:Get(identifier)
         return self.stored[identifier]
     end
 
-    for k, v in pairs(self.stored) do
-        for k2, v2 in ipairs(v.Prefixes) do
+    for _, v in pairs(self.stored) do
+        for _, v2 in ipairs(v.Prefixes) do
             if ( ow.util:FindString(v2, identifier) ) then
                 return v
             end
@@ -83,5 +84,5 @@ function ow.command:Get(identifier)
     end
 
     ow.util:PrintError("Attempted to get a command with invalid identifier!")
-    return nil
+    return false
 end

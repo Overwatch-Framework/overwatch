@@ -56,12 +56,12 @@ function ow.class:Get(identifier)
         return false
     end
 
-    if ( self.stored[identifier] ) then
-        return self.stored[identifier]
+    if ( tonumber(identifier) ) then
+        return self.instances[identifier]
     end
 
-    if ( isnumber(identifier) ) then
-        return self.instances[identifier]
+    if ( self.stored[identifier] ) then
+        return self.stored[identifier]
     end
 
     for k, v in ipairs(self.instances) do
