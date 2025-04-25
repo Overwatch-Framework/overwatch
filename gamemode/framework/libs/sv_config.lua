@@ -122,7 +122,7 @@ end
 -- @realm server
 -- @param ply The player to synchronize the configuration with.
 -- @return Whether or not the configuration was synchronized with the player.
--- @usage ow.config:Synchronize(player.GetHumans()[1]) -- Synchronizes the configuration with the first player.
+-- @usage ow.config:Synchronize(Entity(1)) -- Synchronizes the configuration with the first player.
 function ow.config:Synchronize(ply)
     if ( !IsValid(ply) ) then return false end
 
