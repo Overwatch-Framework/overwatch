@@ -126,15 +126,14 @@ end
 function ow.config:Synchronize(ply)
     if ( !IsValid(ply) ) then return false end
 
-    hook.Run("PreConfigSync", ply)
-
     local compressed = util.Compress(util.TableToJSON(self.stored))
+    hook.Run("PreConfigSync", ply, compressed)
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
     net.Send(ply)
 
-    hook.Run("PostConfigSync", ply, values)
+    hook.Run("PostConfigSync", ply, self.stored)
 
     return true
 end
