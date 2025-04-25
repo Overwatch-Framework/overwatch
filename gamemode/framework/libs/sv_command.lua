@@ -75,11 +75,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
             continue
         end
 
-        if ( v.Description ) then
-            ow.util:Print("/" .. v.Name .. " - " .. v.Description)
-        else
-            ow.util:Print("/" .. v.Name)
-        end
+        ow.util:Print("/" .. v.Name .. (v.Description and " - " .. v.Description or ""))
     end
 
     ply.owNextCommand = CurTime() + 1
