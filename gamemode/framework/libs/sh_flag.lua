@@ -13,8 +13,8 @@ function ow.flag:Register(flagChar, giveFunction, takeFunction)
     end
 
     self.stored[flagChar] = {
-        Give = giveFunction or nil,
-        Take = takeFunction or nil
+        OnGive = giveFunction or nil,
+        OnTake = takeFunction or nil
     }
 
     hook.Run("OnFlagRegistered", flagChar, giveFunction, takeFunction)
