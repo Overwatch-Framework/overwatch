@@ -102,16 +102,6 @@ if ( CLIENT ) then
             net.WriteData(compressed, #compressed)
         net.SendToServer()
     end
-
-    net.Receive("ow.option.set", function(len)
-        local key = net.ReadString()
-        local value = net.ReadType()
-
-        local stored = ow.option.stored[key]
-        if ( !istable(stored) ) then return end
-
-        ow.option:Set(key, value)
-    end)
 end
 
 local requiredFields = {

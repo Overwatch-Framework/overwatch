@@ -35,3 +35,24 @@ net.Receive("ow.config.set", function(len)
 
     ow.config:Set(key, value)
 end)
+
+net.Receive("ow.chat.send", function(len)
+    local speaker = net.ReadPlayer()
+    local uniqueID = net.ReadString()
+    local text = net.ReadString()
+
+    local chatData = ow.chat:Get(uniqueID)
+    if ( chatData ) then
+        chatData.OnChatAdd(speaker, text)
+    end
+end)
+
+net.Receive("ow.option.set", function(len)
+    local key = net.ReadString()
+    local value = net.ReadType()
+
+    local stored = ow.option.stored[key]
+    if ( !istable(stored) ) then return end
+
+    ow.option:Set(key, value)
+end)
