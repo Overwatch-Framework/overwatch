@@ -4,8 +4,8 @@ ow = ow or {util = {}, meta = {}, config = {}}
 
 AddCSLuaFile("cl_init.lua")
 
-AddCSLuaFile("framework/sh_util.lua")
-include("framework/sh_util.lua")
+AddCSLuaFile("core/sh_util.lua")
+include("core/sh_util.lua")
 
 AddCSLuaFile("shared.lua")
 include("shared.lua")
