@@ -13,7 +13,7 @@ end
 
 function ENT:SetItem(uniqueID)
     local itemData = ow.item:Get(uniqueID)
-    if ( !itemData ) then return false end
+    if ( !istable(itemData) ) then return false end
 
     self:SetModel(Model(itemData.Model))
 
