@@ -39,12 +39,11 @@ function SKIN:PaintButton(panel, width, height)
         color = lightGrayColorLessTransparent
     end
 
-    if ( !panel.owLerpColor ) then
+    if ( !IsColor(panel.owLerpColor) ) then
         panel.owLerpColor = color
     end
 
     panel.owLerpColor = panel.owLerpColor:Lerp(color, FrameTime() * 10)
-
     draw.RoundedBox(0, 0, 0, width, height, panel.owLerpColor)
 end
 
@@ -64,15 +63,13 @@ function SKIN:PaintComboBox(panel, width, height)
         color = lightGrayColorLessTransparent
     end
 
-    if ( !panel.owLerpColor ) then
+    if ( !IsColor(panel.owLerpColor) ) then
         panel.owLerpColor = color
     end
 
     panel.owLerpColor = panel.owLerpColor:Lerp(color, FrameTime() * 10)
-
     draw.RoundedBox(0, 0, 0, width, height, panel.owLerpColor)
 end
-
 
 function SKIN:PaintMenu(panel, width, height)
     draw.RoundedBox(0, 0, 0, width, height, grayColor)
@@ -88,12 +85,11 @@ function SKIN:PaintMenuOption(panel, width, height)
         color = lightGrayColorLessTransparent
     end
 
-    if ( !panel.owLerpColor ) then
+    if ( !IsColor(panel.owLerpColor) ) then
         panel.owLerpColor = color
     end
 
     panel.owLerpColor = panel.owLerpColor:Lerp(color, FrameTime() * 10)
-
     draw.RoundedBox(0, 0, 0, width, height, panel.owLerpColor)
 end
 
