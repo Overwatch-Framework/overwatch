@@ -51,7 +51,7 @@ function ow.class:Register(classData)
 end
 
 function ow.class:Get(identifier)
-    if ( !identifier ) then
+    if ( identifier == nil ) then
         ow.util:PrintError("Attempted to get an invalid faction!")
         return false
     end
