@@ -42,8 +42,8 @@ net.Receive("ow.chat.send", function(len)
     local text = net.ReadString()
 
     local chatData = ow.chat:Get(uniqueID)
-    if ( chatData ) then
-        chatData.OnChatAdd(speaker, text)
+    if ( istable(chatData) ) then
+        chatData:OnChatAdd(speaker, text)
     end
 end)
 
