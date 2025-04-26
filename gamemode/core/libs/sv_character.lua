@@ -31,7 +31,7 @@ function ow.character:Create(ply, query)
         return false
     end
 
-    if ( !query or !istable(query) ) then
+    if ( !istable(query) ) then
         ErrorNoHalt("Attempted to create character with invalid query (" .. tostring(query) .. ")")
         return false
     end
