@@ -51,6 +51,17 @@ if ( CLIENT ) then
     local gmod_language = GetConVar("gmod_language")
     function ow.localization:GetPhrase(key, languageName)
         languageName = languageName or ( gmod_language and gmod_language:GetString() ) or "en"
-        return self:Get(languageName)[key]
+
+        local data = self:Get(languageName)
+        if ( !istable(data) ) then
+            return key
+        end
+
+        local value = data[key]
+        if ( !isstring(value) ) then
+            return key
+        end
+
+        return value
     end
 end
