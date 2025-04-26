@@ -82,7 +82,7 @@ function PANEL:Paint(width, height)
             if ( percent >= 1 ) then
                 self.rippleEffect = nil
             else
-                local alpha = RIPPLE_START_ALPHA * (1 - percent)
+                local alpha = RIPPLE_START_ALPHA * (1 - percent) * self.inertia
                 local radius = math.max(width, height) * percent * math.sqrt(2)
 
                 paint.roundedBoxes.roundedBox(0, rippleX - radius, rippleY - radius, radius * 2, radius * 2, ColorAlpha(self.textColor, alpha))
