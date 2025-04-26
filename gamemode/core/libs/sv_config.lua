@@ -33,8 +33,7 @@ function ow.config:Set(key, value, ply)
     if ( isfunction(stored.OnChange) ) then
         stored:OnChange(value, oldValue, ply)
     end
-
-    hook.Run("PostConfigChanged", key, value, oldValue, ply)
+    
     return true
 end
 

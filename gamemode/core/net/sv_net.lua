@@ -20,6 +20,8 @@ net.Receive("ow.config.set", function(len, ply)
     if ( tobool(bResult) == false ) then return end
 
     ow.config:Set(key, value, ply)
+
+    hook.Run("PostConfigChanged", key, value, oldValue, ply)
 end)
 
 util.AddNetworkString("ow.character.create")
