@@ -150,6 +150,10 @@ function PANEL:Populate()
         self.settingsPanel:Populate()
     end
 
+    local testButton = buttons:Add("ow.mainmenu.button")
+    testButton:Dock(TOP)
+    testButton:SetText(ow.localization:GetPhrase("mainmenu.test"):upper())
+
     local disconnectButton = buttons:Add("ow.mainmenu.button")
     disconnectButton:Dock(TOP)
     disconnectButton:SetText(ow.localization:GetPhrase("mainmenu.leave"):upper())
