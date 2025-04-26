@@ -260,6 +260,20 @@ function GM:LoadFonts()
         antialias = true
     })
 
+    surface.CreateFont("ow.fonts.button.small", {
+        font = "GorDIN SemiBold",
+        size = ScreenScale(12),
+        weight = 600,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.button.small.hover", {
+        font = "GorDIN Bold",
+        size = ScreenScale(12),
+        weight = 700,
+        antialias = true
+    })
+
     surface.CreateFont("ow.fonts.fancy", {
         font = "K12HL2",
         size = ScreenScale(8)

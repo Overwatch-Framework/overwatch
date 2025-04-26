@@ -237,6 +237,7 @@ function PANEL:PopulateCreateCharacterForm()
             entry:SetFont("ow.fonts.button")
             entry:SetTextColor(color_white)
             entry:SetPlaceholderText(v.Default or "")
+            entry:SetTall(ScreenScale(16))
             entry:SetZPos(zPos)
         elseif ( v.Type == ow.type.text ) then
             zPos = zPos + 1 + v.ZPos
@@ -255,11 +256,11 @@ function PANEL:PopulateCreateCharacterForm()
             local entry = self.characterCreateForm:Add("ow.text.entry")
             entry:Dock(TOP)
             entry:DockMargin(0, 0, 0, smallPadding)
-            entry:SetFont("ow.fonts.button")
+            entry:SetFont("ow.fonts.button.small")
             entry:SetTextColor(color_white)
             entry:SetPlaceholderText(v.Default or "")
             entry:SetMultiline(true)
-            entry:SetTall(ScreenScale(32))
+            entry:SetTall(ScreenScale(12) * 4)
             entry:SetZPos(zPos)
         end
     end
