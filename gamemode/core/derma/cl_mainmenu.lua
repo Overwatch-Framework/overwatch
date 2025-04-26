@@ -115,15 +115,14 @@ function PANEL:Populate()
         createButton:SetText(ow.localization:GetPhrase("mainmenu.charactercreate"):upper())
 
         createButton.DoClick = function(this)
-            local hasMultipleOptions = false
+            local availableFactions = 0
             for k, v in ipairs(ow.faction:GetAll()) do
-                if ( ow.faction:CanSwitchTo(ply, v.Index) ) then
-                    hasMultipleOptions = true
-                    break
+                if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
+                    availableFactions = availableFactions + 1
                 end
             end
 
-            if ( hasMultipleOptions ) then
+            if ( availableFactions > 1 ) then
                 self.createPanel:PopulateFactionSelect()
             else
                 self.createPanel:PopulateCreateCharacter()

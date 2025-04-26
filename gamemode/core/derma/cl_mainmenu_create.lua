@@ -72,7 +72,7 @@ function PANEL:PopulateFactionSelect()
         local factionButton = factionList:Add("DButton")
         factionButton:Dock(LEFT)
         factionButton:SetText(v.Name or "Unknown Faction")
-        factionButton:SetWide(self:GetWide() / 2 - padding * 4) -- In HL2 the create background images are 2048x1024
+        factionButton:SetWide(self:GetWide() / 2 - padding * 4) -- In HL2 the create background images are 2048x1024 -- thank you eon
 
         factionButton.DoClick = function()
             self.currentCreatePage = 0
@@ -125,15 +125,14 @@ function PANEL:PopulateCreateCharacter()
 
     backButton.DoClick = function()
         if ( self.currentCreatePage == 0 ) then
-            local hasMultipleOptions = false
+            local availableFactions = 0
             for k, v in ipairs(ow.faction:GetAll()) do
                 if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
-                    hasMultipleOptions = true
-                    break
+                    availableFactions = availableFactions + 1
                 end
             end
 
-            if ( hasMultipleOptions ) then
+            if ( availableFactions > 1 ) then
                 self:PopulateFactionSelect()
             else
                 self.currentCreatePage = 0
