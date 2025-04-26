@@ -98,6 +98,8 @@ function ow.character:Delete(id)
 end
 
 net.Receive("ow.character.create", function(len, ply)
+    -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
+
     local payload = net.ReadTable()
 
     local character = ow.character:Create(ply, payload)
