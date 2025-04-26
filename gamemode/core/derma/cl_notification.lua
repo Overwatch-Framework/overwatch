@@ -82,6 +82,10 @@ function PANEL:OnRemove()
     self:ClearNotifications()
 end
 
+function PANEL:Think()
+    self:MoveToFront()
+end
+
 vgui.Register("ow.notification.core", PANEL, "DPanel")
 
 PANEL = {}

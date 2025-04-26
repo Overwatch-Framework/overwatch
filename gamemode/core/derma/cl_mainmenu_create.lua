@@ -136,7 +136,10 @@ function PANEL:PopulateCreateCharacter()
             if ( hasMultipleOptions ) then
                 self:PopulateFactionSelect()
             else
-                self:Populate()
+                self.currentCreatePage = 0
+                self.currentCreatePayload = {}
+                parent:Populate()
+                self:Clear()
             end
         else
             self.currentCreatePage = self.currentCreatePage - 1
@@ -149,10 +152,43 @@ function PANEL:PopulateCreateCharacter()
     nextButton:SetText("NEXT")
 
     nextButton.DoClick = function()
-        -- TODO: Validate the form data of the current page
+        local isNextEmpty = true
+        for k, v in pairs(ow.character.variables) do
+            if ( v.Editable != true ) then continue end
 
-        self.currentCreatePage = self.currentCreatePage + 1
-        self:PopulateCreateCharacterForm()
+            local page = v.Page or 0
+            if ( page != self.currentCreatePage + 1 ) then continue end
+
+            if ( v.OnValidate ) then
+                isNextEmpty = v:OnValidate(self.characterCreateForm, self.currentCreatePayload)
+                if ( isNextEmpty ) then break end
+            end
+
+            if ( v.Type == ow.type.string ) then
+                local entry = self.characterCreateForm:GetChild(k)
+                if ( entry and entry:GetValue() != "" ) then
+                    self.currentCreatePayload[k] = entry:GetValue()
+                    isNextEmpty = false
+                end
+            elseif ( v.Type == ow.type.text ) then
+                local entry = self.characterCreateForm:GetChild(k)
+                if ( entry and entry:GetValue() != "" ) then
+                    self.currentCreatePayload[k] = entry:GetValue()
+                    isNextEmpty = false
+                end
+            end
+        end
+
+        if ( isNextEmpty ) then
+            -- TODO: Start networking to create the character
+
+            net.Start("ow.character.create")
+                net.WriteTable(self.currentCreatePayload)
+            net.SendToServer()
+        else
+            self.currentCreatePage = self.currentCreatePage + 1
+            self:PopulateCreateCharacterForm()
+        end
     end
 
     self:PopulateCreateCharacterForm()

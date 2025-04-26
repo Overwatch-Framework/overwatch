@@ -27,7 +27,7 @@ function ow.character:RegisterVariable(key, data)
 
         local field = data.Field
         if ( field ) then
-            ow.sqlite:RegisterVar("characters", key, data.Default or nil)
+            ow.sqlite:RegisterVar("ow_characters", key, data.Default or nil)
             self.fields[key] = field
         end
     end
@@ -74,7 +74,7 @@ function ow.character:GetVariable(id, key, callback, bNoCache)
         local field = data.Field
         if ( field ) then
             local query = string.format("%s = %s", field, sql.SQLStr(key))
-            local result = ow.sqlite:Select("characters", nil, query)
+            local result = ow.sqlite:Select("ow_characters", nil, query)
 
             if ( result and result[1] ) then
                 self.cache[key] = result[1]
