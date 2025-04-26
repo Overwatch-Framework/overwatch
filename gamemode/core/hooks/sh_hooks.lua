@@ -27,7 +27,7 @@ function GM:GetPlayerHandsMaxMass(ply)
 end
 
 function GM:GetFrameworkColor()
-    return ow.config:Get("frameworkColor", Color(0, 100, 150))
+    return ow.config:Get("frameworkColor", Color(95, 255, 220))
 end
 
 function GM:GetSchemaColor()
@@ -80,7 +80,7 @@ end
 
 function GM:PlayerCanHearChat(ply, listener, uniqueID, text)
     local canHear = ow.chat:Get(uniqueID).CanHear
-    if ( isboolean(canHear) ) then
+    if ( isbool(canHear) ) then
         return canHear
     elseif ( isfunction(canHear) ) then
         return canHear(ply, listener, text)
@@ -92,5 +92,5 @@ end
 function GM:PreConfigChanged(key, value, oldValue, ply)
 end
 
-function GM:PostConfigChanged(key, value, oldValue, ply) -- ply can be nil :D
+function GM:PostConfigChanged(key, value, oldValue, ply)
 end

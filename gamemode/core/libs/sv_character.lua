@@ -1,10 +1,6 @@
 --- Character library.
 -- @module ow.character
 
-util.AddNetworkString("ow.character.create")
-util.AddNetworkString("ow.character.delete")
-util.AddNetworkString("ow.character.load")
-
 function ow.character:SetVariable(id, key, value)
     if ( !istable(self.variables[id]) ) then
         return false, "Variable not found"
@@ -35,7 +31,7 @@ function ow.character:Create(ply, query)
         return false
     end
 
-    if ( !query or !istable(query) ) then
+    if ( !istable(query) ) then
         ErrorNoHalt("Attempted to create character with invalid query (" .. tostring(query) .. ")")
         return false
     end
@@ -96,17 +92,3 @@ end
 function ow.character:Delete(id)
     print("Deleting character with ID: " .. id)
 end
-
-net.Receive("ow.character.create", function(len, ply)
-    -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
-
-    local payload = net.ReadTable()
-
-    local character = ow.character:Create(ply, payload)
-    if ( !character ) then
-        ply:ChatPrint("Failed to create character.")
-        return
-    end
-
-    ply:ChatPrint("Character created successfully!")
-end)

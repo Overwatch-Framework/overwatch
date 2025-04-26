@@ -3,66 +3,6 @@
 
 ow.option.clients = {}
 
-util.AddNetworkString("ow.option.set")
-net.Receive("ow.option.set", function(len, ply)
-    local key = net.ReadString()
-    local value = net.ReadType()
-
-    local stored = ow.option.stored[key]
-    if ( !istable(stored) ) then
-        ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
-        return
-    end
-
-    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
-        ow.util:PrintError("Option \"" .. key .. "\" is not of type \"" .. stored.Type .. "\"!")
-        return
-    end
-
-    local bResult = hook.Run("PreOptionChanged", ply, key, value)
-    if ( bResult == false ) then return false end
-
-    if ( !stored.bNoNetworking ) then
-        ow.option.clients[ply] = ow.option.clients[ply] or {}
-        ow.option.clients[ply][key] = value
-    end
-
-    if ( stored.OnChange ) then
-        stored:OnChange(value, ply)
-    end
-
-    hook.Run("PostOptionChanged", ply, key, value)
-end)
-
-util.AddNetworkString("ow.option.syncServer")
-net.Receive("ow.option.syncServer", function(len, ply)
-    if ( !IsValid(ply) ) then return end
-
-    local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
-    if ( !istable(data) ) then return end
-
-    for k, v in pairs(ow.option.stored) do
-        local stored = ow.option.stored[k]
-        if ( !istable(stored) ) then
-            ow.util:PrintError("Option \"" .. k .. "\" does not exist!")
-            return
-        end
-
-        if ( data[k] != nil ) then
-            if ( ow.util:GetTypeFromValue(data[k]) != stored.Type ) then
-                ow.util:PrintError("Option \"" .. k .. "\" is not of type \"" .. stored.Type .. "\"!")
-                return
-            end
-
-            if ( ow.option.clients[ply] == nil ) then
-                ow.option.clients[ply] = {}
-            end
-
-            ow.option.clients[ply][k] = data[k]
-        end
-    end
-end)
-
 function ow.option:Set(ply, key, value)
     local stored = ow.option.stored[key]
     if ( stored == nil or !istable(stored) ) then
