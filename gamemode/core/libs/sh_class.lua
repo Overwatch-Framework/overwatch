@@ -77,8 +77,8 @@ function ow.class:CanSwitchTo(ply, classID)
     local class = self:Get(classID)
     if ( !class ) then return false end
 
-    local hookRun = hook.Run("OWClassCanBecome", ply, classID)
-    if ( hookRun != nil and hookRun == false ) then return false end
+    local hookRun = hook.Run("PreClassBecome", ply, classID)
+    if ( hookRun == false ) then return false end
 
     if ( class.CanSwitchTo and !class:CanSwitchTo(ply) ) then
         return false
