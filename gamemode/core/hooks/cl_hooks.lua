@@ -119,7 +119,7 @@ function GM:DrawVignette()
     paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
 end
 
-local overWatchLogo = ow.util:GetMaterial("overwatch/gui/logo_tone_x512.png", "noclamp smooth")
+local overWatchLogo = ow.util:GetMaterial("overwatch/gui/logo_white_x512.png", "noclamp smooth")
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
@@ -132,7 +132,7 @@ function GM:HUDPaint()
 
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
 
-        surface.SetDrawColor(color_white)
+        surface.SetDrawColor(hook.Run("GetFrameworkColor") or color_white)
         surface.SetMaterial(overWatchLogo)
         surface.DrawTexturedRect(x - logoWidth, y - 30, logoWidth, logoHeight)
 
