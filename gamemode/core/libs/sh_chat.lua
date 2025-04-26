@@ -45,16 +45,3 @@ end
 function ow.chat:Get(uniqueID)
     return self.classes[uniqueID]
 end
-
-if ( CLIENT ) then
-    net.Receive("ow.chat.send", function(len)
-        local speaker = net.ReadPlayer()
-        local uniqueID = net.ReadString()
-        local text = net.ReadString()
-
-        local chatData = ow.chat:Get(uniqueID)
-        if ( chatData ) then
-            chatData.OnChatAdd(speaker, text)
-        end
-    end)
-end
