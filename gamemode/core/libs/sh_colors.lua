@@ -1,13 +1,13 @@
 --- Colors library
--- @module ow.color
+-- @module ow.colour
 
-ow.color = {}
-ow.color.stored = {}
+ow.colour = {}
+ow.colour.stored = {}
 
 --- Registers a new color.
 -- @realm shared
 -- @param info A table containing information about the color.
-function ow.color:Register(name, color)
+function ow.colour:Register(name, color)
     if ( name == nil or !isstring(name) or #name < 1 ) then
         ow.util:PrintError("Attempted to register a color without a name!")
         return false
@@ -29,7 +29,7 @@ end
 -- @realm shared
 -- @param name The name of the color.
 -- @return The color.
-function ow.color:Get(name)
+function ow.colour:Get(name)
     if ( self.stored[name] ) then
         return table.Copy(self.stored[name])
     end
@@ -43,6 +43,6 @@ end
 -- @param col Color The color to dim.
 -- @param frac number The fraction to dim the color by.
 -- @return Color The dimmed color.
-function ow.color:Dim(col, frac)
+function ow.colour:Dim(col, frac)
     return Color(col.r * frac, col.g * frac, col.b * frac, col.a)
 end

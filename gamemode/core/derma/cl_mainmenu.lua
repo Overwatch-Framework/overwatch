@@ -157,7 +157,7 @@ function PANEL:Populate()
     local disconnectButton = buttons:Add("ow.mainmenu.button")
     disconnectButton:Dock(TOP)
     disconnectButton:SetText(ow.localization:GetPhrase("mainmenu.leave"):upper())
-    disconnectButton:SetTextColorProperty(ow.color:Get("maroon"))
+    disconnectButton:SetTextColorProperty(ow.colour:Get("maroon"))
 
     disconnectButton.DoClick = function()
         Derma_Query("Are you sure you want to disconnect?", "Disconnect", "Yes", function()
