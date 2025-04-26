@@ -1,8 +1,32 @@
 --- Character library.
 -- @module ow.character
 
+util.AddNetworkString("ow.character.create")
+util.AddNetworkString("ow.character.delete")
+util.AddNetworkString("ow.character.load")
+
 function ow.character:SetVariable(id, key, value)
+    if ( !istable(self.variables[id]) ) then
+        return false, "Variable not found"
+    end
+
+    local data = self.variables[id]
+
+    if ( SERVER ) then
+        local field = data.Field
+        if ( field ) then
+            local query = string.format("%s = %s", field, sql.SQLStr(key))
+            ow.sqlite:Update("ow_characters", { [field] = value }, query)
+        end
+
+        self.cache[key] = value
+    else
+        self.cache[key] = value
+    end
+
     hook.Run("CharacterVariableSet", id, key, value)
+
+    return true, nil
 end
 
 function ow.character:Create(ply, query)
@@ -28,7 +52,7 @@ function ow.character:Create(ply, query)
         end
     end
 
-    local id = ow.sqlite:Count("characters") + 1
+    local id = ow.sqlite:Count("ow_characters") + 1
     if ( !id ) then
         print("Failed to get new character ID")
         return false
@@ -38,7 +62,7 @@ function ow.character:Create(ply, query)
     insertQuery.steamid = ply:SteamID64()
     insertQuery.schema = SCHEMA.Folder
 
-    ow.sqlite:Insert("characters", insertQuery)
+    ow.sqlite:Insert("ow_characters", insertQuery)
 
     print("Created character with ID " .. id .. " for player " .. ply:Nick())
 
@@ -72,3 +96,15 @@ end
 function ow.character:Delete(id)
     print("Deleting character with ID: " .. id)
 end
+
+net.Receive("ow.character.create", function(len, ply)
+    local payload = net.ReadTable()
+
+    local character = ow.character:Create(ply, payload)
+    if ( !character ) then
+        ply:ChatPrint("Failed to create character.")
+        return
+    end
+
+    ply:ChatPrint("Character created successfully!")
+end)
