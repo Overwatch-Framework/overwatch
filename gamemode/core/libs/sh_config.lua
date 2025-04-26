@@ -87,6 +87,8 @@ function ow.config:Register(key, data)
         end
     end
 
+    CONFIG.Schema = SCHEMA != nil and SCHEMA.Folder or false
+
     self.stored[key] = CONFIG
     hook.Run("PostConfigRegistered", key, data, CONFIG)
 
