@@ -1,16 +1,15 @@
 function GM:PlayerInitialSpawn(ply)
-    ow.sqlite:LoadRow("players", "steamid", ply:SteamID64(), function(data)
+    ow.sqlite:LoadRow("ow_players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
+
+        ply.owDatabase = data or {}
 
         ply:SetDBVar("name", ply:SteamName())
         ply:SetDBVar("ip", ply:IPAddress())
         ply:SetDBVar("play_time", 0)
         ply:SetDBVar("last_played", os.time())
-        ply:SetDBVar("data", data.data or "[]")
-
+        ply:SetDBVar("data", IsValid(data) and data["data"] or "[]")
         ply:SaveDB()
-
-        ply.owDatabase = data
 
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
@@ -38,10 +37,9 @@ end
 
 function GM:PlayerDisconnected(ply)
     if ( ply.owDatabase and !ply:IsBot() ) then
-        ply.owDatabase.play_time = ply.owDatabase.play_time + math.floor(CurTime() - ply.owDatabase.last_played)
-        ply.owDatabase.last_played = os.time()
-
-        ow.sqlite:SaveRow("users", ply.owDatabase, "steamid")
+        ply:SetDBVar("play_time", ply:GetDBVar("play_time") + math.floor(CurTime() - ply:GetDBVar("last_played")))
+        ply:SetDBVar("last_played", os.time())
+        ply:SaveDB()
     end
 end
 

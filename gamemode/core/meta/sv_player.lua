@@ -11,17 +11,49 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:SetDBVar(key, value)
-    if ( self.owDatabase ) then
-        self.owDatabase[key] = value
+    if ( !self.owDatabase ) then
+        self.owDatabase = {}
     end
+
+    self.owDatabase[key] = value
 end
 
-function PLAYER:GetDBVar(key)
-    return self.owDatabase and self.owDatabase[key]
+function PLAYER:GetDBVar(key, default)
+    if ( self.owDatabase ) then
+        return self.owDatabase[key] or default
+    end
+
+    return default
 end
 
 function PLAYER:SaveDB()
     if ( self.owDatabase ) then
-        ow.sqlite:SaveRow("users", self.owDatabase, "steamid")
+        ow.sqlite:SaveRow("ow_players", self.owDatabase, "steamid")
     end
+end
+
+function PLAYER:SetData(key, value)
+    local data = self.owDatabase["data"] or {}
+
+    if ( type(data) == "string" ) then
+        data = util.JSONToTable(data) or {}
+    else
+        data = data or {}
+    end
+
+    data[key] = value
+
+    self.owDatabase["data"] = util.TableToJSON(data)
+end
+
+function PLAYER:GetData(key, default)
+    local data = self.owDatabase["data"] or {}
+
+    if ( type(data) == "string" ) then
+        data = util.JSONToTable(data) or {}
+    else
+        data = data or {}
+    end
+
+    return data[key] or default
 end
