@@ -80,7 +80,7 @@ function ow.class:CanSwitchTo(ply, classID)
     local hookRun = hook.Run("PreClassBecome", ply, classID)
     if ( hookRun == false ) then return false end
 
-    if ( class.CanSwitchTo and !class:CanSwitchTo(ply) ) then
+    if ( isfunction(class.CanSwitchTo) and !class:CanSwitchTo(ply) ) then
         return false
     end
 
