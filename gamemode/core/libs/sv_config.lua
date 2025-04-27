@@ -44,7 +44,6 @@ end
 -- @internal
 function ow.config:Load()
     local config = ow.data:Get("config", {}, true, false)
-    local schemaConfig = ow.data:Get("config", {}, false, false) -- schema config
 
     hook.Run("PreConfigLoad", config)
 
@@ -66,9 +65,7 @@ function ow.config:Load()
     return true
 end
 
-function ow.config:GetSaveData(bSchema)
-    if ( bSchema == nil ) then bSchema = false end
-
+function ow.config:GetSaveData()
     local saveData = {}
     for k, v in pairs(self.stored) do
         if ( v.Value and v.Value != v.Default ) then
