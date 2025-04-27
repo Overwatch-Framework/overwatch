@@ -1,40 +1,3 @@
-DEFINE_BASECLASS("DButton")
-
-local PANEL = {}
-
-function PANEL:Init()
-    self:SetFont("ow.fonts.button")
-    self:SetTextColorProperty(color_white)
-    self:SetContentAlignment(4)
-    self:SetTall(ScreenScale(18))
-    self:SetTextInset(ScreenScale(2), 0)
-
-    self.inertia = 0
-    self.inertiaTarget = 0
-
-    self.baseHeight = self:GetTall()
-    self.baseTextColor = self:GetTextColor()
-    self.height = 0
-    self.heightTarget = self.baseHeight
-    self.textColor = color_white
-    self.textColorTarget = color_white
-    self.textInset = {0, 0}
-    self.textInsetTarget = {0, 0}
-end
-
-function PANEL:SetText(text, bNoTranslate)
-    if ( bNoTranslate ) then
-        BaseClass.SetText(self, text)
-    else
-        BaseClass.SetText(self, ow.localization:GetPhrase(text))
-    end
-end
-
-function PANEL:SetTextColorProperty(color)
-    self.baseTextColor = color
-    self:SetTextColor(color)
-end
-
 local function mask(drawMask, draw)
     render.ClearStencil()
     render.SetStencilEnable(true)
@@ -65,6 +28,52 @@ end
 local RIPPLE_DIE_TIME = 0.4
 local RIPPLE_START_ALPHA = 50
 
+DEFINE_BASECLASS("DButton")
+
+local PANEL = {}
+
+AccessorFunc(PANEL, "inertia", "Inertia", FORCE_NUMBER)
+
+function PANEL:Init()
+    self:SetFont("ow.fonts.button")
+    self:SetTextColorProperty(color_white)
+    self:SetContentAlignment(4)
+    self:SetTall(ScreenScale(18))
+    self:SetTextInset(ScreenScale(2), 0)
+
+    self.inertia = 0
+    self.inertiaTarget = 0
+
+    self.baseHeight = self:GetTall()
+    self.baseTextColor = self:GetTextColor()
+
+    self.height = 0
+    self.heightTarget = self.baseHeight
+
+    self.textColor = color_white
+    self.textColorTarget = color_white
+
+    self.textInset = {0, 0}
+    self.textInsetTarget = {0, 0}
+end
+
+function PANEL:SetText(text, bNoTranslate)
+    if ( bNoTranslate ) then
+        BaseClass.SetText(self, text)
+    else
+        BaseClass.SetText(self, ow.localization:GetPhrase(text))
+    end
+end
+
+function PANEL:SetTextColorProperty(color)
+    self.baseTextColor = color
+    self:SetTextColor(color)
+end
+
+function PANEL:SizeToContents()
+    BaseClass.SizeToContents(self)
+end
+
 function PANEL:Paint(width, height)
     local ft = FrameTime()
     local time = ft * 10
@@ -93,7 +102,7 @@ function PANEL:Paint(width, height)
                 local alpha = RIPPLE_START_ALPHA * (1 - percent) * self.inertia
                 local radius = math.max(width, height) * percent * math.sqrt(2)
 
-                paint.roundedBoxes.roundedBox(0, rippleX - radius, rippleY - radius, radius * 2, radius * 2, ColorAlpha(self.textColor, alpha))
+                paint.roundedBoxes.roundedBox(radius, rippleX - radius, rippleY - radius, radius * 2, radius * 2, ColorAlpha(self.textColor, alpha))
             end
         end)
     paint.endPanel()
@@ -117,7 +126,7 @@ function PANEL:Think()
 end
 
 function PANEL:OnCursorEntered()
-    self:SetFont("ow.fonts.button.hover")
+    self:SetFont("ow.fonts.button")
 
     self.heightTarget = self.baseHeight * 1.25
     self.textColorTarget = hook.Run("GetSchemaColor")
@@ -126,6 +135,10 @@ function PANEL:OnCursorEntered()
     surface.PlaySound("ow.button.enter")
 
     self.inertiaTarget = 1
+
+    if ( self.OnHovered ) then
+        self:OnHovered()
+    end
 end
 
 function PANEL:OnCursorExited()
@@ -136,6 +149,10 @@ function PANEL:OnCursorExited()
     self.textInsetTarget = {ScreenScale(2), 0}
 
     self.inertiaTarget = 0
+
+    if ( self.OnUnHovered ) then
+        self:OnUnHovered()
+    end
 end
 
 function PANEL:OnMousePressed(key)
@@ -152,6 +169,99 @@ function PANEL:OnMousePressed(key)
 end
 
 vgui.Register("ow.mainmenu.button", PANEL, "DButton")
+
+DEFINE_BASECLASS("ow.mainmenu.button")
+
+PANEL = {}
+
+function PANEL:Init()
+    self:SetFont("ow.fonts.button.small")
+    self:SetTextColorProperty(color_white)
+    self:SetContentAlignment(5)
+    self:SetTall(ScreenScale(12))
+    self:SetTextInset(ScreenScale(2), 0)
+end
+
+function PANEL:SetText(text, bNoTranslate)
+    BaseClass.SetText(self, text)
+
+    self:SizeToContents()
+end
+
+function PANEL:SizeToContents()
+    BaseClass.SizeToContents(self)
+
+    self:SetSize(self:GetWide() + ScreenScale(16), self:GetTall() + ScreenScale(16))
+end
+
+function PANEL:Paint(width, height)
+    local ft = FrameTime()
+    local time = ft * 10
+
+    self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
+    self.textColor = self.textColor:Lerp(self.textColorTarget, time)
+
+    paint.startPanel(self)
+        mask(function()
+            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(255, 255, 255, 255 * self.inertia))
+        end,
+        function()
+            local ripple = self.rippleEffect
+            if ( ripple == nil ) then return end
+
+            local rippleX, rippleY, rippleStartTime = ripple[1], ripple[2], ripple[3]
+
+            local percent = (RealTime() - rippleStartTime)  / RIPPLE_DIE_TIME
+            if ( percent >= 1 ) then
+                self.rippleEffect = nil
+            else
+                local alpha = (RIPPLE_START_ALPHA * 2) * (1 - percent) * self.inertia
+                local radius = math.max(width, height) * percent * math.sqrt(2)
+
+                paint.roundedBoxes.roundedBox(radius, rippleX - radius, rippleY - radius, radius * 2, radius * 2, Color(0, 0, 0, alpha))
+            end
+        end)
+    paint.endPanel()
+end
+
+function PANEL:Think()
+    if ( !self:IsHovered() and ( self.textColorTarget != self.baseTextColor ) ) then
+        self.textColorTarget = self.baseTextColor
+        self.textInsetTarget = {ScreenScale(2), 0}
+    end
+
+    if ( self.inertia > 0 ) then
+        self:SetTextColor(self.textColor)
+    end
+end
+
+function PANEL:OnCursorEntered()
+    self:SetFont("ow.fonts.button.small.hover")
+
+    self.textColorTarget = color_black
+
+    surface.PlaySound("ow.button.enter")
+
+    self.inertiaTarget = 1
+
+    if ( self.OnHovered ) then
+        self:OnHovered()
+    end
+end
+
+function PANEL:OnCursorExited()
+    self:SetFont("ow.fonts.button.small")
+
+    self.textColorTarget = self.baseTextColor or color_white
+
+    self.inertiaTarget = 0
+
+    if ( self.OnUnHovered ) then
+        self:OnUnHovered()
+    end
+end
+
+vgui.Register("ow.mainmenu.button.small", PANEL, "ow.mainmenu.button")
 
 sound.Add({
     name = "ow.button.click",
