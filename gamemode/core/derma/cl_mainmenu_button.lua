@@ -54,7 +54,7 @@ local function mask(drawMask, draw)
     render.ClearStencil()
 end
 
-local RIPPLE_DIE_TIME = 1
+local RIPPLE_DIE_TIME = 0.4
 local RIPPLE_START_ALPHA = 50
 
 function PANEL:Paint(width, height)
