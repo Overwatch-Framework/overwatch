@@ -100,7 +100,7 @@ function PANEL:PopulateCreateCharacter()
     title:Dock(TOP)
     title:DockMargin(padding, padding, padding, 0)
     title:SetFont("ow.fonts.title")
-    title:SetText("CREATE CHARACTER")
+    title:SetText(ow.localization:GetPhrase("mainmenu.charactercreate"):upper())
     title:SetTextColor(hook.Run("GetFrameworkColor"))
     title:SetExpensiveShadow(4, color_black)
     title:SizeToContents()
@@ -158,9 +158,9 @@ function PANEL:PopulateCreateCharacter()
             local page = v.Page or 0
             if ( page != self.currentCreatePage + 1 ) then continue end
 
-            if ( v.OnValidate ) then
+            if ( isfunction(v.OnValidate) ) then
                 isNextEmpty = v:OnValidate(self.characterCreateForm, self.currentCreatePayload)
-                if ( isNextEmpty ) then break end
+                if ( isNextEmpty ) then continue end
             end
 
             if ( v.Type == ow.type.string ) then
