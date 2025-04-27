@@ -142,26 +142,34 @@ function GM:HUDPaint()
     if ( !IsValid(ply) ) then return end
 
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
-    if ( shouldDraw != nil and shouldDraw != false ) then
-        local _, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
+    if ( tobool(shouldDraw) != false ) then
+        local scrW, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
         local width, height
-        local x, y = 100, scrH - 100
-
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
+        local x, y = scrW / 2 - logoWidth * 4, scrH - 100
 
         surface.SetDrawColor(hook.Run("GetFrameworkColor") or color_white)
         surface.SetMaterial(overWatchLogo)
         surface.DrawTexturedRect(x - logoWidth, y - 30, logoWidth, logoHeight)
 
         if ( SCHEMA ) then
-            width, height = draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.fancy.small", x, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            width, height = draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.large.bold", x, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             x, y = x + 16, y + height
+        end
+
+        shouldDraw = hook.Run("ShouldDrawPreviewHUD")
+        if ( tobool(shouldDraw) != false ) then
+            width, height = draw.SimpleText("PREVIEW BUILD - ", "ow.fonts.default.bold", x, y, previewColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            x, y = x + width, y
+
+            width = draw.SimpleText("The following gameplay can be subjected to change", "ow.fonts.default.bold", x, y, ow.colour:Get("light.gray"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            return
         end
 
         width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
-    shouldDraw = hook.Run("ShouldDrawPreviewHUD")
+    
     if ( shouldDraw != nil and shouldDraw != false ) then
         local x, y = 100, 100
         local width, height = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
@@ -235,21 +243,21 @@ end
 function GM:LoadFonts()
     surface.CreateFont("ow.fonts.default", {
         font = "GorDIN",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 500,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.italic", {
         font = "GorDIN",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 500,
         italic = true,
         antialias = true
@@ -257,7 +265,7 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.default.italic.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 700,
         italic = true,
         antialias = true
