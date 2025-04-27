@@ -401,7 +401,7 @@ end
 function GM:ShouldDrawPreviewHUD()
     if ( !ow.convars:Get("ow_preview"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
-    
+
     return true
 end
 
