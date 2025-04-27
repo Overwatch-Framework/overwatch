@@ -69,7 +69,7 @@ function ow.item:GetAll()
 end
 
 if ( CLIENT ) then
-    function ow.item:Add(uniqueID, data, callback)
+    function ow.item:Add(itemID, uniqueID, data, callback)
         -- Do networking for the inventory in the future here...
         -- For now, we'll just pretend we added the item.
 

@@ -11,10 +11,13 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:GetData(key, default)
-    local data = ow.localData and ow.localData[key]
-    if ( data == nil ) then
-        return default
+    local data = self.owDatabase["data"] or {}
+
+    if ( type(data) == "string" ) then
+        data = util.JSONToTable(data) or {}
     else
-        return data
+        data = data or {}
     end
+
+    return data[key] or default
 end

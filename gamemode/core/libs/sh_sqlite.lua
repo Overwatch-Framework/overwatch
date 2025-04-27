@@ -179,6 +179,7 @@ function ow.sqlite:Insert(query, data, callback)
 
     local insertQuery = string.format("INSERT INTO %s (%s) VALUES (%s);", query, table.concat(keys, ", "), table.concat(values, ", "))
     sql.Query(insertQuery)
+    print(insertQuery)
 
     if ( callback ) then
         local result = sql.QueryRow("SELECT last_insert_rowid();")

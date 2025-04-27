@@ -75,10 +75,11 @@ function PANEL:Init()
     self.players = {}
 
     self.teamName = self:Add("ow.text")
-    self.teamName:SetTall(ScreenScale(8))
+    self.teamName:SetTall(ScreenScale(10))
     self.teamName:Dock(TOP)
     self.teamName:DockMargin(8, 0, 0, 0)
-    self.teamName:SetFont("ow.fonts.large.italic.bold")
+    self.teamName:SetFont("ow.fonts.default.italic.bold")
+    self.teamName:SetContentAlignment(7)
 
     self.container = self:Add("DPanel")
     self.container:Dock(FILL)

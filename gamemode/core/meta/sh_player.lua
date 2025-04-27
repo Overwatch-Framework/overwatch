@@ -18,6 +18,14 @@ function PLAYER:GetCharacters()
     return self.owCharacters or {}
 end
 
+function PLAYER:GetCharacterID()
+    if ( self.owCharacter ) then
+        return self.owCharacter:GetID()
+    end
+
+    return self:EntIndex() -- Use index for now
+end
+
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
 
 function PLAYER:Name()
