@@ -2,7 +2,7 @@ function GM:CanDrive(ply, entity)
     return false
 end
 
-function GM:CanPlayerBecomeFaction(ply, factionID)
+function GM:CanPlayerJoinFaction(ply, factionID)
     return true
 end
 
