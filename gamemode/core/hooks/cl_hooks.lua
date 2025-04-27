@@ -453,3 +453,10 @@ function GM:PopulateTabButtons(buttons)
         end
     }
 end
+
+-- TODO: Maybe if it looks good someday
+--[[
+function GM:ForceDermaSkin()
+    return "Overwatch"
+end
+]]
