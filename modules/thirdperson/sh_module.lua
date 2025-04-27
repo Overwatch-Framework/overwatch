@@ -40,7 +40,7 @@ ow.option:Register("thirdperson.followhead", {
 ow.option:Register("thirdperson.position.x", {
     DisplayName = "options.thirdperson.position.x",
     Type = ow.type.number,
-    Default = 0,
+    Default = 50,
     Description = "options.thirdperson.position.x.help",
     Category = "category.thirdperson"
 })
@@ -48,7 +48,7 @@ ow.option:Register("thirdperson.position.x", {
 ow.option:Register("thirdperson.position.y", {
     DisplayName = "options.thirdperson.position.y",
     Type = ow.type.number,
-    Default = 0,
+    Default = 25,
     Description = "options.thirdperson.position.y.help",
     Category = "category.thirdperson"
 })
