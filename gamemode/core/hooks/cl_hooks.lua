@@ -136,6 +136,7 @@ function GM:DrawVignette()
 end
 
 local overWatchLogo = ow.util:GetMaterial("overwatch/gui/logo_white_x512.png", "noclamp smooth")
+local previewColor = Color(255, 210, 80)
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
@@ -144,7 +145,7 @@ function GM:HUDPaint()
     if ( shouldDraw != nil and shouldDraw != false ) then
         local _, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
         local width, height
-        local x, y = ScrW() / 2 - 400, scrH - 100
+        local x, y = 100, scrH - 100
 
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
 
@@ -158,6 +159,19 @@ function GM:HUDPaint()
         end
 
         width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+    end
+
+    shouldDraw = hook.Run("ShouldDrawPreviewHUD")
+    if ( shouldDraw != nil and shouldDraw != false ) then
+        local x, y = 100, 100
+        local width, height = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
+
+        local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
+        surface.SetDrawColor(hook.Run("GetFrameworkColor") or color_white)
+        surface.SetMaterial(overWatchLogo)
+        surface.DrawTexturedRect(x - logoWidth, y - 30, logoWidth, logoHeight)
+
+        draw.SimpleText("PREVIEW BUILD", "ow.fonts.button", x, y, previewColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
     shouldDraw = hook.Run("ShouldDrawCrosshair")
@@ -220,53 +234,93 @@ end
 
 function GM:LoadFonts()
     surface.CreateFont("ow.fonts.default", {
-        font = "Arial",
+        font = "GorDIN",
         size = ScreenScale(6),
-        weight = 500
+        weight = 500,
+        antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.bold", {
-        font = "Arial",
+        font = "GorDIN Bold",
         size = ScreenScale(6),
-        weight = 700
+        weight = 700,
+        antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.italic", {
-        font = "Arial",
+        font = "GorDIN",
         size = ScreenScale(6),
         weight = 500,
-        italic = true
+        italic = true,
+        antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.italic.bold", {
-        font = "Arial",
+        font = "GorDIN Bold",
         size = ScreenScale(6),
         weight = 700,
-        italic = true
+        italic = true,
+        antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.large", {
-        font = "Arial",
+    surface.CreateFont("ow.fonts.large", {
+        font = "GorDIN",
         size = ScreenScale(10),
-        weight = 500
+        weight = 500,
+        antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.large.bold", {
-        font = "Arial",
+    surface.CreateFont("ow.fonts.large.bold", {
+        font = "GorDIN Bold",
         size = ScreenScale(10),
-        weight = 700
+        weight = 700,
+        antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.extralarge", {
-        font = "Arial",
-        size = ScreenScale(12),
-        weight = 500
+    surface.CreateFont("ow.fonts.large.italic", {
+        font = "GorDIN",
+        size = ScreenScale(10),
+        weight = 500,
+        italic = true,
+        antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.extralarge.bold", {
-        font = "Arial",
+    surface.CreateFont("ow.fonts.large.italic.bold", {
+        font = "GorDIN Bold",
+        size = ScreenScale(10),
+        weight = 700,
+        italic = true,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.extralarge", {
+        font = "GorDIN",
         size = ScreenScale(12),
-        weight = 700
+        weight = 500,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.extralarge.bold", {
+        font = "GorDIN Bold",
+        size = ScreenScale(12),
+        weight = 700,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.extralarge.italic", {
+        font = "GorDIN",
+        size = ScreenScale(12),
+        weight = 500,
+        italic = true,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.extralarge.italic.bold", {
+        font = "GorDIN Bold",
+        size = ScreenScale(12),
+        weight = 700,
+        italic = true,
+        antialias = true
     })
 
     surface.CreateFont("ow.fonts.button", {
@@ -297,34 +351,18 @@ function GM:LoadFonts()
         antialias = true
     })
 
-    surface.CreateFont("ow.fonts.fancy", {
-        font = "K12HL2",
-        size = ScreenScale(8)
-    })
-
-    surface.CreateFont("ow.fonts.fancy.small", {
-        font = "K12HL2",
-        size = ScreenScale(6)
-    })
-
-    surface.CreateFont("ow.fonts.fancy.large", {
-        font = "K12HL2",
-        size = ScreenScale(10)
-    })
-
-    surface.CreateFont("ow.fonts.fancy.extralarge", {
-        font = "K12HL2",
-        size = ScreenScale(12)
-    })
-
     surface.CreateFont("ow.fonts.title", {
-        font = "K12HL2",
-        size = ScreenScale(24)
+        font = "GorDIN Bold",
+        size = ScreenScale(24),
+        weight = 700,
+        antialias = true,
     })
 
     surface.CreateFont("ow.fonts.subtitle", {
-        font = "K12HL2",
-        size = ScreenScale(16)
+        font = "GorDIN SemiBold",
+        size = ScreenScale(16),
+        weight = 600,
+        antialias = true,
     })
 
     hook.Run("PostLoadFonts")
@@ -357,6 +395,13 @@ function GM:ShouldDrawDebugHUD()
     if ( !ow.convars:Get("ow_debug"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
 
+    return true
+end
+
+function GM:ShouldDrawPreviewHUD()
+    if ( !ow.convars:Get("ow_preview"):GetBool() ) then return false end
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+    
     return true
 end
 

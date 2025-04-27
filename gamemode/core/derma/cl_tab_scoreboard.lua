@@ -26,7 +26,7 @@ function PANEL:Populate()
     local teams = {}
     for _, ply in ipairs(self.cache.players) do
         local teamID = ply:Team()
-        if ( !teams[teamID] ) then
+        if ( !istable(teams[teamID]) ) then
             teams[teamID] = {}
         end
 
@@ -78,7 +78,7 @@ function PANEL:Init()
     self.teamName:SetTall(ScreenScale(8))
     self.teamName:Dock(TOP)
     self.teamName:DockMargin(8, 0, 0, 0)
-    self.teamName:SetFont("ow.fonts.default.italic.bold")
+    self.teamName:SetFont("ow.fonts.large.italic.bold")
 
     self.container = self:Add("DPanel")
     self.container:Dock(FILL)
@@ -134,11 +134,11 @@ function PANEL:Init()
     self.avatar:SetPos(0, 0)
 
     self.name = self:Add("ow.text")
-    self.name:SetFont("ow.fonts.default.large")
+    self.name:SetFont("ow.fonts.large.bold")
 
     self.ping = self:Add("ow.text")
     self.ping:SetSize(ScreenScale(32), self:GetTall())
-    self.ping:SetFont("ow.fonts.default")
+    self.ping:SetFont("ow.fonts.large.bold")
     self.ping:SetContentAlignment(6)
 end
 
@@ -146,7 +146,7 @@ function PANEL:SetPlayer(ply)
     self.player = ply
 
     if ( IsValid(self.avatar) ) then
-        self.avatar:SetPlayer(ply, 128)
+        self.avatar:SetPlayer(ply, self:GetTall())
     end
 
     if ( IsValid(self.name) ) then

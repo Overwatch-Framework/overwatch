@@ -11,23 +11,14 @@ function ow.convars:Get(name)
 end
 
 function ow.convars:Create(name, default, flags, help, min, max)
-    if ( self.stored[name] != nil ) then
-        ow.util:PrintWarning(Format("Attempted to create a client convar that already exists! \"%s\"", name))
-        return false
-    end
-
     local convar = CreateConVar(name, default, flags, help, min, max)
     self.stored[name] = convar
 end
 
 function ow.convars:CreateClient(name, default, shouldsave, userinfo, helptext, min, max)
-    if ( self.stored[name] != nil ) then
-        ow.util:PrintWarning(Format("Attempted to create a client convar that already exists! \"%s\"", name))
-        return false
-    end
-
     local convar = CreateClientConVar(name, default, shouldsave, userinfo, helptext, min, max)
     self.stored[name] = convar
 end
 
 ow.convars:Create("ow_debug", "0", {FCVAR_REPLICATED, FCVAR_ARCHIVE}, "Enable debug mode.", 0, 1)
+ow.convars:Create("ow_preview", "0", {FCVAR_REPLICATED, FCVAR_ARCHIVE}, "Enable preview mode.", 0, 1)

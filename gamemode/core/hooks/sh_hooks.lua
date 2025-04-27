@@ -83,7 +83,7 @@ function GM:PlayerCanHearChat(ply, listener, uniqueID, text)
     if ( isbool(canHear) ) then
         return canHear
     elseif ( isfunction(canHear) ) then
-        return canHear(ply, listener, text)
+        return ow.chat:Get(uniqueID):CanHear(ply, listener, text)
     end
 
     return true
