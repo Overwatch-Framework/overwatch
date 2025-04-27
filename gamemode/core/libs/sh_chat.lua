@@ -23,8 +23,8 @@ function ow.chat:Register(uniqueID, chatData)
     end
 
     if ( chatData.Prefixes ) then
-        ow.command:Register({
-            Name = uniqueID,
+        ow.command:Register(uniqueID, {
+            Description = chatData.Description or "",
             Prefixes = chatData.Prefixes,
             Callback = function(info, ply, arguments)
                 local text = table.concat(arguments, " ")
