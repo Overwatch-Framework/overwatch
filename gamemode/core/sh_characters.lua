@@ -23,7 +23,7 @@ ow.character:RegisterVariable("name", {
 
     Editable = true,
     ZPos = -3,
-    DisplayName = "Name",
+    Name = "Name",
 
     AllowNonAscii = false,
     Numeric = false,
@@ -54,7 +54,7 @@ ow.character:RegisterVariable("description", {
 
     Editable = true,
     ZPos = 0,
-    DisplayName = "Description",
+    Name = "Description",
 
     OnValidate = function(self, parent, payload)
         if ( string.len(payload.description) < 10 ) then
@@ -72,7 +72,7 @@ ow.character:RegisterVariable("model", {
 
     Editable = true,
     ZPos = 0,
-    DisplayName = "Model",
+    Name = "Model",
 
     OnValidate = function(self, parent, payload)
         local factionIndex = payload.factionIndex or 1
@@ -97,7 +97,7 @@ ow.character:RegisterVariable("model", {
     OnPopulate = function(self, parent, payload)
         local label = parent:Add("DLabel")
         label:Dock(TOP)
-        label:SetText(self.DisplayName or k)
+        label:SetText(self.Name or k)
         label:SetFont("ow.fonts.button")
         label:SetTextColor(color_white)
         label:SizeToContents()

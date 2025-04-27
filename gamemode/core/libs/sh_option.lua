@@ -123,7 +123,7 @@ if ( CLIENT ) then
 end
 
 local requiredFields = {
-    "DisplayName",
+    "Name",
     "Description",
     "Default"
 }
@@ -146,6 +146,10 @@ function ow.option:Register(key, data)
             ow.util:PrintError("Option \"" .. key .. "\" has an invalid type!")
             return false
         end
+    end
+
+    if ( data.Category == nil ) then
+        data.Category = "misc"
     end
 
     self.stored[key] = data

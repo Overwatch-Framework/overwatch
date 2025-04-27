@@ -50,14 +50,14 @@ end
 -- @realm shared
 -- @param key The key of the configuration.
 -- @param data The data of the configuration.
--- @field DisplayName The display name of the configuration.
+-- @field Name The display name of the configuration.
 -- @field Description The description of the configuration.
 -- @field Type The type of the configuration.
 -- @field Default The default value of the configuration.
 -- @field OnChange The function that is called when the configuration is changed.
 -- @treturn boolean Whether the configuration was successfully registered.
 -- @usage ow.config:Register("schemaColor", {
---     DisplayName = "Schema Color",
+--     Name = "Schema Color",
 --     Description = "The color of the schema.",
 --     Type = ow.type.color,
 --     Default = Color(0, 100, 150),
@@ -67,7 +67,7 @@ end
 -- })
 
 local requiredFields = {
-    "DisplayName",
+    "Name",
     "Description",
     "Default"
 }
