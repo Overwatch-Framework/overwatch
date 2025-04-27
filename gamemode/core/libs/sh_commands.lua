@@ -35,8 +35,10 @@ function ow.command:Register(commandName, info)
         return
     end
 
-    if ( !istable(info.Prefixes) ) then
-        info.Prefixes = { commandName }
+    if ( !isfunction(info.GetDescription) ) then
+        function data:GetDescription()
+            return info.Description or "No description provided."
+        end
     end
 
     info.uniqueID = commandName

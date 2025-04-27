@@ -1,6 +1,5 @@
-ow.command:Register({
-    Name = "Respawn",
-    Prefixes = {"Respawn"},
+ow.command:Register("Respawn", {
+    Description = "Respawn a player.",
     AdminOnly = true,
     Callback = function(info, ply, arguments)
         local target = ow.util:FindPlayer(arguments[1])
@@ -16,9 +15,8 @@ ow.command:Register({
     end
 })
 
-ow.command:Register({
-    Name = "SetModel",
-    Prefixes = {"SetModel"},
+ow.command:Register("SetModel", {
+    Description = "Set the model of a player.",
     AdminOnly = true,
     Callback = function(info, ply, arguments)
         local target = ow.util:FindPlayer(arguments[1])
@@ -39,9 +37,8 @@ ow.command:Register({
     end
 })
 
-ow.command:Register({
-    Name = "SetFaction",
-    Prefixes = {"SetFaction"},
+ow.command:Register("SetFaction", {
+    Description = "Set the faction of a player.",
     AdminOnly = true,
     Callback = function(info, ply, arguments)
         local target = ow.util:FindPlayer(arguments[1])
