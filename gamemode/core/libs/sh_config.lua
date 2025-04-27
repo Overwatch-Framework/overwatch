@@ -74,12 +74,11 @@ local requiredFields = {
 }
 
 function ow.config:Register(key, data)
-    if ( key == nil or data == nil or !isstring(key) or !istable(data) ) then return false end
+    if ( !isstring(key) or !istable(data) ) then return false end
 
     local bResult = hook.Run("PreConfigRegistered", key, data)
     if ( bResult == false ) then return false end
 
-    local CONFIG = table.Copy(data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
             ow.util:PrintError("Configuration \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
@@ -87,10 +86,8 @@ function ow.config:Register(key, data)
         end
     end
 
-    CONFIG.Schema = SCHEMA != nil and SCHEMA.Folder or false
-
-    self.stored[key] = CONFIG
-    hook.Run("PostConfigRegistered", key, data, CONFIG)
+    self.stored[key] = data
+    hook.Run("PostConfigRegistered", key, data)
 
     return true
 end

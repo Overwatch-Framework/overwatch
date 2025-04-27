@@ -13,6 +13,14 @@ function ow.option:SetDefault(key, default)
 
     stored.Default = default
 
+    if ( SERVER ) then
+        local compressed = util.Compress(util.TableToJSON(self:GetSaveData()))
+
+        net.Start("ow.option.syncServer")
+            net.WriteData(compressed, #compressed)
+        net.SendToServer()
+    end
+
     return true
 end
 
@@ -115,7 +123,6 @@ function ow.option:Register(key, data)
     local bResult = hook.Run("PreOptionRegistered", key, data)
     if ( bResult == false ) then return false end
 
-    local OPTION = table.Copy(data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
             ow.util:PrintError("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
@@ -123,8 +130,8 @@ function ow.option:Register(key, data)
         end
     end
 
-    self.stored[key] = OPTION
-    hook.Run("PostOptionRegistered", key, data, OPTION)
+    self.stored[key] = data
+    hook.Run("PostOptionRegistered", key, data)
 
     return true
 end
