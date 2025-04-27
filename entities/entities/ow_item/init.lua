@@ -72,9 +72,7 @@ function ENT:SetItem(uniqueID)
 end
 
 function ENT:SetData(data)
-    if ( !istable(data) ) then return end
-
-    self.owItemData = data
+    self:GetTable().owItemData = data
 end
 
 function ENT:Use(ply)
@@ -112,9 +110,7 @@ function ENT:OnTakeDamage(damageInfo)
 
     self:SetHealth(self:Health() - damageInfo:GetDamage())
 
-    if ( self:Health() <= 0 and tobool(hook.Run("ItemCanBeDestroyed", self, damageInfo)) != false ) then
-
-
+    if ( self:Health() <= 0 and hook.Run("ItemCanBeDestroyed", self, damageInfo) != false ) then
         SafeRemoveEntity(self)
     end
 end
