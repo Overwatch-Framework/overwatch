@@ -211,7 +211,7 @@ function PANEL:PopulateCreateCharacterForm()
         local page = v.Page or 0
         if ( page != self.currentCreatePage ) then continue end
 
-        if ( v.OnPopulate ) then
+        if ( isfunction(v.OnPopulate) ) then
             v:OnPopulate(self.characterCreateForm, self.currentCreatePayload)
             continue
         end
