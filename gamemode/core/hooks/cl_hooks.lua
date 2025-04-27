@@ -239,23 +239,29 @@ function GM:HUDShouldDraw(name)
 end
 
 function GM:LoadFonts()
+    local scale8 = ScreenScale(8)
+    local scale10 = ScreenScale(10)
+    local scale12 = ScreenScale(12)
+    local scale16 = ScreenScale(16)
+    local scale24 = ScreenScale(24)
+
     surface.CreateFont("ow.fonts.default", {
         font = "GorDIN",
-        size = ScreenScale(8),
+        size = scale8,
         weight = 500,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(8),
+        size = scale8,
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.italic", {
         font = "GorDIN",
-        size = ScreenScale(8),
+        size = scale8,
         weight = 500,
         italic = true,
         antialias = true
@@ -263,7 +269,7 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.default.italic.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(8),
+        size = scale8,
         weight = 700,
         italic = true,
         antialias = true
@@ -271,21 +277,21 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.large", {
         font = "GorDIN",
-        size = ScreenScale(10),
+        size = scale10,
         weight = 500,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.large.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(10),
+        size = scale10,
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.large.italic", {
         font = "GorDIN",
-        size = ScreenScale(10),
+        size = scale10,
         weight = 500,
         italic = true,
         antialias = true
@@ -293,7 +299,7 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.large.italic.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(10),
+        size = scale10,
         weight = 700,
         italic = true,
         antialias = true
@@ -301,21 +307,21 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.extralarge", {
         font = "GorDIN",
-        size = ScreenScale(12),
+        size = scale12,
         weight = 500,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.extralarge.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(12),
+        size = scale12,
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.extralarge.italic", {
         font = "GorDIN",
-        size = ScreenScale(12),
+        size = scale12,
         weight = 500,
         italic = true,
         antialias = true
@@ -323,7 +329,7 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.extralarge.italic.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(12),
+        size = scale12,
         weight = 700,
         italic = true,
         antialias = true
@@ -331,42 +337,42 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.button", {
         font = "GorDIN SemiBold",
-        size = ScreenScale(16),
+        size = scale16,
         weight = 600,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.button.hover", {
         font = "GorDIN Bold",
-        size = ScreenScale(16),
+        size = scale16,
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.button.small", {
         font = "GorDIN SemiBold",
-        size = ScreenScale(12),
+        size = scale12,
         weight = 600,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.button.small.hover", {
         font = "GorDIN Bold",
-        size = ScreenScale(12),
+        size = scale12,
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.title", {
         font = "GorDIN Bold",
-        size = ScreenScale(24),
+        size = scale24,
         weight = 700,
         antialias = true,
     })
 
     surface.CreateFont("ow.fonts.subtitle", {
         font = "GorDIN SemiBold",
-        size = ScreenScale(16),
+        size = scale16,
         weight = 600,
         antialias = true,
     })
