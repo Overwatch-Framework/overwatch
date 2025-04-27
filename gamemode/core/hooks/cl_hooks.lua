@@ -10,6 +10,22 @@ function GM:PlayerEndVoice(ply)
     end
 end
 
+function GM:ScoreboardShow()
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+
+    if ( !IsValid(ow.gui.tab) ) then
+        vgui.Create("ow.tab")
+    else
+        ow.gui.tab:Remove()
+    end
+
+    return false
+end
+
+function GM:ScoreboardHide()
+    return false
+end
+
 function GM:Initialize()
     ow.schema:Initialize()
 
@@ -222,6 +238,13 @@ function GM:LoadFonts()
         italic = true
     })
 
+    surface.CreateFont("ow.fonts.default.italic.bold", {
+        font = "Arial",
+        size = ScreenScale(6),
+        weight = 700,
+        italic = true
+    })
+
     surface.CreateFont("ow.fonts.default.large", {
         font = "Arial",
         size = ScreenScale(10),
@@ -346,4 +369,30 @@ end
 
 function GM:GetCharacterName(ply, target)
     -- TODO: Empty hook, implement this in the future
+end
+
+function GM:PopulateTabButtons(buttons)
+    buttons["tab.config"] = {
+        Populate = function(container)
+            -- TODO: Implement this in the future
+            -- container:Add("ow.tab.config")
+        end
+    }
+    buttons["tab.inventory"] = {
+        Populate = function(container)
+            -- TODO: Implement this in the future
+            -- container:Add("ow.tab.inventory")
+        end
+    }
+    buttons["tab.scoreboard"] = {
+        Populate = function(container)
+            container:Add("ow.tab.scoreboard")
+        end
+    }
+    buttons["tab.settings"] = {
+        Populate = function(container)
+            -- TODO: Implement this in the future
+            -- container:Add("ow.tab.settings")
+        end
+    }
 end
