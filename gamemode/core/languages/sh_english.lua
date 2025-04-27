@@ -1,10 +1,15 @@
 ow.localization:Register("en", {
-    ["mainmenu.play"] = "Play",
+    ["back"] = "Back",
+    ["quit"] = "Quit",
     ["mainmenu.charactercreate"] = "Create Character",
     ["mainmenu.characterselect"] = "Select Character",
-    ["mainmenu.settings"] = "Settings",
     ["mainmenu.leave"] = "Disconnect",
-    ["quit"] = "Quit",
-    ["back"] = "Back",
-
+    ["mainmenu.play"] = "Play",
+    ["mainmenu.settings"] = "Settings",
+    ["tab.close"] = "Close",
+    ["tab.config"] = "Config",
+    ["tab.inventory"] = "Inventory",
+    ["tab.mainmenu"] = "Main Menu",
+    ["tab.scoreboard"] = "Scoreboard",
+    ["tab.settings"] = "Settings",
 })

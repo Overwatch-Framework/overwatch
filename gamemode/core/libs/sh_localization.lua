@@ -34,7 +34,7 @@ end
 -- @return The language data.
 function ow.localization:Get(languageName)
     local stored = self.stored[languageName]
-    if ( !istable(stored))  then
+    if ( !istable(stored) ) then
         ow.util:PrintError("Attempted to get localisation data that doesn't exist! Language: " .. languageName)
         return false
     end
