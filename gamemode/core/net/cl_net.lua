@@ -68,12 +68,14 @@ net.Receive("ow.character.load", function(len)
     local data = net.ReadTable()
     if ( !istable(data) ) then return end
 
-    local character = ow.character:CreateObject(data.id, data, LocalPlayer())
+    local ply = LocalPlayer()
+
+    local character = ow.character:CreateObject(data.id, data, ply)
     local id = character:GetID()
 
-    LocalPlayer().owCharacters = LocalPlayer().owCharacters or {}
-    LocalPlayer().owCharacters[id] = character
-    LocalPlayer().owCharacter = character
+    ply.owCharacters = ply.owCharacters or {}
+    ply.owCharacters[id] = character
+    ply.owCharacter = character
 
     notification.AddLegacy("Character " .. id .. " loaded!", NOTIFY_GENERIC, 5)
 end)
