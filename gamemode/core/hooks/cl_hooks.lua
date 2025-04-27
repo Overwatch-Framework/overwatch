@@ -104,7 +104,7 @@ end
 local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png", "noclamp smooth")
 local vignetteColor = Color(0, 0, 0, 255)
 function GM:HUDPaintBackground()
-    if ( hook.Run("ShouldDrawVignette") ) then
+    if ( tobool(hook.Run("ShouldDrawVignette")) ) then
         hook.Run("DrawVignette")
     end
 end
@@ -128,7 +128,7 @@ function GM:DrawVignette()
     end
 
     local result = hook.Run("GetVignetteColor")
-    if ( result != nil and IsColor(result) ) then
+    if ( IsColor(result) ) then
         vignetteColor = result
     end
 
@@ -142,7 +142,7 @@ function GM:HUDPaint()
     if ( !IsValid(ply) ) then return end
 
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
-    if ( tobool(shouldDraw) != false ) then
+    if ( shouldDraw != false ) then
         local scrW, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
         local width, height
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
@@ -158,7 +158,7 @@ function GM:HUDPaint()
         end
 
         shouldDraw = hook.Run("ShouldDrawPreviewHUD")
-        if ( tobool(shouldDraw) != false ) then
+        if ( shouldDraw != false ) then
             width, height = draw.SimpleText("PREVIEW BUILD - ", "ow.fonts.default.bold", x, y, previewColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             x, y = x + width, y
 
@@ -401,7 +401,7 @@ function GM:ShouldDrawDebugHUD()
     if ( !ow.convars:Get("ow_debug"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
 
-    return true
+    return
 end
 
 function GM:ShouldDrawPreviewHUD()

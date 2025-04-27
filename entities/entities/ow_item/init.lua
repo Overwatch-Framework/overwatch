@@ -91,11 +91,10 @@ function ENT:Use(ply)
     end
     ]]
 
-    SafeRemoveEntity(self)
-
     ply:ChatPrint("You took the " .. itemData.Name .. "!")
-
     hook.Run("PlayerTookItem", ply, self)
+    
+    SafeRemoveEntity(self)
 end
 
 function ENT:OnRemove()
@@ -113,7 +112,9 @@ function ENT:OnTakeDamage(damageInfo)
 
     self:SetHealth(self:Health() - damageInfo:GetDamage())
 
-    if ( self:Health() <= 0 and hook.Run("ItemCanBeDestroyed", self, damageInfo) != false ) then
+    if ( self:Health() <= 0 and tobool(hook.Run("ItemCanBeDestroyed", self, damageInfo)) != false ) then
+
+
         SafeRemoveEntity(self)
     end
 end

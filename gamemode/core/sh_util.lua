@@ -195,7 +195,7 @@ end
 -- @param path string The path to the file.
 -- @param realm string The realm to load the file in.
 function ow.util:LoadFile(path, realm)
-    if ( !path ) then
+    if ( !isstring(path) ) then
         self:PrintError("Failed to load file " .. path .. "!")
         return
     end
