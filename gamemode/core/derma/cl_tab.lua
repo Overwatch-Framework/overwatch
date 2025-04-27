@@ -52,7 +52,7 @@ function PANEL:Init()
 
     self.fadeTime = 0.1
 
-    self.anchorTime = CurTime() + self.fadeTime
+    self.anchorTime = CurTime() + 0.5
     self.anchorEnabled = true
 
     self:SetSize(ScrW(), ScrH())

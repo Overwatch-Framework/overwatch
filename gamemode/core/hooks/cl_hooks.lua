@@ -235,21 +235,21 @@ end
 function GM:LoadFonts()
     surface.CreateFont("ow.fonts.default", {
         font = "GorDIN",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 500,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 700,
         antialias = true
     })
 
     surface.CreateFont("ow.fonts.default.italic", {
         font = "GorDIN",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 500,
         italic = true,
         antialias = true
@@ -257,7 +257,7 @@ function GM:LoadFonts()
 
     surface.CreateFont("ow.fonts.default.italic.bold", {
         font = "GorDIN Bold",
-        size = ScreenScale(6),
+        size = ScreenScale(8),
         weight = 700,
         italic = true,
         antialias = true
