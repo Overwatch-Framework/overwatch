@@ -59,7 +59,7 @@ end
 -- @usage ow.config:Register("schemaColor", {
 --     DisplayName = "Schema Color",
 --     Description = "The color of the schema.",
---     Type = "Color",
+--     Type = ow.type.color,
 --     Default = Color(0, 100, 150),
 --     OnChange = function(oldValue, newValue)
 --         print("Schema color changed from " .. tostring(oldValue) .. " to " .. tostring(newValue))
