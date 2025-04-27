@@ -162,7 +162,7 @@ function GM:HUDPaint()
             width, height = draw.SimpleText("PREVIEW BUILD - ", "ow.fonts.default.bold", x, y, previewColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
             x, y = x + width, y
 
-            width = draw.SimpleText("The following gameplay can be subjected to change", "ow.fonts.default.bold", x, y, ow.colour:Get("light.gray"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+            width = select(1, draw.SimpleText("The following gameplay can be subjected to change", "ow.fonts.default.bold", x, y, ow.colour:Get("light.gray"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP))
             return
         end
 
