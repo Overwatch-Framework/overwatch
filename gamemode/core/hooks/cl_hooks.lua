@@ -143,7 +143,7 @@ function GM:HUDPaint()
 
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
-        local scrW, scrH = ScrW(), ScrH() -- bloodycop: scrW wasn't used, so I removed it, add it back if it's used
+        local scrW, scrH = ScrW(), ScrH()
         local width, height
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
         local x, y = scrW / 2 - logoWidth * 4, scrH - 100
