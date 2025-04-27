@@ -5,12 +5,17 @@ ow.option.clients = {}
 
 function ow.option:Set(ply, key, value)
     local stored = ow.option.stored[key]
-    if ( stored == nil or !istable(stored) ) then
+    if ( !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return false
     end
 
     if ( !IsValid(ply) ) then return false end
+
+    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
+        ow.util:PrintError("Attempted to set option \"" .. key .. "\" with invalid type!")
+        return false
+    end
 
     net.Start("ow.option.set")
         net.WriteString(key)
@@ -28,8 +33,6 @@ function ow.option:Set(ply, key, value)
 
         ow.option.clients[ply][key] = value
     end
-
-    hook.Run("OnOptionChanged", ply, key, value)
 
     return true
 end
