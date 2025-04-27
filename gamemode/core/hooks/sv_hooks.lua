@@ -11,6 +11,8 @@ function GM:PlayerInitialSpawn(ply)
         ply:SetDBVar("data", IsValid(data) and data["data"] or "[]")
         ply:SaveDB()
 
+        ow.character:LoadAll(ply)
+
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
 

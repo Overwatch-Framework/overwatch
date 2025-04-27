@@ -1,9 +1,12 @@
+util.AddNetworkString("ow.character.delete")
+util.AddNetworkString("ow.character.load")
+util.AddNetworkString("ow.character.load.all")
 util.AddNetworkString("ow.chat.text")
+util.AddNetworkString("ow.config.set")
+util.AddNetworkString("ow.config.sync")
+util.AddNetworkString("ow.database.save")
 util.AddNetworkString("ow.gesture.play")
 util.AddNetworkString("ow.item.add")
-util.AddNetworkString("ow.config.sync")
-util.AddNetworkString("ow.config.set")
-util.AddNetworkString("ow.database.save")
 
 net.Receive("ow.config.set", function(len, ply)
     if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end
@@ -29,13 +32,32 @@ util.AddNetworkString("ow.character.create")
 net.Receive("ow.character.create", function(len, ply)
     -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
     local payload = net.ReadTable()
+    if ( !istable(payload) ) then return end
+    PrintTable(payload)
 
     local bResult = hook.Run("PreCharacterCreate", ply, payload)
     if ( bResult == false ) then return end
 
-    local character = ow.character:Create(ply, payload)
+    for k, v in pairs(ow.character.variables) do
+        if ( v.Editable != true ) then continue end
+
+        -- This is a bit of a hack, but it works for now.
+        if ( v.Type == ow.type.string or v.Type == ow.type.text ) then
+            payload[k] = string.Trim(payload[k] or "")
+        end
+
+        if ( v.OnValidate ) then
+            local validate, reason = v:OnValidate(ply, payload)
+            if ( !validate ) then
+                ply:ChatPrint(reason or "Failed to validate character.")
+                return
+            end
+        end
+    end
+
+    local character, reason = ow.character:Create(ply, payload)
     if ( !character ) then
-        ply:ChatPrint("Failed to create character.")
+        ply:ChatPrint(reason or "Failed to create character.")
         return
     end
 
@@ -101,6 +123,3 @@ net.Receive("ow.option.syncServer", function(len, ply)
         end
     end
 end)
-
-util.AddNetworkString("ow.character.delete")
-util.AddNetworkString("ow.character.load")

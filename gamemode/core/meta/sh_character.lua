@@ -1,20 +1,20 @@
 local CHAR = ow.character.meta or {}
 CHAR.__index = CHAR
-CHAR.ID = 0
+CHAR.id = 0
 CHAR.variables = {}
 
 function CHAR:__tostring()
-    return "character[" .. self:GetID().. "]"
+    return "character[" .. self:GetID() .. "]"
 end
 
 function CHAR:__eq(other)
-    return self.ID == other.ID
+    return self.id == other.id
 end
 
 function CHAR:GetID()
-    return self.ID
+    return self.id
 end
 
 function CHAR:GetPlayer()
-    return self.Player
+    return self.player
 end
