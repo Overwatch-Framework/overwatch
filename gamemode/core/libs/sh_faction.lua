@@ -33,41 +33,58 @@ local default = {
     OnSwitch = nil
 }
 
+local metaFaction = {
+    GetName = function(self)
+        return self.Name or "Unknown Faction"
+    end,
+    GetDescription = function(self)
+        return self.Description or "No description available."
+    end,
+    GetModels = function(self)
+        return self.Models or DEFAULT_MODELS
+    end,
+}
+
+metaFaction.__index = metaFaction
+
 function ow.faction:Register(factionData)
+    local FACTION = setmetatable(factionData, { __index = metaFaction })
+
     for k, v in pairs(default) do
-        if ( factionData[k] == nil ) then
-            factionData[k] = v
+        if ( FACTION[k] == nil ) then
+            FACTION[k] = v
         end
     end
 
-    local bResult = hook.Run("PreFactionRegistered", factionData)
+
+    local bResult = hook.Run("PreFactionRegistered", FACTION)
     if ( bResult == false ) then return false end
 
-    local uniqueID = string.lower(string.gsub(factionData.Name, "%s", "_"))
-    factionData.UniqueID = factionData.UniqueID or uniqueID
+    local uniqueID = string.lower(string.gsub(FACTION.Name, "%s", "_"))
+    FACTION.UniqueID = FACTION.UniqueID or uniqueID
 
-    self.stored[factionData.UniqueID] = factionData
-    self.instances[#self.instances + 1] = factionData
+    self.stored[FACTION.UniqueID] = FACTION
+    self.instances[#self.instances + 1] = FACTION
 
-    factionData.Index = #self.instances
+    FACTION.Index = #self.instances
 
-    team.SetUp(factionData.Index, factionData.Name, factionData.Color, false)
-    hook.Run("PostFactionRegistered", factionData)
+    FACTION["GetName"] = function(self)
+        return self.Name
+    end
 
-    return factionData.Index
+    team.SetUp(FACTION.Index, FACTION.Name, FACTION.Color, false)
+    hook.Run("PostFactionRegistered", FACTION)
+
+    return FACTION.Index
 end
 
 function ow.faction:Get(identifier)
-    if ( !isstring(identifier) or !isnumber(identifier) ) then
-        ow.util:PrintError("Attempted to get an invalid faction!")
-        return nil
-    end
-
     if ( self.stored[identifier] ) then
         return self.stored[identifier]
     end
 
     if ( isnumber(identifier) ) then
+        print("Getting faction by index: " .. identifier)
         return self.instances[identifier]
     end
 

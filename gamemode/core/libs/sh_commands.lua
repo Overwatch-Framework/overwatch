@@ -36,7 +36,7 @@ function ow.command:Register(commandName, info)
     end
 
     if ( !isfunction(info.GetDescription) ) then
-        function data:GetDescription()
+        function info:GetDescription()
             return info.Description or "No description provided."
         end
     end
