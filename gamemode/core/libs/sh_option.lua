@@ -98,6 +98,16 @@ if ( CLIENT ) then
         return optionData.Value == nil and optionData.Default or optionData.Value
     end
 
+    function ow.option:GetDefault(key)
+        local optionData = self.stored[key]
+        if ( !istable(optionData) ) then
+            ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
+            return nil
+        end
+
+        return optionData.Default
+    end
+
     function ow.option:ResetAll()
         for k, v in pairs(self.stored) do
             v.Value = nil

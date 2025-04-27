@@ -5,9 +5,9 @@ concommand.Add("ow_thirdperson_toggle", function()
 end, nil, ow.localization:GetPhrase("options.thirdperson.toggle"))
 
 concommand.Add("ow_thirdperson_reset", function()
-    ow.option:Set("thirdperson.position.x", 0)
-    ow.option:Set("thirdperson.position.y", 0)
-    ow.option:Set("thirdperson.position.z", 0)
+    ow.option:Set("thirdperson.position.x", ow.option:GetDefault("thirdperson.position.x"))
+    ow.option:Set("thirdperson.position.y", ow.option:GetDefault("thirdperson.position.y"))
+    ow.option:Set("thirdperson.position.z", ow.option:GetDefault("thirdperson.position.z"))
 end, nil, ow.localization:GetPhrase("options.thirdperson.reset"))
 
 local fakePos
@@ -105,6 +105,22 @@ function MODULE:ShouldDrawLocalPlayer(ply)
     return ow.option:Get("thirdperson", false)
 end
 
+/*
 function MODULE:AddToolMenuCategories()
     spawnmenu.AddToolCategory("Overwatch", "User", "User")
 end
+
+function MODULE:AddToolMenuTabs()
+    spawnmenu.AddToolTab("Overwatch", "Overwatch", "icon16/computer.png")
+
+    spawnmenu.AddToolMenuOption("Overwatch", "User", "ow_thirdperson", "Third Person", "", "", function(panel)
+        panel:ClearControls()
+
+        panel:AddControl("Header", { Text = ow.localization:GetPhrase("options.thirdperson.title"), Description = ow.localization:GetPhrase("options.thirdperson.description") })
+        panel:CheckBox(ow.localization:GetPhrase("options.thirdperson.enable"), "ow_thirdperson_enable")
+        panel:NumSlider(ow.localization:GetPhrase("options.thirdperson.position.x"), "ow_thirdperson_position_x", -1000, 1000, 0)
+        panel:NumSlider(ow.localization:GetPhrase("options.thirdperson.position.y"), "ow_thirdperson_position_y", -1000, 1000, 0)
+        panel:NumSlider(ow.localization:GetPhrase("options.thirdperson.position.z"), "ow_thirdperson_position_z", -1000, 1000, 0)
+    end)
+end
+*/
