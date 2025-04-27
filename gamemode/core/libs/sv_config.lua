@@ -17,7 +17,7 @@ function ow.config:Set(key, value, ply)
         return false
     end
 
-    if ( ow.util:SanitizeType(value) != stored.Type ) then
+    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
         ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
         return false
     end
@@ -52,10 +52,6 @@ function ow.config:Load()
         if ( config[k] != nil ) then
             v.Value = config[k]
         end
-
-        if ( schemaConfig[k] != nil ) then
-            v.Value = schemaConfig[k]
-        end
     end
 
     local compressed = util.Compress(util.TableToJSON(self.stored))
@@ -76,12 +72,6 @@ function ow.config:GetSaveData(bSchema)
     local saveData = {}
     for k, v in pairs(self.stored) do
         if ( v.Value and v.Value != v.Default ) then
-            if ( bSchema ) then 
-                if ( !tobool(v.Schema) ) then 
-                    continue 
-                end 
-            end
-
             saveData[k] = v.Value
         end
     end
@@ -98,10 +88,8 @@ function ow.config:Save()
     hook.Run("PreConfigSave")
 
     local values = self:GetSaveData()
-    local schemaValues = self:GetSaveData(true)
 
     ow.data:Set("config", values, true, false)
-    ow.data:Set("config", schemaValues, false, false) -- schema config
 
     hook.Run("PostConfigSave", values)
     ow.util:Print("Configuration saved.")

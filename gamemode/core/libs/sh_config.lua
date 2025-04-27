@@ -69,7 +69,6 @@ end
 local requiredFields = {
     "DisplayName",
     "Description",
-    "Type",
     "Default"
 }
 
@@ -82,6 +81,15 @@ function ow.config:Register(key, data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
             ow.util:PrintError("Configuration \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
+            return false
+        end
+    end
+
+    if ( data.Type == nil ) then
+        data.Type = ow.util:GetTypeFromValue(data.Default)
+
+        if ( data.Type == nil ) then
+            ow.util:PrintError("Config \"" .. key .. "\" has an invalid type!")
             return false
         end
     end

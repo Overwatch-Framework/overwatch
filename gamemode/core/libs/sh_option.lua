@@ -14,7 +14,7 @@ function ow.option:SetDefault(key, default)
     stored.Default = default
 
     if ( SERVER ) then
-        local compressed = util.Compress(util.TableToJSON(self:GetSaveData()))
+        local compressed = util.Compress(util.TableToJSON(self.stored))
 
         net.Start("ow.option.syncServer")
             net.WriteData(compressed, #compressed)
@@ -125,7 +125,6 @@ end
 local requiredFields = {
     "DisplayName",
     "Description",
-    "Type",
     "Default"
 }
 
@@ -136,6 +135,15 @@ function ow.option:Register(key, data)
     for _, v in pairs(requiredFields) do
         if ( data[v] == nil ) then
             ow.util:PrintError("Option \"" .. key .. "\" is missing required field \"" .. v .. "\"!\n")
+            return false
+        end
+    end
+
+    if ( data.Type == nil ) then
+        data.Type = ow.util:GetTypeFromValue(data.Default)
+
+        if ( data.Type == nil ) then
+            ow.util:PrintError("Option \"" .. key .. "\" has an invalid type!")
             return false
         end
     end
