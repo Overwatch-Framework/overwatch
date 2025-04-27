@@ -13,8 +13,21 @@ end, nil, ow.localization:GetPhrase("options.thirdperson.reset"))
 local fakePos
 local fakeAngles
 local fakeFov
+
+function MODULE:PreRenderThirdpersonView(ply, pos, angles, fov)
+    if ( IsValid(ow.gui.mainmenu) ) then
+        return false
+    end
+
+    if ( IsValid(ply:GetVehicle()) ) then
+        return false
+    end
+
+    return true
+end
+
 function MODULE:CalcView(ply, pos, angles, fov)
-    if ( !ow.option:Get("thirdperson", false) ) then
+    if ( !ow.option:Get("thirdperson", false) or hook.Run("PreRenderThirdpersonView", ply, pos, angles, fov) == false ) then
         fakePos = nil
         fakeAngles = nil
         fakeFov = nil
