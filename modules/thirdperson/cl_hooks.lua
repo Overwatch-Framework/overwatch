@@ -84,15 +84,18 @@ function MODULE:CalcView(ply, pos, angles, fov)
     local shootPos = traceData.HitPos
 
     local viewBob = angle_zero
-    viewBob.p = math.sin(CurTime() / 4) / 2
-    viewBob.y = math.cos(CurTime()) / 2
+    local curTime = CurTime()
+    local frameTime = FrameTime()
 
-    fakeAngles = LerpAngle(FrameTime() * 8, fakeAngles or angles, (shootPos - trace.HitPos):Angle() + viewBob)
-    fakePos = LerpVector(FrameTime() * 8, fakePos or trace.HitPos, trace.HitPos)
+    viewBob.p = math.sin(curTime / 4) / 2
+    viewBob.y = math.cos(curTime) / 2
+
+    fakeAngles = LerpAngle(frameTime * 8, fakeAngles or angles, (shootPos - trace.HitPos):Angle() + viewBob)
+    fakePos = LerpVector(frameTime * 8, fakePos or trace.HitPos, trace.HitPos)
 
     local distance = pos:Distance(traceData.HitPos) / 64
     distance = math.Clamp(distance, 0, 50)
-    fakeFov = Lerp(FrameTime(), fakeFov or fov, fov - distance)
+    fakeFov = Lerp(frameTime, fakeFov or fov, fov - distance)
 
     view.origin = fakePos or trace.HitPos
     view.angles = fakeAngles or angles
