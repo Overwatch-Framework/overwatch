@@ -36,7 +36,7 @@ function GM:PostPlayerInitialSpawn(ply)
 end
 
 function GM:PlayerDisconnected(ply)
-    if ( ply.owDatabase and !ply:IsBot() ) then
+    if ( !ply:IsBot() ) then
         ply:SetDBVar("play_time", ply:GetDBVar("play_time") + math.floor(CurTime() - ply:GetDBVar("last_played")))
         ply:SetDBVar("last_played", os.time())
         ply:SaveDB()
@@ -77,11 +77,10 @@ end
 
 function GM:PlayerSay(ply, text, teamChat)
     if ( string.sub(text, 1, 1) == "/" ) then
+        -- TODO: Arguments such as "bloody cop" "bloody" cop, don't work correctly
         local arguments = string.Explode(" ", string.sub(text, 2))
         local command = arguments[1]
         table.remove(arguments, 1)
-
-        -- TODO: Arguments such as "bloody cop" "bloody" cop, don't work correctly
 
         ow.command:Run(ply, command, arguments)
     else

@@ -2,11 +2,12 @@
 -- @module ow.character
 
 ow.character = {}
-ow.character.meta = ow.character.meta or {}
-ow.character.variables = ow.character.variables or {}
-ow.character.fields = ow.character.fields or {}
-ow.character.stored = ow.character.stored or {}
-ow.character.cache = ow.character.cache or {}
+
+ow.character.meta = ow.character.meta or {} -- All currently registered character meta functions.
+ow.character.variables = ow.character.variables or {} -- All currently registered variables.
+ow.character.fields = ow.character.fields or {} -- All currently registered fields.
+ow.character.stored = ow.character.stored or {} -- All currently stored characters which are in use.
+ow.character.cache = ow.character.cache or {} -- All currently cached variables from characters.
 
 --- Registers a variable for the character.
 -- @realm shared
@@ -93,4 +94,14 @@ function ow.character:GetVariable(id, key, callback, bNoCache)
     end
 
     return true, nil
+end
+
+function ow.character:GetPlayerByCharacter(id)
+    for _, ply in player.Iterator() do
+        if ( ply:GetCharacterID() == id ) then
+            return ply
+        end
+    end
+
+    return false, "Player not found"
 end

@@ -15,9 +15,12 @@ end)
 
 net.Receive("ow.item.add", function(len)
     local uniqueID = net.ReadString()
+    local itemID = net.ReadUInt(32)
     local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
-    ow.item:Add(uniqueID, data)
+    ow.item:Add(itemID, uniqueID, data)
+
+    print("Item " .. uniqueID .. " received with ID " .. itemID .. ".")
 end)
 
 net.Receive("ow.config.sync", function(len)
@@ -55,4 +58,8 @@ net.Receive("ow.option.set", function(len)
     if ( !istable(stored) ) then return end
 
     ow.option:Set(key, value)
+end)
+
+net.Receive("ow.database.save", function(len)
+    LocalPlayer().owDatabase = net.ReadTable()
 end)

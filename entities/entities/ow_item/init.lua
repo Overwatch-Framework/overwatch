@@ -13,7 +13,7 @@ end
 
 function ENT:SetItem(uniqueID)
     local itemData = ow.item:Get(uniqueID)
-    if ( !istable(itemData) ) then return false end
+    if ( !istable(itemData) ) then print("Item \"" .. uniqueID .. "\" not found!") return end
 
     self:SetModel(Model(itemData.Model))
 
@@ -67,14 +67,21 @@ function ENT:SetItem(uniqueID)
         itemData:OnSpawned(self)
     end
 
-    -- TODO: Assign item ID and unique ID
+    self:SetUniqueID(uniqueID)
+    self:SetData(itemData.Data or {})
+end
+
+function ENT:SetData(data)
+    if ( !istable(data) ) then return end
+
+    self.owItemData = data
 end
 
 function ENT:Use(ply)
     if ( !IsValid(ply) or !ply:IsPlayer() ) then return end
     if ( hook.Run("CanPlayerTakeItem", ply, self) == false ) then return end
 
-    local itemData = ow.item:Get(self:GetItemID())
+    local itemData = ow.item:Get(self:GetUniqueID())
     if ( !itemData ) then return end
 
     -- TODO: Should probably move this into some Inventory Action System
@@ -85,6 +92,8 @@ function ENT:Use(ply)
     ]]
 
     SafeRemoveEntity(self)
+
+    ply:ChatPrint("You took the " .. itemData.Name .. "!")
 
     hook.Run("PlayerTookItem", ply, self)
 end

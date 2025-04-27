@@ -29,6 +29,13 @@ end
 function PLAYER:SaveDB()
     if ( self.owDatabase ) then
         ow.sqlite:SaveRow("ow_players", self.owDatabase, "steamid")
+
+        -- Network it to the client so they can update their local copy of the database
+        -- This is useful for when the player is in the main menu and we want to retrieve something from the database
+        -- via the client
+        net.Start("ow.database.save")
+            net.WriteTable(self.owDatabase)
+        net.Send(self)
     end
 end
 

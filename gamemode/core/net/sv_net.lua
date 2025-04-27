@@ -3,6 +3,7 @@ util.AddNetworkString("ow.gesture.play")
 util.AddNetworkString("ow.item.add")
 util.AddNetworkString("ow.config.sync")
 util.AddNetworkString("ow.config.set")
+util.AddNetworkString("ow.database.save")
 
 net.Receive("ow.config.set", function(len, ply)
     if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end

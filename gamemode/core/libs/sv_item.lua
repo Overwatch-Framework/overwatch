@@ -5,42 +5,57 @@
 -- @realm server
 -- @param number ownerID The ID of the character who owns the item.
 -- @param string uniqueID The uniqueID of the item.
--- @param table data The data to save with the item.
+-- @param table data Additional data for the item.
 -- @param function callback The callback function.
--- @return table The item table.
+-- @return boolean True if the item was added successfully, false otherwise.
 function ow.item:Add(ownerID, uniqueID, data, callback)
-    if ( !ownerID or !uniqueID ) then return end
-    if ( !self.stored[uniqueID] ) then return end
+    if ( !ownerID or !uniqueID or !self.stored[uniqueID] ) then return end
 
-    local item = table.Copy(self.stored[uniqueID])
-    if ( !item ) then return end
+    if ( !data ) then data = {} end
 
-    item.Data = data.Data
-
-    ow.sqlite:Insert("items", {
+    ow.sqlite:Insert("ow_items", {
         owner_id = ownerID,
         unique_id = uniqueID,
-        data = util.TableToJSON(data or {})
-    }, function(dataReceived)
+        inv_id = 1,
+        data = util.Compress(util.TableToJSON(data))
+    }, function(id)
+        if ( !id ) then return end
+        print("Item " .. uniqueID .. " added to character " .. ownerID .. ".")
         local receiver = ow.character:GetPlayerByCharacter(ownerID)
         if ( IsValid(receiver) ) then
-            local compressed = util.Compress(util.TableToJSON(dataReceived))
+            print("Sending item " .. uniqueID .. " to player " .. receiver:Name() .. ".")
+            local compressed = util.Compress(util.TableToJSON(data))
 
             net.Start("ow.item.add")
                 net.WriteString(uniqueID)
+                net.WriteUInt(id, 32)
                 net.WriteData(compressed, #compressed)
             net.Send(receiver)
+        else
+            print("Player not found for character " .. ownerID .. ".")
         end
 
         if ( callback ) then
-            callback(item)
+            callback(id, data)
         end
     end)
 
     hook.Run("OnItemAdded", item, ownerID, uniqueID, data)
 
-    return item
+    return true
 end
+
+concommand.Add("ow_item_add", function(ply, cmd, args)
+    if ( !ply:IsAdmin() ) then return end
+
+    local uniqueID = args[1]
+
+    ow.item:Add(1, uniqueID, nil, function(itemID, data)
+        if ( !itemID ) then return end
+
+        ply:ChatPrint("Item " .. uniqueID .. " added with ID " .. itemID .. ".")
+    end)
+end)
 
 --- Spawns an item entity with the given uniqueID, position and angles.
 -- @realm server
@@ -48,65 +63,41 @@ end
 -- @param Vector pos The position of the item.
 -- @param Angle angles The angles of the item.
 -- @param function callback The callback function.
+-- @param table data Additional data for the item.
+-- @return Entity The spawned item entity.
 function ow.item:Spawn(uniqueID, position, angles, callback, data)
-    self:Instance(0, uniqueID, data or {}, 1, function(item)
-        local entity = item:Spawn(position, angles)
+    if ( !uniqueID or !position or !self.stored[uniqueID] ) then return end
+
+    local entity = ents.Create("ow_item")
+    if ( IsValid(entity) ) then
+        entity:SetPos(position)
+        entity:SetAngles(angles or Angle(0, 0, 0))
+        entity:Spawn()
+        entity:Activate()
+        entity:SetItem(uniqueID)
+        entity:SetData(data or {})
 
         if ( callback ) then
-            callback(item, entity)
+            callback(entity)
         end
-    end)
-end
 
-function ow.item:Instance(index, uniqueID, data, charID, callback)
-    if ( !self.stored[uniqueID] ) then return end
-
-    local itemTable = table.Copy(self.stored[uniqueID])
-    if ( !itemTable ) then return end
-
-    ow.sqlite:Insert("items", {
-        unique_id = uniqueID,
-        data = util.TableToJSON(data or {}),
-        owner_id = charID,
-        inv_id = index,
-    }, function(dataReceived)
-        local item = ow.item:New(uniqueID, dataReceived)
-        if ( item ) then
-            item.Data = data
-            item.InvID = index
-            item.charID = charID
-
-            if ( isfunction(callback) ) then
-                callback(item)
-            end
-
-            if ( isfunction(item.OnInstanced) ) then
-                item:OnInstanced(dataReceived)
-            end
-        end
-    end)
-
-    return item
-end
-
-function ow.item:New(uniqueID, id)
-    if ( ow.item.instances[id] and ow.item.instances[id].uniqueID == uniqueID ) then
-        return ow.item.instances[id]
+        return entity
     end
 
-    local itemTable = table.Copy(self.stored[uniqueID])
-    if ( !itemTable ) then return end
-
-    local ITEM = setmetatable({
-        ID = id,
-        Data = {},
-    }, {
-        __index = itemTable,
-        __tostring = itemTable.__tostring,
-        __eq = itemTable.__eq,
-    })
-
-    ow.item.instances[id] = ITEM
-
-    return ITEM
+    return nil
 end
+
+concommand.Add("ow_item_spawn", function(ply, cmd, args)
+    if ( !ply:IsAdmin() ) then return end
+
+    local uniqueID = args[1]
+    local position = ply:GetEyeTrace().HitPos + Vector(0, 0, 10)
+
+    ow.item:Spawn(uniqueID, position, nil, function(entity)
+        if ( IsValid(entity) ) then
+            ply:ChatPrint("Item " .. uniqueID .. " spawned.")
+        else
+            ply:ChatPrint("Failed to spawn item " .. uniqueID .. ".")
+        end
+    end)
+end)
