@@ -21,7 +21,7 @@ if ( CLIENT ) then
         local ply = LocalPlayer()
         if ( !IsValid(ply) or !ply:InObserver() or !ply:Alive() or !ply:GetNoDraw() ) then return end
 
-        if ( !hook.Run("ShouldDrawObserverHUD", ply) ) then return end
+        if ( hook.Run("ShouldDrawObserverHUD", ply) == false ) then return end
 
         local playerCount = 0
         local admins = 0
