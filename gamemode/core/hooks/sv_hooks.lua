@@ -1,3 +1,4 @@
+local loadQueue = {}
 function GM:PlayerInitialSpawn(ply)
     ow.sqlite:LoadRow("ow_players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
@@ -11,10 +12,10 @@ function GM:PlayerInitialSpawn(ply)
         ply:SetDBVar("data", IsValid(data) and data["data"] or "[]")
         ply:SaveDB()
 
-        ow.character:LoadAll(ply)
-
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
+
+        loadQueue[ply] = true
 
         -- Do not render the player, as we are in the main menu
         -- and we do not have a character loaded yet
@@ -23,14 +24,22 @@ function GM:PlayerInitialSpawn(ply)
         ply:SetMoveType(MOVETYPE_NONE)
 
         ply:KillSilent()
-        ply:SendLua("vgui.Create(\"ow.mainmenu\")")
 
         ow.config:Synchronize(ply)
+    end)
+end
 
+function GM:StartCommand(ply, cmd)
+    if ( loadQueue[ply] and !cmd:IsForced() ) then
+        loadQueue[ply] = nil
+        ow.character:LoadAll(ply)
         ow.util:SendChatText(nil, Color(25, 75, 150), ply:SteamName() .. " has joined the server.")
 
+        net.Start("ow.mainmenu")
+        net.Send(ply)
+
         hook.Run("PostPlayerInitialSpawn", ply)
-    end)
+    end
 end
 
 function GM:PostPlayerInitialSpawn(ply)

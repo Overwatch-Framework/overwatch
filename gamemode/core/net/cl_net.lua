@@ -84,3 +84,7 @@ net.Receive("ow.character.load.all", function(len)
     LocalPlayer().owCharacters = net.ReadTable()
     notification.AddLegacy("Characters loaded!", NOTIFY_GENERIC, 5)
 end)
+
+net.Receive("ow.mainmenu", function(len)
+    ow.gui.mainmenu = vgui.Create("ow.mainmenu")
+end)
