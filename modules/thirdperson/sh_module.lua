@@ -5,67 +5,60 @@ MODULE.Description = "Allows players to view themselves in third person."
 MODULE.Author = "Riggs"
 
 ow.localization:Register("en", {
-    ["ow.option.thirdperson"] = "Third Person",
-
-    ["ow.option.thirdperson.enable"] = "Enable Third Person",
-    ["ow.option.thirdperson.enable.help"] = "Enable or disable third person view.",
-
-    ["ow.options.thirdperson.followhead"] = "Follow Head",
-    ["ow.options.thirdperson.followhead.help"] = "Follow the player's head with the third person camera.",
-
-    ["ow.options.thirdperson.position.x"] = "Position X",
-    ["ow.options.thirdperson.position.x.help"] = "Set the X position of the third person camera.",
-
-    ["ow.options.thirdperson.position.y"] = "Position Y",
-    ["ow.options.thirdperson.position.y.help"] = "Set the Y position of the third person camera.",
-
-    ["ow.options.thirdperson.position.z"] = "Position Z",
-    ["ow.options.thirdperson.position.z.help"] = "Set the Z position of the third person camera.",
-
-    ["ow.options.thirdperson.reset"] = "Reset third person camera position.",
-    ["ow.options.thirdperson.toggle"] = "Toggle third person view.",
-
-    ["ow.category.thirdperson"] = "Third Person",
+    ["category.thirdperson"] = "Third Person",
+    ["option.thirdperson"] = "Third Person",
+    ["option.thirdperson.enable"] = "Enable Third Person",
+    ["option.thirdperson.enable.help"] = "Enable or disable third person view.",
+    ["options.thirdperson.followhead"] = "Follow Head",
+    ["options.thirdperson.followhead.help"] = "Follow the player's head with the third person camera.",
+    ["options.thirdperson.position.x"] = "Position X",
+    ["options.thirdperson.position.x.help"] = "Set the X position of the third person camera.",
+    ["options.thirdperson.position.y"] = "Position Y",
+    ["options.thirdperson.position.y.help"] = "Set the Y position of the third person camera.",
+    ["options.thirdperson.position.z"] = "Position Z",
+    ["options.thirdperson.position.z.help"] = "Set the Z position of the third person camera.",
+    ["options.thirdperson.reset"] = "Reset third person camera position.",
+    ["options.thirdperson.toggle"] = "Toggle third person view.",
 })
 
 ow.option:Register("thirdperson", {
-    DisplayName = "ow.option.thirdperson",
+    DisplayName = "option.thirdperson",
     Type = ow.type.bool,
     Default = false,
-    Description = "ow.option.thirdperson.enable.help",
-    Category = "ow.category.thirdperson"
+    Description = "option.thirdperson.enable.help",
+    Category = "category.thirdperson"
 })
 
 ow.option:Register("thirdperson.followhead", {
-    DisplayName = "ow.options.thirdperson.followhead",
+    DisplayName = "options.thirdperson.followhead",
     Type = ow.type.bool,
     Default = false,
-    Description = "ow.options.thirdperson.followhead.help",
-    Category = "ow.category.thirdperson"
+    Description = "options.thirdperson.followhead.help",
+    Category = "category.thirdperson"
 })
 
 ow.option:Register("thirdperson.position.x", {
-    DisplayName = "ow.options.thirdperson.position.x",
+    DisplayName = "options.thirdperson.position.x",
     Type = ow.type.number,
     Default = 0,
-    Description = "ow.options.thirdperson.position.x.help",
-    Category = "ow.category.thirdperson"
+    Description = "options.thirdperson.position.x.help",
+    Category = "category.thirdperson"
 })
 
 ow.option:Register("thirdperson.position.y", {
-    DisplayName = "ow.options.thirdperson.position.y",
+    DisplayName = "options.thirdperson.position.y",
     Type = ow.type.number,
     Default = 0,
-    Description = "ow.options.thirdperson.position.y.help",
-    Category = "ow.category.thirdperson"
+    Description = "options.thirdperson.position.y.help",
+    Category = "category.thirdperson"
 })
 
 ow.option:Register("thirdperson.position.z", {
-    DisplayName = "ow.options.thirdperson.position.z",
+    DisplayName = "options.thirdperson.position.z",
     Type = ow.type.number,
     Default = 0,
-    Description = "ow.options.thirdperson.position.z.help",
-    Category = "ow.category.thirdperson"
+    Description = "options.thirdperson.position.z.help",
+    Category = "category.thirdperson"
 })
 
 local meta = FindMetaTable("Player")
