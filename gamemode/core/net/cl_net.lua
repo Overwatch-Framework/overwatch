@@ -63,3 +63,22 @@ end)
 net.Receive("ow.database.save", function(len)
     LocalPlayer().owDatabase = net.ReadTable()
 end)
+
+net.Receive("ow.character.load", function(len)
+    local data = net.ReadTable()
+    if ( !istable(data) ) then return end
+
+    local character = ow.character:CreateObject(data.id, data, LocalPlayer())
+    local id = character:GetID()
+
+    LocalPlayer().owCharacters = LocalPlayer().owCharacters or {}
+    LocalPlayer().owCharacters[id] = character
+    LocalPlayer().owCharacter = character
+
+    notification.AddLegacy("Character " .. id .. " loaded!", NOTIFY_GENERIC, 5)
+end)
+
+net.Receive("ow.character.load.all", function(len)
+    LocalPlayer().owCharacters = net.ReadTable()
+    notification.AddLegacy("Characters loaded!", NOTIFY_GENERIC, 5)
+end)

@@ -1,13 +1,12 @@
 --- Character library.
 -- @module ow.character
 
-ow.character = {}
+ow.character = ow.character or {} -- Character library.
 
 ow.character.meta = ow.character.meta or {} -- All currently registered character meta functions.
 ow.character.variables = ow.character.variables or {} -- All currently registered variables.
 ow.character.fields = ow.character.fields or {} -- All currently registered fields.
 ow.character.stored = ow.character.stored or {} -- All currently stored characters which are in use.
-ow.character.cache = ow.character.cache or {} -- All currently cached variables from characters.
 
 --- Registers a variable for the character.
 -- @realm shared
@@ -34,7 +33,7 @@ function ow.character:RegisterVariable(key, data)
     end
 
     self.meta["Get" .. upperKey] = function(this)
-        return self:GetVariable(key)
+        return self:GetVariable(this:GetID(), key)
     end
 
     if ( data.Alias != nil ) then
@@ -44,7 +43,7 @@ function ow.character:RegisterVariable(key, data)
 
         for k, v in ipairs(data.Alias) do
             self.meta["Get" .. v] = function(this)
-                return self:GetVariable(key)
+                return self:GetVariable(this:GetID(), key)
             end
 
             self.meta["Set" .. v] = function(this, value)
@@ -60,40 +59,60 @@ function ow.character:RegisterVariable(key, data)
     self.variables[key] = data
 end
 
-function ow.character:GetVariable(id, key, callback, bNoCache)
-    if ( !istable(self.variables[id]) ) then
-        return false, "Variable not found"
+function ow.character:SetVariable(id, key, value)
+    if ( !self.variables[key] ) then return end
+
+    local character = self.stored[id]
+    if ( !character ) then return end
+
+    local data = self.variables[key]
+    if ( data.OnSet ) then
+        data:OnSet(character, value)
     end
 
-    if ( self.cache[key] and !bNoCache ) then
-        return self.cache[key]
-    end
-
-    local data = self.variables[id]
+    character[key] = value
 
     if ( SERVER ) then
-        local field = data.Field
-        if ( field ) then
-            local query = string.format("%s = %s", field, sql.SQLStr(key))
-            local result = ow.sqlite:Select("ow_characters", nil, query)
+        ow.sqlite:Update("ow_characters", { [key] = value }, { id = id })
+    end
+end
 
-            if ( result and result[1] ) then
-                self.cache[key] = result[1]
-            else
-                self.cache[key] = {}
-            end
+function ow.character:GetVariable(id, key)
+    local character = self.stored[id]
+    if ( !character ) then return end
 
-            if ( callback ) then
-                callback(self.cache[key])
-            end
-        else
-            callback(self.cache[key])
-        end
-    else
-        callback(self.cache[key])
+    local variable = self.variables[key]
+    if ( !variable ) then return end
+
+    if ( variable.OnGet ) then
+        return variable:OnGet(character, character[key])
     end
 
-    return true, nil
+    return character[key]
+end
+
+function ow.character:CreateObject(id, data, ply)
+    local character = setmetatable({}, self.meta)
+    character.id = id
+    character.player = ply or NULL
+    character.schema = SCHEMA.Folder
+    character.steamid = ply and ply:SteamID64() or nil
+
+    for k, v in pairs(self.variables) do
+        if ( data[k] ) then
+            character[k] = data[k]
+        elseif ( v.Default ) then
+            character[k] = v.Default
+        end
+
+        if ( v.OnCreate ) then
+            v:OnCreate(character, data[k])
+        end
+    end
+
+    self.stored[id] = character
+
+    return character
 end
 
 function ow.character:GetPlayerByCharacter(id)

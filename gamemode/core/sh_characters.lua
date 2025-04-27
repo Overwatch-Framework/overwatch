@@ -23,7 +23,28 @@ ow.character:RegisterVariable("name", {
 
     Editable = true,
     ZPos = -3,
-    DisplayName = "Name"
+    DisplayName = "Name",
+
+    AllowNonAscii = false,
+    Numeric = false,
+
+    OnValidate = function(self, parent, payload)
+        if ( string.len(payload.name) < 3 ) then
+            return false, "Name must be at least 3 characters long!"
+        elseif ( string.len(payload.name) > 32 ) then
+            return false, "Name must be at most 32 characters long!"
+        end
+
+        if ( string.find(payload.name, "[^%a%d%s]") ) then
+            return false, "Name can only contain letters, numbers and spaces!"
+        end
+
+        if ( string.find(payload.name, "%s%s") ) then
+            return false, "Name cannot contain multiple spaces in a row!"
+        end
+
+        return true
+    end
 })
 
 ow.character:RegisterVariable("description", {
@@ -33,7 +54,15 @@ ow.character:RegisterVariable("description", {
 
     Editable = true,
     ZPos = 0,
-    DisplayName = "Description"
+    DisplayName = "Description",
+
+    OnValidate = function(self, parent, payload)
+        if ( string.len(payload.description) < 10 ) then
+            return false, "Description must be at least 10 characters long!"
+        end
+
+        return true
+    end
 })
 
 ow.character:RegisterVariable("model", {
@@ -44,6 +73,27 @@ ow.character:RegisterVariable("model", {
     Editable = true,
     ZPos = 0,
     DisplayName = "Model",
+
+    OnValidate = function(self, parent, payload)
+        local factionIndex = payload.factionIndex or 1
+        local faction = ow.faction:Get(factionIndex)
+        if ( faction and faction.Models ) then
+            local found = false
+            for _, v in SortedPairs(faction.Models) do
+                if ( v == payload.model ) then
+                    found = true
+                    break
+                end
+            end
+
+            if ( !found ) then
+                return false, "Model is not valid for this faction!"
+            end
+        end
+
+        return true
+    end,
+
     OnPopulate = function(self, parent, payload)
         local label = parent:Add("DLabel")
         label:Dock(TOP)
@@ -70,6 +120,7 @@ ow.character:RegisterVariable("model", {
                 icon:SetTooltip(v)
                 icon.DoClick = function()
                     notification.AddLegacy("Model set to " .. v, NOTIFY_GENERIC, 5)
+                    payload.model = v
                 end
             end
         end
@@ -89,14 +140,7 @@ ow.character:RegisterVariable("class", {
 })
 
 ow.character:RegisterVariable("inventory", {
-    bNoNetworking = true,
-    bNoDisplay = true,
-    --[[OnGet = function(character, index) -- TODO, we need the bloody OnGet and OnSet support
-        if (index and !isnumber(index)) then
-            return character.vars.inv or {}
-        end
-
-        return character.vars.inv and character.vars.inv[index or 1]
-    end,]]
-    alias = "Inv"
+    Type = ow.type.number,
+    Field = "inventory",
+    Default = 0
 })

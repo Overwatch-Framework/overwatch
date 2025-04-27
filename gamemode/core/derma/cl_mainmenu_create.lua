@@ -11,7 +11,35 @@ function PANEL:Init()
     self:SetVisible(false)
 
     self.currentCreatePage = 0
-    self.currentCreatePayload = {}
+end
+
+function PANEL:ResetPayload()
+    self.currentCreatePage = 0
+
+    for k, v in pairs(ow.character.variables) do
+        if ( v.Editable != true ) then continue end
+
+        -- This is a bit of a hack, but it works for now.
+        if ( v.Type == ow.type.string or v.Type == ow.type.text ) then
+            self:SetPayload(k, "")
+        end
+    end
+end
+
+function PANEL:SetPayload(key, value)
+    if ( !self.currentCreatePayload ) then
+        self.currentCreatePayload = {}
+    end
+
+    self.currentCreatePayload[key] = value
+end
+
+function PANEL:GetPayload(key)
+    if ( !self.currentCreatePayload ) then
+        self.currentCreatePayload = {}
+    end
+
+    return self.currentCreatePayload[key]
 end
 
 function PANEL:PopulateFactionSelect()
@@ -54,7 +82,7 @@ function PANEL:PopulateFactionSelect()
     backButton:SetText("BACK")
     backButton.DoClick = function()
         self.currentCreatePage = 0
-        self.currentCreatePayload = {}
+        self:ResetPayload()
 
         self:Clear()
         self:SetVisible(false)
@@ -76,8 +104,8 @@ function PANEL:PopulateFactionSelect()
 
         factionButton.DoClick = function()
             self.currentCreatePage = 0
-            self.currentCreatePayload = {}
-            self.currentCreatePayload.factionIndex = v.Index
+            self:ResetPayload()
+            self:SetPayload("factionIndex", v.Index)
 
             self:PopulateCreateCharacter()
         end
@@ -136,7 +164,7 @@ function PANEL:PopulateCreateCharacter()
                 self:PopulateFactionSelect()
             else
                 self.currentCreatePage = 0
-                self.currentCreatePayload = {}
+                self:ResetPayload()
                 parent:Populate()
                 self:Clear()
             end
@@ -155,6 +183,14 @@ function PANEL:PopulateCreateCharacter()
         for k, v in pairs(ow.character.variables) do
             if ( v.Editable != true ) then continue end
 
+            if ( isfunction(v.OnValidate) ) then
+                local isValid, errorMessage = v:OnValidate(self.characterCreateForm, self.currentCreatePayload)
+                if ( !isValid ) then
+                    notification.AddLegacy(errorMessage, NOTIFY_ERROR, 5)
+                    return
+                end
+            end
+
             local page = v.Page or 0
             if ( page != self.currentCreatePage + 1 ) then continue end
 
@@ -163,24 +199,16 @@ function PANEL:PopulateCreateCharacter()
                 if ( isNextEmpty ) then continue end
             end
 
-            if ( v.Type == ow.type.string ) then
+            if ( v.Type == ow.type.string or v.Type == ow.type.text ) then
                 local entry = self.characterCreateForm:GetChild(k)
                 if ( entry and entry:GetValue() != "" ) then
-                    self.currentCreatePayload[k] = entry:GetValue()
-                    isNextEmpty = false
-                end
-            elseif ( v.Type == ow.type.text ) then
-                local entry = self.characterCreateForm:GetChild(k)
-                if ( entry and entry:GetValue() != "" ) then
-                    self.currentCreatePayload[k] = entry:GetValue()
+                    self:SetPayload(k, entry:GetValue())
                     isNextEmpty = false
                 end
             end
         end
 
         if ( isNextEmpty ) then
-            -- TODO: Start networking to create the character
-
             net.Start("ow.character.create")
                 net.WriteTable(self.currentCreatePayload)
             net.SendToServer()
@@ -238,6 +266,19 @@ function PANEL:PopulateCreateCharacterForm()
             entry:SetPlaceholderText(v.Default or "")
             entry:SetTall(ScreenScale(16))
             entry:SetZPos(zPos)
+
+            entry:SetNumeric(v.Numeric or false)
+            entry:SetAllowNonAsciiCharacters(v.AllowNonAscii or false)
+
+            entry.OnTextChanged = function(this)
+                local text = this:GetValue()
+
+                if ( isfunction(v.OnChange) ) then
+                    v:OnChange(this, text, self.currentCreatePayload)
+                end
+
+                self:SetPayload(k, text)
+            end
         elseif ( v.Type == ow.type.text ) then
             zPos = zPos + 1 + v.ZPos
 
@@ -261,6 +302,16 @@ function PANEL:PopulateCreateCharacterForm()
             entry:SetMultiline(true)
             entry:SetTall(ScreenScale(12) * 4)
             entry:SetZPos(zPos)
+
+            entry.OnTextChanged = function(this)
+                local text = this:GetValue()
+
+                if ( isfunction(v.OnChange) ) then
+                    v:OnChange(this, text, self.currentCreatePayload)
+                end
+
+                self:SetPayload(k, text)
+            end
         end
     end
 end

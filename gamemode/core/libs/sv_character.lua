@@ -1,30 +1,6 @@
 --- Character library.
 -- @module ow.character
 
-function ow.character:SetVariable(id, key, value)
-    if ( !istable(self.variables[id]) ) then
-        return false, "Variable not found"
-    end
-
-    local data = self.variables[id]
-
-    if ( SERVER ) then
-        local field = data.Field
-        if ( field ) then
-            local query = string.format("%s = %s", field, sql.SQLStr(key))
-            ow.sqlite:Update("ow_characters", { [field] = value }, query)
-        end
-
-        self.cache[key] = value
-    else
-        self.cache[key] = value
-    end
-
-    hook.Run("CharacterVariableSet", id, key, value)
-
-    return true, nil
-end
-
 function ow.character:Create(ply, query)
     if ( !IsValid(ply) or !ply:IsPlayer() ) then
         ErrorNoHalt("Attempted to create character for invalid player (" .. tostring(ply) .. ")")
@@ -60,14 +36,12 @@ function ow.character:Create(ply, query)
 
     ow.sqlite:Insert("ow_characters", insertQuery)
 
-    print("Created character with ID " .. id .. " for player " .. ply:Nick())
+    print("Created character with ID " .. id .. " for player " .. tostring(ply))
 
-    local character = setmetatable({
-        id = id
-    }, self.meta)
-
-    for k, v in pairs(self.variables) do
-        character[k] = v.Default
+    local character = self:CreateObject(id, insertQuery, ply)
+    if ( !character ) then
+        ErrorNoHalt("Failed to create character object for ID " .. id .. " for player " .. tostring(ply) .. "\n")
+        return false
     end
 
     hook.Run("PlayerCreatedCharacter", ply, character, query)
@@ -75,20 +49,88 @@ function ow.character:Create(ply, query)
     return character
 end
 
+function ow.character:Load(ply, id)
+    if ( !IsValid(ply) or !ply:IsPlayer() ) then
+        ErrorNoHalt("Attempted to load character for invalid player (" .. tostring(ply) .. ")\n")
+        return false
+    end
+
+    if ( !id ) then
+        ErrorNoHalt("Attempted to load character with invalid ID (" .. tostring(id) .. ")\n")
+        return false
+    end
+
+    local currentCharacter = ply:GetCharacter()
+    if ( currentCharacter and currentCharacter.id == id ) then
+        ErrorNoHalt("Attempted to load the same character (" .. id .. ") for player " .. tostring(ply) .. "\n")
+        return false
+    end
+
+    local steamID = ply:SteamID64()
+    local condition = string.format("steamid = %s AND id = %s", sql.SQLStr(steamID), sql.SQLStr(id))
+    local result = ow.sqlite:Select("ow_characters", nil, condition)
+
+    if ( result and result[1] ) then
+        local row = result[1]
+        local character = self:CreateObject(row.id, row, ply)
+        if ( !character ) then
+            ErrorNoHalt("Failed to create character object for ID " .. id .. " for player " .. tostring(ply) .. "\n")
+            return false
+        end
+
+        self.stored[row.id] = character
+
+        net.Start("ow.character.load")
+            net.WriteTable(character)
+        net.Send(ply)
+
+        ply.owCharacter = character
+        print(character:GetModel())
+        ply:SetModel(character:GetModel())
+        ply:Spawn()
+
+        hook.Run("PlayerLoadedCharacter", ply, character, currentCharacter)
+
+        return character
+    else
+        ErrorNoHalt("Failed to load character with ID " .. id .. " for player " .. tostring(ply) .. "\n")
+        return false
+    end
+end
+
+function ow.character:LoadAll(ply)
+    if ( !IsValid(ply) or !ply:IsPlayer() ) then
+        ErrorNoHalt("Attempted to load characters for invalid player (" .. tostring(ply) .. ")\n")
+        return false
+    end
+
+    local steamID = ply:SteamID64()
+
+    local condition = string.format("steamid = %s", sql.SQLStr(steamID))
+    local result = ow.sqlite:Select("ow_characters", nil, condition)
+
+    -- Ensure the player has a table to store characters
+    ply.owCharacters = {}
+
+    if ( result ) then
+        for _, row in ipairs(result) do
+            local character = self:CreateObject(row.id, row, ply)
+            self.stored[row.id] = character
+            ply.owCharacters[row.id] = character
+        end
+    end
+
+    net.Start("ow.character.load.all")
+        net.WriteTable(ply.owCharacters)
+    net.Send(ply)
+
+    hook.Run("PlayerLoadedAllCharacters", ply, ply.owCharacters)
+
+    return ply.owCharacters
+end
+
 concommand.Add("ow_character_test_create", function(ply, cmd, args)
     ow.character:Create(ply, {
         name = "Test Character"
     })
 end)
-
-function ow.character:Load(id)
-    print("Loading character with ID: " .. id)
-end
-
-function ow.character:Save(character)
-    print("Saving character with ID: " .. character.id)
-end
-
-function ow.character:Delete(id)
-    print("Deleting character with ID: " .. id)
-end
