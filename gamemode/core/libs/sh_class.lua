@@ -5,6 +5,26 @@ ow.class = {}
 ow.class.stored = {}
 ow.class.instances = {}
 
+ow.class.meta = {
+    GetName = function(self)
+        return self.Name or "Unknown Class"
+    end,
+    GetDescription = function(self)
+        return self.Description or "No description available."
+    end,
+    GetIndex = function(self)
+        return self.Index or 0
+    end,
+    GetUniqueID = function(self)
+        return self.UniqueID or "unknown_class"
+    end,
+    GetIsDefault = function(self)
+        return self.IsDefault or false
+    end,
+}
+
+ow.class.meta.__index = ow.class.meta
+
 local default = {
     Name = "Unknown",
     Description = "No description available.",
@@ -14,45 +34,46 @@ local default = {
 }
 
 function ow.class:Register(classData)
-    if ( classData.faction == nil or !isnumber(classData.faction) ) then
+    local CLASS = setmetatable(classData, { __index = ow.class.meta })
+    if ( CLASS.faction == nil or !isnumber(CLASS.faction) ) then
         ow.util:PrintError("Attempted to register a class without a valid faction!")
         return false
     end
 
-    local faction = ow.faction:Get(classData.faction)
+    local faction = ow.faction:Get(CLASS.faction)
     if ( faction == nil or !istable(faction) ) then
         ow.util:PrintError("Attempted to register a class for an invalid faction!")
         return false
     end
 
     for k, v in pairs(default) do
-        if ( classData[k] == nil ) then
-            classData[k] = v
+        if ( CLASS[k] == nil ) then
+            CLASS[k] = v
         end
     end
 
-    local bResult = hook.Run("PreClassRegistered", classData)
+    local bResult = hook.Run("PreClassRegistered", CLASS)
     if ( bResult == false ) then return false end
 
-    local uniqueID = string.lower(string.gsub(classData.Name, "%s", "_"))
-    classData.UniqueID = classData.UniqueID or uniqueID
+    local uniqueID = string.lower(string.gsub(CLASS.Name, "%s", "_"))
+    CLASS.UniqueID = CLASS.UniqueID or uniqueID
 
-    self.stored[classData.UniqueID] = classData
-    self.instances[#self.instances + 1] = classData
+    self.stored[CLASS.UniqueID] = CLASS
+    self.instances[#self.instances + 1] = CLASS
 
-    classData.Index = #self.instances
+    CLASS.Index = #self.instances
 
-    hook.Run("PostClassRegistered", classData)
+    hook.Run("PostClassRegistered", CLASS)
 
     faction.Classes = faction.Classes or {}
-    faction.Classes[#faction.Classes + 1] = classData
+    faction.Classes[#faction.Classes + 1] = CLASS
 
-    return classData.Index
+    return CLASS.Index
 end
 
 function ow.class:Get(identifier)
     if ( identifier == nil ) then
-        ow.util:PrintError("Attempted to get an invalid faction!")
+        ow.util:PrintError("Attempted to get a faction with an invalid identifier!")
         return false
     end
 

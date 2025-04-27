@@ -22,18 +22,7 @@ local DEFAULT_MODELS = {
 ow.faction = {}
 ow.faction.stored = {}
 ow.faction.instances = {}
-
-local default = {
-    Name = "Unknown",
-    Description = "No description available.",
-    Models = DEFAULT_MODELS,
-    IsDefault = false,
-    Color = color_white,
-    CanSwitchTo = nil,
-    OnSwitch = nil
-}
-
-local metaFaction = {
+ow.faction.meta = {
     GetName = function(self)
         return self.Name or "Unknown Faction"
     end,
@@ -43,12 +32,36 @@ local metaFaction = {
     GetModels = function(self)
         return self.Models or DEFAULT_MODELS
     end,
+    GetColor = function(self)
+        return self.Color or color_white
+    end,
+    GetIndex = function(self)
+        return self.Index or 0
+    end,
+    GetUniqueID = function(self)
+        return self.UniqueID or "unknown_faction"
+    end,
+    GetIsDefault = function(self)
+        return self.IsDefault or false
+    end,
+    GetClasses = function(self)
+        return self.Classes or {}
+    end,
 }
 
-metaFaction.__index = metaFaction
+ow.faction.meta.__index = ow.faction.meta
+
+local default = {
+    Name = "Unknown Faction",
+    Description = "No description available.",
+    Models = DEFAULT_MODELS,
+    IsDefault = false,
+    Color = color_white,
+    Classes = {},
+}
 
 function ow.faction:Register(factionData)
-    local FACTION = setmetatable(factionData, { __index = metaFaction })
+    local FACTION = setmetatable(factionData, { __index = ow.faction.meta })
 
     for k, v in pairs(default) do
         if ( FACTION[k] == nil ) then
@@ -56,21 +69,16 @@ function ow.faction:Register(factionData)
         end
     end
 
-
     local bResult = hook.Run("PreFactionRegistered", FACTION)
     if ( bResult == false ) then return false end
 
-    local uniqueID = string.lower(string.gsub(FACTION.Name, "%s", "_"))
+    local uniqueID = string.lower(string.gsub(FACTION.Name, "%s+", "_"))
     FACTION.UniqueID = FACTION.UniqueID or uniqueID
 
     self.stored[FACTION.UniqueID] = FACTION
     self.instances[#self.instances + 1] = FACTION
 
     FACTION.Index = #self.instances
-
-    FACTION["GetName"] = function(self)
-        return self.Name
-    end
 
     team.SetUp(FACTION.Index, FACTION.Name, FACTION.Color, false)
     hook.Run("PostFactionRegistered", FACTION)
@@ -79,12 +87,16 @@ function ow.faction:Register(factionData)
 end
 
 function ow.faction:Get(identifier)
+    if ( identifier == nil ) then
+        ow.util:PrintError("Attempted to get a faction without an identifier!")
+        return false
+    end
+    
     if ( self.stored[identifier] ) then
         return self.stored[identifier]
     end
 
     if ( isnumber(identifier) ) then
-        print("Getting faction by index: " .. identifier)
         return self.instances[identifier]
     end
 
