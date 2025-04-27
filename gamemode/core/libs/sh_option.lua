@@ -152,6 +152,8 @@ function ow.option:Register(key, data)
         data.Category = "misc"
     end
 
+    data.UniqueID = key
+
     self.stored[key] = data
     hook.Run("PostOptionRegistered", key, data)
 
