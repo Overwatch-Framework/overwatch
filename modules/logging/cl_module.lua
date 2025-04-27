@@ -7,5 +7,5 @@ net.Receive("ow.logging.send", function(len)
 end)
 
 function MODULE:SendLog(...)
-    ow.util:Print(ow.colour:Get("ow.log.message"), "Logging >> ", color_white, ...)
+    ow.util:Print(ow.colour:Get("log.message"), "Logging >> ", color_white, ...)
 end
