@@ -77,7 +77,7 @@ function PANEL:PopulateFactionSelect()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("DButton")
+    local backButton = navigation:Add("ow.mainmenu.button.small")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
     backButton.DoClick = function()
@@ -97,7 +97,7 @@ function PANEL:PopulateFactionSelect()
     for k, v in ipairs(ow.faction:GetAll()) do
         if ( !ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then continue end
 
-        local factionButton = factionList:Add("DButton")
+        local factionButton = factionList:Add("ow.mainmenu.button.small")
         factionButton:Dock(LEFT)
         factionButton:SetText(v.Name or "Unknown Faction")
         factionButton:SetWide(self:GetWide() / 2 - padding * 4) -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
@@ -147,7 +147,7 @@ function PANEL:PopulateCreateCharacter()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("DButton")
+    local backButton = navigation:Add("ow.mainmenu.button.small")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
 
@@ -174,7 +174,7 @@ function PANEL:PopulateCreateCharacter()
         end
     end
 
-    local nextButton = navigation:Add("DButton")
+    local nextButton = navigation:Add("ow.mainmenu.button.small")
     nextButton:Dock(RIGHT)
     nextButton:SetText("NEXT")
 
@@ -249,7 +249,7 @@ function PANEL:PopulateCreateCharacterForm()
 
             local label = self.characterCreateForm:Add("ow.text")
             label:Dock(TOP)
-            label:SetText(v.DisplayName or k)
+            label:SetText(v.Name or k)
             label:SetFont("ow.fonts.button")
             label:SetTextColor(color_white)
             label:SizeToContents()
@@ -284,7 +284,7 @@ function PANEL:PopulateCreateCharacterForm()
 
             local label = self.characterCreateForm:Add("ow.text")
             label:Dock(TOP)
-            label:SetText(v.DisplayName or k)
+            label:SetText(v.Name or k)
             label:SetFont("ow.fonts.button")
             label:SetTextColor(color_white)
             label:SizeToContents()
