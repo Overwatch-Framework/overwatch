@@ -55,7 +55,7 @@ end
 
 function SKIN:PaintComboBox(panel, width, height)
     local color = lightGrayColorMoreTransparent
-    if ( panel:GetDisabled() ) then
+    if ( !panel:IsEnabled() ) then
         color = grayColor
     elseif ( panel.Depressed or panel:IsSelected() ) then
         color = lightGrayColorLessTransparent
@@ -77,7 +77,7 @@ end
 
 function SKIN:PaintMenuOption(panel, width, height)
     local color = lightGrayColorMoreTransparent
-    if ( panel:GetDisabled() ) then
+    if ( !panel:IsEnabled() ) then
         color = grayColor
     elseif ( panel.Depressed or panel:IsSelected() ) then
         color =  lightGrayColorLessTransparent
