@@ -169,10 +169,8 @@ function GM:HUDPaint()
         width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
-    
     if ( shouldDraw != nil and shouldDraw != false ) then
         local x, y = 100, 100
-        local width, height = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
 
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
         surface.SetDrawColor(hook.Run("GetFrameworkColor") or color_white)
