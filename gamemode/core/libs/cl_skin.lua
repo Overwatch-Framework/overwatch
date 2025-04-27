@@ -34,7 +34,7 @@ function SKIN:PaintButton(panel, width, height)
     if ( panel:GetDisabled() ) then
         color = grayColor
     elseif ( panel.Depressed or panel:IsSelected() ) then
-        color =  lightGrayColorLessTransparent
+        color = lightGrayColorLessTransparent
     elseif ( panel.Hovered ) then
         color = lightGrayColorLessTransparent
     end
