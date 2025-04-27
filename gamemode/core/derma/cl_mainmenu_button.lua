@@ -22,6 +22,14 @@ function PANEL:Init()
     self.textInsetTarget = {0, 0}
 end
 
+function PANEL:SetText(text, bNoTranslate)
+    if ( bNoTranslate ) then
+        BaseClass.SetText(self, text)
+    else
+        BaseClass.SetText(self, ow.localization:GetPhrase(text))
+    end
+end
+
 function PANEL:SetTextColorProperty(color)
     self.baseTextColor = color
     self:SetTextColor(color)
