@@ -46,3 +46,11 @@ end
 function ow.colour:Dim(col, frac)
     return Color(col.r * frac, col.g * frac, col.b * frac, col.a)
 end
+
+if ( CLIENT ) then
+    concommand.Add("ow_list_colours", function(ply, cmd, args)
+        for k, v in pairs(ow.colour.stored) do
+            ow.util:Print("Colour: " .. k .. " >> ", ow.colour:Get("cyan"), v, " Color Sample")
+        end
+    end)
+end
