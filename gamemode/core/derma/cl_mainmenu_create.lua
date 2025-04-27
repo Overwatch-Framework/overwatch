@@ -55,10 +55,10 @@ function PANEL:PopulateFactionSelect()
     backButton.DoClick = function()
         self.currentCreatePage = 0
         self.currentCreatePayload = {}
-        parent:Populate()
 
         self:Clear()
         self:SetVisible(false)
+        parent:Populate()
     end
 
     local factionList = self:Add("DPanel")
