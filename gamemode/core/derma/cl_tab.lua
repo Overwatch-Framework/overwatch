@@ -50,9 +50,9 @@ function PANEL:Init()
     self.gradientTopTarget = 0
     self.gradientBottomTarget = 0
 
-    self.fadeTime = 0.5
+    self.fadeTime = 0.1
 
-    self.anchorTime = CurTime() + 0.5
+    self.anchorTime = CurTime() + self.fadeTime
     self.anchorEnabled = true
 
     self:SetSize(ScrW(), ScrH())
