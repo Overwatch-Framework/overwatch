@@ -41,6 +41,9 @@ ow.option:Register("thirdperson.position.x", {
     Name = "options.thirdperson.position.x",
     Type = ow.type.number,
     Default = 50,
+    Min = -100,
+    Max = 100,
+    Decimals = 0,
     Description = "options.thirdperson.position.x.help",
     Category = "category.thirdperson"
 })
@@ -49,6 +52,9 @@ ow.option:Register("thirdperson.position.y", {
     Name = "options.thirdperson.position.y",
     Type = ow.type.number,
     Default = 25,
+    Min = -100,
+    Max = 100,
+    Decimals = 0,
     Description = "options.thirdperson.position.y.help",
     Category = "category.thirdperson"
 })
@@ -57,6 +63,9 @@ ow.option:Register("thirdperson.position.z", {
     Name = "options.thirdperson.position.z",
     Type = ow.type.number,
     Default = 0,
+    Min = -100,
+    Max = 100,
+    Decimals = 0,
     Description = "options.thirdperson.position.z.help",
     Category = "category.thirdperson"
 })
