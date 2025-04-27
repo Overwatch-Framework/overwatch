@@ -20,7 +20,7 @@ function MODULE:DoPlayerDeath(ply, attacker, dmginfo)
         end
     end
 
-    self:SendLog(Color(255, 0, 0), self:FormatPlayer(ply) .. " was killed by " .. attackerName .. " using " .. weaponName)
+    self:SendLog(ow.colour:Get("red"), self:FormatPlayer(ply) .. " was killed by " .. attackerName .. " using " .. weaponName)
 end
 
 function MODULE:EntityTakeDamage(ent, dmginfo)
@@ -29,7 +29,7 @@ function MODULE:EntityTakeDamage(ent, dmginfo)
     local attacker = dmginfo:GetAttacker()
     if ( !IsValid(attacker) ) then return end
 
-    self:SendLog(Color(255, 150, 0), self:FormatPlayer(ent) .. " took " .. dmginfo:GetDamage() .. " damage from " .. self:FormatEntity(attacker))
+    self:SendLog(ow.colour:Get("orange"), self:FormatPlayer(ent) .. " took " .. dmginfo:GetDamage() .. " damage from " .. self:FormatEntity(attacker))
 end
 
 function MODULE:PlayerInitialSpawn(ply)
