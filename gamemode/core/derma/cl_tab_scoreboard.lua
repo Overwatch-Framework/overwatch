@@ -111,7 +111,7 @@ function PANEL:PerformLayout(width, height)
         containerHeight = containerHeight + playerPanel:GetTall()
     end
 
-    self:SetTall(math.max(teamNameHeight, containerHeight) + ScreenScale(8))
+    self:SetTall(teamNameHeight + containerHeight)
 end
 
 function PANEL:Paint(width, height)
