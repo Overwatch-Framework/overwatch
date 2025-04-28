@@ -68,7 +68,7 @@ Provide a secure method for players to delete unwanted characters.
 - **Saving and Loading**
 Ensure character data, including stats and inventory, is saved and loaded accurately.
 
-### Player System
+### ~Player System~
 
 - ~**Data Management**
 Handle player-specific data such as settings and preferences.~
