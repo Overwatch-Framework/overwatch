@@ -1,5 +1,6 @@
 local padding = ScreenScale(32)
 local smallPadding = ScreenScale(16)
+local tinyPadding = ScreenScale(8)
 
 DEFINE_BASECLASS("EditablePanel")
 
@@ -55,23 +56,11 @@ function PANEL:PopulateFactionSelect()
     self:Clear()
     self:SetVisible(true)
 
-    local title = self:Add("DLabel")
+    local title = self:Add("ow.text")
     title:Dock(TOP)
     title:DockMargin(padding, padding, padding, 0)
     title:SetFont("ow.fonts.title")
-    title:SetText("CREATE CHARACTER")
-    title:SetTextColor(hook.Run("GetFrameworkColor"))
-    title:SetExpensiveShadow(4, color_black)
-    title:SizeToContents()
-
-    local subtitle = self:Add("DLabel")
-    subtitle:Dock(TOP)
-    subtitle:DockMargin(padding * 1.5, 0, padding, 0)
-    subtitle:SetFont("ow.fonts.subtitle")
-    subtitle:SetText("SELECT YOUR FACTION")
-    subtitle:SetTextColor(color_white)
-    subtitle:SetExpensiveShadow(4, color_black)
-    subtitle:SizeToContents()
+    title:SetText(string.upper("mainmenu.create.character.faction"))
 
     local navigation = self:Add("EditablePanel")
     navigation:Dock(BOTTOM)
@@ -90,18 +79,25 @@ function PANEL:PopulateFactionSelect()
         parent:Populate()
     end
 
-    local factionList = self:Add("DPanel")
+    local factionList = self:Add("DHorizontalScroller")
     factionList:Dock(FILL)
-    factionList:DockMargin(padding * 2, padding, padding * 2, padding)
+    factionList:DockMargin(padding, padding * 2, padding, padding)
+    factionList:InvalidateParent(true)
     factionList.Paint = nil
 
     for k, v in ipairs(ow.faction:GetAll()) do
         if ( !ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then continue end
 
+        local name = (v.Name and string.upper(v.Name)) or "UNKNOWN FACTION"
+        local description = (v.Description and string.upper(v.Description)) or "UNKNOWN FACTION DESCRIPTION"
+        local descriptionWrapped = ow.util:WrapText(description, "ow.fonts.button.small", factionList:GetTall() * 1.5)
+
+        -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
         local factionButton = factionList:Add("ow.mainmenu.button.small")
         factionButton:Dock(LEFT)
+        factionButton:DockMargin(0, 0, 16, 0)
         factionButton:SetText(v.Name or "Unknown Faction")
-        factionButton:SetWide(self:GetWide() / 2 - padding * 4) -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
+        factionButton:SetWide(factionList:GetTall() * 1.5)
 
         factionButton.DoClick = function()
             self.currentCreatePage = 0
@@ -109,6 +105,36 @@ function PANEL:PopulateFactionSelect()
             self:SetPayload("factionIndex", v.Index)
 
             self:PopulateCreateCharacter()
+        end
+
+        local image = factionButton:Add("DPanel")
+        image:Dock(FILL)
+        image:SetMouseInputEnabled(false)
+        image:SetSize(factionButton:GetTall(), factionButton:GetTall())
+        --image:SetImage(v.Image or "gamepadui/chapter14")
+        image.Paint = function(this, width, height)
+            local imageHeight = height * 0.85
+            imageHeight = math.Round(imageHeight)
+
+            surface.SetDrawColor(color_white)
+            surface.SetTexture(surface.GetTextureID(v.Image or "gamepadui/chapter14"))
+            surface.DrawTexturedRect(0, 0, width, imageHeight)
+
+            local inertia = factionButton:GetInertia()
+            local boxHeightStatic = (height * 0.15)
+            boxHeightStatic = math.Round(boxHeightStatic)
+
+            local boxHeight = boxHeightStatic * inertia
+            boxHeight = math.Round(boxHeight)
+            draw.RoundedBox(0, 0, imageHeight - boxHeight, width, boxHeight, ColorAlpha(color_white, 255 * inertia))
+
+            local textColor = factionButton:GetTextColor()
+
+            draw.SimpleText(name, factionButton:IsHovered() and "ow.fonts.button.large.hover" or "ow.fonts.button.large", tinyPadding, imageHeight - boxHeight + boxHeightStatic / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            --draw.SimpleText(description, "ow.fonts.button.small", tinyPadding, imageHeight - boxHeight + boxHeightStatic, ColorAlpha(textColor, 255 * inertia), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            for i = 1, #descriptionWrapped do
+                draw.SimpleText(descriptionWrapped[i], "ow.fonts.button.small", tinyPadding, imageHeight - boxHeight + boxHeightStatic + (i - 1) * ScreenScale(8), ColorAlpha(textColor, 255 * inertia), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+            end
         end
     end
 end
@@ -125,23 +151,11 @@ function PANEL:PopulateCreateCharacter()
     self:Clear()
     self:SetVisible(true)
 
-    local title = self:Add("DLabel")
+    local title = self:Add("ow.text")
     title:Dock(TOP)
     title:DockMargin(padding, padding, padding, 0)
     title:SetFont("ow.fonts.title")
-    title:SetText(ow.localization:GetPhrase("mainmenu.charactercreate"):upper())
-    title:SetTextColor(hook.Run("GetFrameworkColor"))
-    title:SetExpensiveShadow(4, color_black)
-    title:SizeToContents()
-
-    local subtitle = self:Add("DLabel")
-    subtitle:Dock(TOP)
-    subtitle:DockMargin(padding * 1.5, 0, padding, 0)
-    subtitle:SetFont("ow.fonts.subtitle")
-    subtitle:SetText("DEFINE YOUR NAME AND APPEARANCE")
-    subtitle:SetTextColor(color_white)
-    subtitle:SetExpensiveShadow(4, color_black)
-    subtitle:SizeToContents()
+    title:SetText(string.upper("mainmenu.create.character"))
 
     local navigation = self:Add("EditablePanel")
     navigation:Dock(BOTTOM)
@@ -250,10 +264,8 @@ function PANEL:PopulateCreateCharacterForm()
 
             local label = self.characterCreateForm:Add("ow.text")
             label:Dock(TOP)
-            label:SetText(v.Name or k)
             label:SetFont("ow.fonts.button")
-            label:SetTextColor(color_white)
-            label:SizeToContents()
+            label:SetText(v.Name or k)
 
             zPos = zPos - 1
             label:SetZPos(zPos)
