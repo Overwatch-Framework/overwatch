@@ -66,6 +66,7 @@ ow.util:Print("Initializing Modules...")
 		MODULE = nil
 	end
 ow.util:Print("Initialized Modules.")
+hook.Run("ModulesInitialized")
 
 ow.reloaded = false
 ow.refresh = ow.refresh or {}
