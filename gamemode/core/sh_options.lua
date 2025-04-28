@@ -51,6 +51,20 @@ ow.option:Register("vignette", {
     Default = true
 })
 
+ow.option:Register("tab.fade.time", {
+    Name = "options.tab.fade.time",
+    Description = "options.tab.fade.time.help",
+    Type = ow.type.number,
+    Default = 0.4
+})
+
+ow.option:Register("tab.anchor.time", {
+    Name = "options.tab.anchor.time",
+    Description = "options.tab.anchor.time.help",
+    Type = ow.type.number,
+    Default = 0.4
+})
+
 ow.option:Register("performance.blur", {
     Name = "options.performance.blur",
     Description = "options.performance.blur.help",

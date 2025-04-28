@@ -50,9 +50,9 @@ function PANEL:Init()
     self.gradientTopTarget = 0
     self.gradientBottomTarget = 0
 
-    self.fadeTime = 0.1
+    self.fadeTime = ow.option:Get("tab.fade.time", 0.2)
 
-    self.anchorTime = CurTime() + 0.5
+    self.anchorTime = CurTime() + ow.option:Get("tab.anchor.time", 0.4)
     self.anchorEnabled = true
 
     self:SetSize(ScrW(), ScrH())
