@@ -29,10 +29,12 @@ end
 -- @realm shared
 -- @param name The name of the color.
 -- @return The color.
-function ow.colour:Get(name)
+function ow.colour:Get(name, copy)
+    if ( copy == nil ) then copy = false end
+
     local storedColour = self.stored[name]
     if ( IsColor(storedColour) ) then
-        return Color(storedColour.r, storedColour.g, storedColour.b, storedColour.a)
+        return copy and Color(storedColour.r, storedColour.g, storedColour.b, storedColour.a) or storedColour
     end
 
     ow.util:PrintError("Attempted to get an invalid color!")
