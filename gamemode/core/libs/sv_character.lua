@@ -134,8 +134,7 @@ function ow.character:Delete(id)
         net.Send(ply)
     end
 
-    local condition = string.format("id = %s", sql.SQLStr(id))
-    ow.sqlite:Delete("ow_characters", condition)
+    -- TODO: Remove from database
 
     self.stored[id] = nil
 
