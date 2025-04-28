@@ -56,8 +56,8 @@ function PANEL:Init()
     self.textColor = color_white
     self.textColorTarget = color_white
 
-    self.textInset = {0, 0}
-    self.textInsetTarget = {0, 0}
+    self.textInset = {ScreenScale(2), 0}
+    self.textInsetTarget = {ScreenScale(2), 0}
 end
 
 function PANEL:SetText(text, bNoTranslate, bNoSizeToContents, bNoUppercase)
