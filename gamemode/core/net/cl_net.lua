@@ -61,7 +61,8 @@ net.Receive("ow.option.set", function(len)
 end)
 
 net.Receive("ow.database.save", function(len)
-    LocalPlayer().owDatabase = net.ReadTable()
+    local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
+    LocalPlayer():GetTable().owDatabase = compressedTable
 end)
 
 net.Receive("ow.character.create", function(len)
@@ -76,7 +77,7 @@ net.Receive("ow.character.create.failed", function(len)
 end)
 
 net.Receive("ow.character.cache", function(len)
-    local data = net.ReadTable()
+    local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(data) ) then return end
 
     local ply = LocalPlayer()
@@ -96,7 +97,7 @@ net.Receive("ow.character.cache", function(len)
 end)
 
 net.Receive("ow.character.cache.all", function(len)
-    local data = net.ReadTable()
+    local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(data) ) then return end
 
     local ply = LocalPlayer()

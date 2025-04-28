@@ -55,7 +55,8 @@ function PANEL:Populate()
     characterList:GetVBar():SetWide(0)
     characterList.Paint = nil
 
-    for k, v in pairs(ply.owCharacters) do
+    local plyTable = ply:GetTable()
+    for k, v in pairs(plyTable.owCharacters) do
         -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
         local button = characterList:Add("ow.mainmenu.button.small")
         button:Dock(TOP)

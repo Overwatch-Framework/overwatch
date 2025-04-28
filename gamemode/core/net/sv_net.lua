@@ -36,7 +36,7 @@ end)
 util.AddNetworkString("ow.character.create")
 net.Receive("ow.character.create", function(len, ply)
     -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
-    local payload = net.ReadTable()
+    local payload = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(payload) ) then return end
     PrintTable(payload)
 
@@ -127,4 +127,19 @@ net.Receive("ow.character.load", function(len, ply)
     if ( !characterID ) then return end
 
     ow.character:Load(ply, characterID)
+end)
+
+net.Receive("ow.character.delete", function(len, ply)
+    local characterID = net.ReadUInt(32)
+    if ( !characterID ) then return end
+
+    local character = ow.character:Get(characterID)
+    if ( !character ) then return end
+
+    local bResult = hook.Run("PreCharacterDelete", ply, character)
+    if ( bResult == false ) then return end
+
+    ow.character:Delete(characterID)
+
+    hook.Run("PostCharacterDelete", ply, character)
 end)

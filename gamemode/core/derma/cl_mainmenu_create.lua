@@ -224,8 +224,9 @@ function PANEL:PopulateCreateCharacter()
         end
 
         if ( isNextEmpty ) then
+            local compressed = util.Compress(util.TableToJSON(self.currentCreatePayload))
             net.Start("ow.character.create")
-                net.WriteTable(self.currentCreatePayload)
+                net.WriteData(compressed, #compressed)
             net.SendToServer()
         else
             self.currentCreatePage = self.currentCreatePage + 1

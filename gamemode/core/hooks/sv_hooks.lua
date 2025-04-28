@@ -5,7 +5,7 @@ function GM:PlayerInitialSpawn(ply)
     ow.sqlite:LoadRow("ow_players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
 
-        ply.owDatabase = data or {}
+        ply:GetTable().owDatabase = data or {}
 
         ply:SetDBVar("name", ply:SteamName())
         ply:SetDBVar("ip", ply:IPAddress())

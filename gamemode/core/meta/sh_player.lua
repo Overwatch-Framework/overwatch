@@ -11,16 +11,17 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:GetCharacter()
-    return self.owCharacter
+    return self:GetTable().owCharacter
 end
 
 function PLAYER:GetCharacters()
-    return self.owCharacters or {}
+    return self:GetTable().owCharacters or {}
 end
 
 function PLAYER:GetCharacterID()
-    if ( self.owCharacter ) then
-        return self.owCharacter:GetID()
+    local selfTable = self:GetTable()
+    if ( selfTable.owCharacter ) then
+        return selfTable.owCharacter:GetID()
     end
 
     return self:EntIndex() -- Use index for now
@@ -29,8 +30,9 @@ end
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
 
 function PLAYER:Name()
-    if ( self.owCharacter ) then
-        return self.owCharacter:GetName()
+    local character = self:GetCharacter()
+    if ( character ) then
+        return character:GetName()
     end
 
     return self:SteamName()
@@ -92,11 +94,12 @@ function PLAYER:HasWhitelist(identifier, bSchema, bMap)
 end
 
 function PLAYER:GetData(key, default)
+    local selfTable = self:GetTable()
     if ( key == true ) then
-        return self.owData
+        return selfTable.owData
     end
 
-    local data = self.owData and self.owData[key]
+    local data = selfTable.owData and selfTable.owData[key]
     if ( data == nil ) then
         return default
     else

@@ -64,7 +64,8 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
         return
     end
 
-    if ( ply.owNextCommand and ply.owNextCommand > CurTime() ) then
+    local plyTable = ply:GetTable()
+    if ( plyTable.owNextCommand and plyTable.owNextCommand > CurTime() ) then
         return
     end
 
@@ -78,7 +79,7 @@ concommand.Add("ow_command", function(ply, cmd, arguments)
         ow.util:Print("/" .. v.Name .. (v.Description and " - " .. v.Description or ""))
     end
 
-    ply.owNextCommand = CurTime() + 1
+    plyTable.owNextCommand = CurTime() + 1
 end--[[, function(cmd, argStr, args)
     local commands = {}
 
