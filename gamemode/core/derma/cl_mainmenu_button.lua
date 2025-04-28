@@ -196,6 +196,20 @@ function PANEL:Init()
     self:SetContentAlignment(5)
     self:SetTall(ScreenScale(12))
     self:SetTextInset(ScreenScale(2), 0)
+
+    self:SetWide(ScreenScale(64))
+
+    self.inertia = 0
+    self.inertiaTarget = 0
+
+    self.doRippleEffect = true
+    self.rippleEffect = nil
+
+    self.baseHeight = self:GetTall()
+    self.baseTextColor = self:GetTextColor()
+
+    self.baseTextColorTarget = color_black
+    self.textColorTarget = color_black
 end
 
 function PANEL:SizeToContents()
@@ -248,7 +262,6 @@ function PANEL:Think()
         self:SetFont("ow.fonts.button.small")
 
         self.textColorTarget = self.baseTextColor or color_white
-        self.textInsetTarget = {ScreenScale(2), 0}
 
         self.inertiaTarget = 0
 
