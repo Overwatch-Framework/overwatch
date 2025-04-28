@@ -32,7 +32,7 @@ function PANEL:OnValueChanged(value)
 end
 
 function PANEL:Paint(width, height)
-    draw.RoundedBox(0, 0, 0, width, height, Color(200, 200, 200, 100))
+    draw.RoundedBox(0, 0, 0, width, height, ow.colour:Get("slider.background"))
     local fraction = (self.value - self.min) / (self.max - self.min)
     local barWidth = math.Clamp(fraction * width, 0, width)
     draw.RoundedBox(0, 0, 0, barWidth, height, color_white)
