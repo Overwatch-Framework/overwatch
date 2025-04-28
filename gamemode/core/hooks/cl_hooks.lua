@@ -418,12 +418,14 @@ end
 
 function GM:ShouldDrawCrosshair()
     if ( IsValid(ow.gui.mainmenu) ) then return false end
+    if ( IsValid(ow.gui.tab) ) then return false end
 
     return true
 end
 
 function GM:ShouldDrawAmmoBox()
     if ( IsValid(ow.gui.mainmenu) ) then return false end
+    if ( IsValid(ow.gui.tab) ) then return false end
 
     return true
 end
@@ -431,6 +433,7 @@ end
 function GM:ShouldDrawDebugHUD()
     if ( !ow.convars:Get("ow_debug"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
+    if ( IsValid(ow.gui.tab) ) then return false end
 
     return ow.localClient:IsAdmin()
 end
@@ -438,6 +441,7 @@ end
 function GM:ShouldDrawPreviewHUD()
     if ( !ow.convars:Get("ow_preview"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
+    if ( IsValid(ow.gui.tab) ) then return false end
 
     return !ow.localClient:IsAdmin()
 end
