@@ -33,6 +33,7 @@ DEFINE_BASECLASS("DButton")
 local PANEL = {}
 
 AccessorFunc(PANEL, "inertia", "Inertia", FORCE_NUMBER)
+AccessorFunc(PANEL, "doRippleEffect", "DoRippleEffect", FORCE_BOOL)
 
 function PANEL:Init()
     self:SetFont("ow.fonts.button")
@@ -43,6 +44,8 @@ function PANEL:Init()
 
     self.inertia = 0
     self.inertiaTarget = 0
+
+    self.doRippleEffect = true
 
     self.baseHeight = self:GetTall()
     self.baseTextColor = self:GetTextColor()
@@ -90,6 +93,8 @@ function PANEL:Paint(width, height)
             paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 50 * self.inertia))
         end,
         function()
+            if ( !self.doRippleEffect ) then return end
+            
             local ripple = self.rippleEffect
             if ( ripple == nil ) then return end
 
