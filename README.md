@@ -29,7 +29,7 @@ Design an interface allowing players to create and customize characters, includi
 Implement a UI for players to select from existing characters, displaying relevant details for each.
 
 - **Inventory Interface**  
-Develop a grid-based inventory system that displays items with their respective weights and quantities. 
+Develop a weight-based inventory system that displays items with their respective quantities. 
 
 - **Death Screen**  
 Create a UI that appears upon player death, offering options such as respawn or spectate.
