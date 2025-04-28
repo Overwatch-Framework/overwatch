@@ -85,7 +85,7 @@ function PANEL:Populate()
 
     local sideButtons = self.container:Add("EditablePanel")
     sideButtons:Dock(LEFT)
-    sideButtons:DockMargin(padding * 3, padding, 0, 0)
+    sideButtons:DockMargin(padding * 2, padding * 3, 0, 0)
     sideButtons:SetSize(self.container:GetWide() / 3, self.container:GetTall() - padding * 2)
 
     local title = sideButtons:Add("DLabel")
@@ -98,7 +98,7 @@ function PANEL:Populate()
 
     local subtitle = sideButtons:Add("DLabel")
     subtitle:Dock(TOP)
-    subtitle:DockMargin(padding / 2, 0, 0, 0)
+    subtitle:DockMargin(padding / 4, -padding / 8, 0, 0)
     subtitle:SetFont("ow.fonts.subtitle")
     subtitle:SetText(string.upper(SCHEMA.Name or "UNKNOWN SCHEMA"))
     subtitle:SetTextColor(hook.Run("GetSchemaColor"))
@@ -106,7 +106,7 @@ function PANEL:Populate()
 
     local buttons = sideButtons:Add("EditablePanel")
     buttons:Dock(FILL)
-    buttons:DockMargin(0, padding, 0, padding)
+    buttons:DockMargin(0, padding / 4, 0, padding)
 
     local ply = LocalPlayer()
     if ( ply.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
@@ -212,19 +212,19 @@ function PANEL:Paint(width, height)
 
     surface.SetDrawColor(0, 0, 0, 255 * self:GetGradientLeft())
     surface.SetMaterial(gradientLeft)
-    surface.DrawTexturedRect(0, 0, width / 2, height)
+    surface.DrawTexturedRect(0, 0, width, height)
 
     surface.SetDrawColor(0, 0, 0, 255 * self:GetGradientRight())
     surface.SetMaterial(gradientRight)
-    surface.DrawTexturedRect(width / 2, 0, width / 2, height)
+    surface.DrawTexturedRect(0, 0, width, height)
 
     surface.SetDrawColor(0, 0, 0, 255 * self:GetGradientTop())
     surface.SetMaterial(gradientTop)
-    surface.DrawTexturedRect(0, 0, width, height / 2)
+    surface.DrawTexturedRect(0, 0, width, height)
 
     surface.SetDrawColor(0, 0, 0, 255 * self:GetGradientBottom())
     surface.SetMaterial(gradientBottom)
-    surface.DrawTexturedRect(0, height / 2, width, height / 2)
+    surface.DrawTexturedRect(0, 0, width, height)
 end
 
 vgui.Register("ow.mainmenu", PANEL, "EditablePanel")
