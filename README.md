@@ -23,6 +23,8 @@ Overwatch was created by [Riggs](https://github.com/riggs9162) and [bloodycop](h
     - Character Creation
     - Character Selection
     - Inventory
+    - Death Screen
+    - Tooltips or something
 - ### Inventory System
     - Weight Based Inventory System
     - Storage System
