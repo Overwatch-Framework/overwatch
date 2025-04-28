@@ -108,7 +108,7 @@ function PANEL:Paint(width, height)
             paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 50 * self.inertia))
         end,
         function()
-            if ( !self.doRippleEffect ) then return end
+            if ( !self.doRippleEffect or performanceAnimations == false ) then return end
 
             local ripple = self.rippleEffect
             if ( ripple == nil ) then return end
@@ -224,7 +224,7 @@ function PANEL:Paint(width, height)
         end,
         function()
             local ripple = self.rippleEffect
-            if ( ripple == nil ) then return end
+            if ( ripple == nil or performanceAnimations == false ) then return end
 
             local rippleX, rippleY, rippleStartTime = ripple[1], ripple[2], ripple[3]
 
