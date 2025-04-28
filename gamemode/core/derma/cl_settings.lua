@@ -59,7 +59,7 @@ function PANEL:PopulateCategory(category)
     end
 
     table.sort(settings, function(a, b)
-        return a.Name < b.Name
+        return ow.localization:GetPhrase(a.Name) < ow.localization:GetPhrase(b.Name)
     end)
 
     local subCategories = {}
