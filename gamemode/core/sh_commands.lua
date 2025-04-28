@@ -5,13 +5,19 @@ ow.command:Register("Respawn", {
         local target = ow.util:FindPlayer(arguments[1])
         if ( !IsValid(target) ) then
             ow.util:PrintError("Attempted to respawn an invalid player!", ply)
+            ply:Notify("You must provide a valid player to respawn!", NOTIFY_ERROR, 5)
+            return
+        end
+
+        if ( target:GetCharacter() == nil ) then
+            ply:Notify("The targeted player does not have a character!", NOTIFY_ERROR, 5)
             return
         end
 
         target:KillSilent()
         target:Spawn()
 
-        ow.util:Print(ply, " respawned ", target)
+        ply:Notify("You have respawned " .. target:Name() .. ".", NOTIFY_HINT, 5)
     end
 })
 
@@ -21,19 +27,30 @@ ow.command:Register("SetModel", {
     Callback = function(info, ply, arguments)
         local target = ow.util:FindPlayer(arguments[1])
         if ( !IsValid(target) ) then
-            ow.util:PrintError("Attempted to set the model of an invalid player!", ply)
+            ply:Notify("You must provide a valid player to set the model of!", NOTIFY_ERROR, 5)
             return
         end
 
         local model = arguments[2]
-        if ( !util.IsValidModel(model) ) then
-            ow.util:PrintError("Attempted to set an invalid model!", ply)
+        if ( !isstring(model) or model == "" or !string.StartsWith(model, "models/") ) then
+            ply:Notify("You must provide a valid model to set!", NOTIFY_ERROR, 5)
             return
         end
 
-        target:SetModel(model)
+        if ( string.lower(model) == string.lower(target:GetModel()) ) then
+            ply:Notify("The targeted player already has that model!", NOTIFY_ERROR, 5)
+            return
+        end
 
-        ow.util:Print(ply, " set the model of ", target, " to ", model)
+        local character = target:GetCharacter()
+        if ( !character ) then
+            ply:Notify("The targeted player does not have a character!", NOTIFY_ERROR, 5)
+            return
+        end
+
+        character:SetModel(model)
+
+        ply:Notify("You have set the model of " .. target:Name() .. " to " .. model .. ".", NOTIFY_HINT, 5)
     end
 })
 
@@ -43,20 +60,26 @@ ow.command:Register("SetFaction", {
     Callback = function(info, ply, arguments)
         local target = ow.util:FindPlayer(arguments[1])
         if ( !IsValid(target) ) then
-            ow.util:PrintError("Attempted to set the faction of an invalid player!", ply)
+            ply:Notify("You must provide a valid player to set the faction of!", NOTIFY_ERROR, 5)
             return
         end
 
         local factionIdentifier = arguments[2]
         local faction = ow.faction:Get(factionIdentifier)
         if ( !faction ) then
-            ow.util:PrintError("Attempted to set an invalid faction!", ply)
+            ply:Notify("You must provide a valid faction to set!", NOTIFY_ERROR, 5)
             return
         end
 
-        --target:SetFaction(faction.Index)
+        local character = target:GetCharacter()
+        if ( !character ) then
+            ply:Notify("The targeted player does not have a character!", NOTIFY_ERROR, 5)
+            return
+        end
+
+        character:SetFaction(faction.Index)
         ow.faction:Join(target, faction.Index, true)
 
-        ow.util:Print(ply, " set the faction of ", target, " to ", faction.Name)
+        ply:Notify("You have set the faction of " .. target:Name() .. " to " .. faction.Name .. ".", NOTIFY_HINT, 5)
     end
 })

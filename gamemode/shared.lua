@@ -66,6 +66,7 @@ function GM:OnReloaded()
 	ow.reloaded = true
 
 	ow.schema:Initialize()
+
 	if ( CLIENT ) then
 		ow.option:Load()
 	end
@@ -90,7 +91,7 @@ ow.util:LoadFile("core/sh_options.lua")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(ply, command, arguments)
-	ow.util:PrintError("This command has been disabled.", ply)
+	ply:Notify("This command has been disabled!", NOTIFY_ERROR, 5)
 end)
 
 -- concommand.Remove("gm_admin_cleanup")

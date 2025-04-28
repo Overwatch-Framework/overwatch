@@ -16,7 +16,7 @@ function ow.chat:Register(uniqueID, chatData)
     end
 
     if ( !isfunction(chatData.OnChatAdd) ) then
-        chatData.OnChatAdd = function(self, speaker, text)
+        chatData.OnChatAdd = function(this, speaker, text)
             chat.AddText(color_white, speaker:Name() .. " says \"" .. text .. "\"")
             chat.PlaySound()
         end
@@ -25,11 +25,11 @@ function ow.chat:Register(uniqueID, chatData)
     ow.command:Register(uniqueID, {
         Description = chatData.Description or "",
         Prefixes = chatData.Prefixes,
-        Callback = function(info, ply, arguments)
+        Callback = function(this, ply, arguments)
             local text = table.concat(arguments, " ")
 
             if ( !isstring(text) or #text < 1 ) then
-                ow.util:PrintError("Attempted to send an empty chat message!", ply)
+                ply:Notify("You must provide a message to send!", NOTIFY_ERROR, 5)
                 return false
             end
 

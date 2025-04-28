@@ -107,7 +107,7 @@ notification.AddLegacy = function(text, type, length)
         ow.localClient:EmitSound("ow.notification.error")
     elseif ( type == NOTIFY_HINT ) then
         color = ow.colour:Get("ui.success")
-        ow.localClient:EmitSound("ow.notification.success")
+        ow.localClient:EmitSound("ow.notification.hint")
     else
         color = ow.colour:Get("ui.info")
         ow.localClient:EmitSound("ow.notification.generic")
@@ -130,11 +130,11 @@ sound.Add({
 })
 
 sound.Add({
-    name = "ow.notification.success",
+    name = "ow.notification.hint",
     channel = CHAN_STATIC,
     volume = 1.0,
     level = 80,
-    sound = "overwatch/ui/success.wav"
+    sound = "overwatch/ui/hint.wav"
 })
 
 sound.Add({

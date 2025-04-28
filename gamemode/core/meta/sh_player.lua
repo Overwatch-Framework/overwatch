@@ -108,5 +108,10 @@ function PLAYER:GetData(key, default)
 end
 
 function PLAYER:Notify(text, type, length)
+    if ( !text or text == "" ) then return end
+
+    type = type or NOTIFY_GENERIC
+    duration = duration or 3
+
     ow.notification:Send(self, text, type, length)
 end

@@ -13,28 +13,28 @@ function ow.command:Run(ply, command, arguments)
     end
 
     if ( !isstring(command) ) then
-        ow.util:PrintError("Attempted to run a command with no command!", ply)
+        ply:Notify("You must provide a command to run!", NOTIFY_ERROR, 5)
         return false
     end
 
     local info = self:Get(command)
     if ( !istable(info) ) then
-        ow.util:PrintError("Attempted to run an invalid command!", ply)
+        ply:Notify("This command does not exist!", NOTIFY_ERROR, 5)
         return false
     end
 
     if ( CAMI == nil ) then
         if ( info.AdminOnly and !ply:IsAdmin() ) then
-            ow.util:PrintError("Attempted to run an admin-only command!", ply)
+            ply:Notify("You must be an admin to run this command!", NOTIFY_ERROR, 5)
             return false
         end
 
         if ( info.SuperAdminOnly and !ply:IsSuperAdmin() ) then
-            ow.util:PrintError("Attempted to run a superadmin-only command!", ply)
+            ply:Notify("You must be a superadmin to run this command!", NOTIFY_ERROR, 5)
             return false
         end
     else
-        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.uniqueID) ) then
+        if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Commands - " .. info.UniqueID) ) then
             return false
         end
     end

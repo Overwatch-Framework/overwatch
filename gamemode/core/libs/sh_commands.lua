@@ -41,7 +41,7 @@ function ow.command:Register(commandName, info)
         end
     end
 
-    info.uniqueID = commandName
+    info.UniqueID = commandName
     self.stored[commandName] = info
 
     if ( CAMI != nil ) then
@@ -77,11 +77,17 @@ function ow.command:Get(identifier)
         return self.stored[identifier]
     end
 
+    for k, v in pairs(self.stored) do
+        if ( string.lower(k) == string.lower(identifier) ) then
+            return v
+        end
+    end
+
     for _, v in pairs(self.stored) do
         if ( !istable(v.Prefixes) ) then continue end
 
         for _, v2 in ipairs(v.Prefixes) do
-            if ( ow.util:FindString(v2, identifier) ) then
+            if ( string.lower(v2) == string.lower(identifier) ) then
                 return v
             end
         end
