@@ -69,13 +69,17 @@ function PANEL:PopulateCategory(category)
         panel:SetContentAlignment(4)
         panel:SetTextInset(ScreenScale(6), 0)
 
+        local enabled = ow.localization:GetPhrase("enabled")
+        local disabled = ow.localization:GetPhrase("disabled")
+        local unknown = ow.localization:GetPhrase("unknown")
+
         local label
         local options
         if ( v.Type == ow.type.bool ) then
             label = panel:Add("ow.text")
             label:Dock(RIGHT)
             label:DockMargin(0, 0, ScreenScale(8), 0)
-            label:SetText(value and "Enabled" or "Disabled", true)
+            label:SetText(value and enabled or disabled, true)
             label:SetFont("ow.fonts.button")
             label:SetExpensiveShadow(0, Color(0, 0, 0, 150))
             label:SetWide(ScreenScale(128))
@@ -88,7 +92,7 @@ function PANEL:PopulateCategory(category)
                 ow.option:Set(v.UniqueID, !value)
                 value = !value
 
-                label:SetText(value and "< Enabled >" or "< Disabled >", true)
+                label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
             end
         elseif ( v.Type == ow.type.number ) then
             local slider = panel:Add("ow.slider")
@@ -158,10 +162,12 @@ function PANEL:PopulateCategory(category)
                 table.insert(keys, k2)
             end
 
+            local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+
             label = panel:Add("ow.text")
             label:Dock(RIGHT)
             label:DockMargin(0, 0, ScreenScale(8), 0)
-            label:SetText(options and options[value] or "Unknown", true)
+            label:SetText(phrase, true)
             label:SetFont("ow.fonts.button")
             label:SetExpensiveShadow(0, Color(0, 0, 0, 150))
             label:SetWide(ScreenScale(128))
@@ -205,10 +211,11 @@ function PANEL:PopulateCategory(category)
                         ow.option:Set(v.UniqueID, k2)
                         value = k2
 
+                        local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
                         if ( panel:IsHovered() ) then
-                            label:SetText("< " .. (options and options[value] or "Unknown") .. " >", true)
+                            label:SetText("< " .. phrase .. " >", true)
                         else
-                            label:SetText(options and options[value] or "Unknown", true)
+                            label:SetText(phrase, true)
                         end
 
                         label:SizeToContents()
@@ -220,9 +227,10 @@ function PANEL:PopulateCategory(category)
 
         panel.OnHovered = function(this)
             if ( v.Type == ow.type.bool ) then
-                label:SetText(value and "< Enabled >" or "< Disabled >", true)
+                label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
             elseif ( v.Type == ow.type.array ) then
-                label:SetText("< " .. (options and options[value] or "Unknown") .. " >", true)
+                local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+                label:SetText("< " .. phrase .. " >", true)
             end
 
             if ( !IsValid(ow.gui.tooltip) ) then
@@ -239,9 +247,10 @@ function PANEL:PopulateCategory(category)
 
         panel.OnUnHovered = function(this)
             if ( v.Type == ow.type.bool ) then
-                label:SetText(value and "Enabled" or "Disabled", true)
+                label:SetText(value and enabled or disabled, true)
             elseif ( v.Type == ow.type.array ) then
-                label:SetText(options and options[value] or "Unknown", true)
+                local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+                label:SetText(phrase, true)
             end
 
             if ( IsValid(ow.gui.tooltip) ) then
