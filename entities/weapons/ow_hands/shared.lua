@@ -35,7 +35,7 @@ SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
 SWEP.Secondary.Delay = 0.5
 
-SWEP.HoldType = "fist"
+SWEP.HoldType = "normal"
 
 function SWEP:SetupDataTables()
     self:NetworkVar("Bool", 0, "Dragging")
