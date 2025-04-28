@@ -62,6 +62,7 @@ function PANEL:Init()
     self:MakePopup()
 
     self.createPanel = self:Add("ow.mainmenu.create")
+    self.selectPanel = self:Add("ow.mainmenu.load")
     self.settingsPanel = self:Add("ow.mainmenu.settings")
 
     self.container = self:Add("EditablePanel")
@@ -111,7 +112,7 @@ function PANEL:Populate()
     if ( ply.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
         local playButton = buttons:Add("ow.mainmenu.button")
         playButton:Dock(TOP)
-        playButton:SetText(ow.localization:GetPhrase("mainmenu.play"):upper())
+        playButton:SetText("mainmenu.play")
 
         playButton.DoClick = function(this)
             self:Remove()
@@ -120,7 +121,7 @@ function PANEL:Populate()
 
     local createButton = buttons:Add("ow.mainmenu.button")
     createButton:Dock(TOP)
-    createButton:SetText(ow.localization:GetPhrase("mainmenu.charactercreate"):upper())
+    createButton:SetText("mainmenu.create.character")
 
     createButton.DoClick = function(this)
         local availableFactions = 0
@@ -141,28 +142,24 @@ function PANEL:Populate()
     if ( bHasCharacters ) then
         local selectButton = buttons:Add("ow.mainmenu.button")
         selectButton:Dock(TOP)
-        selectButton:SetText(ow.localization:GetPhrase("mainmenu.characterselect"):upper())
+        selectButton:SetText("mainmenu.select.character")
 
         selectButton.DoClick = function()
-            self.createPanel:PopulateSelectCharacter()
+            self.selectPanel:Populate()
         end
     end
 
     local settingsButton = buttons:Add("ow.mainmenu.button")
     settingsButton:Dock(TOP)
-    settingsButton:SetText(ow.localization:GetPhrase("mainmenu.settings"):upper())
+    settingsButton:SetText("mainmenu.settings")
 
     settingsButton.DoClick = function()
         self.settingsPanel:Populate()
     end
 
-    local testButton = buttons:Add("ow.mainmenu.button")
-    testButton:Dock(TOP)
-    testButton:SetText(ow.localization:GetPhrase("mainmenu.test"):upper())
-
     local disconnectButton = buttons:Add("ow.mainmenu.button")
     disconnectButton:Dock(TOP)
-    disconnectButton:SetText(ow.localization:GetPhrase("mainmenu.leave"):upper())
+    disconnectButton:SetText("mainmenu.leave")
     disconnectButton:SetTextColorProperty(ow.colour:Get("maroon"))
 
     disconnectButton.DoClick = function()

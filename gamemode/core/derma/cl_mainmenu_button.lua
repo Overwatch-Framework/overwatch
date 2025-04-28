@@ -60,11 +60,21 @@ function PANEL:Init()
     self.textInsetTarget = {0, 0}
 end
 
-function PANEL:SetText(text, bNoTranslate)
-    if ( bNoTranslate ) then
-        BaseClass.SetText(self, text)
-    else
-        BaseClass.SetText(self, ow.localization:GetPhrase(text))
+function PANEL:SetText(text, bNoTranslate, bNoSizeToContents, bNoUppercase)
+    if ( !text or text == "" ) then return end
+
+    if ( !bNoTranslate ) then
+        text = ow.localization:GetPhrase(text)
+    end
+
+    if ( !bNoUppercase ) then
+        text = string.upper(text)
+    end
+
+    BaseClass.SetText(self, text)
+
+    if ( !bNoSizeToContents ) then
+        self:SizeToContents()
     end
 end
 
@@ -94,7 +104,7 @@ function PANEL:Paint(width, height)
         end,
         function()
             if ( !self.doRippleEffect ) then return end
-            
+
             local ripple = self.rippleEffect
             if ( ripple == nil ) then return end
 
@@ -185,12 +195,6 @@ function PANEL:Init()
     self:SetContentAlignment(5)
     self:SetTall(ScreenScale(12))
     self:SetTextInset(ScreenScale(2), 0)
-end
-
-function PANEL:SetText(text, bNoTranslate)
-    BaseClass.SetText(self, text)
-
-    self:SizeToContents()
 end
 
 function PANEL:SizeToContents()
