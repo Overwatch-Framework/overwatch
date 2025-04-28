@@ -49,14 +49,14 @@ local eyeTraceHullMin = Vector(-2, -2, -2)
 local eyeTraceHullMax = Vector(2, 2, 2)
 function GM:CalcView(ply, pos, angles, fov)
     if ( IsValid(ow.gui.mainmenu) ) then
-        local menuCamPos = ow.config:Get("menuCamPos", vector_origin)
-        local menuCamAng = ow.config:Get("menuCamAng", angle_zero)
-        local menuCamFov = ow.config:Get("menuCamFov", 90)
+        local mainmenuPos = ow.config:Get("mainmenu.pos", vector_origin)
+        local mainmenuAng = ow.config:Get("mainmenu.ang", angle_zero)
+        local mainmenuFov = ow.config:Get("mainmenu.fov", 90)
 
         return {
-            origin = menuCamPos,
-            angles = menuCamAng,
-            fov = menuCamFov,
+            origin = mainmenuPos,
+            angles = mainmenuAng,
+            fov = mainmenuFov,
             drawviewer = true
         }
     end

@@ -1,62 +1,62 @@
-ow.config:Register("frameworkColor", {
-    Name = "Framework Color",
-    Description = "The color of the framework.",
+ow.config:Register("color.framework", {
+    Name = "config.color.framework.name",
+    Description = "config.color.framework.help",
     Type = ow.type.color,
     Default = Color(0, 100, 150)
 })
 
-ow.config:Register("schemaColor", {
-    Name = "Schema Color",
-    Description = "The color of the schema.",
+ow.config:Register("color.schema", {
+    Name = "config.color.schema.name",
+    Description = "config.color.schema.help",
     Type = ow.type.color,
     Default = Color(0, 150, 100)
 })
 
-ow.config:Register("voiceDistance", {
-    Name = "Voice Distance",
-    Description = "The distance that players can hear each other's voice.",
+ow.config:Register("voice.distance", {
+    Name = "config.voice.distance.name",
+    Description = "config.voice.distance.help",
     Type = ow.type.number,
     Default = 384
 })
 
-ow.config:Register("mainMenuMusic", {
-    Name = "Main Menu Music",
-    Description = "The music that plays in the main menu.",
+ow.config:Register("mainmenu.music", {
+    Name = "config.mainmenu.music.name",
+    Description = "config.mainmenu.music.help",
     Type = ow.type.string,
     Default = "music/hl2_song20_submix0.mp3"
 })
 
-ow.config:Register("menuCamPos", {
-    Name = "Menu Camera Position",
-    Description = "The position of the camera in the main menu.",
+ow.config:Register("mainmenu.pos", {
+    Name = "config.mainmenu.pos.name",
+    Description = "config.mainmenu.pos.help",
     Type = ow.type.vector,
     Default = vector_origin
 })
 
-ow.config:Register("menuCamAng", {
-    Name = "Menu Camera Angle",
-    Description = "The angle of the camera in the main menu.",
+ow.config:Register("mainmenu.ang", {
+    Name = "config.mainmenu.ang.name",
+    Description = "config.mainmenu.ang.help",
     Type = ow.type.angle,
     Default = angle_zero
 })
 
-ow.config:Register("menuCamFov", {
-    Name = "Menu Camera FOV",
-    Description = "The field of view of the camera in the main menu.",
+ow.config:Register("mainmenu.fov", {
+    Name = "config.mainmenu.fov.name",
+    Description = "config.mainmenu.fov.help",
     Type = ow.type.number,
     Default = 90
 })
 
-ow.config:Register("saveInterval", {
-    Name = "Save Interval",
-    Description = "The interval at which all possible data is saved.",
+ow.config:Register("save.interval", {
+    Name = "config.save.interval.name",
+    Description = "config.save.interval.help",
     Type = ow.type.number,
     Default = 300
 })
 
-ow.config:Register("walkSpeed", {
-    Name = "Walk Speed",
-    Description = "The speed at which players walk.",
+ow.config:Register("speed.walk", {
+    Name = "config.speed.walk.name",
+    Description = "config.speed.walk.help",
     Type = ow.type.number,
     Default = 80,
     OnChange = function(value)
@@ -66,9 +66,9 @@ ow.config:Register("walkSpeed", {
     end
 })
 
-ow.config:Register("runSpeed", {
-    Name = "Run Speed",
-    Description = "The speed at which players run.",
+ow.config:Register("speed.run", {
+    Name = "config.speed.run.name",
+    Description = "config.speed.run.help",
     Type = ow.type.number,
     Default = 180,
     OnChange = function(value)
@@ -78,9 +78,9 @@ ow.config:Register("runSpeed", {
     end
 })
 
-ow.config:Register("jumpPower", {
-    Name = "Jump Power",
-    Description = "The power at which players jump.",
+ow.config:Register("jump.power", {
+    Name = "config.jump.power.name",
+    Description = "config.jump.power.help",
     Type = ow.type.number,
     Default = 160,
     OnChange = function(value)

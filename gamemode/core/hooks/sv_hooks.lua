@@ -65,9 +65,9 @@ function GM:PlayerLoadout(ply)
     ply:Give("ow_hands")
     ply:SelectWeapon("ow_hands")
 
-    ply:SetWalkSpeed(ow.config:Get("walkSpeed", 80))
-    ply:SetRunSpeed(ow.config:Get("runSpeed", 180))
-    ply:SetJumpPower(ow.config:Get("jumpPower", 160))
+    ply:SetWalkSpeed(ow.config:Get("speed.walk", 80))
+    ply:SetRunSpeed(ow.config:Get("speed.run", 180))
+    ply:SetJumpPower(ow.config:Get("jump.power", 160))
 
     ply:SetupHands()
 
@@ -111,7 +111,7 @@ end
 
 function GM:SetupPlayerVisibility(ply, viewEntity)
     if ( ply:Team() == 0 ) then
-        AddOriginToPVS(ow.config:Get("menuCamPos", vector_origin))
+        AddOriginToPVS(ow.config:Get("mainmenu.pos", vector_origin))
     end
 end
 
@@ -154,7 +154,7 @@ function GM:Think()
         local voiceListeners = {}
         for _, listener in player.Iterator() do
             if ( listener == ply ) then continue end
-            if ( listener:EyePos():DistToSqr(ply:EyePos()) > ow.config:Get("voiceDistance", 384) ^ 2 ) then continue end
+            if ( listener:EyePos():DistToSqr(ply:EyePos()) > ow.config:Get("voice.distance", 384) ^ 2 ) then continue end
 
             voiceListeners[listener] = true
         end
@@ -163,7 +163,7 @@ function GM:Think()
     end
 
     if ( CurTime() < nextSave ) then return end
-    nextSave = CurTime() + ow.config:Get("saveInterval", 300)
+    nextSave = CurTime() + ow.config:Get("save.interval", 300)
 
     hook.Run("SaveData")
 end
