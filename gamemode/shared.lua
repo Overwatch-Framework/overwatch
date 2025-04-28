@@ -14,19 +14,6 @@ end
 
 hook.Remove("PlayerTick", "TickWidgets")
 
-function team.NumPlayers( index )
-	local players = 0
-
-	for _, ply in player.Iterator() do
-		if ( ply:Team() == index ) then
-			players = players + 1
-		end
-	end
-
-	return players
-end
-
-
 ow.util:Print("Initializing...")
 	ow.util:LoadFolder("core/libs")
 	ow.util:LoadFolder("core/thirdparty")
