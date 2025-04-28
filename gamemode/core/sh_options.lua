@@ -1,3 +1,4 @@
+/*
 -- Don't know if there is are more efficient way to do this or to retrieve the languages from gmod itself.
 local languages = {
     ["bg"] = "Bulgarian",
@@ -40,12 +41,14 @@ ow.option:Register("language", {
     Type = ow.type.array,
     Default = "en",
     OnChange = function(self, value)
+        -- GMOD blocks the console command gmod_language from being run in the console
         RunConsoleCommand("gmod_language", value)
     end,
     Populate = function()
         return languages
     end
 })
+*/
 
 ow.option:Register("vignette", {
     Name = "options.vignette",
