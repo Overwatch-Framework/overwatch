@@ -1,10 +1,14 @@
 local INV = ow.meta.inventory or {}
 INV.__index = INV
-INV.ID = 0
-INV.Items = {}
+INV.id = 0
+INV.items = {}
 
 function INV:__tostring()
-    return "inventory[" .. self:GetID().. "]"
+    return "inventory[" .. self:GetID() .. "]"
+end
+
+function INV:__eq(other)
+    return self.ID == other.ID
 end
 
 -- TODO: I believe a sequential table with the value being the item's ID
