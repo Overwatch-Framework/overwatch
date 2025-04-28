@@ -34,6 +34,16 @@ function PANEL:Init()
         button.DoClick = function()
             self:PopulateCategory(v)
         end
+        button.Paint = function(this, width, height)
+            if ( isstring(self.activeCategory) and self.activeCategory == v ) then
+                surface.SetDrawColor(color_white)
+                surface.DrawRect(0, 0, width, height)
+
+                this:SetTextColor(color_black)
+            else
+                this:SetTextColor(color_white)
+            end
+        end
     end
 
     if ( ow.gui.settingsLast ) then
@@ -42,8 +52,6 @@ function PANEL:Init()
         self:PopulateCategory(categories[1])
     end
 end
-
-local labelShadow = Color(0, 0, 0, 150)
 
 function PANEL:PopulateCategory(category)
     ow.gui.settingsLast = category
@@ -101,7 +109,7 @@ function PANEL:PopulateCategory(category)
             label:DockMargin(0, 0, ScreenScale(8), 0)
             label:SetText(value and enabled or disabled, true)
             label:SetFont("ow.fonts.button")
-            label:SetExpensiveShadow(0, Color(0, 0, 0, 150))
+            label:SetExpensiveShadow(0, ow.colour:Get("settings.shadow"))
             label:SetWide(ScreenScale(128))
             label:SetContentAlignment(6)
             label.Think = function(this)
@@ -150,7 +158,7 @@ function PANEL:PopulateCategory(category)
             label:DockMargin(0, 0, -ScreenScale(4), 8)
             label:SetText(value)
             label:SetFont("ow.fonts.button.small")
-            label:SetExpensiveShadow(0, Color(0, 0, 0, 150))
+            label:SetExpensiveShadow(0, ow.colour:Get("settings.shadow"))
             label:SetWide(ScreenScale(128))
             label:SetContentAlignment(6)
             label.Think = function(this)

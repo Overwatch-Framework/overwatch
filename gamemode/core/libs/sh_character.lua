@@ -18,10 +18,6 @@ function ow.character:RegisterVariable(key, data)
     if ( SERVER ) then
         self.meta["Set" .. upperKey] = function(character, value)
             self:SetVariable(key, value)
-
-            if ( data.OnSet ) then
-                data:OnSet(character, value)
-            end
         end
 
         local field = data.Field
@@ -47,10 +43,6 @@ function ow.character:RegisterVariable(key, data)
 
             self.meta["Set" .. v] = function(character, value)
                 self:SetVariable(character:GetID(), key, value)
-
-                if ( data.OnSet ) then
-                    data:OnSet(character, value)
-                end
             end
         end
     end

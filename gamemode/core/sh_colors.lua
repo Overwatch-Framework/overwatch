@@ -41,3 +41,6 @@ ow.colour:Register("ui.success", Color(50, 255, 120))
 ow.colour:Register("ui.error", Color(255, 75, 75))
 ow.colour:Register("ui.warning", Color(255, 215, 60))
 ow.colour:Register("ui.info", Color(75, 165, 255))
+ow.colour:Register("notification.background", Color(50, 50, 50, 200))
+
+ow.colour:Register("settings.shadow", Color(0, 0, 0, 150))
