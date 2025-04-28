@@ -27,8 +27,6 @@ function ow.option:Set(ply, key, value)
             ow.util:PrintError("Option \"" .. key .. "\" is above maximum value!")
             return false
         end
-        
-        return false
     end
 
     net.Start("ow.option.set")
