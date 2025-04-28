@@ -22,63 +22,63 @@ Overwatch was created by [Riggs](https://github.com/riggs9162) and [bloodycop](h
 
 ### User Interface
 
-- **Character Creation Screen**  
+- **Character Creation Screen**
 Design an interface allowing players to create and customize characters, including name, description, and model selection.
 
-- **Character Selection Screen**  
+- **Character Selection Screen**
 Implement a UI for players to select from existing characters, displaying relevant details for each.
 
-- **Inventory Interface**  
+- **Inventory Interface**
 Develop a weight-based inventory system that displays items with their respective quantities. 
 
-- **Death Screen**  
+- **Death Screen**
 Create a UI that appears upon player death, offering options such as respawn or spectate.
 
-- **Tooltip System**  
+- **Tooltip System**
 Integrate dynamic tooltips that provide information when hovering over items, players, or objects.
 
 ### Inventory System
 
-- **Weight-Based Mechanics**  
+- **Weight-Based Mechanics**
 Implement a system where item weight affects player movement and inventory capacity.
 
 ### Item System
 
-- **Item Actions**  
+- **Item Actions**
 Develop functionalities for items, including:
     - Pickup
     - Drop
     - Use
     - Inspect
 
-- **Item Categorization**  
+- **Item Categorization**
 Organize items into categories for better management and accessibility.
 
 ### Character System
 
-- **Creation**  
+- **Creation**
 Handle the creation of new characters, ensuring data is stored correctly.
 
-- **Selection**  
-Allow players to select from their created characters upon joining.
+- ~**Selection**
+Allow players to select from their created characters upon joining.~
 
-- **Deletion**  
+- **Deletion**
 Provide a secure method for players to delete unwanted characters.
 
-- **Saving and Loading**  
+- **Saving and Loading**
 Ensure character data, including stats and inventory, is saved and loaded accurately.
 
-### Player System (Completed)
+### Player System
 
-- **Data Management**  
-Handle player-specific data such as settings and preferences.
+- ~**Data Management**
+Handle player-specific data such as settings and preferences.~
 
-- **Saving and Loading**  
-Implement systems to save and retrieve player data upon joining or leaving the server.
+- ~**Saving and Loading**
+Implement systems to save and retrieve player data upon joining or leaving the server.~
 
 ### Animation System
 
-- **Model Animations**  
+- **Model Animations**
 Develop and integrate animations for various models:
     - citizen_male
     - citizen_female
