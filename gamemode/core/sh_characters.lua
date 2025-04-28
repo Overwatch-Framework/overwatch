@@ -110,9 +110,12 @@ ow.character:RegisterVariable("model", {
         local layout = scroller:Add("DIconLayout")
         layout:Dock(FILL)
 
+        PrintTable(payload)
         local factionIndex = payload.factionIndex or 1
         local faction = ow.faction:Get(factionIndex)
         if ( faction and faction.Models ) then
+            PrintTable(faction)
+            PrintTable(faction.Models)
             for _, v in SortedPairs(faction.Models) do
                 local icon = layout:Add("SpawnIcon")
                 icon:SetModel(v)
@@ -130,6 +133,12 @@ ow.character:RegisterVariable("model", {
 ow.character:RegisterVariable("money", {
     Type = ow.type.number,
     Field = "money",
+    Default = 0
+})
+
+ow.character:RegisterVariable("faction", {
+    Type = ow.type.number,
+    Field = "faction",
     Default = 0
 })
 
