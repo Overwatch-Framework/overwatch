@@ -41,3 +41,8 @@ Overwatch was created by [Riggs](https://github.com/riggs9162) and [bloodycop](h
     - Player Saving System
     - Player Loading System
 - ### Animation System
+    - citizen_male
+    - citizen_female
+    - metrocop
+    - overwatch
+    - player
