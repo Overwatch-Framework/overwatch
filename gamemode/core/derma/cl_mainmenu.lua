@@ -116,24 +116,24 @@ function PANEL:Populate()
         playButton.DoClick = function(this)
             self:Remove()
         end
-    else
-        local createButton = buttons:Add("ow.mainmenu.button")
-        createButton:Dock(TOP)
-        createButton:SetText(ow.localization:GetPhrase("mainmenu.charactercreate"):upper())
+    end
 
-        createButton.DoClick = function(this)
-            local availableFactions = 0
-            for k, v in ipairs(ow.faction:GetAll()) do
-                if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
-                    availableFactions = availableFactions + 1
-                end
-            end
+    local createButton = buttons:Add("ow.mainmenu.button")
+    createButton:Dock(TOP)
+    createButton:SetText(ow.localization:GetPhrase("mainmenu.charactercreate"):upper())
 
-            if ( availableFactions > 1 ) then
-                self.createPanel:PopulateFactionSelect()
-            else
-                self.createPanel:PopulateCreateCharacter()
+    createButton.DoClick = function(this)
+        local availableFactions = 0
+        for k, v in ipairs(ow.faction:GetAll()) do
+            if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
+                availableFactions = availableFactions + 1
             end
+        end
+
+        if ( availableFactions > 1 ) then
+            self.createPanel:PopulateFactionSelect()
+        else
+            self.createPanel:PopulateCreateCharacter()
         end
     end
 
