@@ -189,6 +189,25 @@ function ow.sqlite:Insert(query, data, callback)
     end
 end
 
+--- Deletes a row from a table
+-- @realm shared
+-- @tparam string query Table name
+-- @tparam string condition WHERE clause condition
+-- @treturn boolean Success status
+function ow.sqlite:Delete(query, condition)
+    local insertQuery = string.format("DELETE FROM %s WHERE %s;", query, condition)
+    local result = sql.Query(insertQuery)
+
+    if ( result == false ) then
+        print("Failed to remove row:", insertQuery, sql.LastError())
+        return false
+    else
+        return true
+    end
+
+    return false
+end
+
 --- Updates a row in a table based on a condition.
 -- @realm shared
 -- @tparam string query Table name

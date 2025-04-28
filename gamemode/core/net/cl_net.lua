@@ -143,3 +143,25 @@ end)
 net.Receive("ow.mainmenu", function(len)
     ow.gui.mainmenu = vgui.Create("ow.mainmenu")
 end)
+
+net.Receive("ow.character.delete", function(len)
+    local characterID = net.ReadUInt(32)
+    if ( !isnumber(characterID) ) then return end
+
+    local character = ow.character.stored[characterID]
+    if ( !character ) then return end
+
+    ow.character.stored[characterID] = nil
+
+    local ply = LocalPlayer()
+    local plyTable = ply:GetTable()
+    if ( plyTable.owCharacters ) then
+        plyTable.owCharacters[characterID] = nil
+    end
+
+    if ( plyTable.owCharacter == character ) then
+        plyTable.owCharacter = nil
+    end
+
+    ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.colour:Get("ui.success"))
+end)

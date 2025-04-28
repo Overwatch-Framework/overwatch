@@ -113,13 +113,13 @@ end
 
 function ow.character:Delete(id)
     if ( !isnumber(id) ) then
-        ErrorNoHalt("Attempted to delete character with invalid ID (" .. tostring(id) .. ")\n")
+        ErrorNoHalt("Attempted to delete character with invalid ID (" .. tostring(id) .. ")")
         return false
     end
 
     local character = self.stored[id]
     if ( !character ) then
-        ErrorNoHalt("Attempted to delete character that does not exist (" .. id .. ")\n")
+        ow.util:PrintError("Attempted to delete character that does not exist (" .. id .. ")")
         return false
     end
 
@@ -134,8 +134,7 @@ function ow.character:Delete(id)
         net.Send(ply)
     end
 
-    -- TODO: Remove from database
-
+    ow.sqlite:Delete("ow_characters", string.format("id = %s", sql.SQLStr(id)))
     self.stored[id] = nil
 
     return true
