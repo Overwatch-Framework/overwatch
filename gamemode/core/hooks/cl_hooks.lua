@@ -481,6 +481,32 @@ function GM:PopulateTabButtons(buttons)
     }
 end
 
+-- Idk if this is good
+local suggestionIndex = 1
+local lastText = ""
+local lastSuggestions = {}
+
+function GM:OnChatTab(text)
+    if ( !text:StartWith("/") ) then return end
+
+    local split = string.Explode(" ", text)
+    local cmd = string.sub(split[1], 2)
+    local command = ow.command.stored[cmd]
+
+    if ( command and command.AutoComplete ) then
+        if ( text != lastText ) then
+            lastSuggestions = command.AutoComplete(LocalPlayer(), split) or {}
+            suggestionIndex = 1
+        else
+            suggestionIndex = ( suggestionIndex % #lastSuggestions ) + 1
+        end
+
+        lastText = text
+
+        return lastSuggestions[suggestionIndex]
+    end
+end
+
 -- TODO: Maybe if it looks good someday
 --[[
 function GM:ForceDermaSkin()

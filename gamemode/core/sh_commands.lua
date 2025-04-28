@@ -17,13 +17,21 @@ ow.command:Register("Respawn", {
         target:KillSilent()
         target:Spawn()
 
-        ply:Notify("You have respawned " .. target:Name() .. ".", NOTIFY_HINT, 5)
+        ply:Notify("You have respawned " .. target:Nick() .. ".", NOTIFY_HINT, 5)
     end
 })
 
 ow.command:Register("SetModel", {
     Description = "Set the model of a player.",
     AdminOnly = true,
+    AutoComplete = function(ply, split)
+        local suggestions = {}
+        for _, v in player.Iterator() do
+            table.insert(suggestions, "/SetModel " .. v:Nick())
+        end
+
+        return suggestions
+    end,
     Callback = function(info, ply, arguments)
         local target = ow.util:FindPlayer(arguments[1])
         if ( !IsValid(target) ) then
@@ -50,7 +58,7 @@ ow.command:Register("SetModel", {
 
         character:SetModel(model)
 
-        ply:Notify("You have set the model of " .. target:Name() .. " to " .. model .. ".", NOTIFY_HINT, 5)
+        ply:Notify("You have set the model of " .. target:Nick() .. " to " .. model .. ".", NOTIFY_HINT, 5)
     end
 })
 
@@ -80,6 +88,6 @@ ow.command:Register("SetFaction", {
         character:SetFaction(faction.Index)
         ow.faction:Join(target, faction.Index, true)
 
-        ply:Notify("You have set the faction of " .. target:Name() .. " to " .. faction.Name .. ".", NOTIFY_HINT, 5)
+        ply:Notify("You have set the faction of " .. target:Nick() .. " to " .. faction.Name .. ".", NOTIFY_HINT, 5)
     end
 })
