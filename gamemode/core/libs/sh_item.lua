@@ -20,19 +20,18 @@ function ow.item:Register(uniqueID, itemData)
 
     -- TODO: Add Inheritance Support in Future
 
-    ITEM = table.Copy(itemData)
     for _, field in ipairs(requiredFields) do
-        if ( ITEM[field] == nil ) then
+        if ( itemData[field] == nil ) then
             ow.util:PrintError("Item \"" .. uniqueID .. "\" is missing required field \"" .. field .. "\"!\n")
             return false
         end
     end
 
-    ITEM.Weight = ITEM.Weight or 0
-    ITEM.Category = ITEM.Category or "Miscellaneous"
+    itemData.Weight = itemData.Weight or 0
+    itemData.Category = itemData.Category or "Miscellaneous"
 
-    ITEM.functions = ITEM.functions or {}
-    ITEM.functions.drop = ITEM.functions.drop or {
+    itemData.functions = itemData.functions or {}
+    itemData.functions.drop = itemData.functions.drop or {
         Name = "Drop",
         OnRun = function(item)
             -- TODO: Yeah yeah, this
@@ -41,7 +40,7 @@ function ow.item:Register(uniqueID, itemData)
         end
     }
 
-    ITEM.functions.take = ITEM.functions.take or {
+    itemData.functions.take = itemData.functions.take or {
         Name = "Take",
         OnRun = function(item)
             -- TODO: Yeah yeah, this
@@ -50,7 +49,7 @@ function ow.item:Register(uniqueID, itemData)
         end
     }
 
-    self.stored[uniqueID] = ITEM
+    self.stored[uniqueID] = itemData
     hook.Run("PostItemRegistered", uniqueID, itemData)
 end
 
