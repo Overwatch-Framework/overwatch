@@ -30,8 +30,9 @@ end
 -- @param name The name of the color.
 -- @return The color.
 function ow.colour:Get(name)
-    if ( self.stored[name] ) then
-        return table.Copy(self.stored[name])
+    local storedColour = self.stored[name]
+    if ( IsColor(storedColour) ) then
+        return Color(storedColour.r, storedColour.g, storedColour.b, storedColour.a)
     end
 
     ow.util:PrintError("Attempted to get an invalid color!")
