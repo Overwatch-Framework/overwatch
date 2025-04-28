@@ -31,7 +31,7 @@ end
 function PLAYER:SaveDB()
     local selfTable = self:GetTable()
     if ( selfTable.owDatabase ) then
-        ow.sqlite:SaveRow("ow_players", self.owDatabase, "steamid")
+        ow.sqlite:SaveRow("ow_players", selfTable.owDatabase, "steamid")
 
         -- Network it to the client so they can update their local copy of the database
         -- This is useful for when the player is in the main menu and we want to retrieve something from the database

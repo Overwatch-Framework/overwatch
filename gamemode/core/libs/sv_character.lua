@@ -112,7 +112,7 @@ function ow.character:Load(ply, id)
 end
 
 function ow.character:Delete(id)
-    if ( !id ) then
+    if ( !isnumber(id) ) then
         ErrorNoHalt("Attempted to delete character with invalid ID (" .. tostring(id) .. ")\n")
         return false
     end
