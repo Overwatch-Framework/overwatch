@@ -37,7 +37,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
 
     local view = {}
 
-    if ( ow.option:Get("thirdperson.followhead", false) ) then
+    if ( ow.option:Get("thirdperson.follow.head", false) ) then
         local head
 
         for i = 0, ply:GetBoneCount() do
@@ -95,6 +95,8 @@ function MODULE:CalcView(ply, pos, angles, fov)
     })
 
     local shootPos = traceData.HitPos
+    local followHitAngles = ow.option:Get("thirdperson.follow.hit.angles", true)
+    local followHitFov = ow.option:Get("thirdperson.follow.hit.fov", true)
 
     local viewBob = angle_zero
     local curTime = CurTime()
@@ -103,12 +105,12 @@ function MODULE:CalcView(ply, pos, angles, fov)
     viewBob.p = math.sin(curTime / 4) / 2
     viewBob.y = math.cos(curTime) / 2
 
-    fakeAngles = LerpAngle(frameTime * 8, fakeAngles or angles, (shootPos - trace.HitPos):Angle() + viewBob)
+    fakeAngles = LerpAngle(frameTime * 8, fakeAngles or angles, (followHitAngles and (shootPos - trace.HitPos):Angle() or angles) + viewBob)
     fakePos = LerpVector(frameTime * 8, fakePos or trace.HitPos, trace.HitPos)
 
     local distance = pos:Distance(traceData.HitPos) / 64
     distance = math.Clamp(distance, 0, 50)
-    fakeFov = Lerp(frameTime, fakeFov or fov, fov - distance)
+    fakeFov = Lerp(frameTime, fakeFov or fov, followHitFov and (fov - distance) or fov)
 
     view.origin = fakePos or trace.HitPos
     view.angles = fakeAngles or angles

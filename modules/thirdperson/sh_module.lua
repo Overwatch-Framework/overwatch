@@ -9,8 +9,12 @@ ow.localization:Register("en", {
     ["option.thirdperson"] = "Third Person",
     ["option.thirdperson.enable"] = "Enable Third Person",
     ["option.thirdperson.enable.help"] = "Enable or disable third person view.",
-    ["options.thirdperson.followhead"] = "Follow Head",
-    ["options.thirdperson.followhead.help"] = "Follow the player's head with the third person camera.",
+    ["options.thirdperson.follow.head"] = "Follow Head",
+    ["options.thirdperson.follow.head.help"] = "Follow the player's head with the third person camera.",
+    ["options.thirdperson.follow.hit.angles"] = "Follow Hit Angles",
+    ["options.thirdperson.follow.hit.angles.help"] = "Follow the hit angles with the third person camera.",
+    ["options.thirdperson.follow.hit.fov"] = "Follow Hit FOV",
+    ["options.thirdperson.follow.hit.fov.help"] = "Follow the hit FOV with the third person camera.",
     ["options.thirdperson.position.x"] = "Position X",
     ["options.thirdperson.position.x.help"] = "Set the X position of the third person camera.",
     ["options.thirdperson.position.y"] = "Position Y",
@@ -30,11 +34,29 @@ ow.option:Register("thirdperson", {
     Category = "category.thirdperson"
 })
 
-ow.option:Register("thirdperson.followhead", {
-    Name = "options.thirdperson.followhead",
+ow.option:Register("thirdperson.follow.head", {
+    Name = "options.thirdperson.follow.head",
     Type = ow.type.bool,
     Default = false,
-    Description = "options.thirdperson.followhead.help",
+    Description = "options.thirdperson.follow.head.help",
+    bNoNetworking = true,
+    Category = "category.thirdperson"
+})
+
+ow.option:Register("thirdperson.follow.hit.angles", {
+    Name = "options.thirdperson.follow.hit.angles",
+    Type = ow.type.bool,
+    Default = true,
+    Description = "options.thirdperson.follow.hit.angles.help",
+    bNoNetworking = true,
+    Category = "category.thirdperson"
+})
+
+ow.option:Register("thirdperson.follow.hit.fov", {
+    Name = "options.thirdperson.follow.hit.fov",
+    Type = ow.type.bool,
+    Default = true,
+    Description = "options.thirdperson.follow.hit.fov.help",
     bNoNetworking = true,
     Category = "category.thirdperson"
 })
