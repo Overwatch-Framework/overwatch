@@ -192,6 +192,9 @@ function PANEL:Paint(width, height)
         time = 1
     end
 
+    local fraction = self:GetAlpha() / 255
+    ow.util:DrawBlur(self, 1 * fraction, 0.5 * fraction, 255 * fraction)
+
     self:SetGradientLeft(Lerp(time, self:GetGradientLeft(), self:GetGradientLeftTarget()))
     self:SetGradientRight(Lerp(time, self:GetGradientRight(), self:GetGradientRightTarget()))
     self:SetGradientTop(Lerp(time, self:GetGradientTop(), self:GetGradientTopTarget()))
