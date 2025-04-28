@@ -7,7 +7,14 @@ local PANEL = {}
 
 function PANEL:Init()
     self:Dock(FILL)
-    self:DockMargin(0, 0, 0, 0)
+
+    local title = self:Add("ow.text")
+    title:Dock(TOP)
+    title:SetFont("ow.fonts.title")
+    title:SetText("SCOREBOARD")
+
+    self.container = self:Add("DScrollPanel")
+    self.container:Dock(FILL)
 
     self.cache = {}
     self.cache.players = {}
@@ -38,17 +45,18 @@ function PANEL:Populate()
     for teamID, players in pairs(teams) do
         table.insert(sortedTeams, { teamID = teamID, players = players })
     end
+
     table.sort(sortedTeams, function(a, b) return a.teamID < b.teamID end)
 
     -- Clear the current scoreboard
-    self:Clear()
+    self.container:Clear()
 
     for _, teamData in ipairs(sortedTeams) do
         local teamID = teamData.teamID
         local players = teamData.players
 
         -- Create a new panel for the team
-        local teamPanel = self:Add("ow.tab.scoreboard.team")
+        local teamPanel = self.container:Add("ow.tab.scoreboard.team")
         teamPanel:SetTeam(teamID)
 
         -- Add each player to the team panel
@@ -59,8 +67,6 @@ function PANEL:Populate()
             teamPanel.players[ply:SteamID64()] = playerPanel
         end
     end
-
-    self:InvalidateLayout(true)
 end
 
 vgui.Register("ow.tab.scoreboard", PANEL, "EditablePanel")
@@ -77,13 +83,12 @@ function PANEL:Init()
     self.teamName = self:Add("ow.text")
     self.teamName:SetTall(ScreenScale(10))
     self.teamName:Dock(TOP)
-    self.teamName:DockMargin(8, 0, 0, 0)
+    self.teamName:DockMargin(ScreenScale(2), 0, 0, 0)
     self.teamName:SetFont("ow.fonts.default.italic.bold")
     self.teamName:SetContentAlignment(7)
 
     self.container = self:Add("DPanel")
     self.container:Dock(FILL)
-    self.container:DockMargin(0, 0, 0, 0)
     self.container.Paint = function(this, width, height)
         surface.SetDrawColor(0, 0, 0, 200)
         surface.DrawRect(0, 0, width, height)
@@ -98,7 +103,7 @@ function PANEL:SetTeam(teamID)
     self.teamID = teamID
 
     if ( IsValid(self.teamName) ) then
-        self.teamName:SetText(team.GetName(teamID))
+        self.teamName:SetText(team.GetName(teamID), true, true)
     end
 end
 
@@ -151,20 +156,16 @@ function PANEL:SetPlayer(ply)
     end
 
     if ( IsValid(self.name) ) then
-        self.name:SetText(ply:SteamName())
-        self.name:SizeToContents()
+        self.name:SetText(ply:SteamName(), true)
         self.name:SetPos(self.avatar:GetWide() + 16, self:GetTall() / 2 - self.name:GetTall() / 2)
     end
 end
 
 function PANEL:Think()
     if ( IsValid(self.ping) and IsValid(self.player) ) then
-        self.ping:SetText(self.player:Ping() .. "ms")
+        self.ping:SetText(self.player:Ping() .. "ms", true)
         self.ping:SetPos(self:GetWide() - self.ping:GetWide() - 16, self:GetTall() / 2 - self.ping:GetTall() / 2)
     end
-end
-
-function PANEL:Paint(width, height)
 end
 
 vgui.Register("ow.tab.scoreboard.player", PANEL, "EditablePanel")
