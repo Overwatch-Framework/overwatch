@@ -23,11 +23,11 @@ Overwatch was created by [Riggs](https://github.com/riggs9162) and [bloodycop](h
     - Character Creation
     - Character Selection
     - Inventory
-- ### Inventory System
-    - Weight Based Inventory System
-    - Storage System
-    - Item System
-    - Item Pickup System
+    - Death Screen
+    - Tooltips or something
+- ### Weight Based Inventory System
+- ### Item System
+    - Item Actions (Pickup, Take)
 - ### Character System
     - Character Creation System
     - Character Selection System
@@ -39,3 +39,8 @@ Overwatch was created by [Riggs](https://github.com/riggs9162) and [bloodycop](h
     - Player Saving System
     - Player Loading System
 - ### Animation System
+    - citizen_male
+    - citizen_female
+    - metrocop
+    - overwatch
+    - player
