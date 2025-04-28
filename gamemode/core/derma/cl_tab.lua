@@ -20,7 +20,10 @@ AccessorFunc(PANEL, "gradientRightTarget", "GradientRightTarget", FORCE_NUMBER)
 AccessorFunc(PANEL, "gradientTopTarget", "GradientTopTarget", FORCE_NUMBER)
 AccessorFunc(PANEL, "gradientBottomTarget", "GradientBottomTarget", FORCE_NUMBER)
 
-AccessorFunc(PANEL, "fadeTime", "FadeTime", FORCE_NUMBER)
+AccessorFunc(PANEL, "fadeStart", "FadeStart", FORCE_NUMBER)
+
+AccessorFunc(PANEL, "anchorTime", "AnchorTime", FORCE_NUMBER)
+AccessorFunc(PANEL, "anchorEnabled", "AnchorEnabled", FORCE_BOOL)
 
 function PANEL:Init()
     if ( IsValid(ow.gui.tab) ) then
@@ -50,7 +53,7 @@ function PANEL:Init()
     self.gradientTopTarget = 0
     self.gradientBottomTarget = 0
 
-    self.fadeTime = ow.option:Get("tab.fade.time", 0.2)
+    self.fadeStart = CurTime()
 
     self.anchorTime = CurTime() + ow.option:Get("tab.anchor.time", 0.4)
     self.anchorEnabled = true
@@ -62,7 +65,8 @@ function PANEL:Init()
     self.buttons = self:Add("DPanel")
     self.buttons:SetSize(ScrW() / 4 - paddingSmall, ScrH() - padding)
     self.buttons:SetPos(-self.buttons:GetWide(), paddingSmall)
-    self.buttons:MoveTo(paddingTiny, paddingSmall, self.fadeTime, 0)
+    self.buttons.pos = {self.buttons:GetX(), self.buttons:GetY()}
+    self.buttons.posTarget = {paddingTiny, paddingSmall}
     self.buttons.Paint = nil
 
     -- eon did not like the close button :(
@@ -94,7 +98,8 @@ function PANEL:Init()
     self.container = self:Add("DPanel")
     self.container:SetSize(self:GetWide() - self.buttons:GetWide() - padding - paddingSmall, self:GetTall() - padding)
     self.container:SetPos(self:GetWide(), paddingSmall)
-    self.container:MoveTo(self:GetWide() - self.container:GetWide() - paddingTiny, paddingSmall, self.fadeTime, 0)
+    self.container.pos = {self.container:GetX(), self.container:GetY()}
+    self.container.posTarget = {self:GetWide() - self.container:GetWide() - paddingTiny, paddingSmall}
     self.container.Paint = nil
 
     local buttons = {}
@@ -153,7 +158,9 @@ function PANEL:Close(callback)
     self:SetGradientTopTarget(0)
     self:SetGradientBottomTarget(0)
 
-    self:AlphaTo(0, self.fadeTime, 0, function()
+    local fadeDuration = ow.option:Get("tab.fade.time", 0.2)
+
+    self:AlphaTo(0, fadeDuration, 0, function()
         self:Remove()
 
         if ( callback ) then
@@ -161,10 +168,10 @@ function PANEL:Close(callback)
         end
     end)
 
-    self.buttons:MoveTo(-self.buttons:GetWide() * 2, paddingSmall, self.fadeTime, 0, 1)
-    self.buttons:AlphaTo(0, self.fadeTime / 2, 0)
-    self.container:MoveTo(self:GetWide() * 2, paddingSmall, self.fadeTime, 0, 1)
-    self.container:AlphaTo(0, self.fadeTime / 2, 0)
+    self.buttons.posTarget = {-self.buttons:GetWide() * 2, paddingSmall}
+    self.container.posTarget = {self:GetWide() * 2, paddingSmall}
+    self.buttons:AlphaTo(0, fadeDuration / 2, 0)
+    self.container:AlphaTo(0, fadeDuration / 2, 0)
 end
 
 function PANEL:OnKeyCodePressed(keyCode)
@@ -186,6 +193,9 @@ function PANEL:Think()
     if ( ( !bHoldingTab and !self.anchorEnabled ) or gui.IsGameUIVisible() ) then
         self:Close()
     end
+
+    self.buttons:SetPos(self.buttons.pos[1], self.buttons.pos[2])
+    self.container:SetPos(self.container.pos[1], self.container.pos[2])
 end
 
 function PANEL:Paint(width, height)
@@ -204,6 +214,14 @@ function PANEL:Paint(width, height)
     self:SetGradientRight(Lerp(time, self:GetGradientRight(), self:GetGradientRightTarget()))
     self:SetGradientTop(Lerp(time, self:GetGradientTop(), self:GetGradientTopTarget()))
     self:SetGradientBottom(Lerp(time, self:GetGradientBottom(), self:GetGradientBottomTarget()))
+
+    local fadeDuration = ow.option:Get("tab.fade.time", 0.2)
+    local fadeProgress = ( CurTime() - self.fadeStart ) / fadeDuration
+
+    self.buttons.pos[1] = Lerp(fadeProgress, self.buttons.pos[1], self.buttons.posTarget[1])
+    self.buttons.pos[2] = Lerp(fadeProgress, self.buttons.pos[2], self.buttons.posTarget[2])
+    self.container.pos[1] = Lerp(fadeProgress, self.container.pos[1], self.container.posTarget[1])
+    self.container.pos[2] = Lerp(fadeProgress, self.container.pos[2], self.container.posTarget[2])
 
     surface.SetDrawColor(0, 0, 0, 255 * self:GetGradientLeft())
     surface.SetMaterial(gradientLeft)
