@@ -38,7 +38,7 @@ function GM:StartCommand(ply, cmd)
 
         net.Start("ow.mainmenu")
         net.Send(ply)
-        
+
         ply:SaveDB()
 
         hook.Run("PostPlayerInitialSpawn", ply)
