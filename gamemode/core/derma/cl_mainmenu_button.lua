@@ -137,9 +137,17 @@ end
 
 function PANEL:Think()
     if ( !self:IsHovered() and ( self.textColorTarget != self.baseTextColor or self.heightTarget != self.baseHeight) ) then
-        self.textColorTarget = self.baseTextColor
-        self.textInsetTarget = {ScreenScale(2), 0}
+        self:SetFont("ow.fonts.button")
+
         self.heightTarget = self.baseHeight
+        self.textColorTarget = self.baseTextColor or color_white
+        self.textInsetTarget = {ScreenScale(2), 0}
+
+        self.inertiaTarget = 0
+
+        if ( self.OnUnHovered ) then
+            self:OnUnHovered()
+        end
     end
 
     self:SetTall(self.height)
@@ -148,32 +156,18 @@ function PANEL:Think()
 end
 
 function PANEL:OnCursorEntered()
+    surface.PlaySound("ow.button.enter")
+
     self:SetFont("ow.fonts.button.hover")
 
     self.heightTarget = self.baseHeight * 1.25
     self.textColorTarget = hook.Run("GetSchemaColor")
     self.textInsetTarget = {ScreenScale(8), 0}
 
-    surface.PlaySound("ow.button.enter")
-
     self.inertiaTarget = 1
 
     if ( self.OnHovered ) then
         self:OnHovered()
-    end
-end
-
-function PANEL:OnCursorExited()
-    self:SetFont("ow.fonts.button")
-
-    self.heightTarget = self.baseHeight
-    self.textColorTarget = self.baseTextColor or color_white
-    self.textInsetTarget = {ScreenScale(2), 0}
-
-    self.inertiaTarget = 0
-
-    if ( self.OnUnHovered ) then
-        self:OnUnHovered()
     end
 end
 
@@ -251,36 +245,32 @@ end
 
 function PANEL:Think()
     if ( !self:IsHovered() and ( self.textColorTarget != self.baseTextColor ) ) then
-        self.textColorTarget = self.baseTextColor
+        self:SetFont("ow.fonts.button.small")
+
+        self.textColorTarget = self.baseTextColor or color_white
         self.textInsetTarget = {ScreenScale(2), 0}
+
+        self.inertiaTarget = 0
+
+        if ( self.OnUnHovered ) then
+            self:OnUnHovered()
+        end
     end
 
     self:SetTextColor(self.textColor)
 end
 
 function PANEL:OnCursorEntered()
+    surface.PlaySound("ow.button.enter")
+
     self:SetFont("ow.fonts.button.small.hover")
 
     self.textColorTarget = color_black
-
-    surface.PlaySound("ow.button.enter")
 
     self.inertiaTarget = 1
 
     if ( self.OnHovered ) then
         self:OnHovered()
-    end
-end
-
-function PANEL:OnCursorExited()
-    self:SetFont("ow.fonts.button.small")
-
-    self.textColorTarget = self.baseTextColor or color_white
-
-    self.inertiaTarget = 0
-
-    if ( self.OnUnHovered ) then
-        self:OnUnHovered()
     end
 end
 
