@@ -135,13 +135,13 @@ function GM:DrawVignette()
     paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
 end
 
-local x, y = 24, 24
 local padding = 16
 local backgroundColor = Color(10, 10, 10, 220)
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
+    local x, y = 24, 24
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
         local green = ow.colour:Get("green")
@@ -180,7 +180,7 @@ function GM:HUDPaint()
 
     shouldDraw = hook.Run("ShouldDrawCrosshair")
     if ( shouldDraw != false ) then
-        local x, y = ScrW() / 2, ScrH() / 2
+        x, y = ScrW() / 2, ScrH() / 2
         local size = 3
 
         if ( ow.module:Get("thirdperson") and ow.option:Get("thirdperson", false) ) then
