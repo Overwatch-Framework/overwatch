@@ -448,8 +448,7 @@ function GM:PopulateTabButtons(buttons)
     }
     buttons["tab.settings"] = {
         Populate = function(container)
-            -- TODO: Implement this in the future
-            -- container:Add("ow.tab.settings")
+            container:Add("ow.tab.settings")
         end
     }
 end
