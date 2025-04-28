@@ -210,6 +210,8 @@ function PANEL:Init()
 
     self.baseTextColorTarget = color_black
     self.textColorTarget = color_black
+
+    self.backgroundColor = Color(255, 255, 255, 255)
 end
 
 function PANEL:SizeToContents()
@@ -230,7 +232,7 @@ function PANEL:Paint(width, height)
     self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
     self.textColor = self.textColor:Lerp(self.textColorTarget, time)
 
-    draw.RoundedBox(0, 0, 0, width, height, Color(255, 255, 255, 255 * self.inertia))
+    draw.RoundedBox(0, 0, 0, width, height, Color(self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b, 255 * self.inertia))
 
     paint.startPanel(self)
         mask(function()
