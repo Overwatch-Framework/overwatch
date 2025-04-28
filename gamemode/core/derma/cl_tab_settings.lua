@@ -5,57 +5,26 @@ DEFINE_BASECLASS("EditablePanel")
 local PANEL = {}
 
 function PANEL:Init()
-    self:SetSize(ScrW(), ScrH())
-    self:SetPos(0, 0)
-    self:SetVisible(false)
-end
-
-function PANEL:Populate()
-    local parent = self:GetParent()
-    parent:SetGradientLeftTarget(0)
-    parent:SetGradientRightTarget(0)
-    parent:SetGradientTopTarget(1)
-    parent:SetGradientBottomTarget(1)
-    parent:SetDimTarget(0.25)
-    parent.container:Clear()
-    parent.container:SetVisible(false)
-
-    self:SetVisible(true)
+    self:Dock(FILL)
+    self:DockMargin(0, 0, 0, 0)
 
     local title = self:Add("DLabel")
     title:Dock(TOP)
-    title:DockMargin(padding, padding, padding, 0)
+    title:DockMargin(0, 0, 0, 0)
     title:SetFont("ow.fonts.title")
     title:SetText("SETTINGS")
     title:SetTextColor(color_white)
     title:SizeToContents()
 
-    local navigation = self:Add("EditablePanel")
-    navigation:Dock(BOTTOM)
-    navigation:DockMargin(padding, 0, padding, padding)
-    navigation:SetTall(ScreenScale(24))
-
-    local backButton = navigation:Add("ow.mainmenu.button.small")
-    backButton:Dock(LEFT)
-    backButton:SetText("BACK")
-    backButton.DoClick = function()
-        self.currentCreatePage = 0
-        self.currentCreatePayload = {}
-        parent:Populate()
-
-        self:Clear()
-        self:SetVisible(false)
-    end
-
     self.buttons = self:Add("DHorizontalScroller")
     self.buttons:Dock(TOP)
-    self.buttons:DockMargin(padding, padding / 8, padding, 0)
+    self.buttons:DockMargin(0, padding / 8, padding, 0)
     self.buttons:SetTall(ScreenScale(24))
     self.buttons.Paint = nil
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
-    self.container:DockMargin(padding, 0, padding, 0)
+    self.container:DockMargin(0, 0, padding, 0)
     self.container.Paint = nil
 
     local categories = {}
@@ -269,6 +238,6 @@ function PANEL:PopulateCategory(category)
     end
 end
 
-vgui.Register("ow.mainmenu.settings", PANEL, "EditablePanel")
+vgui.Register("ow.tab.settings", PANEL, "EditablePanel")
 
 ow.gui.settingsLast = nil
