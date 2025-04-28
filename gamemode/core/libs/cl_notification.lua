@@ -11,7 +11,7 @@ local FONT_NAME = "ow.fonts.default.bold"
 -- Utility function to create a notification
 function ow.notification:Add(text, duration, bgColor)
     duration = duration or 3
-    bgColor = bgColor or Color(50, 50, 50)
+    bgColor = bgColor or ow.colour:Get("notification.backgroun", true)
     bgColor.a = 200
 
     -- Create panel
