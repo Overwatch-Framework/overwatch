@@ -401,6 +401,11 @@ function GM:LoadFonts()
 end
 
 function GM:OnPauseMenuShow()
+    if ( IsValid(ow.gui.tab) ) then
+        ow.gui.tab:Close()
+        return false
+    end
+
     if ( !IsValid(ow.gui.mainmenu) ) then
         vgui.Create("ow.mainmenu")
     else
@@ -457,8 +462,7 @@ function GM:PopulateTabButtons(buttons)
     }
     buttons["tab.inventory"] = {
         Populate = function(container)
-            -- TODO: Implement this in the future
-            -- container:Add("ow.tab.inventory")
+            container:Add("ow.tab.inventory")
         end
     }
     buttons["tab.scoreboard"] = {

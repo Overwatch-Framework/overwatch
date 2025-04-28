@@ -162,6 +162,16 @@ function PANEL:Close(callback)
     self.container:AlphaTo(0, self.fadeTime / 2, 0)
 end
 
+function PANEL:OnKeyCodePressed(keyCode)
+    if ( keyCode == KEY_TAB or keyCode == KEY_ESCAPE ) then
+        self:Close()
+
+        return true
+    end
+
+    return false
+end
+
 function PANEL:Think()
     local bHoldingTab = input.IsKeyDown(KEY_TAB)
     if ( bHoldingTab and ( self.anchorTime < CurTime() ) and self.anchorEnabled ) then
