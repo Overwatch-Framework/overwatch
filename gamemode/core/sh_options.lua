@@ -39,6 +39,9 @@ ow.option:Register("language", {
     Description = "options.language.help",
     Type = ow.type.array,
     Default = "en",
+    OnChange = function(self, value)
+        RunConsoleCommand("gmod_language", value)
+    end,
     Populate = function()
         return languages
     end
