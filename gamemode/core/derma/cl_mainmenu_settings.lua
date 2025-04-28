@@ -75,9 +75,16 @@ function PANEL:Populate()
             self:PopulateCategory(v)
         end
     end
+
+    if ( ow.gui.settingsLast ) then
+        self:PopulateCategory(ow.gui.settingsLast)
+    else
+        self:PopulateCategory(categories[1])
+    end
 end
 
 function PANEL:PopulateCategory(category)
+    ow.gui.settingsLast = category
     self.activeCategory = category
     self.container:Clear()
 
@@ -263,3 +270,5 @@ function PANEL:PopulateCategory(category)
 end
 
 vgui.Register("ow.mainmenu.settings", PANEL, "EditablePanel")
+
+ow.gui.settingsLast = nil
