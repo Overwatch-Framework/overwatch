@@ -75,20 +75,22 @@ function ow.character:Load(ply, id)
 
     if ( result and result[1] ) then
         local row = result[1]
-        local character = self:CreateObject(row.id, row, ply)
+        local character = self:CreateObject(id, row, ply)
         if ( !character ) then
             ErrorNoHalt("Failed to create character object for ID " .. id .. " for player " .. tostring(ply) .. "\n")
             return false
         end
 
-        self.stored[row.id] = character
+        self.stored[id] = character
 
         hook.Run("PrePlayerLoadedCharacter", ply, character, currentCharacter)
 
         net.Start("ow.character.load")
-            net.WriteTable(character)
+            net.WriteUInt(character:GetID(), 32)
         net.Send(ply)
 
+        ply.owCharacters = ply.owCharacters or {}
+        ply.owCharacters[id] = character
         ply.owCharacter = character
 
         ply:SetModel(character:GetModel())
@@ -103,7 +105,7 @@ function ow.character:Load(ply, id)
     end
 end
 
-function ow.character:Chache(ply, id)
+function ow.character:Cache(ply, id)
     if ( !IsValid(ply) or !ply:IsPlayer() ) then
         ErrorNoHalt("Attempted to cache character for invalid player (" .. tostring(ply) .. ")\n")
         return false
@@ -114,6 +116,12 @@ function ow.character:Chache(ply, id)
     local result = ow.sqlite:Select("ow_characters", nil, condition)
     if ( !result or !result[1] ) then
         ErrorNoHalt("Failed to cache character with ID " .. id .. " for player " .. tostring(ply) .. "\n")
+        return false
+    end
+
+    id = tonumber(id)
+    if ( !id ) then
+        ErrorNoHalt("Failed to convert character ID " .. id .. " to number for player " .. tostring(ply) .. "\n")
         return false
     end
 
@@ -144,9 +152,15 @@ function ow.character:CacheAll(ply)
 
     if ( result ) then
         for _, row in ipairs(result) do
-            local character = self:CreateObject(row.id, row, ply)
-            self.stored[row.id] = character
-            ply.owCharacters[row.id] = character
+            local id = tonumber(row.id)
+            if ( !id ) then
+                ErrorNoHalt("Failed to convert character ID " .. row.id .. " to number for player " .. tostring(ply) .. "\n")
+                continue
+            end
+
+            local character = self:CreateObject(id, row, ply)
+            self.stored[id] = character
+            ply.owCharacters[id] = character
         end
     end
 

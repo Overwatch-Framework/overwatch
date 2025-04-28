@@ -2,7 +2,6 @@
 -- @module ow.character
 
 ow.character = ow.character or {} -- Character library.
-
 ow.character.meta = ow.character.meta or {} -- All currently registered character meta functions.
 ow.character.variables = ow.character.variables or {} -- All currently registered variables.
 ow.character.fields = ow.character.fields or {} -- All currently registered fields.
@@ -92,6 +91,9 @@ function ow.character:GetVariable(id, key)
 end
 
 function ow.character:CreateObject(id, data, ply)
+    if ( !id or !data ) then return false, "Invalid ID or data" end
+    if ( self.stored[id] ) then return self.stored[id], "Character already exists" end
+
     local character = setmetatable({}, self.meta)
     character.id = id
     character.player = ply or NULL
@@ -123,4 +125,12 @@ function ow.character:GetPlayerByCharacter(id)
     end
 
     return false, "Player not found"
+end
+
+function ow.character:Get(id)
+    return self.stored[id]
+end
+
+function ow.character:GetAll()
+    return self.stored
 end

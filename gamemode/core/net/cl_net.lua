@@ -69,19 +69,39 @@ net.Receive("ow.character.cache", function(len)
     if ( !istable(data) ) then return end
 
     local ply = LocalPlayer()
+    local plyTable = ply:GetTable()
 
     local character = ow.character:CreateObject(data.id, data, ply)
     local id = character:GetID()
 
-    ply.owCharacters = ply.owCharacters or {}
-    ply.owCharacters[id] = character
-    ply.owCharacter = character
+    ow.character.stored = ow.character.stored or {}
+    ow.character.stored[id] = character
+
+    plyTable.owCharacters = plyTable.owCharacters or {}
+    plyTable.owCharacters[id] = character
+    plyTable.owCharacter = character
 
     notification.AddLegacy("Character " .. id .. " cached!", NOTIFY_GENERIC, 5)
 end)
 
 net.Receive("ow.character.cache.all", function(len)
-    LocalPlayer().owCharacters = net.ReadTable()
+    local data = net.ReadTable()
+    if ( !istable(data) ) then return end
+
+    local ply = LocalPlayer()
+    local plyTable = ply:GetTable()
+
+    for k, v in pairs(data) do
+        local character = ow.character:CreateObject(v.id, v, ply)
+        local id = character:GetID()
+
+        ow.character.stored = ow.character.stored or {}
+        ow.character.stored[id] = character
+
+        plyTable.owCharacters = plyTable.owCharacters or {}
+        plyTable.owCharacters[id] = character
+    end
+
     notification.AddLegacy("Characters cached!", NOTIFY_GENERIC, 5)
 end)
 
@@ -92,6 +112,20 @@ net.Receive("ow.character.load", function(len)
     if ( ow.gui.mainmenu ) then
         ow.gui.mainmenu:Remove()
     end
+
+    local character, reason = ow.character:CreateObject(characterID, ow.character.stored[characterID], LocalPlayer())
+    if ( !character ) then print("Failed to load character " .. characterID .. "!", reason) return end
+    print("Character " .. characterID .. " loaded.", character)
+
+    local ply = LocalPlayer()
+    local plyTable = ply:GetTable()
+
+    ow.character.stored = ow.character.stored or {}
+    ow.character.stored[characterID] = character
+
+    plyTable.owCharacters = plyTable.owCharacters or {}
+    plyTable.owCharacters[characterID] = character
+    plyTable.owCharacter = character
 end)
 
 net.Receive("ow.mainmenu", function(len)

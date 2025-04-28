@@ -113,8 +113,4 @@ net.Receive("ow.character.load", function(len, ply)
     if ( !characterID ) then return end
 
     ow.character:Load(ply, characterID)
-
-    net.Start("ow.character.load")
-        net.WriteUInt(characterID, 32)
-    net.Send(ply)
 end)
