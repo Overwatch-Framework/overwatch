@@ -79,7 +79,7 @@ function PANEL:PopulateCategory(category)
             local label = self.container:Add("ow.text")
             label:Dock(TOP)
             label:DockMargin(0, 0, 0, ScreenScale(4))
-            label:SetFont("ow.fonts.button.large")
+            label:SetFont("ow.fonts.title")
             label:SetText(v.SubCategory:upper())
 
             subCategoriesActive[v.SubCategory] = true
