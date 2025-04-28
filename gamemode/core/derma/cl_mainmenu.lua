@@ -109,7 +109,8 @@ function PANEL:Populate()
     buttons:DockMargin(0, padding / 4, 0, padding)
 
     local ply = LocalPlayer()
-    if ( ply.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
+    local plyTable = ply:GetTable()
+    if ( plyTable.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
         local playButton = buttons:Add("ow.mainmenu.button")
         playButton:Dock(TOP)
         playButton:DockMargin(0, 0, 0, 16)
@@ -140,7 +141,7 @@ function PANEL:Populate()
         end
     end
 
-    local bHasCharacters = table.Count(ply.owCharacters or {}) > 0
+    local bHasCharacters = table.Count(plyTable.owCharacters or {}) > 0
     if ( bHasCharacters ) then
         local selectButton = buttons:Add("ow.mainmenu.button")
         selectButton:Dock(TOP)

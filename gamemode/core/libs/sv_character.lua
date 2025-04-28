@@ -39,12 +39,16 @@ function ow.character:Create(ply, query)
         return false
     end
 
-    ply.owCharacters = ply.owCharacters or {}
-    ply.owCharacters[id] = character
+    local plyTable = ply:GetTable()
+    plyTable.owCharacters = plyTable.owCharacters or {}
+    plyTable.owCharacters[id] = character
+
     self.stored[id] = character
 
+    local compressed = util.Compress(util.TableToJSON(character))
+
     net.Start("ow.character.cache")
-        net.WriteTable(character)
+        net.WriteData(compressed, #compressed)
     net.Send(ply)
 
     hook.Run("PlayerCreatedCharacter", ply, character, query)
@@ -89,9 +93,10 @@ function ow.character:Load(ply, id)
             net.WriteUInt(character:GetID(), 32)
         net.Send(ply)
 
-        ply.owCharacters = ply.owCharacters or {}
-        ply.owCharacters[id] = character
-        ply.owCharacter = character
+        local plyTable = ply:GetTable()
+        plyTable.owCharacters = plyTable.owCharacters or {}
+        plyTable.owCharacters[id] = character
+        plyTable.owCharacter = character
 
         ply:SetModel(character:GetModel())
         ply:SetTeam(character:GetFaction())
@@ -104,6 +109,37 @@ function ow.character:Load(ply, id)
         ErrorNoHalt("Failed to load character with ID " .. id .. " for player " .. tostring(ply) .. "\n")
         return false
     end
+end
+
+function ow.character:Delete(id)
+    if ( !id ) then
+        ErrorNoHalt("Attempted to delete character with invalid ID (" .. tostring(id) .. ")\n")
+        return false
+    end
+
+    local character = self.stored[id]
+    if ( !character ) then
+        ErrorNoHalt("Attempted to delete character that does not exist (" .. id .. ")\n")
+        return false
+    end
+
+    local ply = character:GetPlayer()
+    if ( IsValid(ply) ) then
+        local plyTable = ply:GetTable()
+        plyTable.owCharacters[id] = nil
+        plyTable.owCharacter = nil
+
+        net.Start("ow.character.delete")
+            net.WriteUInt(id, 32)
+        net.Send(ply)
+    end
+
+    local condition = string.format("id = %s", sql.SQLStr(id))
+    ow.sqlite:Delete("ow_characters", condition)
+
+    self.stored[id] = nil
+
+    return true
 end
 
 function ow.character:Cache(ply, id)
@@ -126,12 +162,15 @@ function ow.character:Cache(ply, id)
         return false
     end
 
-    ply.owCharacters = ply.owCharacters or {}
-    ply.owCharacters[id] = result[1]
+    local plyTable = ply:GetTable()
+    plyTable.owCharacters = plyTable.owCharacters or {}
+    plyTable.owCharacters[id] = result[1]
     self.stored[id] = result[1]
 
+    local compressed = util.Compress(util.TableToJSON(result[1]))
+
     net.Start("ow.character.cache")
-        net.WriteTable(result[1])
+        net.WriteData(compressed, #compressed)
     net.Send(ply)
 
     return true
@@ -149,7 +188,8 @@ function ow.character:CacheAll(ply)
     local result = ow.sqlite:Select("ow_characters", nil, condition)
 
     -- Ensure the player has a table to store characters
-    ply.owCharacters = {}
+    local plyTable = ply:GetTable()
+    plyTable.owCharacters = {}
 
     if ( result ) then
         for _, row in ipairs(result) do
@@ -161,17 +201,19 @@ function ow.character:CacheAll(ply)
 
             local character = self:CreateObject(id, row, ply)
             self.stored[id] = character
-            ply.owCharacters[id] = character
+            plyTable.owCharacters[id] = character
         end
     end
 
+    local compressed = util.Compress(util.TableToJSON(plyTable.owCharacters))
+
     net.Start("ow.character.cache.all")
-        net.WriteTable(ply.owCharacters)
+        net.WriteData(compressed, #compressed)
     net.Send(ply)
 
-    hook.Run("PlayerLoadedAllCharacters", ply, ply.owCharacters)
+    hook.Run("PlayerLoadedAllCharacters", ply, plyTable.owCharacters)
 
-    return ply.owCharacters
+    return plyTable.owCharacters
 end
 
 concommand.Add("ow_character_test_create", function(ply, cmd, args)

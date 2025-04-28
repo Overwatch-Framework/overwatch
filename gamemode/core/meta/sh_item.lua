@@ -28,7 +28,7 @@ function ITEM:Spawn(position, angles)
         entity:SetPos(position)
 
         if ( IsValid(ply) and ply:GetCharacter() ) then
-            entity.owCharID = ply:GetCharacter():GetID()
+            entity:GetTable().owCharID = ply:GetCharacter():GetID()
         end
 
         hook.Run("OnItemSpawned", entity)
