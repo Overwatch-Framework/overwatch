@@ -43,6 +43,9 @@ function PANEL:Init()
     end
 end
 
+local sliderBackground = Color(200, 200, 200, 100)
+local labelShadow = Color(0, 0, 0, 150)
+
 function PANEL:PopulateCategory(category)
     ow.gui.settingsLast = category
     self.activeCategory = category
@@ -102,7 +105,7 @@ function PANEL:PopulateCategory(category)
             slider:SetMouseInputEnabled(false)
 
             slider.Paint = function(this, width, height)
-                draw.RoundedBox(0, 0, 0, width, height, Color(200, 200, 200, 100))
+                draw.RoundedBox(0, 0, 0, width, height, sliderBackground)
                 local fraction = (this.value - this.min) / (this.max - this.min)
                 local barWidth = math.Clamp(fraction * width, 0, width)
                 local inertia = panel:GetInertia()
@@ -169,7 +172,7 @@ function PANEL:PopulateCategory(category)
             label:DockMargin(0, 0, ScreenScale(8), 0)
             label:SetText(phrase, true)
             label:SetFont("ow.fonts.button")
-            label:SetExpensiveShadow(0, Color(0, 0, 0, 150))
+            label:SetExpensiveShadow(0, labelShadow)
             label:SetWide(ScreenScale(128))
             label:SetContentAlignment(6)
             label.Think = function(this)
