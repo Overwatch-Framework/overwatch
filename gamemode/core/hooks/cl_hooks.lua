@@ -459,23 +459,23 @@ end
 
 function GM:PopulateTabButtons(buttons)
     buttons["tab.config"] = {
-        Populate = function(container)
+        Populate = function(this, container)
             -- TODO: Implement this in the future
             -- container:Add("ow.tab.config")
         end
     }
     buttons["tab.inventory"] = {
-        Populate = function(container)
+        Populate = function(this, container)
             container:Add("ow.tab.inventory")
         end
     }
     buttons["tab.scoreboard"] = {
-        Populate = function(container)
+        Populate = function(this, container)
             container:Add("ow.tab.scoreboard")
         end
     }
     buttons["tab.settings"] = {
-        Populate = function(container)
+        Populate = function(this, container)
             container:Add("ow.tab.settings")
         end
     }

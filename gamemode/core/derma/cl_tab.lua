@@ -135,8 +135,8 @@ function PANEL:Populate(data)
     self.container:Clear()
 
     if ( istable(data) ) then
-        if ( data.Populate ) then
-            data.Populate(self.container)
+        if ( isfunction(data.Populate) ) then
+            data:Populate(self.container)
         end
 
         if ( data.OnClose ) then
