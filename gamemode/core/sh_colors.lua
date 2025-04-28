@@ -34,3 +34,5 @@ ow.colour:Register("gmod.console.error.client", Color(255, 221, 102, 255))
 
 ow.colour:Register("gmod.console.msg.server", Color(156, 241, 255, 200))
 ow.colour:Register("gmod.console.msg.client", Color(255, 241, 122, 200))
+
+ow.colour:Register("slider.background", Color(200, 200, 200, 100))

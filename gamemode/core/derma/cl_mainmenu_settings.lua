@@ -60,19 +60,19 @@ function PANEL:Populate()
 
     local categories = {}
     for k, v in pairs(ow.option.stored) do
-        if ( table.HasValue(categories, v.Category) ) then continue end
+        if categories[v.Category] then continue end
 
-        table.insert(categories, v.Category)
+        categories[v.Category] = true 
     end
 
     for k, v in SortedPairs(categories) do
         local button = self.buttons:Add("ow.mainmenu.button.small")
         button:Dock(LEFT)
-        button:SetText(v)
+        button:SetText(k)
         button:SizeToContents()
 
         button.DoClick = function()
-            self:PopulateCategory(v)
+            self:PopulateCategory(k)
         end
     end
 
@@ -144,7 +144,7 @@ function PANEL:PopulateCategory(category)
             slider:SetMouseInputEnabled(false)
 
             slider.Paint = function(this, width, height)
-                draw.RoundedBox(0, 0, 0, width, height, Color(200, 200, 200, 100))
+                draw.RoundedBox(0, 0, 0, width, height, ow.colour:Get("slider.background"))
                 local fraction = (this.value - this.min) / (this.max - this.min)
                 local barWidth = math.Clamp(fraction * width, 0, width)
                 local inertia = panel:GetInertia()
@@ -155,11 +155,8 @@ function PANEL:PopulateCategory(category)
             slider.Think = function(this)
                 local x, y = this:CursorPos()
                 local w, h = this:GetSize()
-                if ( x >= 0 and x <= w and y >= 0 and y <= h ) then
-                    this.bCursorInside = true
-                else
-                    this.bCursorInside = false
-                end
+
+                this.bCursorInside = x >= 0 and x <= w and y >= 0 and y <= h
             end
 
             slider:SetMin(v.Min or 0)
