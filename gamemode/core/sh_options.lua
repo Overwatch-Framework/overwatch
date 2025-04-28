@@ -41,20 +41,22 @@ ow.option:Register("language", {
     Default = "en",
     Populate = function()
         return languages
-    end,
+    end
 })
 
 ow.option:Register("vignette", {
     Name = "options.vignette",
     Description = "options.vignette.help",
     Type = ow.type.bool,
-    Default = true
+    Default = true,
+    bNoNetworking = true
 })
 
 ow.option:Register("tab.fade.time", {
     Name = "options.tab.fade.time",
     Description = "options.tab.fade.time.help",
     Type = ow.type.number,
+    bNoNetworking = true,
     Default = 0.4,
     Min = 0,
     Max = 1,
@@ -66,6 +68,7 @@ ow.option:Register("tab.anchor.time", {
     Description = "options.tab.anchor.time.help",
     Type = ow.type.number,
     Default = 0.4,
+    bNoNetworking = true,
     Min = 0,
     Max = 1,
     Decimals = 2
@@ -76,7 +79,8 @@ ow.option:Register("performance.blur", {
     Description = "options.performance.blur.help",
     Category = "category.performance",
     Type = ow.type.bool,
-    Default = true
+    Default = true,
+    bNoNetworking = true
 })
 
 ow.option:Register("performance.animations", {
@@ -84,5 +88,6 @@ ow.option:Register("performance.animations", {
     Description = "options.performance.animations.help",
     Category = "category.performance",
     Type = ow.type.bool,
-    Default = true
+    Default = true,
+    bNoNetworking = true
 })
