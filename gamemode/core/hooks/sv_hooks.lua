@@ -1,6 +1,10 @@
+local time
 local loadQueue = {}
 function GM:PlayerInitialSpawn(ply)
     if ( ply:IsBot() ) then return end
+
+    time = CurTime()
+    ow.util:Print("Starting to load player " .. ply:SteamName() .. " (" .. ply:SteamID64() .. ")")
 
     ow.sqlite:LoadRow("ow_players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
@@ -26,6 +30,9 @@ function GM:PlayerInitialSpawn(ply)
 
         ply:KillSilent()
 
+        ow.util:Print("Loaded player " .. ply:SteamName() .. " (" .. ply:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
+        time = CurTime()
+
         ow.config:Synchronize(ply)
     end)
 end
@@ -42,6 +49,9 @@ function GM:StartCommand(ply, cmd)
         ply:SaveDB()
 
         hook.Run("PostPlayerInitialSpawn", ply)
+
+        ow.util:Print("Finished loading player " .. ply:SteamName() .. " (" .. ply:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
+        time = CurTime()
     end
 end
 
