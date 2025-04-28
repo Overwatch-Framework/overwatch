@@ -1,5 +1,5 @@
-local gradientLeft = Material("vgui/gradient-l")
-local gradientBottom = Material("vgui/gradient-d")
+local gradientLeft = ow.util:GetMaterial("vgui/gradient-l")
+local gradientBottom = ow.util:GetMaterial("vgui/gradient-d")
 
 DEFINE_BASECLASS("EditablePanel")
 
