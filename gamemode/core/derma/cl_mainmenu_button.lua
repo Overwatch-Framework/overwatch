@@ -265,7 +265,7 @@ function PANEL:OnCursorEntered()
 
     self:SetFont("ow.fonts.button.small.hover")
 
-    self.textColorTarget = color_black
+    self.textColorTarget = self.baseTextColorTarget or color_black
 
     self.inertiaTarget = 1
 

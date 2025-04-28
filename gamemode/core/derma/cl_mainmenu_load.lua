@@ -75,6 +75,19 @@ function PANEL:Populate()
         image:DockMargin(0, 0, tinyPadding, 0)
         image:SetSize(button:GetTall() * 1.75, button:GetTall())
         image:SetImage(v.Image or "gamepadui/chapter14")
+
+        local deleteButton = button:Add("ow.mainmenu.button.small")
+        deleteButton:Dock(RIGHT)
+        deleteButton:DockMargin(tinyPadding, 0, 0, 0)
+        deleteButton.baseTextColor = color_black
+        deleteButton.baseTextColorTarget = ow.colour:Get("ui.error")
+        deleteButton:SetText("X")
+        deleteButton:SetWide(button:GetTall())
+        deleteButton:SetTall(button:GetTall())
+        deleteButton:SetContentAlignment(5)
+        deleteButton.DoClick = function()
+            -- TODO: Add confirmation dialog and delete character
+        end
     end
 end
 
