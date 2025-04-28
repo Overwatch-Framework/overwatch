@@ -135,48 +135,41 @@ function GM:DrawVignette()
     paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
 end
 
-local overWatchLogo = ow.util:GetMaterial("overwatch/gui/logo_white_x512.png", "noclamp smooth")
-local previewColor = Color(255, 210, 80)
+local x, y = 24, 24
+local padding = 16
+local backgroundColor = Color(10, 10, 10, 220)
 function GM:HUDPaint()
     local ply = LocalPlayer()
     if ( !IsValid(ply) ) then return end
 
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
-        local scrW, scrH = ScrW(), ScrH()
-        local width, height
-        local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
-        local x, y = scrW / 2 - logoWidth * 4, scrH - 100
+        local green = ow.colour:Get("green")
+        local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(ply:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(ply:EyeAngles())))
+        surface.SetDrawColor(backgroundColor)
+        surface.DrawRect(x - padding, y - padding, width + padding * 2, 95 + padding * 2)
 
-        surface.SetDrawColor(hook.Run("GetFrameworkColor") or color_white)
-        surface.SetMaterial(overWatchLogo)
-        surface.DrawTexturedRect(x - logoWidth, y - 30, logoWidth, logoHeight)
+        draw.SimpleText("[DEVELOPER HUD]", "ow.fonts.developer", x, y, green, TEXT_ALIGN_LEFT)
 
-        if ( SCHEMA ) then
-            width, height = draw.SimpleText(SCHEMA.Name:upper(), "ow.fonts.large.bold", x, y, hook.Run("GetSchemaColor"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            x, y = x + 16, y + height
-        end
+        draw.SimpleText("Pos: " .. tostring(ply:GetPos()), "ow.fonts.developer", x, y + 16 * 1, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Ang: " .. tostring(ply:EyeAngles()), "ow.fonts.developer", x, y + 16 * 2, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Health: " .. ply:Health(), "ow.fonts.developer", x, y + 16 * 3, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Ping: " .. ply:Ping(), "ow.fonts.developer", x, y + 16 * 4, green, TEXT_ALIGN_LEFT)
 
-        shouldDraw = hook.Run("ShouldDrawPreviewHUD")
-        if ( shouldDraw != false ) then
-            width, height = draw.SimpleText("PREVIEW BUILD - ", "ow.fonts.default.bold", x, y, previewColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-            x, y = x + width, y
-
-            width = select(1, draw.SimpleText("The following gameplay can be subjected to change", "ow.fonts.default.bold", x, y, ow.colour:Get("light.gray"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP))
-        else
-            width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-        end
+        local fps = math.floor(1 / FrameTime())
+        draw.SimpleText("FPS: " .. fps, "ow.fonts.developer", x, y + 16 * 5, green, TEXT_ALIGN_LEFT)
     end
 
+    shouldDraw = hook.Run("ShouldDrawPreviewHUD")
     if ( shouldDraw != false ) then
-        local x, y = 100, 100
+        local orange = ow.colour:Get("orange")
+        local red = ow.colour:Get("red")
+        surface.SetDrawColor(backgroundColor)
+        surface.DrawRect(x - padding, y - padding, 410 + padding * 2, 45 + padding * 2)
 
-        local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
-        surface.SetDrawColor(hook.Run("GetFrameworkColor") or color_white)
-        surface.SetMaterial(overWatchLogo)
-        surface.DrawTexturedRect(x - logoWidth, y - 30, logoWidth, logoHeight)
-
-        draw.SimpleText("PREVIEW BUILD", "ow.fonts.button", x, y, previewColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText("[PREVIEW MODE]", "ow.fonts.developer", x, y, orange, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Warning! Anything you witness is subject to change.", "ow.fonts.developer", x, y + 16, red, TEXT_ALIGN_LEFT)
+        draw.SimpleText("This is not the final product.", "ow.fonts.developer", x, y + 16 * 2, red, TEXT_ALIGN_LEFT)
     end
 
     shouldDraw = hook.Run("ShouldDrawCrosshair")
@@ -391,6 +384,13 @@ function GM:LoadFonts()
         antialias = true,
     })
 
+    surface.CreateFont("ow.fonts.developer", {
+        font = "Courier New",
+        size = 16,
+        weight = 500,
+        antialias = true
+    })
+
     hook.Run("PostLoadFonts")
 end
 
@@ -421,14 +421,14 @@ function GM:ShouldDrawDebugHUD()
     if ( !ow.convars:Get("ow_debug"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
 
-    return
+    return ow.localClient:IsAdmin()
 end
 
 function GM:ShouldDrawPreviewHUD()
     if ( !ow.convars:Get("ow_preview"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
 
-    return true
+    return !ow.localClient:IsAdmin()
 end
 
 function GM:ShouldDrawVignette()
