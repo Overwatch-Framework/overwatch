@@ -78,6 +78,8 @@ function ow.command:Get(identifier)
     end
 
     for _, v in pairs(self.stored) do
+        if ( !istable(v.Prefixes) ) then continue end
+
         for _, v2 in ipairs(v.Prefixes) do
             if ( ow.util:FindString(v2, identifier) ) then
                 return v
