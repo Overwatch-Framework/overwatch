@@ -1,16 +1,22 @@
-ow.localization:Register("en", {
-    ["back"] = "Back",
-    ["quit"] = "Quit",
-    ["misc"] = "Miscellaneous",
-    ["mainmenu.charactercreate"] = "Create Character",
-    ["mainmenu.characterselect"] = "Select Character",
-    ["mainmenu.leave"] = "Disconnect",
-    ["mainmenu.play"] = "Play",
-    ["mainmenu.settings"] = "Settings",
-    ["tab.close"] = "Close",
-    ["tab.config"] = "Config",
-    ["tab.inventory"] = "Inventory",
-    ["tab.mainmenu"] = "Main Menu",
-    ["tab.scoreboard"] = "Scoreboard",
-    ["tab.settings"] = "Settings",
-})
+local localization = {}
+
+localization["back"] = "Back"
+localization["quit"] = "Quit"
+localization["name"] = "Name"
+localization["description"] = "Description"
+localization["model"] = "Model"
+localization["misc"] = "Miscellaneous"
+localization["mainmenu.create.character"] = "Create Character"
+localization["mainmenu.create.character.faction"] = "Select Faction"
+localization["mainmenu.leave"] = "Disconnect"
+localization["mainmenu.play"] = "Play"
+localization["mainmenu.select.character"] = "Select Character"
+localization["mainmenu.settings"] = "Settings"
+localization["tab.close"] = "Close"
+localization["tab.config"] = "Config"
+localization["tab.inventory"] = "Inventory"
+localization["tab.mainmenu"] = "Main Menu"
+localization["tab.scoreboard"] = "Scoreboard"
+localization["tab.settings"] = "Settings"
+
+ow.localization:Register("en", localization)

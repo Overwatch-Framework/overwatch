@@ -242,6 +242,7 @@ function GM:LoadFonts()
     local scale10 = ScreenScale(10)
     local scale12 = ScreenScale(12)
     local scale16 = ScreenScale(16)
+    local scale20 = ScreenScale(20)
     local scale24 = ScreenScale(24)
 
     surface.CreateFont("ow.fonts.default", {
@@ -331,6 +332,20 @@ function GM:LoadFonts()
         size = scale12,
         weight = 700,
         italic = true,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.button.large", {
+        font = "GorDIN SemiBold",
+        size = scale20,
+        weight = 600,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.button.large.hover", {
+        font = "GorDIN Bold",
+        size = scale20,
+        weight = 700,
         antialias = true
     })
 

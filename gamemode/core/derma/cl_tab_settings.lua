@@ -6,15 +6,11 @@ local PANEL = {}
 
 function PANEL:Init()
     self:Dock(FILL)
-    self:DockMargin(0, 0, 0, 0)
 
-    local title = self:Add("DLabel")
+    local title = self:Add("ow.text")
     title:Dock(TOP)
-    title:DockMargin(0, 0, 0, 0)
     title:SetFont("ow.fonts.title")
     title:SetText("SETTINGS")
-    title:SetTextColor(color_white)
-    title:SizeToContents()
 
     self.buttons = self:Add("DHorizontalScroller")
     self.buttons:Dock(TOP)

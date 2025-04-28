@@ -22,13 +22,11 @@ function PANEL:Populate()
 
     self:SetVisible(true)
 
-    local title = self:Add("DLabel")
+    local title = self:Add("ow.text")
     title:Dock(TOP)
     title:DockMargin(padding, padding, padding, 0)
     title:SetFont("ow.fonts.title")
     title:SetText("SETTINGS")
-    title:SetTextColor(color_white)
-    title:SizeToContents()
 
     local navigation = self:Add("EditablePanel")
     navigation:Dock(BOTTOM)

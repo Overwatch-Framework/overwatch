@@ -437,7 +437,6 @@ if ( CLIENT ) then
     -- @return Material The material that was created.
     -- @usage local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png")
     -- surface.SetMaterial(vignette)
-
     function ow.util:GetMaterial(path, parameters)
         if ( !tostring(path) ) then
             ow.util:PrintError("Attempted to get a material with no path", path, parameters)

@@ -95,12 +95,10 @@ ow.character:RegisterVariable("model", {
     end,
 
     OnPopulate = function(self, parent, payload)
-        local label = parent:Add("DLabel")
+        local label = parent:Add("ow.text")
         label:Dock(TOP)
-        label:SetText(self.Name or k)
         label:SetFont("ow.fonts.button")
-        label:SetTextColor(color_white)
-        label:SizeToContents()
+        label:SetText(self.Name or k)
 
         local scroller = parent:Add("DScrollPanel")
         scroller:Dock(TOP)
@@ -110,12 +108,9 @@ ow.character:RegisterVariable("model", {
         local layout = scroller:Add("DIconLayout")
         layout:Dock(FILL)
 
-        PrintTable(payload)
         local factionIndex = payload.factionIndex or 1
         local faction = ow.faction:Get(factionIndex)
         if ( faction and faction.Models ) then
-            PrintTable(faction)
-            PrintTable(faction.Models)
             for _, v in SortedPairs(faction.Models) do
                 local icon = layout:Add("SpawnIcon")
                 icon:SetModel(v)
