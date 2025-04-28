@@ -148,7 +148,7 @@ function PANEL:Think()
 end
 
 function PANEL:OnCursorEntered()
-    self:SetFont("ow.fonts.button")
+    self:SetFont("ow.fonts.button.hover")
 
     self.heightTarget = self.baseHeight * 1.25
     self.textColorTarget = hook.Run("GetSchemaColor")
