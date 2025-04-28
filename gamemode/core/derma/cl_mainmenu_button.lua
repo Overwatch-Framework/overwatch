@@ -103,9 +103,11 @@ function PANEL:Paint(width, height)
     self.textInset[1] = Lerp(time, self.textInset[1], self.textInsetTarget[1])
     self.textInset[2] = Lerp(time, self.textInset[2], self.textInsetTarget[2])
 
+    draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 50 * self.inertia))
+
     paint.startPanel(self)
         mask(function()
-            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 50 * self.inertia))
+            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 0))
         end,
         function()
             if ( !self.doRippleEffect or performanceAnimations == false ) then return end
@@ -129,6 +131,8 @@ function PANEL:Paint(width, height)
 
     surface.SetDrawColor(self.textColor.r, self.textColor.g, self.textColor.b, 200 * self.inertia)
     surface.DrawRect(0, 0, ScreenScale(4) * self.inertia, height)
+
+    return false
 end
 
 function PANEL:Think()
@@ -218,9 +222,11 @@ function PANEL:Paint(width, height)
     self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
     self.textColor = self.textColor:Lerp(self.textColorTarget, time)
 
+    draw.RoundedBox(0, 0, 0, width, height, Color(255, 255, 255, 255 * self.inertia))
+
     paint.startPanel(self)
         mask(function()
-            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(255, 255, 255, 255 * self.inertia))
+            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 0))
         end,
         function()
             local ripple = self.rippleEffect
@@ -239,6 +245,8 @@ function PANEL:Paint(width, height)
             end
         end)
     paint.endPanel()
+
+    return false
 end
 
 function PANEL:Think()
