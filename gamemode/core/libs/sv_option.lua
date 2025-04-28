@@ -17,6 +17,20 @@ function ow.option:Set(ply, key, value)
         return false
     end
 
+    if ( isnumber(value) ) then
+        if ( isnumber(stored.Min) && value < stored.Min ) then
+            ow.util:PrintError("Option \"" .. key .. "\" is below minimum value!")
+            return false
+        end
+
+        if ( isnumber(stored.Max) && value > stored.Max ) then
+            ow.util:PrintError("Option \"" .. key .. "\" is above maximum value!")
+            return false
+        end
+        
+        return false
+    end
+
     net.Start("ow.option.set")
         net.WriteString(key)
         net.WriteType(value)
