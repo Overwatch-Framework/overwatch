@@ -59,10 +59,32 @@ function PANEL:PopulateCategory(category)
     end
 
     table.sort(settings, function(a, b)
+        if ( a.SubCategory and b.SubCategory ) then
+            return a.SubCategory < b.SubCategory
+        end
+
         return a.Name < b.Name
     end)
 
+    local subCategories = {}
     for k, v in ipairs(settings) do
+        if ( v.SubCategory and !subCategories[v.SubCategory] ) then
+            subCategories[v.SubCategory] = true
+        end
+    end
+
+    local subCategoriesActive = {}
+    for k, v in ipairs(settings) do
+        if ( v.SubCategory and !subCategoriesActive[v.SubCategory] and table.Count(subCategories) > 1 ) then
+            local label = self.container:Add("ow.text")
+            label:Dock(TOP)
+            label:DockMargin(0, 0, 0, ScreenScale(4))
+            label:SetFont("ow.fonts.button.large")
+            label:SetText(v.SubCategory:upper())
+
+            subCategoriesActive[v.SubCategory] = true
+        end
+
         local value = ow.option:Get(v.UniqueID)
 
         local panel = self.container:Add("ow.mainmenu.button.small")

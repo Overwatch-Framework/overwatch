@@ -165,6 +165,10 @@ function ow.option:Register(key, data)
         data.Category = "misc"
     end
 
+    if ( data.SubCategory == nil ) then
+        data.SubCategory = "other"
+    end
+
     data.UniqueID = key
 
     self.stored[key] = data

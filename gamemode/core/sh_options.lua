@@ -83,6 +83,7 @@ ow.option:Register("tab.anchor.time", {
 ow.option:Register("mainmenu.music", {
     Name = "options.mainmenu.music",
     Description = "options.mainmenu.music.help",
+    SubCategory = "category.mainmenu",
     Type = ow.type.bool,
     Default = true,
     bNoNetworking = true
@@ -91,6 +92,7 @@ ow.option:Register("mainmenu.music", {
 ow.option:Register("mainmenu.music.volume", {
     Name = "options.mainmenu.music.volume",
     Description = "options.mainmenu.music.volume.help",
+    SubCategory = "category.mainmenu",
     Type = ow.type.number,
     Default = 50,
     bNoNetworking = true,
@@ -102,6 +104,7 @@ ow.option:Register("mainmenu.music.volume", {
 ow.option:Register("mainmenu.music.loop", {
     Name = "options.mainmenu.music.loop",
     Description = "options.mainmenu.music.loop.help",
+    SubCategory = "category.mainmenu",
     Type = ow.type.bool,
     Default = true,
     bNoNetworking = true
