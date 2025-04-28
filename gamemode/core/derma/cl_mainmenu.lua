@@ -23,6 +23,9 @@ AccessorFunc(PANEL, "gradientRightTarget", "GradientRightTarget", FORCE_NUMBER)
 AccessorFunc(PANEL, "gradientTopTarget", "GradientTopTarget", FORCE_NUMBER)
 AccessorFunc(PANEL, "gradientBottomTarget", "GradientBottomTarget", FORCE_NUMBER)
 
+AccessorFunc(PANEL, "dim", "Dim", FORCE_NUMBER)
+AccessorFunc(PANEL, "dimTarget", "DimTarget", FORCE_NUMBER)
+
 function PANEL:Init()
     if ( IsValid(ow.gui.mainmenu) ) then
         ow.gui.mainmenu:Remove()
@@ -51,6 +54,9 @@ function PANEL:Init()
     self.gradientTopTarget = 0
     self.gradientBottomTarget = 0
 
+    self.dim = 0
+    self.dimTarget = 0
+
     self:SetSize(ScrW(), ScrH())
     self:SetPos(0, 0)
     self:MakePopup()
@@ -71,6 +77,7 @@ function PANEL:Populate()
     self:SetGradientRightTarget(0)
     self:SetGradientTopTarget(0)
     self:SetGradientBottomTarget(0)
+    self:SetDimTarget(0)
 
     self.container:Clear()
     self.container:SetVisible(true)
@@ -195,6 +202,11 @@ function PANEL:Paint(width, height)
     self:SetGradientRight(Lerp(time, self:GetGradientRight(), self:GetGradientRightTarget()))
     self:SetGradientTop(Lerp(time, self:GetGradientTop(), self:GetGradientTopTarget()))
     self:SetGradientBottom(Lerp(time, self:GetGradientBottom(), self:GetGradientBottomTarget()))
+
+    self:SetDim(Lerp(time, self:GetDim(), self:GetDimTarget()))
+
+    surface.SetDrawColor(0, 0, 0, 255 * self:GetDim())
+    surface.DrawRect(0, 0, width, height)
 
     surface.SetDrawColor(0, 0, 0, 255 * self:GetGradientLeft())
     surface.SetMaterial(gradientLeft)

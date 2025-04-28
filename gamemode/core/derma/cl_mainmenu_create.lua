@@ -48,6 +48,7 @@ function PANEL:PopulateFactionSelect()
     parent:SetGradientRightTarget(0)
     parent:SetGradientTopTarget(1)
     parent:SetGradientBottomTarget(1)
+    parent:SetDimTarget(0.25)
     parent.container:Clear()
     parent.container:SetVisible(false)
 
