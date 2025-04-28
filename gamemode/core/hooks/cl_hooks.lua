@@ -181,7 +181,7 @@ function GM:HUDPaint()
     end
 
     shouldDraw = hook.Run("ShouldDrawCrosshair")
-    if ( shouldDraw != nil and shouldDraw != false ) then
+    if ( shouldDraw != false ) then
         local x, y = ScrW() / 2, ScrH() / 2
         local size = 3
 

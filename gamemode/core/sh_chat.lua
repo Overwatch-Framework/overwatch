@@ -13,7 +13,7 @@ ow.chat:Register("whisper", {
     CanHear = function(self, speaker, listener)
         return speaker:GetPos():DistToSqr(listener:GetPos()) < 96 ^ 2
     end,
-    OnChatAdd = function(speaker, text)
+    OnChatAdd = function(self, speaker, text)
         chat.AddText(ow.colour:Get("chat.whisper"), speaker:Name() .. " whispers \"" .. text .. "\"")
         chat.PlaySound()
     end
