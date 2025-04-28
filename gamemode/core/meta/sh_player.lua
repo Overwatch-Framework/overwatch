@@ -106,3 +106,7 @@ function PLAYER:GetData(key, default)
         return data
     end
 end
+
+function PLAYER:Notify(text, type, length)
+    ow.notification:Send(self, text, type, length)
+end

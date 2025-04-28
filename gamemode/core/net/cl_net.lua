@@ -163,3 +163,13 @@ net.Receive("ow.character.delete", function(len)
 
     ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.colour:Get("ui.success"))
 end)
+
+net.Receive("ow.notification.send", function(len)
+    local text = net.ReadString()
+    local type = net.ReadUInt(8)
+    local duration = net.ReadUInt(16)
+
+    if ( !text ) then return end
+
+    notification.AddLegacy(text, type, duration)
+end)
