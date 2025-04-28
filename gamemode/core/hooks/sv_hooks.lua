@@ -12,7 +12,12 @@ function GM:PlayerInitialSpawn(ply)
         ply:SetDBVar("play_time", 0)
         ply:SetDBVar("last_played", os.time())
         ply:SetDBVar("data", IsValid(data) and data["data"] or "[]")
-        ply:SaveDB()
+
+        timer.Simple(0.1, function()
+            if ( !IsValid(ply) ) then return end
+
+            ply:SaveDB()
+        end)
 
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
