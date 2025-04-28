@@ -68,9 +68,14 @@ function ow.character:Load(ply, id)
     end
 
     local currentCharacter = ply:GetCharacter()
-    if ( currentCharacter and currentCharacter.id == id ) then
-        ErrorNoHalt("Attempted to load the same character (" .. id .. ") for player " .. tostring(ply) .. "\n")
-        return false
+    if ( currentCharacter ) then
+        --currentCharacter.player = NULL
+        --currentCharacter:Save()
+
+        if ( currentCharacter.id == id  ) then
+            ErrorNoHalt("Attempted to load the same character (" .. id .. ") for player " .. tostring(ply) .. "\n")
+            return false
+        end
     end
 
     local steamID = ply:SteamID64()
@@ -127,12 +132,9 @@ function ow.character:Delete(id)
     if ( IsValid(ply) ) then
         local plyTable = ply:GetTable()
         plyTable.owCharacters[id] = nil
+        plyTable.owCharacter = nil
 
-        if ( plyTable.owCharacter and plyTable.owCharacter.id == id ) then
-            plyTable.owCharacter = nil
-
-            -- TODO: Uh? Silent Kill? Open Main Menu? What do we do here?
-        end
+        -- TODO: Uh? Silent Kill? Open Main Menu? What do we do here?
 
         net.Start("ow.character.delete")
             net.WriteUInt(id, 32)

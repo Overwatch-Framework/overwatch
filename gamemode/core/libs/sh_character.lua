@@ -107,7 +107,7 @@ function ow.character:CreateObject(id, data, ply)
             character[k] = v.Default
         end
 
-        if ( v.OnCreate ) then
+        if ( isfunction(v.OnCreate) ) then
             v:OnCreate(character, data[k])
         end
     end
