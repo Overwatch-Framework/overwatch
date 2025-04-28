@@ -69,8 +69,10 @@ function PANEL:PopulateCategory(category)
         panel:SetContentAlignment(4)
         panel:SetTextInset(ScreenScale(6), 0)
 
+        local label
+        local options
         if ( v.Type == ow.type.bool ) then
-            local label = panel:Add("ow.text")
+            label = panel:Add("ow.text")
             label:Dock(RIGHT)
             label:DockMargin(0, 0, ScreenScale(8), 0)
             label:SetText(value and "Enabled" or "Disabled", true)
@@ -87,14 +89,6 @@ function PANEL:PopulateCategory(category)
                 value = !value
 
                 label:SetText(value and "< Enabled >" or "< Disabled >", true)
-            end
-
-            panel.OnHovered = function(this)
-                label:SetText(value and "< Enabled >" or "< Disabled >", true)
-            end
-
-            panel.OnUnHovered = function(this)
-                label:SetText(value and "Enabled" or "Disabled", true)
             end
         elseif ( v.Type == ow.type.number ) then
             local slider = panel:Add("ow.slider")
@@ -127,7 +121,7 @@ function PANEL:PopulateCategory(category)
             slider:SetDecimals(v.Decimals or 0)
             slider:SetValue(value)
 
-            local label = panel:Add("ow.text")
+            label = panel:Add("ow.text")
             label:Dock(RIGHT)
             label:DockMargin(0, 0, -ScreenScale(4), 8)
             label:SetText(value)
@@ -158,13 +152,13 @@ function PANEL:PopulateCategory(category)
                 slider:OnCursorMoved(slider:CursorPos())
             end
         elseif ( v.Type == ow.type.array ) then
-            local options = v:Populate()
+            options = v:Populate()
             local keys = {}
             for k2, _ in pairs(options) do
                 table.insert(keys, k2)
             end
 
-            local label = panel:Add("ow.text")
+            label = panel:Add("ow.text")
             label:Dock(RIGHT)
             label:DockMargin(0, 0, ScreenScale(8), 0)
             label:SetText(options and options[value] or "Unknown", true)
@@ -222,13 +216,36 @@ function PANEL:PopulateCategory(category)
                 end
                 menu:Open()
             end
+        end
 
-            panel.OnHovered = function(this)
+        panel.OnHovered = function(this)
+            if ( v.Type == ow.type.bool ) then
+                label:SetText(value and "< Enabled >" or "< Disabled >", true)
+            elseif ( v.Type == ow.type.array ) then
                 label:SetText("< " .. (options and options[value] or "Unknown") .. " >", true)
             end
 
-            panel.OnUnHovered = function(this)
+            if ( !IsValid(ow.gui.tooltip) ) then
+                ow.gui.tooltip = vgui.Create("ow.tooltip")
+                ow.gui.tooltip:SetText(v.Name, v.Description)
+                ow.gui.tooltip:SizeToContents()
+                ow.gui.tooltip:SetPanel(this)
+            else
+                ow.gui.tooltip:SetText(v.Name, v.Description)
+                ow.gui.tooltip:SizeToContents()
+                ow.gui.tooltip:SetPanel(this)
+            end
+        end
+
+        panel.OnUnHovered = function(this)
+            if ( v.Type == ow.type.bool ) then
+                label:SetText(value and "Enabled" or "Disabled", true)
+            elseif ( v.Type == ow.type.array ) then
                 label:SetText(options and options[value] or "Unknown", true)
+            end
+
+            if ( IsValid(ow.gui.tooltip) ) then
+                ow.gui.tooltip:SetPanel(nil)
             end
         end
     end
