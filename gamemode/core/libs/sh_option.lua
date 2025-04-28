@@ -31,7 +31,7 @@ if ( CLIENT ) then
         hook.Run("PreOptionsLoad")
 
         for k, v in pairs(ow.data:Get("options", {}, true, false)) do
-            if ( self.stored[k] != nil ) then
+            if ( istable(self.stored[k]) ) then
                 self.stored[k].Value = v
             end
         end
@@ -48,7 +48,7 @@ if ( CLIENT ) then
     function ow.option:GetSaveData()
         local data = {}
         for k, v in pairs(self.stored) do
-            if ( v.Value and v.Value != v.Default ) then
+            if ( v.Value != nil and v.Value != v.Default ) then
                 data[k] = v.Value
             end
         end
