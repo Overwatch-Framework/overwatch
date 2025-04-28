@@ -80,6 +80,33 @@ ow.option:Register("tab.anchor.time", {
     Decimals = 2
 })
 
+ow.option:Register("mainmenu.music", {
+    Name = "options.mainmenu.music",
+    Description = "options.mainmenu.music.help",
+    Type = ow.type.bool,
+    Default = true,
+    bNoNetworking = true
+})
+
+ow.option:Register("mainmenu.music.volume", {
+    Name = "options.mainmenu.music.volume",
+    Description = "options.mainmenu.music.volume.help",
+    Type = ow.type.number,
+    Default = 50,
+    bNoNetworking = true,
+    Min = 0,
+    Max = 100,
+    Decimals = 0
+})
+
+ow.option:Register("mainmenu.music.loop", {
+    Name = "options.mainmenu.music.loop",
+    Description = "options.mainmenu.music.loop.help",
+    Type = ow.type.bool,
+    Default = true,
+    bNoNetworking = true
+})
+
 ow.option:Register("performance.blur", {
     Name = "options.performance.blur",
     Description = "options.performance.blur.help",

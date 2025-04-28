@@ -181,11 +181,30 @@ function PANEL:PlayMenuTrack()
     sound.PlayFile("sound/" .. track, "noplay", function(station, errorID, errorName)
         if ( IsValid(station) and IsValid(self) ) then
             station:Play()
+            station:SetVolume(ow.option:Get("mainmenu.music.volume", 75) / 100)
+            station:EnableLooping(ow.option:Get("mainmenu.music.loop", true))
             self.station = station
         else
             ow.util:PrintError("Error playing main menu music: " .. tostring(errorID) .. " (" .. tostring(errorName) .. ")")
         end
     end)
+end
+
+function PANEL:Think()
+    if ( IsValid(self.station) ) then
+        if ( !ow.option:Get("mainmenu.music", true) ) then
+            self.station:Stop()
+            self.station = nil
+            return
+        end
+
+        local volume = ow.option:Get("mainmenu.music.volume", 75) / 100
+        if ( self.station:GetVolume() != volume ) then
+            self.station:SetVolume(volume)
+        end
+    elseif ( ow.option:Get("mainmenu.music", true) ) then
+        self:PlayMenuTrack()
+    end
 end
 
 function PANEL:OnRemove()
