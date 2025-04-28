@@ -72,7 +72,7 @@ function ow.character:Load(ply, id)
         --currentCharacter.player = NULL
         --currentCharacter:Save()
 
-        if ( currentCharacter.id == id  ) then
+        if ( currentCharacter.id == id ) then
             ErrorNoHalt("Attempted to load the same character (" .. id .. ") for player " .. tostring(ply) .. "\n")
             return false
         end

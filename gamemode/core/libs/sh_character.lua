@@ -106,10 +106,6 @@ function ow.character:CreateObject(id, data, ply)
         elseif ( v.Default ) then
             character[k] = v.Default
         end
-
-        if ( isfunction(v.OnCreate) ) then
-            v:OnCreate(character, data[k])
-        end
     end
 
     self.stored[id] = character
