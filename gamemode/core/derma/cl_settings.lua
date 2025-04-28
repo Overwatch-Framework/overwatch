@@ -181,18 +181,13 @@ function PANEL:PopulateCategory(category)
 
             panel.DoClick = function()
                 -- Pick the next key depending on where the cursor is near the label, if the cursor is near the left side of the label, pick the previous key, if it's near the right side, pick the next key.
-                local x, y = label:CursorPos()
-                local w, h = label:GetSize()
+                local x, y = label:CursorPos() -- not used
+                local w, h = label:GetSize() -- not used
                 local percent = x / w
                 local nextKey = nil
                 for i = 1, #keys do
                     if ( keys[i] == value ) then
-                        if ( percent < 0.5 ) then
-                            nextKey = keys[i - 1] or keys[#keys]
-                        else
-                            nextKey = keys[i + 1] or keys[1]
-                        end
-
+                        nextKey = keys[i + (percent < 0.5 and -1 or 1)] or keys[1]
                         break
                     end
                 end
@@ -214,12 +209,8 @@ function PANEL:PopulateCategory(category)
                         ow.option:Set(v.UniqueID, k2)
                         value = k2
 
-                        local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
-                        if ( panel:IsHovered() ) then
-                            label:SetText("< " .. phrase .. " >", true)
-                        else
-                            label:SetText(phrase, true)
-                        end
+                        phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+                        label:SetText( panel:IsHovered() and "< " .. phrase .. " >" or phrase, true )
 
                         label:SizeToContents()
                     end)
