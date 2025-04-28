@@ -159,9 +159,7 @@ net.Receive("ow.character.delete", function(len)
         plyTable.owCharacters[characterID] = nil
     end
 
-    if ( plyTable.owCharacter == character ) then
-        plyTable.owCharacter = nil
-    end
+    plyTable.owCharacter = nil
 
     ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.colour:Get("ui.success"))
 end)
