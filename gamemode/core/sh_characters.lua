@@ -28,7 +28,7 @@ ow.character:RegisterVariable("name", {
     AllowNonAscii = false,
     Numeric = false,
 
-    OnValidate = function(self, parent, payload)
+    OnValidate = function(self, parent, payload, ply)
         if ( string.len(payload.name) < 3 ) then
             return false, "Name must be at least 3 characters long!"
         elseif ( string.len(payload.name) > 32 ) then
@@ -56,7 +56,7 @@ ow.character:RegisterVariable("description", {
     ZPos = 0,
     Name = "Description",
 
-    OnValidate = function(self, parent, payload)
+    OnValidate = function(self, parent, payload, ply)
         if ( string.len(payload.description) < 10 ) then
             return false, "Description must be at least 10 characters long!"
         end
@@ -74,9 +74,8 @@ ow.character:RegisterVariable("model", {
     ZPos = 0,
     Name = "Model",
 
-    OnValidate = function(self, parent, payload)
-        local factionIndex = payload.factionIndex or 1
-        local faction = ow.faction:Get(factionIndex)
+    OnValidate = function(self, parent, payload, ply)
+        local faction = ow.faction:Get(payload.faction)
         if ( faction and faction.Models ) then
             local found = false
             for _, v in SortedPairs(faction.Models) do
@@ -94,7 +93,7 @@ ow.character:RegisterVariable("model", {
         return true
     end,
 
-    OnPopulate = function(self, parent, payload)
+    OnPopulate = function(self, parent, payload, ply)
         local label = parent:Add("ow.text")
         label:Dock(TOP)
         label:SetFont("ow.fonts.button")
@@ -108,8 +107,7 @@ ow.character:RegisterVariable("model", {
         local layout = scroller:Add("DIconLayout")
         layout:Dock(FILL)
 
-        local factionIndex = payload.factionIndex or 1
-        local faction = ow.faction:Get(factionIndex)
+        local faction = ow.faction:Get(payload.faction)
         if ( faction and faction.Models ) then
             for _, v in SortedPairs(faction.Models) do
                 local icon = layout:Add("SpawnIcon")
@@ -134,7 +132,25 @@ ow.character:RegisterVariable("money", {
 ow.character:RegisterVariable("faction", {
     Type = ow.type.number,
     Field = "faction",
-    Default = 0
+    Default = 0,
+
+    Editable = true,
+
+    OnValidate = function(self, parent, payload, ply)
+        return ow.faction:CanSwitchTo(ply, payload.faction)
+    end,
+
+    OnSet = function(this, character, value)
+        local faction = ow.faction:Get(value)
+        if ( faction and faction.OnSet ) then
+            faction:OnSet(character, value)
+        end
+
+        local ply = character:GetPlayer()
+        if ( IsValid(ply) ) then
+            ply:SetTeam(value)
+        end
+    end
 })
 
 ow.character:RegisterVariable("class", {

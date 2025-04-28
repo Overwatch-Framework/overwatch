@@ -1,7 +1,10 @@
 util.AddNetworkString("ow.character.cache")
 util.AddNetworkString("ow.character.cache.all")
+util.AddNetworkString("ow.character.create")
+util.AddNetworkString("ow.character.create.failed")
 util.AddNetworkString("ow.character.delete")
 util.AddNetworkString("ow.character.load")
+util.AddNetworkString("ow.character.load.failed")
 util.AddNetworkString("ow.chat.text")
 util.AddNetworkString("ow.config.set")
 util.AddNetworkString("ow.config.sync")
@@ -49,9 +52,12 @@ net.Receive("ow.character.create", function(len, ply)
         end
 
         if ( v.OnValidate ) then
-            local validate, reason = v:OnValidate(ply, payload)
+            local validate, reason = v:OnValidate(ply, payload, ply)
             if ( !validate ) then
-                ply:ChatPrint(reason or "Failed to validate character.")
+                net.Start("ow.character.create.failed")
+                    net.WriteString(reason or "Failed to validate character!")
+                net.Send(ply)
+
                 return
             end
         end
@@ -59,11 +65,19 @@ net.Receive("ow.character.create", function(len, ply)
 
     local character, reason = ow.character:Create(ply, payload)
     if ( !character ) then
-        ply:ChatPrint(reason or "Failed to create character.")
+        net.Start("ow.character.create.failed")
+            net.WriteString(reason or "Failed to create character!")
+        net.Send(ply)
+
         return
     end
 
-    ply:ChatPrint("Character created successfully!")
+    ow.character:Load(ply, character:GetID())
+
+    net.Start("ow.character.create")
+    net.Send(ply)
+
+    hook.Run("PostCharacterCreate", ply, character, payload)
 end)
 
 util.AddNetworkString("ow.option.set")

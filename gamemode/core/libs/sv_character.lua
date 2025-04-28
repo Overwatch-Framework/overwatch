@@ -94,6 +94,7 @@ function ow.character:Load(ply, id)
         ply.owCharacter = character
 
         ply:SetModel(character:GetModel())
+        ply:SetTeam(character:GetFaction())
         ply:Spawn()
 
         hook.Run("PlayerLoadedCharacter", ply, character, currentCharacter)

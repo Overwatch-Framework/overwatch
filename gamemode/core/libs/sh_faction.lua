@@ -89,9 +89,9 @@ end
 function ow.faction:Get(identifier)
     if ( identifier == nil ) then
         ow.util:PrintError("Attempted to get a faction without an identifier!")
-        return false
+        return false, "Attempted to get a faction without an identifier!"
     end
-    
+
     if ( self.stored[identifier] ) then
         return self.stored[identifier]
     end
@@ -109,18 +109,20 @@ function ow.faction:Get(identifier)
     return nil
 end
 
-function ow.faction:CanSwitchTo(ply, factionID)
+function ow.faction:CanSwitchTo(ply, factionID, oldFactionID)
     if ( !IsValid(ply) ) then return false end
 
     local faction = self:Get(factionID)
     if ( !faction ) then return false end
 
-    local oldFaction = self:Get(ply:Team())
-    if ( oldFaction ) then
-        if ( oldFaction.Index == faction.Index ) then return false end
+    if ( oldFactionID ) then
+        local oldFaction = self:Get(oldFactionID)
+        if ( oldFaction ) then
+            if ( oldFaction.Index == faction.Index ) then return false end
 
-        if ( oldFaction.CanLeave and !oldFaction:CanLeave(ply) ) then
-            return false
+            if ( oldFaction.CanLeave and !oldFaction:CanLeave(ply) ) then
+                return false
+            end
         end
     end
 

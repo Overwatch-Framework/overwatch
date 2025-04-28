@@ -16,11 +16,11 @@ function ow.character:RegisterVariable(key, data)
     -- TODO, add support for custom OnGet and OnSet methods.
 
     if ( SERVER ) then
-        self.meta["Set" .. upperKey] = function(this, value)
+        self.meta["Set" .. upperKey] = function(character, value)
             self:SetVariable(key, value)
 
             if ( data.OnSet ) then
-                data:OnSet(this, value)
+                data:OnSet(character, value)
             end
         end
 
@@ -31,8 +31,8 @@ function ow.character:RegisterVariable(key, data)
         end
     end
 
-    self.meta["Get" .. upperKey] = function(this)
-        return self:GetVariable(this:GetID(), key)
+    self.meta["Get" .. upperKey] = function(character)
+        return self:GetVariable(character:GetID(), key)
     end
 
     if ( data.Alias != nil ) then
@@ -41,15 +41,15 @@ function ow.character:RegisterVariable(key, data)
         end
 
         for k, v in ipairs(data.Alias) do
-            self.meta["Get" .. v] = function(this)
-                return self:GetVariable(this:GetID(), key)
+            self.meta["Get" .. v] = function(character)
+                return self:GetVariable(character:GetID(), key)
             end
 
-            self.meta["Set" .. v] = function(this, value)
-                self:SetVariable(key, value)
+            self.meta["Set" .. v] = function(character, value)
+                self:SetVariable(character:GetID(), key, value)
 
                 if ( data.OnSet ) then
-                    data:OnSet(this, value)
+                    data:OnSet(character, value)
                 end
             end
         end

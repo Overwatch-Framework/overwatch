@@ -102,7 +102,7 @@ function PANEL:PopulateFactionSelect()
         factionButton.DoClick = function()
             self.currentCreatePage = 0
             self:ResetPayload()
-            self:SetPayload("factionIndex", v.Index)
+            self:SetPayload("faction", v.Index)
 
             self:PopulateCreateCharacter()
         end
@@ -199,7 +199,7 @@ function PANEL:PopulateCreateCharacter()
             if ( v.Editable != true ) then continue end
 
             if ( isfunction(v.OnValidate) ) then
-                local isValid, errorMessage = v:OnValidate(self.characterCreateForm, self.currentCreatePayload)
+                local isValid, errorMessage = v:OnValidate(self.characterCreateForm, self.currentCreatePayload, ow.localClient)
                 if ( !isValid ) then
                     notification.AddLegacy(errorMessage, NOTIFY_ERROR, 5)
                     return
@@ -210,7 +210,7 @@ function PANEL:PopulateCreateCharacter()
             if ( page != self.currentCreatePage + 1 ) then continue end
 
             if ( isfunction(v.OnValidate) ) then
-                isNextEmpty = v:OnValidate(self.characterCreateForm, self.currentCreatePayload)
+                isNextEmpty = v:OnValidate(self.characterCreateForm, self.currentCreatePayload, ow.localClient)
                 if ( isNextEmpty ) then continue end
             end
 

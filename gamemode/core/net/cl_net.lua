@@ -64,6 +64,17 @@ net.Receive("ow.database.save", function(len)
     LocalPlayer().owDatabase = net.ReadTable()
 end)
 
+net.Receive("ow.character.create", function(len)
+    print("Character created!")
+end)
+
+net.Receive("ow.character.create.failed", function(len)
+    local reason = net.ReadString()
+    if ( !reason ) then return end
+
+    notification.AddLegacy(reason, NOTIFY_ERROR, 5)
+end)
+
 net.Receive("ow.character.cache", function(len)
     local data = net.ReadTable()
     if ( !istable(data) ) then return end
