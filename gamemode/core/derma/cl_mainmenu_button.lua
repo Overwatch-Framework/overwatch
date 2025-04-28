@@ -103,7 +103,7 @@ function PANEL:Paint(width, height)
     self.textInset[1] = Lerp(time, self.textInset[1], self.textInsetTarget[1])
     self.textInset[2] = Lerp(time, self.textInset[2], self.textInsetTarget[2])
 
-    draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 50 * self.inertia))
+    draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 100 * self.inertia))
 
     paint.startPanel(self)
         mask(function()

@@ -65,13 +65,17 @@ function PANEL:Init()
     self.buttons:MoveTo(paddingTiny, paddingSmall, self.fadeTime, 0)
     self.buttons.Paint = nil
 
+    -- eon did not like the close button :(
+    /*
     local closeButton = self.buttons:Add("ow.mainmenu.button")
     closeButton:Dock(BOTTOM)
+    closeButton:DockMargin(0, 16, 0, 0)
     closeButton:SetText("tab.close")
 
     closeButton.DoClick = function()
         self:Close()
     end
+    */
 
     local menuButton = self.buttons:Add("ow.mainmenu.button")
     menuButton:Dock(BOTTOM)
@@ -98,6 +102,7 @@ function PANEL:Init()
     for k, v in SortedPairs(buttons) do
         local button = self.buttons:Add("ow.mainmenu.button")
         button:Dock(TOP)
+        button:DockMargin(0, 0, 0, 16)
         button:SetText(k)
 
         button.DoClick = function()

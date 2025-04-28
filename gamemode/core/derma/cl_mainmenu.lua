@@ -112,6 +112,7 @@ function PANEL:Populate()
     if ( ply.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
         local playButton = buttons:Add("ow.mainmenu.button")
         playButton:Dock(TOP)
+        playButton:DockMargin(0, 0, 0, 16)
         playButton:SetText("mainmenu.play")
 
         playButton.DoClick = function(this)
@@ -121,6 +122,7 @@ function PANEL:Populate()
 
     local createButton = buttons:Add("ow.mainmenu.button")
     createButton:Dock(TOP)
+    createButton:DockMargin(0, 0, 0, 16)
     createButton:SetText("mainmenu.create.character")
 
     createButton.DoClick = function(this)
@@ -142,6 +144,7 @@ function PANEL:Populate()
     if ( bHasCharacters ) then
         local selectButton = buttons:Add("ow.mainmenu.button")
         selectButton:Dock(TOP)
+        selectButton:DockMargin(0, 0, 0, 16)
         selectButton:SetText("mainmenu.select.character")
 
         selectButton.DoClick = function()
@@ -151,6 +154,7 @@ function PANEL:Populate()
 
     local settingsButton = buttons:Add("ow.mainmenu.button")
     settingsButton:Dock(TOP)
+    settingsButton:DockMargin(0, 0, 0, 16)
     settingsButton:SetText("mainmenu.settings")
 
     settingsButton.DoClick = function()
@@ -159,6 +163,7 @@ function PANEL:Populate()
 
     local disconnectButton = buttons:Add("ow.mainmenu.button")
     disconnectButton:Dock(TOP)
+    disconnectButton:DockMargin(0, 0, 0, 16)
     disconnectButton:SetText("mainmenu.leave")
     disconnectButton:SetTextColorProperty(ow.colour:Get("maroon"))
 
