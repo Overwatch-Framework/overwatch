@@ -127,7 +127,12 @@ function ow.character:Delete(id)
     if ( IsValid(ply) ) then
         local plyTable = ply:GetTable()
         plyTable.owCharacters[id] = nil
-        plyTable.owCharacter = nil
+
+        if ( plyTable.owCharacter and plyTable.owCharacter.id == id ) then
+            plyTable.owCharacter = nil
+
+            -- TODO: Uh? Silent Kill? Open Main Menu? What do we do here?
+        end
 
         net.Start("ow.character.delete")
             net.WriteUInt(id, 32)
