@@ -37,8 +37,9 @@ function PLAYER:SaveDB()
         -- This is useful for when the player is in the main menu and we want to retrieve something from the database
         -- via the client
 
-        local compressed = util.Compress(util.TableToJSON(selfTable.owDatabase))
+        local compressed = util.Compress(util.TableToJSON(selfTable.owDatabase or {}))
 
+        print(self)
         net.Start("ow.database.save")
             net.WriteData(compressed, #compressed)
         net.Send(self)
