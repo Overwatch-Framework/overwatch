@@ -50,7 +50,7 @@ function PANEL:Init()
     self.baseHeight = self:GetTall()
     self.baseTextColor = self:GetTextColor()
 
-    self.height = 0
+    self.height = self.baseHeight
     self.heightTarget = self.baseHeight
 
     self.textColor = color_white
@@ -90,6 +90,11 @@ end
 function PANEL:Paint(width, height)
     local ft = FrameTime()
     local time = ft * 10
+
+    local performanceAnimations = ow.option:Get("performance.animations", true)
+    if ( !performanceAnimations ) then
+        time = 1
+    end
 
     self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
     self.height = Lerp(time, self.height, self.heightTarget)
@@ -133,11 +138,9 @@ function PANEL:Think()
         self.heightTarget = self.baseHeight
     end
 
-    if ( self.inertia > 0 ) then
-        self:SetTall(self.height)
-        self:SetTextColor(self.textColor)
-        self:SetTextInset(self.textInset[1], self.textInset[2])
-    end
+    self:SetTall(self.height)
+    self:SetTextColor(self.textColor)
+    self:SetTextInset(self.textInset[1], self.textInset[2])
 end
 
 function PANEL:OnCursorEntered()
@@ -207,6 +210,11 @@ function PANEL:Paint(width, height)
     local ft = FrameTime()
     local time = ft * 10
 
+    local performanceAnimations = ow.option:Get("performance.animations", true)
+    if ( !performanceAnimations ) then
+        time = 1
+    end
+
     self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
     self.textColor = self.textColor:Lerp(self.textColorTarget, time)
 
@@ -239,9 +247,7 @@ function PANEL:Think()
         self.textInsetTarget = {ScreenScale(2), 0}
     end
 
-    if ( self.inertia > 0 ) then
-        self:SetTextColor(self.textColor)
-    end
+    self:SetTextColor(self.textColor)
 end
 
 function PANEL:OnCursorEntered()

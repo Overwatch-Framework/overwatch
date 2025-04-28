@@ -35,8 +35,8 @@ local languages = {
 }
 
 ow.option:Register("language", {
-    Name = "Language",
-    Description = "The language of the game.",
+    Name = "options.language",
+    Description = "options.language.help",
     Type = ow.type.array,
     Default = "en",
     Populate = function()
@@ -45,8 +45,24 @@ ow.option:Register("language", {
 })
 
 ow.option:Register("vignette", {
-    Name = "Vignette",
-    Description = "The vignette effect.",
+    Name = "options.vignette",
+    Description = "options.vignette.help",
+    Type = ow.type.bool,
+    Default = true
+})
+
+ow.option:Register("performance.blur", {
+    Name = "options.performance.blur",
+    Description = "options.performance.blur.help",
+    Category = "category.performance",
+    Type = ow.type.bool,
+    Default = true
+})
+
+ow.option:Register("performance.animations", {
+    Name = "options.performance.animations",
+    Description = "options.performance.animations.help",
+    Category = "category.performance",
     Type = ow.type.bool,
     Default = true
 })

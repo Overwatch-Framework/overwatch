@@ -457,8 +457,8 @@ if ( CLIENT ) then
     end
 
     local blur = ow.util:GetMaterial("pp/blurscreen")
-    local defaultAmount = 1
-    local defaultPasses = 0.1
+    local surface = surface
+    local render = render
 
     --- Draws blur on a panel.
     -- @realm client
@@ -466,18 +466,23 @@ if ( CLIENT ) then
     -- @param amount number The amount of blur to apply.
     -- @param passes number The number of passes to apply.
     function ow.util:DrawBlur(panel, amount, passes)
-        amount = amount or defaultAmount
-        passes = passes or defaultPasses
+        amount = amount or 5
 
-        local x, y = panel:LocalToScreen(0, 0)
-        local scrW, scrH = ScrW(), ScrH()
+        if ( ow.option:Get("performance.blur") == true ) then
+            surface.SetMaterial(blur)
+            surface.SetDrawColor(255, 255, 255, alpha or 255)
 
-        for i = -passes, 1, 0.2 do
-            blur:SetFloat("$blur", ( i / passes ) * amount)
-            blur:Recompute()
+            local x, y = panel:LocalToScreen(0, 0)
 
-            render.UpdateScreenEffectTexture()
-            paint.rects.drawRect(x * -1, y * -1, scrW, scrH, color_white, blur)
+            for i = -( passes or 0.2 ), 1, 0.2 do
+                -- Do things to the blur material to make it blurry.
+                blur:SetFloat("$blur", i * amount)
+                blur:Recompute()
+
+                -- Draw the blur material over the screen.
+                render.UpdateScreenEffectTexture()
+                surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
+            end
         end
     end
 
@@ -490,15 +495,23 @@ if ( CLIENT ) then
     -- @param amount number The amount of blur to apply.
     -- @param passes number The number of passes to apply.
     function ow.util:DrawBlurRect(x, y, w, h, amount, passes)
-        amount = amount or defaultAmount
-        passes = passes or defaultPasses
+        amount = amount or 5
 
-        for i = -passes, 1, 0.2 do
-            blur:SetFloat("$blur", ( i / passes ) * amount)
-            blur:Recompute()
+        if ( ow.option:Get("performance.blur") == true ) then
+            surface.SetMaterial(blur)
+            surface.SetDrawColor(255, 255, 255, alpha or 255)
 
-            render.UpdateScreenEffectTexture()
-            paint.rects.drawRect(x * -1, y * -1, w, h, color_white, blur)
+            local scrW, scrH = ScrW(), ScrH()
+            local x2, y2 = x / scrW, y / scrH
+            local w2, h2 = (x + width) / scrW, (y + height) / scrH
+
+            for i = -( passes or 0.2 ), 1, 0.2 do
+                blur:SetFloat("$blur", i * amount)
+                blur:Recompute()
+
+                render.UpdateScreenEffectTexture()
+                surface.DrawTexturedRectUV(x, y, width, height, x2, y2, w2, h2)
+            end
         end
     end
 end

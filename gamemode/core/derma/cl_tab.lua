@@ -177,6 +177,11 @@ function PANEL:Paint(width, height)
     local ft = FrameTime()
     local time = ft * 5
 
+    local performanceAnimations = ow.option:Get("performance.animations", true)
+    if ( !performanceAnimations ) then
+        time = 1
+    end
+
     self:SetGradientLeft(Lerp(time, self:GetGradientLeft(), self:GetGradientLeftTarget()))
     self:SetGradientRight(Lerp(time, self:GetGradientRight(), self:GetGradientRightTarget()))
     self:SetGradientTop(Lerp(time, self:GetGradientTop(), self:GetGradientTopTarget()))
