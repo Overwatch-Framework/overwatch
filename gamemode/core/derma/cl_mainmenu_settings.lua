@@ -16,6 +16,7 @@ function PANEL:Populate()
     parent:SetGradientRightTarget(0)
     parent:SetGradientTopTarget(1)
     parent:SetGradientBottomTarget(1)
+    parent:SetDimTarget(0.25)
     parent.container:Clear()
     parent.container:SetVisible(false)
 
@@ -50,18 +51,12 @@ function PANEL:Populate()
     self.buttons:Dock(TOP)
     self.buttons:DockMargin(padding, padding / 8, padding, 0)
     self.buttons:SetTall(ScreenScale(24))
-    self.buttons.Paint = function(self, w, h)
-        surface.SetDrawColor(0, 0, 0, 0)
-        surface.DrawRect(0, 0, w, h)
-    end
+    self.buttons.Paint = nil
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
     self.container:DockMargin(padding, 0, padding, 0)
-    self.container.Paint = function(self, w, h)
-        surface.SetDrawColor(0, 0, 0, 50)
-        surface.DrawRect(0, 0, w, h)
-    end
+    self.container.Paint = nil
 
     local categories = {}
     for k, v in pairs(ow.option.stored) do
@@ -150,6 +145,16 @@ function PANEL:PopulateCategory(category)
                 draw.RoundedBox(0, 0, 0, barWidth, height, Color(full, full, full, 255))
             end
 
+            slider.Think = function(this)
+                local x, y = this:CursorPos()
+                local w, h = this:GetSize()
+                if ( x >= 0 and x <= w and y >= 0 and y <= h ) then
+                    this.bCursorInside = true
+                else
+                    this.bCursorInside = false
+                end
+            end
+
             slider:SetMin(v.Min or 0)
             slider:SetMax(v.Max or 100)
             slider:SetDecimals(v.Decimals or 0)
@@ -157,7 +162,7 @@ function PANEL:PopulateCategory(category)
 
             local label = panel:Add("ow.text")
             label:Dock(RIGHT)
-            label:DockMargin(0, 0, -ScreenScale(4), 0)
+            label:DockMargin(0, 0, -ScreenScale(4), 8)
             label:SetText(value)
             label:SetFont("ow.fonts.button.small")
             label:SetExpensiveShadow(0, Color(0, 0, 0, 150))
@@ -174,6 +179,13 @@ function PANEL:PopulateCategory(category)
             end
 
             panel.DoClick = function(this)
+                if ( !slider.bCursorInside ) then
+                    ow.option:Reset(v.UniqueID)
+                    value = ow.option:Get(v.UniqueID)
+                    slider:SetValue(value)
+                    return
+                end
+
                 slider.dragging = true
                 slider:MouseCapture(true)
                 slider:OnCursorMoved(slider:CursorPos())
