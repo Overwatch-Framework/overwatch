@@ -1,6 +1,7 @@
+util.AddNetworkString("ow.character.cache")
+util.AddNetworkString("ow.character.cache.all")
 util.AddNetworkString("ow.character.delete")
 util.AddNetworkString("ow.character.load")
-util.AddNetworkString("ow.character.load.all")
 util.AddNetworkString("ow.chat.text")
 util.AddNetworkString("ow.config.set")
 util.AddNetworkString("ow.config.sync")
@@ -105,4 +106,15 @@ net.Receive("ow.option.syncServer", function(len, ply)
             ow.option.clients[ply][k] = data[k]
         end
     end
+end)
+
+net.Receive("ow.character.load", function(len, ply)
+    local characterID = net.ReadUInt(32)
+    if ( !characterID ) then return end
+
+    ow.character:Load(ply, characterID)
+
+    net.Start("ow.character.load")
+        net.WriteUInt(characterID, 32)
+    net.Send(ply)
 end)

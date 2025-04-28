@@ -64,7 +64,7 @@ net.Receive("ow.database.save", function(len)
     LocalPlayer().owDatabase = net.ReadTable()
 end)
 
-net.Receive("ow.character.load", function(len)
+net.Receive("ow.character.cache", function(len)
     local data = net.ReadTable()
     if ( !istable(data) ) then return end
 
@@ -77,12 +77,21 @@ net.Receive("ow.character.load", function(len)
     ply.owCharacters[id] = character
     ply.owCharacter = character
 
-    notification.AddLegacy("Character " .. id .. " loaded!", NOTIFY_GENERIC, 5)
+    notification.AddLegacy("Character " .. id .. " cached!", NOTIFY_GENERIC, 5)
 end)
 
-net.Receive("ow.character.load.all", function(len)
+net.Receive("ow.character.cache.all", function(len)
     LocalPlayer().owCharacters = net.ReadTable()
-    notification.AddLegacy("Characters loaded!", NOTIFY_GENERIC, 5)
+    notification.AddLegacy("Characters cached!", NOTIFY_GENERIC, 5)
+end)
+
+net.Receive("ow.character.load", function(len)
+    local characterID = net.ReadUInt(32)
+    if ( !characterID ) then return end
+
+    if ( ow.gui.mainmenu ) then
+        ow.gui.mainmenu:Remove()
+    end
 end)
 
 net.Receive("ow.mainmenu", function(len)

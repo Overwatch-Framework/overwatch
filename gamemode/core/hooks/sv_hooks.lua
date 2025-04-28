@@ -32,7 +32,7 @@ end
 function GM:StartCommand(ply, cmd)
     if ( loadQueue[ply] and !cmd:IsForced() ) then
         loadQueue[ply] = nil
-        ow.character:LoadAll(ply)
+        ow.character:CacheAll(ply)
         ow.util:SendChatText(nil, Color(25, 75, 150), ply:SteamName() .. " has joined the server.")
 
         net.Start("ow.mainmenu")
