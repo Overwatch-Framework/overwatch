@@ -163,13 +163,12 @@ function GM:HUDPaint()
             x, y = x + width, y
 
             width = select(1, draw.SimpleText("The following gameplay can be subjected to change", "ow.fonts.default.bold", x, y, ow.colour:Get("light.gray"), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP))
-            return
+        else
+            width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
         end
-
-        width, height = draw.SimpleText(Format("LATENCY: %s :: FPS: %s",  ply:Ping(), math.Round(1 / FrameTime())), "ow.fonts.default.bold", x, y, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 
-    if ( shouldDraw != nil and shouldDraw != false ) then
+    if ( shouldDraw != false ) then
         local x, y = 100, 100
 
         local logoWidth, logoHeight = overWatchLogo:Width() / 7, overWatchLogo:Height() / 7
