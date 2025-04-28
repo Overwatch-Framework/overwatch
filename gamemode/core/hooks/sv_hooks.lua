@@ -1,5 +1,7 @@
 local loadQueue = {}
 function GM:PlayerInitialSpawn(ply)
+    if ( ply:IsBot() ) then return end
+    
     ow.sqlite:LoadRow("ow_players", "steamid", ply:SteamID64(), function(data)
         if ( !IsValid(ply) ) then return end
 
