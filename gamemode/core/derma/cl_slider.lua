@@ -18,8 +18,13 @@ function PANEL:SetValue(value, bNoNotify)
 
     self.value = math.Round(value, self.decimals)
 
-    if ( !bNoNotify and self.OnValueChanged ) then
-        self:OnValueChanged(self.value)
+    if ( !bNoNotify and self.value != value ) then
+        local pitch = math.Clamp((self.value - self.min) / (self.max - self.min), 0, 1) * 100 + 50
+        ow.localClient:EmitSound("ui/buttonrollover.wav", 60, pitch, 0.05, CHAN_STATIC)
+
+        if ( self.OnValueChanged ) then
+            self:OnValueChanged(self.value)
+        end
     end
 end
 

@@ -143,7 +143,7 @@ function PANEL:PopulateCategory(category)
             slider:SetMin(v.Min or 0)
             slider:SetMax(v.Max or 100)
             slider:SetDecimals(v.Decimals or 0)
-            slider:SetValue(value)
+            slider:SetValue(value, true)
 
             label = panel:Add("ow.text")
             label:Dock(RIGHT)
@@ -168,6 +168,7 @@ function PANEL:PopulateCategory(category)
                     ow.option:Reset(v.UniqueID)
                     value = ow.option:Get(v.UniqueID)
                     slider:SetValue(value)
+                    label:SetText(value)
                     return
                 end
 
