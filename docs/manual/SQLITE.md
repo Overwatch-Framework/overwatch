@@ -1,6 +1,6 @@
 # SQLite Library
 
-This library provides a modular, extensible system to manage persistent data using SQLite in Garry's Mod. It allows schemas or plugins to dynamically register variables for any SQL table (like `users`, `characters`, etc.), and ensures the tables are created, loaded, and saved correctly with default values.
+This library provides a modular, extensible system to manage persistent data using SQLite in Garry's Mod. It allows schemas or modules to dynamically register variables for any SQL table (like `users`, `characters`, etc.), and ensures the tables are created, loaded, and saved correctly with default values.
 
 ## 🌟 Features
 - Dynamic variable registration for different tables.
@@ -72,10 +72,10 @@ You can pass additional schema fields if necessary.
 
 ## 📁 Example: Character Plugin Adding Custom XP Field
 ```lua
-PLUGIN.name = "XP System"
-PLUGIN.author = "Riggs"
+MODULE.name = "XP System"
+MODULE.author = "Riggs"
 
-function PLUGIN:InitializedPlugins()
+function MODULE:ModulesInitialized()
     ow.sqlite:RegisterVar("characters", "xp", 0)
 end
 ```
@@ -95,7 +95,7 @@ ow.sqlite:SaveRow("characters", ply.characterData, "steamid")
 ---
 
 ## ✅ Benefits
-- Easy to extend by other developers or plugins.
+- Easy to extend by other developers or modules.
 - Reduces need to manually manage tables and schema.
 - Avoids schema conflicts and hardcoded SQL logic.
 - Works for any number of systems or table types.

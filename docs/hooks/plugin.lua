@@ -4,8 +4,8 @@
 --[[--
 Global hooks for general use.
 
-Plugin hooks are regular hooks that can be used in your schema with `Schema:HookName(args)`, in your plugin with
-`PLUGIN:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
+Plugin hooks are regular hooks that can be used in your schema with `Schema:HookName(args)`, in your module with
+`MODULE:HookName(args)`, or in your addon with `hook.Add("HookName", function(args) end)`.
 ]]
 -- @hooks Plugin
 
@@ -14,7 +14,7 @@ Plugin hooks are regular hooks that can be used in your schema with `Schema:Hook
 -- @player client Player that is creating the character
 -- @tab payload Table of data to be used for character creation
 -- @tab newPayload Table of data be merged with the current payload
--- @usage function PLUGIN:AdjustCreationPayload(client, payload, newPayload)
+-- @usage function MODULE:AdjustCreationPayload(client, payload, newPayload)
 --     newPayload.money = payload.attributes["stm"] -- Sets the characters initial money to the stamina attribute value.
 -- end
 function AdjustCreationPayload(client, payload, newPayload)
@@ -27,7 +27,7 @@ end
 -- @number baseOffset Amount the stamina is changing by. This can be a positive or negative number depending if they are
 -- exhausting or regaining stamina
 -- @treturn number New offset to use
--- @usage function PLUGIN:AdjustStaminaOffset(client, baseOffset)
+-- @usage function MODULE:AdjustStaminaOffset(client, baseOffset)
 --     return baseOffset * 2 -- Drain/Regain stamina twice as fast.
 -- end
 function AdjustStaminaOffset(client, baseOffset)
@@ -36,7 +36,7 @@ end
 --- Creates the business panel in the tab menu.
 -- @realm client
 -- @treturn bool Whether or not to create the business menu
--- @usage function PLUGIN:BuildBusinessMenu()
+-- @usage function MODULE:BuildBusinessMenu()
 --     return LocalPlayer():IsAdmin() -- Only builds the business menu for admins.
 -- end
 function BuildBusinessMenu()
@@ -48,7 +48,7 @@ end
 -- @string chatType Chat type of the message. This will be something registered with `ix.chat.Register` - like `ic`, `ooc`, etc.
 -- @string text Unformatted text of the message
 -- @treturn bool Whether or not to allow auto formatting on the message
--- @usage function PLUGIN:CanAutoFormatMessage(speaker, chatType, text)
+-- @usage function MODULE:CanAutoFormatMessage(speaker, chatType, text)
 --     return false -- Disable auto formatting outright.
 -- end
 function CanAutoFormatMessage(speaker, chatType, text)
@@ -68,8 +68,8 @@ end
 -- - `money` - current money the character has
 -- - `attributes` - attributes list for the character
 --
--- Note that schemas/plugins can add additional character info panels.
--- @usage function PLUGIN:CanCreateCharacterInfo(suppress)
+-- Note that schemas/modules can add additional character info panels.
+-- @usage function MODULE:CanCreateCharacterInfo(suppress)
 --     suppress.attributes = true -- Hides the attributes panel from the character info tab
 -- end
 function CanCreateCharacterInfo(suppress)
@@ -79,7 +79,7 @@ end
 -- @realm client
 -- @entity weapon Weapon the player currently is holding
 -- @treturn bool Whether or not to draw the ammo hud
--- @usage function PLUGIN:CanDrawAmmoHUD(weapon)
+-- @usage function MODULE:CanDrawAmmoHUD(weapon)
 --     if (weapon:GetClass() == "weapon_frag") then -- Hides the ammo hud when holding grenades.
 --         return false
 --     end
@@ -93,7 +93,7 @@ end
 -- @entity door The door entity itself.
 -- @number access The access level used when called.
 -- @treturn bool Whether or not to allow the client access.
--- @usage function PLUGIN:CanPlayerAccessDoor(client, door, access)
+-- @usage function MODULE:CanPlayerAccessDoor(client, door, access)
 --     return true -- Always allow access.
 -- end
 function CanPlayerAccessDoor(client, door, access)
@@ -105,7 +105,7 @@ end
 -- @number item instance ID of the item being dropped onto
 -- @number other instance ID of the item being combined into the first item, this can be invalid due to it being from clientside
 -- @treturn bool Whether or not to allow the player to combine the items
--- @usage function PLUGIN:CanPlayerCombineItem(client, item, other)
+-- @usage function MODULE:CanPlayerCombineItem(client, item, other)
 --        local otherItem = ix.item.instances[other]
 --
 --        if (otherItem and otherItem.uniqueID == "soda") then
@@ -124,7 +124,7 @@ end
 -- calls to this hook from running.
 -- @treturn string Language phrase to use for the error message
 -- @treturn ... Arguments to use for the language phrase
--- @usage function PLUGIN:CanPlayerCreateCharacter(client, payload)
+-- @usage function MODULE:CanPlayerCreateCharacter(client, payload)
 --     if (!client:IsAdmin()) then
 --         return false, "notNow" -- only allow admins to create a character
 --     end
@@ -138,7 +138,7 @@ end
 -- @player client Player attempting to drop an item
 -- @number item instance ID of the item being dropped
 -- @treturn bool Whether or not to allow the player to drop the item
--- @usage function PLUGIN:CanPlayerDropItem(client, item)
+-- @usage function MODULE:CanPlayerDropItem(client, item)
 --     return false -- Never allow dropping items.
 -- end
 function CanPlayerDropItem(client, item)
@@ -150,7 +150,7 @@ end
 -- @player client Player to give money to
 -- @tab faction Faction of the player's character
 -- @treturn bool Whether or not to allow the player to earn salary
--- @usage function PLUGIN:CanPlayerEarnSalary(client, faction)
+-- @usage function MODULE:CanPlayerEarnSalary(client, faction)
 --     return client:IsAdmin() -- Restricts earning salary to admins only.
 -- end
 function CanPlayerEarnSalary(client, faction)
@@ -161,20 +161,20 @@ end
 -- @realm server
 -- @player client Player attempting to enter observer
 -- @treturn bool Whether or not to allow the player to enter observer
--- @usage function PLUGIN:CanPlayerEnterObserver(client)
+-- @usage function MODULE:CanPlayerEnterObserver(client)
 --     return true -- Always allow observer.
 -- end
 function CanPlayerEnterObserver(client)
 end
 
 --- Whether or not a player can equip the given `item`. This is called for items with `outfit`, `pacoutfit`, or `weapons` as
--- their base. Schemas/plugins can utilize this hook for their items.
+-- their base. Schemas/modules can utilize this hook for their items.
 -- @realm server
 -- @player client Player attempting to equip the item
 -- @tab item Item being equipped
 -- @treturn bool Whether or not to allow the player to equip the item
 -- @see CanPlayerUnequipItem
--- @usage function PLUGIN:CanPlayerEquipItem(client, item)
+-- @usage function MODULE:CanPlayerEquipItem(client, item)
 --     return client:IsAdmin() -- Restrict equipping items to admins only.
 -- end
 function CanPlayerEquipItem(client, item)
@@ -185,7 +185,7 @@ end
 -- @player client Player attempting to hold an entity
 -- @entity entity Entity being held
 -- @treturn bool Whether or not to allow the player to hold the entity
--- @usage function PLUGIN:CanPlayerHoldObject(client, entity)
+-- @usage function MODULE:CanPlayerHoldObject(client, entity)
 --     return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer holding objects.
 -- end
 function CanPlayerHoldObject(client, entity)
@@ -198,7 +198,7 @@ end
 -- @string option Option selected by the player
 -- @param data Any data passed with the interaction option
 -- @treturn bool Whether or not to allow the player to interact with the entity
--- @usage function PLUGIN:CanPlayerInteractEntity(client, entity, option, data)
+-- @usage function MODULE:CanPlayerInteractEntity(client, entity, option, data)
 --     return false -- Disallow interacting with any entity.
 -- end
 function CanPlayerInteractEntity(client, entity, option, data)
@@ -213,7 +213,7 @@ end
 -- @param item Item's instance ID or item table
 -- @param data Any data passed with the action
 -- @treturn bool Whether or not to allow the player to interact with the item
--- @usage function PLUGIN:CanPlayerInteractItem(client, action, item, data)
+-- @usage function MODULE:CanPlayerInteractItem(client, action, item, data)
 --     return false -- Disallow interacting with any item.
 -- end
 function CanPlayerInteractItem(client, action, item, data)
@@ -225,7 +225,7 @@ end
 -- @number class ID of the class
 -- @tab info The class table
 -- @treturn bool Whether or not to allow the player to join the class
--- @usage function PLUGIN:CanPlayerJoinClass(client, class, info)
+-- @usage function MODULE:CanPlayerJoinClass(client, class, info)
 --     return client:IsAdmin() -- Restrict joining classes to admins only.
 -- end
 function CanPlayerJoinClass(client, class, info)
@@ -236,7 +236,7 @@ end
 -- @player client Player attempting to knock
 -- @entity entity Door being knocked on
 -- @treturn bool Whether or not to allow the player to knock on the door
--- @usage function PLUGIN:CanPlayerKnock(client, entity)
+-- @usage function MODULE:CanPlayerKnock(client, entity)
 --     return false -- Disable knocking on doors outright.
 -- end
 function CanPlayerKnock(client, entity)
@@ -247,7 +247,7 @@ end
 -- @player client Player attempting to open the shipment
 -- @entity entity Shipment entity
 -- @treturn bool Whether or not to allow the player to open the shipment
--- @usage function PLUGIN:CanPlayerOpenShipment(client, entity)
+-- @usage function MODULE:CanPlayerOpenShipment(client, entity)
 --     return client:Team() == FACTION_BMD -- Restricts opening shipments to FACTION_BMD.
 -- end
 function CanPlayerOpenShipment(client, entity)
@@ -259,7 +259,7 @@ end
 -- @string model Model of the container being spawned
 -- @entity entity Container entity
 -- @treturn bool Whether or not to allow the player to spawn the container
--- @usage function PLUGIN:CanPlayerSpawnContainer(client, model, entity)
+-- @usage function MODULE:CanPlayerSpawnContainer(client, model, entity)
 --     return client:IsAdmin() -- Restrict spawning containers to admins.
 -- end
 function CanPlayerSpawnContainer(client, model, entity)
@@ -270,7 +270,7 @@ end
 -- @player client Player attempting to take the item
 -- @entity item Entity corresponding to the item
 -- @treturn bool Whether or not to allow the player to take the item
--- @usage function PLUGIN:CanPlayerTakeItem(client, item)
+-- @usage function MODULE:CanPlayerTakeItem(client, item)
 --     return !(client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle()) -- Disallow players in observer taking items.
 -- end
 function CanPlayerTakeItem(client, item)
@@ -280,7 +280,7 @@ end
 -- @realm shared
 -- @player client Player attempting throw a punch
 -- @treturn bool Whether or not to allow the player to punch
--- @usage function PLUGIN:CanPlayerThrowPunch(client)
+-- @usage function MODULE:CanPlayerThrowPunch(client)
 --     return client:GetCharacter():GetAttribute("str", 0) > 0 -- Only allow players with strength to punch.
 -- end
 function CanPlayerThrowPunch(client)
@@ -293,7 +293,7 @@ end
 -- @string uniqueID The uniqueID of the item being traded.
 -- @bool isSellingToVendor If the client is selling to the vendor
 -- @treturn bool Whether or not to allow the client to trade with the vendor
--- @usage function PLUGIN:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
+-- @usage function MODULE:CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
 --     return false -- Disallow trading with vendors outright.
 -- end
 function CanPlayerTradeWithVendor(client, entity, uniqueID, isSellingToVendor)
@@ -305,7 +305,7 @@ end
 -- @tab item Item being unequipped
 -- @treturn bool Whether or not to allow the player to unequip the item
 -- @see CanPlayerEquipItem
--- @usage function PLUGIN:CanPlayerUnequipItem(client, item)
+-- @usage function MODULE:CanPlayerUnequipItem(client, item)
 --     return false -- Disallow unequipping items.
 -- end
 function CanPlayerUnequipItem(client, item)
@@ -316,7 +316,7 @@ end
 -- @player client Player that uses a business menu
 -- @string uniqueID The uniqueID of the business menu item
 -- @treturn bool Whether or not to allow the player to buy an item from the business menu
--- @usage function PLUGIN:CanPlayerUseBusiness(client, uniqueID)
+-- @usage function MODULE:CanPlayerUseBusiness(client, uniqueID)
 --  return false -- Disallow buying from the business menu.
 -- end
 function CanPlayerUseBusiness(client, uniqueID)
@@ -327,7 +327,7 @@ end
 -- @player client Player that wants to use a character
 -- @char character Character that a player wants to use
 -- @treturn bool Whether or not to allow the player to load a character
--- @usage function PLUGIN:CanPlayerUseCharacter(client, character)
+-- @usage function MODULE:CanPlayerUseCharacter(client, character)
 --     return false -- Disallow using any character.
 -- end
 function CanPlayerUseCharacter(client, character)
@@ -338,7 +338,7 @@ end
 -- @player client Player that wants to use a door
 -- @entity entity Door that a player wants to use
 -- @treturn bool Whether or not to allow the player to use a door
--- @usage function PLUGIN:CanPlayerUseDoor(client, character)
+-- @usage function MODULE:CanPlayerUseDoor(client, character)
 --     return false -- Disallow using any door.
 -- end
 function CanPlayerUseDoor(client, entity)
@@ -355,7 +355,7 @@ end
 --- Whether or not a player can view his inventory.
 -- @realm client
 -- @treturn bool Whether or not to allow the player to view his inventory
--- @usage function PLUGIN:CanPlayerViewInventory()
+-- @usage function MODULE:CanPlayerViewInventory()
 --     return false -- Prevent player from viewing his inventory.
 -- end
 function CanPlayerViewInventory()
@@ -366,7 +366,7 @@ end
 -- @entity entity Container entity to save
 -- @tab inventory Container inventory
 -- @treturn bool Whether or not to save a container
--- @usage function PLUGIN:CanSaveContainer(entity, inventory)
+-- @usage function MODULE:CanSaveContainer(entity, inventory)
 --  return false -- Disallow saving any container.
 -- end
 function CanSaveContainer(entity, inventory)
@@ -378,7 +378,7 @@ end
 -- @tab currentInv Current inventory
 -- @tab oldInv Old inventory
 -- @treturn bool Whether or not to allow the item to be transferred
--- @usage function PLUGIN:CanTransferItem(item, currentInv, oldInv)
+-- @usage function MODULE:CanTransferItem(item, currentInv, oldInv)
 --     if (IsValid(item:GetOwner() and !item:GetOwner():IsAdmin()) then
 --         return false -- Admins can transfer items.
 --     end
@@ -393,7 +393,7 @@ end
 -- @number attribID ID of the attribute being boosted
 -- @number boostID ID of the boost
 -- @number boostAmount Amount of the boost
--- @usage function PLUGIN:CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
+-- @usage function MODULE:CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
 --     client:Notify("Your character's "..ix.attributes.list[attribID].name.." has been boosted by "..boostAmount..".")
 -- end
 function CharacterAttributeBoosted(client, character, attribID, boostID, boostAmount)
@@ -405,7 +405,7 @@ end
 -- @char character Character that is being updated
 -- @string key Key of the attribute being updated
 -- @number value Value of the attribute
--- @usage function PLUGIN:CharacterAttributeUpdated(client, character, key, value)
+-- @usage function MODULE:CharacterAttributeUpdated(client, character, key, value)
 --     client:Notify("Your character's "..key.." has been updated to "..value..".")
 -- end
 function CharacterAttributeUpdated(client, character, key, value)
@@ -416,7 +416,7 @@ end
 -- @player client Player that is deleting the character
 -- @number id ID of the character being deleted
 -- @bool isCurrentChar Whether or not the character is the current character
--- @usage function PLUGIN:CharacterDeleted(client, id, isCurrentChar)
+-- @usage function MODULE:CharacterDeleted(client, id, isCurrentChar)
 --     if (CLIENT and isCurrentChar) then
 --         client:Notify("You have deleted your current character.")
 --     end
@@ -429,7 +429,7 @@ end
 -- @char character Character to check
 -- @number flags Flags to check
 -- @treturn bool Whether or not the character has the flags
--- @usage function PLUGIN:CharacterHasFlags(character, flags)
+-- @usage function MODULE:CharacterHasFlags(character, flags)
 --     return {"p", "e", "t"} -- Character has the spawning, physgun and toolgun flags.
 -- end
 function CharacterHasFlags(character, flags)
@@ -438,7 +438,7 @@ end
 --- Called when a character is loaded.
 -- @realm shared
 -- @char character Character that is being loaded
--- @usage function PLUGIN:CharacterLoaded(character)
+-- @usage function MODULE:CharacterLoaded(character)
 --     print("Character "..character:GetName().." has been loaded.")
 -- end
 function CharacterLoaded(character)
@@ -447,7 +447,7 @@ end
 --- Called when a character was saved.
 -- @realm shared
 -- @char character that was saved
--- @usage function PLUGIN:CharacterPostSave(character)
+-- @usage function MODULE:CharacterPostSave(character)
 --     print("Character "..character:GetName().." has been saved.")
 -- end
 function CharacterPostSave(character)
@@ -456,7 +456,7 @@ end
 --- Called before a character is saved.
 -- @realm shared
 -- @char character Character that is being saved
--- @usage function PLUGIN:CharacterPreSave(character)
+-- @usage function MODULE:CharacterPreSave(character)
 --     print("Character "..character:GetName().." is about to be saved.")
 -- end
 function CharacterPreSave(character)
@@ -515,7 +515,7 @@ end
 -- @realm client
 -- @tab tabs Table of tabs to be modified
 -- @usage -- Create a new tab in the tab menu using localizations.
--- function PLUGIN:CreateMenuButtons(tabs)
+-- function MODULE:CreateMenuButtons(tabs)
 --     tabs["skills"] = function(container)
 --         local button = container:Add("DButton")
 --         button:SetText("chooseSkills")
@@ -527,12 +527,12 @@ end
 -- end
 --
 -- -- You can also remove tabs by setting them to nil.
--- function PLUGIN:CreateMenuButtons(tabs)
+-- function MODULE:CreateMenuButtons(tabs)
 --     tabs["inv"] = nil
 -- end
 --
 -- -- When creating tabs, you can use it as a table instead of a function instead to provide more information for the button and the tab itself.
--- function PLUGIN:CreateMenuButtons(tabs)
+-- function MODULE:CreateMenuButtons(tabs)
 --     tabs["skills"] = {
 --         buttonColor = Color(255, 0, 0), -- color of the button
 --         bDefault = true, -- make this tab the default tab
@@ -577,7 +577,7 @@ function DatabaseConnectionFailed(error)
 end
 
 --- @realm shared
-function DoPluginIncludes(path, pluginTable)
+function DoPluginIncludes(path, moduleTable)
 end
 
 --- @realm client
@@ -602,7 +602,7 @@ end
 -- @string chatType Chat type of the message. This will be something registered with `ix.chat.Register` - like `ic`, `ooc`, etc.
 -- @treturn string Name of the character
 -- @usage -- Show the name of the character at all times to admins.
--- function PLUGIN:GetCharacterName(speaker, chatType)
+-- function MODULE:GetCharacterName(speaker, chatType)
 --     if (LocalPlayer():IsAdmin()) then
 --         return speaker:GetCharacter():GetName()
 --     end
@@ -636,11 +636,11 @@ end
 -- @player client Player that died
 -- @treturn[1] string Sound to play
 -- @treturn[2] bool `false` if a sound shouldn't be played at all
--- @usage function PLUGIN:GetPlayerDeathSound(client)
+-- @usage function MODULE:GetPlayerDeathSound(client)
 --     -- play impact sound every time someone dies
 --     return "physics/body/body_medium_impact_hard1.wav"
 -- end
--- @usage function PLUGIN:GetPlayerDeathSound(client)
+-- @usage function MODULE:GetPlayerDeathSound(client)
 --     -- don't play a sound at all
 --     return false
 -- end
@@ -655,7 +655,7 @@ end
 -- @realm shared
 -- @player speaker Player that is speaking
 -- @treturn string Icon to display
--- @usage function PLUGIN:GetPlayerIcon(speaker)
+-- @usage function MODULE:GetPlayerIcon(speaker)
 --     return "icon16/user.png" -- Use the default user icon.
 -- end
 function GetPlayerIcon(speaker)
@@ -665,7 +665,7 @@ end
 -- @realm shared
 -- @player speaker Player that is speaking
 -- @treturn Color Color to display
--- @usage function PLUGIN:GetPlayerColor(speaker)
+-- @usage function MODULE:GetPlayerColor(speaker)
 --     return Color(255, 0, 0) -- Use red color for the player.
 -- end
 function GetPlayerColor(speaker)
@@ -675,7 +675,7 @@ end
 -- @realm server
 -- @player client Client that received damage
 -- @treturn string Sound to emit
--- @usage function PLUGIN:GetPlayerPainSound(client)
+-- @usage function MODULE:GetPlayerPainSound(client)
 --     return "NPC_MetroPolice.Pain" -- Make players emit MetroPolice pain sound.
 -- end
 function GetPlayerPainSound(client)
@@ -687,7 +687,7 @@ end
 -- @number damage Base damage of the punch
 -- @tab context Context of the punch
 -- @treturn number Damage to deal
--- @usage function PLUGIN:GetPlayerPunchDamage(client, damage, context)
+-- @usage function MODULE:GetPlayerPunchDamage(client, damage, context)
 --     return (client:IsAdmin() and damage * 2) or damage -- Admins deal double damage.
 -- end
 function GetPlayerPunchDamage(client, damage, context)
@@ -699,7 +699,7 @@ end
 -- @tab faction Faction of the player's character
 -- @treturn number Character salary
 -- @see CanPlayerEarnSalary
--- @usage function PLUGIN:GetSalaryAmount(client, faction)
+-- @usage function MODULE:GetSalaryAmount(client, faction)
 --  return 0 -- Everyone get no salary.
 -- end
 function GetSalaryAmount(client, faction)
@@ -711,7 +711,7 @@ end
 -- @tab faction Faction of the player's character
 -- @number salary Salary amount
 -- @see CanPlayerEarnSalary
--- @usage function PLUGIN:OnPlayerEarnSalary(client, faction, salary)
+-- @usage function MODULE:OnPlayerEarnSalary(client, faction, salary)
 --     client:Notify("You have received a salary of "..salary..".")
 -- end
 function OnPlayerEarnSalary(client, faction, salary)
@@ -724,7 +724,7 @@ end
 --- Registers chat classes after the core framework chat classes have been registered. You should usually create your chat
 -- classes in this hook - especially if you want to reference the properties of a framework chat class.
 -- @realm shared
--- @usage function PLUGIN:InitializedChatClasses()
+-- @usage function MODULE:InitializedChatClasses()
 --     -- let's say you wanted to reference an existing chat class's color
 --     ix.chat.Register("myclass", {
 --         format = "%s says \"%s\"",
@@ -744,23 +744,23 @@ end
 
 --- Called after the config has been initialized.
 -- @realm shared
--- @usage function PLUGIN:InitializedConfig()
+-- @usage function MODULE:InitializedConfig()
 --     ix.config.Add("myConfig", true, "Whether or not my config is enabled.")
 -- end
 function InitializedConfig()
 end
 
---- Called after all the plugins have been initialized.
+--- Called after all the modules have been initialized.
 -- @realm shared
--- @usage function PLUGIN:InitializedPlugins()
---     print("All plugins have been initialized!")
+-- @usage function MODULE:ModulesInitialized()
+--     print("All modules have been initialized!")
 -- end
-function InitializedPlugins()
+function ModulesInitialized()
 end
 
 --- Called after the schema has been initialized.
 -- @realm shared
--- @usage function PLUGIN:InitializedSchema()
+-- @usage function MODULE:InitializedSchema()
 --     print("The schema has been initialized!")
 -- end
 function InitializedSchema()
@@ -795,7 +795,7 @@ end
 
 --- Called when server is loading data.
 -- @realm server
--- @usage function PLUGIN:LoadData()
+-- @usage function MODULE:LoadData()
 --     print("Loading data...")
 -- end
 function LoadData()
@@ -805,7 +805,7 @@ end
 -- @realm client
 -- @string font Font to load from the config
 -- @string genericFont Generic font to load from the config
--- @usage function PLUGIN:LoadFonts(font, genericFont)
+-- @usage function MODULE:LoadFonts(font, genericFont)
 --     surface.CreateFont("ixBigFont", {
 --         font = font,
 --         extended = true,
@@ -818,7 +818,7 @@ end
 
 --- Called when the client is loading the intro for the first time.
 -- @realm client
--- @usage function PLUGIN:LoadIntro()
+-- @usage function MODULE:LoadIntro()
 --     print("Loading the intro for the first time!")
 -- end
 function LoadIntro()
@@ -870,7 +870,7 @@ end
 -- `entity:GetItemTable()`.
 -- @realm server
 -- @entity entity Spawned item entity
--- @usage function PLUGIN:OnItemSpawned(entity)
+-- @usage function MODULE:OnItemSpawned(entity)
 --     local item = entity:GetItemTable()
 --     -- do something with the item here
 -- end
@@ -882,7 +882,7 @@ end
 -- @item item Item that was transferred
 -- @tab curInv Current inventory
 -- @tab inventory Inventory that item was transferred to
--- @usage function PLUGIN:OnItemTransferred(item, curInv, inventory)
+-- @usage function MODULE:OnItemTransferred(item, curInv, inventory)
 --     print("Item "..item:GetName().." was transferred to "..inventory:GetOwner():Name())
 -- end
 function OnItemTransferred(item, curInv, inventory)
@@ -901,7 +901,7 @@ end
 -- @player client Player that picked up the money
 -- @entity self Money entity
 -- @treturn bool Whether or not to allow the player to pick up the money
--- @usage function PLUGIN:OnPickupMoney(client, self)
+-- @usage function MODULE:OnPickupMoney(client, self)
 --     return false -- Disallow picking up money.
 -- end
 function OnPickupMoney(client, self)
@@ -912,7 +912,7 @@ end
 -- @player client Player that moved to a new area
 -- @number oldID ID of the old area
 -- @number newID ID of the new area
--- @usage function PLUGIN:OnPlayerAreaChanged(client, oldID, newID)
+-- @usage function MODULE:OnPlayerAreaChanged(client, oldID, newID)
 --     client:Notify("You have moved to "..newID..".")
 -- end
 function OnPlayerAreaChanged(client, oldID, newID)
@@ -922,7 +922,7 @@ end
 -- @realm server
 -- @player client Player that entered or exited the observer mode
 -- @bool state Previous observer state
--- @usage function PLUGIN:OnPlayerObserve(client, state)
+-- @usage function MODULE:OnPlayerObserve(client, state)
 --     client:Notify(state and "You have entered observer mode." or "You have exited observer mode.")
 -- end
 function OnPlayerObserve(client, state)
@@ -942,7 +942,7 @@ end
 -- @entity entity Door that was purchased or sold
 -- @bool bBuying Whether or not the player is bying a door
 -- @func bCallOnDoorChild Function to call something on the door child
--- @usage function PLUGIN:OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
+-- @usage function MODULE:OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
 --     client:Notify("You have "..(bBuying and "purchased" or "sold").." a door.")
 -- end
 function OnPlayerPurchaseDoor(client, entity, bBuying, bCallOnDoorChild)
@@ -951,7 +951,7 @@ end
 --- Called when a player was restricted.
 -- @realm server
 -- @player client Player that was restricted
--- @usage function PLUGIN:OnPlayerRestricted(client)
+-- @usage function MODULE:OnPlayerRestricted(client)
 --     client:Kick("You have been restricted.")
 -- end
 function OnPlayerRestricted(client)
@@ -960,7 +960,7 @@ end
 --- Called when a player was unrestricted.
 -- @realm server
 -- @player client Player that was unrestricted
--- @usage function PLUGIN:OnPlayerUnRestricted(client)
+-- @usage function MODULE:OnPlayerUnRestricted(client)
 --     client:Notify("You have been unrestricted.")
 -- end
 function OnPlayerUnRestricted(client)
@@ -984,7 +984,7 @@ end
 -- @param callback Callback function
 -- @param time Time of the sequence
 -- @param bNoFreeze Whether or not to freeze the player
--- @usage function PLUGIN:PlayerEnterSequence(client, sequence, callback, time, bNoFreeze)
+-- @usage function MODULE:PlayerEnterSequence(client, sequence, callback, time, bNoFreeze)
 --     if (CLIENT) then
 --         client:Notify("You have entered a sequence.")
 --     end
@@ -1020,7 +1020,7 @@ end
 --- Called when a player leaves a certain sequence.
 -- @realm server
 -- @player client Player that has left a sequence
--- @usage function PLUGIN:PlayerLeaveSequence(client)
+-- @usage function MODULE:PlayerLeaveSequence(client)
 --     client:Notify("You have left the sequence.")
 -- end
 function PlayerLeaveSequence(client)
@@ -1031,7 +1031,7 @@ end
 -- @player client Player that has loaded a character
 -- @char character Character that was loaded
 -- @char currentChar Character that player was using
--- @usage function PLUGIN:PlayerLoadedCharacter(client, character, currentChar)
+-- @usage function MODULE:PlayerLoadedCharacter(client, character, currentChar)
 --     client:Notify("Welcome back, "..character:GetName().."!")
 -- end
 function PlayerLoadedCharacter(client, character, currentChar)
@@ -1061,7 +1061,7 @@ end
 -- @tab receivers Players who will hear that message
 -- @string rawText Chat message without any formatting
 -- @treturn string You can return text that will be shown instead
--- @usage function PLUGIN:PlayerMessageSend(speaker, chatType, text, anonymous, receivers, rawText)
+-- @usage function MODULE:PlayerMessageSend(speaker, chatType, text, anonymous, receivers, rawText)
 --  return "Text" -- When a player writes something into chat, he will say "Text" instead.
 -- end
 function PlayerMessageSend(speaker, chatType, text, anonymous, receivers, rawText)
@@ -1126,7 +1126,7 @@ end
 --- Called before the player's data is about to be loaded
 -- @realm server
 -- @player client Player that is about to load data
--- @usage function PLUGIN:PrePlayerDataLoaded(client)
+-- @usage function MODULE:PrePlayerDataLoaded(client)
 --     print("Player "..client:Name().." is about to load data.")
 -- end
 function PrePlayerDataLoaded(client)
@@ -1135,7 +1135,7 @@ end
 --- Called when a player's data is about to be loaded.
 -- @realm server
 -- @player client Player that is about to load data
--- @usage function PLUGIN:PlayerDataLoaded(client)
+-- @usage function MODULE:PlayerDataLoaded(client)
 --     print("Player "..client:Name().." is about to load data.")
 -- end
 -- @internal
@@ -1145,7 +1145,7 @@ end
 --- Called after the player's data is fully loaded.
 -- @realm server
 -- @player client Player that has loaded data
--- @usage function PLUGIN:PostPlayerDataLoaded(client)
+-- @usage function MODULE:PostPlayerDataLoaded(client)
 --     print("Player "..client:Name().." has loaded data.")
 -- end
 function PostPlayerDataLoaded(client)
@@ -1201,7 +1201,7 @@ end
 
 --- Called when server data was loaded.
 -- @realm server
--- @usage function PLUGIN:PostLoadData()
+-- @usage function MODULE:PostLoadData()
 --     print("Data has been loaded.")
 -- end
 function PostLoadData()
@@ -1210,7 +1210,7 @@ end
 --- Called after player loadout.
 -- @realm server
 -- @player client
--- @usage function PLUGIN:PostPlayerLoadout(client)
+-- @usage function MODULE:PostPlayerLoadout(client)
 --     client:StripWeapon("ix_keys") -- Strip keys from player loadout.
 -- end
 function PostPlayerLoadout(client)
@@ -1252,7 +1252,7 @@ end
 -- @string message Contents of the message
 -- @bool bAnonymous Whether or not the player is sending the message anonymously
 -- @treturn bool Whether or not to prevent the message from being sent
--- @usage function PLUGIN:PrePlayerMessageSend(client, chatType, message, bAnonymous)
+-- @usage function MODULE:PrePlayerMessageSend(client, chatType, message, bAnonymous)
 --     if (!client:IsAdmin()) then
 --         return false -- only allow admins to talk in chat
 --     end
@@ -1262,7 +1262,7 @@ end
 
 --- Called when server is saving data.
 -- @realm server
--- @usage function PLUGIN:SaveData()
+-- @usage function MODULE:SaveData()
 --     for k, v in player.Iterator() do
 --         ix.util.Notify(v, "The server's data has been saved.")
 --     end
@@ -1274,7 +1274,7 @@ end
 -- @realm client
 -- @number width New screen width
 -- @number height New screen height
--- @usage function PLUGIN:ScreenResolutionChanged(width, height)
+-- @usage function MODULE:ScreenResolutionChanged(width, height)
 --     print("Screen resolution changed to "..width.."x"..height)
 -- end
 function ScreenResolutionChanged(width, height)
@@ -1300,7 +1300,7 @@ end
 -- @realm client
 -- @number bar Bar ID
 -- @treturn bool Whether or not the bar should be drawn
--- @usage function PLUGIN:ShouldBarDraw(bar)
+-- @usage function MODULE:ShouldBarDraw(bar)
 --     return bar == "stm" -- Only draw the stamina bar.
 -- end
 function ShouldBarDraw(bar)
@@ -1309,7 +1309,7 @@ end
 --- Whether or not the server should delete saved items.
 -- @realm server
 -- @treturn bool Whether or not the server should delete saved items
--- @usage function PLUGIN:ShouldDeleteSavedItems()
+-- @usage function MODULE:ShouldDeleteSavedItems()
 --  return true -- Delete all saved items.
 -- end
 function ShouldDeleteSavedItems()
@@ -1319,7 +1319,7 @@ end
 -- @realm client
 -- @number newID ID of the new area
 -- @treturn bool Whether or not the area should be displayed
--- @usage function PLUGIN:ShouldDisplayArea(newID)
+-- @usage function MODULE:ShouldDisplayArea(newID)
 --     return newID == 1 -- Only display area 1.
 -- end
 function ShouldDisplayArea(newID)
@@ -1330,7 +1330,7 @@ end
 -- @player client Player that the crosshair is being drawn for
 -- @entity weapon Weapon that the crosshair is being drawn for
 -- @treturn bool Whether or not the crosshair should be drawn
--- @usage function PLUGIN:ShouldDrawCrosshair(client, weapon)
+-- @usage function MODULE:ShouldDrawCrosshair(client, weapon)
 --     return client:IsAdmin() -- Only draw crosshair for admins.
 -- end
 function ShouldDrawCrosshair(client, weapon)
@@ -1343,7 +1343,7 @@ end
 --- Wehther or not the hud bars should be hidden.
 -- @realm client
 -- @treturn bool Whether or not the hud bars should be hidden
--- @usage function PLUGIN:ShouldHideBars()
+-- @usage function MODULE:ShouldHideBars()
 --     return true -- Hide all hud bars.
 -- end
 function ShouldHideBars()
@@ -1357,7 +1357,7 @@ end
 -- @entity inflictor Entity that inflicted the killing blow
 -- @entity attacker Other player or entity that killed the player
 -- @treturn bool `false` if the player should not be permakilled
--- @usage function PLUGIN:ShouldPermakillCharacter(client, character, inflictor, attacker)
+-- @usage function MODULE:ShouldPermakillCharacter(client, character, inflictor, attacker)
 --         if (client:IsAdmin()) then
 --             return false -- all non-admin players will have their character permakilled
 --         end
@@ -1369,7 +1369,7 @@ end
 -- @realm server
 -- @player client Player that is underwater
 -- @treturn bool Whether or not player should drown
--- @usage function PLUGIN:ShouldPlayerDrowned(client)
+-- @usage function MODULE:ShouldPlayerDrowned(client)
 --  return false -- Players will not drown.
 -- end
 function ShouldPlayerDrowned(client)
@@ -1379,7 +1379,7 @@ end
 -- @realm server
 -- @player client Player that died
 -- @treturn bool Whether or not remove player ragdoll on death
--- @usage function PLUGIN:ShouldRemoveRagdollOnDeath(client)
+-- @usage function MODULE:ShouldRemoveRagdollOnDeath(client)
 --  return false -- Player ragdolls will not be removed.
 -- end
 function ShouldRemoveRagdollOnDeath(client)
@@ -1391,7 +1391,7 @@ end
 -- @number inventoryID ID of the inventory
 -- @string inventoryType Type of the inventory
 -- @treturn bool Whether or not to restore character inventory
--- @usage function PLUGIN:ShouldRestoreInventory(characterID, inventoryID, inventoryType)
+-- @usage function MODULE:ShouldRestoreInventory(characterID, inventoryID, inventoryType)
 --  return false -- Character inventories will not be restored.
 -- end
 function ShouldRestoreInventory(characterID, inventoryID, inventoryType)
@@ -1401,7 +1401,7 @@ end
 -- @realm client
 -- @player client Player to show on the scoreboard
 -- @treturn bool Whether or not to show the player on the scoreboard
--- @usage function PLUGIN:ShouldShowPlayerOnScoreboard(client)
+-- @usage function MODULE:ShouldShowPlayerOnScoreboard(client)
 --  return !client:IsAdmin() -- Admins will not be shown on the scoreboard, but regular players will.
 -- end
 function ShouldShowPlayerOnScoreboard(client)
@@ -1411,7 +1411,7 @@ end
 -- @realm server
 -- @player client Player that died
 -- @treturn bool Whether or not spawn player ragdoll on death
--- @usage function PLUGIN:ShouldSpawnClientRagdoll(client)
+-- @usage function MODULE:ShouldSpawnClientRagdoll(client)
 --  return false -- Player ragdolls will not be spawned.
 -- end
 function ShouldSpawnClientRagdoll(client)
@@ -1425,7 +1425,7 @@ end
 -- @realm client
 -- @bool oldValue Old value of thirdperson
 -- @bool value New value of thirdperson
--- @usage function PLUGIN:ThirdPersonToggled(oldValue, value)
+-- @usage function MODULE:ThirdPersonToggled(oldValue, value)
 --     print("Thirdperson has been toggled from "..tostring(oldValue).." to "..tostring(value))
 -- end
 function ThirdPersonToggled(oldValue, value)
@@ -1448,7 +1448,7 @@ end
 --- Able to return a new sound to play when cycling weapons.
 -- @realm client
 -- @treturn string Sound to play when cycling weapons
--- @usage function PLUGIN:WeaponCycleSound()
+-- @usage function MODULE:WeaponCycleSound()
 --     return "weapons/357/357_spin1.wav" -- Play the 357 spin sound when cycling weapons.
 -- end
 function WeaponCycleSound()
@@ -1458,7 +1458,7 @@ end
 -- @realm client
 -- @entity weapon Weapon that is being selected
 -- @treturn string Sound to play when selecting weapons
--- @usage function PLUGIN:WeaponSelectSound(weapon)
+-- @usage function MODULE:WeaponSelectSound(weapon)
 --     if (weapon:GetClass() == "weapon_physgun") then
 --         return "weapons/physcannon/physcannon_charge.wav" -- Play the physgun charge sound when selecting the physgun.
 --     end
@@ -1471,7 +1471,7 @@ end
 -- @string name Name of the character
 -- @treturn bool Whether or not the character name is valid
 -- @treturn string|nil Error message if the character name is invalid
--- @usage function PLUGIN:CharacterNameValid(name)
+-- @usage function MODULE:CharacterNameValid(name)
 --     if (string.find(name, "badword")) then
 --         return false, "Your character name contains a bad word."
 --     end
@@ -1483,7 +1483,7 @@ end
 -- @realm shared
 -- @string description Description of the character
 -- @treturn bool Whether or not the character description is valid
--- @usage function PLUGIN:IsCharacterDescriptionValid(description)
+-- @usage function MODULE:IsCharacterDescriptionValid(description)
 --     if (string.find(description, "badword")) then
 --         return false
 --     end
