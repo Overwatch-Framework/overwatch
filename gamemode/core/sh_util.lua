@@ -494,7 +494,7 @@ if ( CLIENT ) then
     -- @param h number The height of the rectangle.
     -- @param amount number The amount of blur to apply.
     -- @param passes number The number of passes to apply.
-    function ow.util:DrawBlurRect(x, y, w, h, amount, passes)
+    function ow.util:DrawBlurRect(x, y, width, height, amount, passes)
         amount = amount or 5
 
         if ( ow.option:Get("performance.blur") == true ) then

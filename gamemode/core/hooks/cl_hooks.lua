@@ -146,6 +146,9 @@ function GM:HUDPaint()
     if ( shouldDraw != false ) then
         local green = ow.colour:Get("green")
         local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(ply:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(ply:EyeAngles())))
+
+        ow.util:DrawBlurRect(x - padding, y - padding, width + padding * 2, 95 + padding * 2)
+
         surface.SetDrawColor(backgroundColor)
         surface.DrawRect(x - padding, y - padding, width + padding * 2, 95 + padding * 2)
 
@@ -164,6 +167,9 @@ function GM:HUDPaint()
     if ( shouldDraw != false ) then
         local orange = ow.colour:Get("orange")
         local red = ow.colour:Get("red")
+
+        ow.util:DrawBlurRect(x - padding, y - padding, 410 + padding * 2, 45 + padding * 2)
+
         surface.SetDrawColor(backgroundColor)
         surface.DrawRect(x - padding, y - padding, 410 + padding * 2, 45 + padding * 2)
 
