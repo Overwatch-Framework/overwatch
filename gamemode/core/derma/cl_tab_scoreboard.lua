@@ -13,6 +13,7 @@ function PANEL:Init()
     title:Dock(TOP)
     title:SetFont("ow.fonts.title")
     title:SetText("SCOREBOARD")
+    title:SetContentAlignment(5)
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)

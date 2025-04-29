@@ -38,6 +38,8 @@ function PLAYER:Name()
     return self:SteamName()
 end
 
+PLAYER.Nick = PLAYER.Name
+
 function PLAYER:ChatText(...)
     local args = {...}
 

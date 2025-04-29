@@ -11,6 +11,7 @@ function PANEL:Init()
     title:Dock(TOP)
     title:SetFont("ow.fonts.title")
     title:SetText("SETTINGS")
+    title:SetContentAlignment(5)
 
     local settings = self:Add("ow.settings")
     settings:Dock(FILL)
