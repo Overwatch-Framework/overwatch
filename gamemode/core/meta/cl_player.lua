@@ -11,9 +11,9 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:GetData(key, default)
-    local data = self:GetTable().owDatabase["data"] or {}
+    local data = self:GetTable().owDatabase.data or {}
 
-    if ( type(data) == "string" ) then
+    if ( isstring(data) ) then
         data = util.JSONToTable(data) or {}
     else
         data = data or {}

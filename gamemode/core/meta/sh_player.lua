@@ -81,31 +81,27 @@ function PLAYER:GetDropPosition(offset)
     return trace.HitPos + trace.HitNormal
 end
 
-function PLAYER:HasWhitelist(identifier, bSchema, bMap)
+function PLAYER:HasWhitelist(identifier)
     if ( bSchema == nil ) then bSchema = true end
-    if ( bMap == nil ) then bMap = false end
 
-    local key = "whitelists"
-    if ( bSchema ) then key = key .. "_" .. SCHEMA.Folder end
-    if ( bMap ) then key = key .. "_" .. game.GetMap() end
-
-    local whitelists = self:GetData(key, {}) or {}
+    local whitelists = self:GetData("whitelists_" .. SCHEMA.Folder, {}) or {}
     local whitelist = whitelists[identifier]
 
     return whitelist != nil and whitelist != false
 end
 
-function PLAYER:GetData(key, default)
-    local selfTable = self:GetTable()
-    local data = selfTable.owDatabase.data or {}
+function PLAYER:SetWhitelisted(factionID, bWhitelisted)
+    local key = "whitelists_" .. SCHEMA.Folder
+    local whitelists = self:GetData(key, {}) or {}
+    local whitelist = whitelists[factionID]
 
-    if ( type(data) == "string" ) then
-        data = util.JSONToTable(data) or {}
-    else
-        data = data or {}
-    end
+    if ( bWhitelisted == nil ) then bWhitelisted = true end
+    if ( whitelist == bWhitelisted ) then return end
 
-    return data[key] or default
+    whitelists[factionID] = bWhitelisted
+    self:SetData(key, whitelists)
+
+    self:SaveDB()
 end
 
 function PLAYER:Notify(text, iType, length)

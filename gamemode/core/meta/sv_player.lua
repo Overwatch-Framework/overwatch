@@ -48,9 +48,9 @@ end
 
 function PLAYER:SetData(key, value)
     local selfTable = self:GetTable()
-    local data = selfTable.owDatabase["data"] or {}
+    local data = selfTable.owDatabase.data or {}
 
-    if ( type(data) == "string" ) then
+    if ( isstring(data) ) then
         data = util.JSONToTable(data) or {}
     else
         data = data or {}
@@ -58,5 +58,17 @@ function PLAYER:SetData(key, value)
 
     data[key] = value
 
-    selfTable.owDatabase["data"] = util.TableToJSON(data)
+    selfTable.owDatabase.data = util.TableToJSON(data)
+end
+
+function PLAYER:GetData(key, default)
+    local data = self:GetTable().owDatabase.data or {}
+
+    if ( type(data) == "string" ) then
+        data = util.JSONToTable(data) or {}
+    else
+        data = data or {}
+    end
+
+    return data[key] or default
 end
