@@ -179,8 +179,8 @@ function PANEL:PlayMenuTrack()
     local track = hook.Run("GetMainMenuMusic")
     if ( !isstring(track) or #track == 0 ) then return end
 
-    sound.PlayFile("sound/" .. track, "noplay", function(station, errorID, errorName)
-        if ( IsValid(station) and IsValid(self) ) then
+    sound.PlayFile("sound/" .. track, "noplay noblock", function(station, errorID, errorName)
+        if ( IsValid(station) ) then
             station:Play()
             station:SetVolume(ow.option:Get("mainmenu.music.volume", 75) / 100)
             station:EnableLooping(ow.option:Get("mainmenu.music.loop", true))
@@ -209,11 +209,12 @@ function PANEL:Think()
 end
 
 function PANEL:OnRemove()
-    ow.gui.mainmenu = nil
-
     if ( IsValid(self.station) ) then
         self.station:Stop()
+        self.station = nil
     end
+
+    ow.gui.mainmenu = nil
 end
 
 function PANEL:Paint(width, height)

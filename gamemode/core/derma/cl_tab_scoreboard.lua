@@ -13,7 +13,6 @@ function PANEL:Init()
     title:Dock(TOP)
     title:SetFont("ow.fonts.title")
     title:SetText("SCOREBOARD")
-    title:SetContentAlignment(5)
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
@@ -127,7 +126,7 @@ function PANEL:Paint(width, height)
 
     surface.SetMaterial(gradientLeft)
     surface.SetDrawColor(color.r, color.g, color.b, 200)
-    surface.DrawTexturedRect(0, 0, width, self.teamName:GetTall())
+    surface.DrawTexturedRect(0, 0, width, height)
 end
 
 vgui.Register("ow.tab.scoreboard.team", PANEL, "EditablePanel")
@@ -149,6 +148,8 @@ function PANEL:Init()
     self.ping:SetSize(ScreenScale(32), self:GetTall())
     self.ping:SetFont("ow.fonts.large.bold")
     self.ping:SetContentAlignment(6)
+
+    self:SetMouseInputEnabled(true)
 end
 
 function PANEL:SetPlayer(ply)
@@ -168,6 +169,29 @@ function PANEL:Think()
     if ( IsValid(self.ping) and IsValid(self.player) ) then
         self.ping:SetText(self.player:Ping() .. "ms", true)
         self.ping:SetPos(self:GetWide() - self.ping:GetWide() - 16, self:GetTall() / 2 - self.ping:GetTall() / 2)
+    end
+end
+
+function PANEL:OnMousePressed(keyCode)
+    if ( keyCode == MOUSE_LEFT ) then
+        gui.OpenURL("http://steamcommunity.com/profiles/" .. self.player:SteamID64())
+    elseif ( keyCode == MOUSE_RIGHT ) then
+        local result = hook.Run("ShouldPopulateScoreboardPlayerCard", self.player)
+        if ( result == false ) then return end
+
+        local dermaMenu = DermaMenu(false, self)
+        dermaMenu:Open()
+
+        dermaMenu:AddOption("Copy SteamID", function()
+            SetClipboardText(self.player:SteamID64())
+        end):SetIcon("icon16/page_paste.png")
+
+        dermaMenu:AddOption("Open Profile", function()
+            gui.OpenURL("http://steamcommunity.com/profiles/" .. self.player:SteamID64())
+        end):SetIcon("icon16/world.png")
+
+        dermaMenu:AddSpacer()
+        hook.Run("PopulateScoreboardPlayerCard", dermaMenu, self.player)
     end
 end
 
