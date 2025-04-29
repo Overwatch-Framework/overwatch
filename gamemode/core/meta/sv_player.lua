@@ -60,16 +60,3 @@ function PLAYER:SetData(key, value)
 
     selfTable.owDatabase["data"] = util.TableToJSON(data)
 end
-
-function PLAYER:GetData(key, default)
-    local selfTable = self:GetTable()
-    local data = selfTable.owDatabase["data"] or {}
-
-    if ( type(data) == "string" ) then
-        data = util.JSONToTable(data) or {}
-    else
-        data = data or {}
-    end
-
-    return data[key] or default
-end

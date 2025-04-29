@@ -97,23 +97,22 @@ end
 
 function PLAYER:GetData(key, default)
     local selfTable = self:GetTable()
-    if ( key == true ) then
-        return selfTable.owData
+    local data = selfTable.owDatabase.data or {}
+
+    if ( type(data) == "string" ) then
+        data = util.JSONToTable(data) or {}
+    else
+        data = data or {}
     end
 
-    local data = selfTable.owData and selfTable.owData[key]
-    if ( data == nil ) then
-        return default
-    else
-        return data
-    end
+    return data[key] or default
 end
 
-function PLAYER:Notify(text, type, length)
+function PLAYER:Notify(text, iType, length)
     if ( !text or text == "" ) then return end
 
-    type = type or NOTIFY_GENERIC
+    iType = iType or NOTIFY_GENERIC
     duration = duration or 3
 
-    ow.notification:Send(self, text, type, length)
+    ow.notification:Send(self, text, iType, length)
 end
