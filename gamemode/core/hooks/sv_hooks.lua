@@ -15,7 +15,7 @@ function GM:PlayerInitialSpawn(ply)
         ply:SetDBVar("ip", ply:IPAddress())
         ply:SetDBVar("play_time", 0)
         ply:SetDBVar("last_played", os.time())
-        ply:SetDBVar("data", IsValid(data) and data["data"] or "[]")
+        ply:SetDBVar("data", IsValid(data) and data.data or "[]")
 
         ply:SetTeam(0)
         ply:SetModel("models/player/kleiner.mdl")
