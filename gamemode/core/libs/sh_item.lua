@@ -103,7 +103,7 @@ if ( CLIENT ) then
         if ( !item ) then return end
 
         item.InventoryID = inventoryID
-        item.CharacterID = LocalPlayer():GetCharacterID()
+        item.CharacterID = ow.localClient:GetCharacterID()
 
         self.instances[itemID] = item
 

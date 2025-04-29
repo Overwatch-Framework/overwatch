@@ -86,7 +86,7 @@ function PANEL:PopulateFactionSelect()
     factionList.Paint = nil
 
     for k, v in ipairs(ow.faction:GetAll()) do
-        if ( !ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then continue end
+        if ( !ow.faction:CanSwitchTo(ow.localClient, v.Index) ) then continue end
 
         local name = (v.Name and string.upper(v.Name)) or "UNKNOWN FACTION"
         local description = (v.Description and string.upper(v.Description)) or "UNKNOWN FACTION DESCRIPTION"
@@ -170,7 +170,7 @@ function PANEL:PopulateCreateCharacter()
         if ( self.currentCreatePage == 0 ) then
             local availableFactions = 0
             for k, v in ipairs(ow.faction:GetAll()) do
-                if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
+                if ( ow.faction:CanSwitchTo(ow.localClient, v.Index) ) then
                     availableFactions = availableFactions + 1
                 end
             end

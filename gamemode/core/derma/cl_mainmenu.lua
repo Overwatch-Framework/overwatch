@@ -33,7 +33,7 @@ function PANEL:Init()
 
     ow.gui.mainmenu = self
 
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     if ( IsValid(ply) and ply:IsTyping() ) then
         chat.Close()
     end
@@ -108,7 +108,7 @@ function PANEL:Populate()
     buttons:Dock(FILL)
     buttons:DockMargin(0, padding / 4, 0, padding)
 
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     local plyTable = ply:GetTable()
     if ( plyTable.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
         local playButton = buttons:Add("ow.mainmenu.button")
@@ -129,7 +129,7 @@ function PANEL:Populate()
     createButton.DoClick = function(this)
         local availableFactions = 0
         for k, v in ipairs(ow.faction:GetAll()) do
-            if ( ow.faction:CanSwitchTo(LocalPlayer(), v.Index) ) then
+            if ( ow.faction:CanSwitchTo(ow.localClient, v.Index) ) then
                 availableFactions = availableFactions + 1
             end
         end

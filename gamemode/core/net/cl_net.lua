@@ -63,7 +63,7 @@ end)
 
 net.Receive("ow.database.save", function(len)
     local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
-    LocalPlayer():GetTable().owDatabase = compressedTable
+    ow.localClient:GetTable().owDatabase = compressedTable
 end)
 
 net.Receive("ow.character.create", function(len)
@@ -81,7 +81,7 @@ net.Receive("ow.character.cache", function(len)
     local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(data) ) then return end
 
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     local plyTable = ply:GetTable()
 
     local character = ow.character:CreateObject(data.ID, data, ply)
@@ -101,7 +101,7 @@ net.Receive("ow.character.cache.all", function(len)
     local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(data) ) then return end
 
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     local plyTable = ply:GetTable()
 
     for k, v in pairs(data) do
@@ -126,11 +126,12 @@ net.Receive("ow.character.load", function(len)
         ow.gui.mainmenu:Remove()
     end
 
-    local character, reason = ow.character:CreateObject(characterID, ow.character.stored[characterID], LocalPlayer())
+    local ply = ow.localClient
+
+    local character, reason = ow.character:CreateObject(characterID, ow.character.stored[characterID], ply)
     if ( !character ) then print("Failed to load character " .. characterID .. "!", reason) return end
     print("Character " .. characterID .. " loaded.", character)
 
-    local ply = LocalPlayer()
     local plyTable = ply:GetTable()
 
     ow.character.stored = ow.character.stored or {}
@@ -154,7 +155,7 @@ net.Receive("ow.character.delete", function(len)
 
     ow.character.stored[characterID] = nil
 
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     local plyTable = ply:GetTable()
     if ( plyTable.owCharacters ) then
         plyTable.owCharacters[characterID] = nil

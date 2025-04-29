@@ -18,7 +18,7 @@ if ( CLIENT ) then
     end
 
     function MODULE:HUDPaint()
-        local ply = LocalPlayer()
+        local ply = ow.localClient
         if ( !IsValid(ply) or !ply:InObserver() or !ply:Alive() or !ply:GetNoDraw() ) then return end
 
         if ( hook.Run("ShouldDrawObserverHUD", ply) == false ) then return end

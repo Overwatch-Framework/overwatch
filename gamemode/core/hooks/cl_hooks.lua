@@ -110,7 +110,7 @@ function GM:HUDPaintBackground()
 end
 
 function GM:DrawVignette()
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     if ( !IsValid(ply) ) then return end
 
     local scrW, scrH = ScrW(), ScrH()
@@ -138,7 +138,7 @@ end
 local padding = 16
 local backgroundColor = Color(10, 10, 10, 220)
 function GM:HUDPaint()
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     if ( !IsValid(ply) ) then return end
 
     local x, y = 24, 24
@@ -497,7 +497,7 @@ function GM:OnChatTab(text)
 
     if ( command and command.AutoComplete ) then
         if ( text != lastText ) then
-            lastSuggestions = command.AutoComplete(LocalPlayer(), split) or {}
+            lastSuggestions = command.AutoComplete(ow.localClient, split) or {}
             suggestionIndex = 1
         else
             suggestionIndex = ( suggestionIndex % #lastSuggestions ) + 1

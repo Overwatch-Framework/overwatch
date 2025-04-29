@@ -13,7 +13,7 @@ function PANEL:Init()
 end
 
 function PANEL:Populate()
-    local ply = LocalPlayer()
+    local ply = ow.localClient
     if ( !IsValid(ply) ) then return end
 
     local parent = self:GetParent()

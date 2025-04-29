@@ -57,7 +57,7 @@ if ( CLIENT ) then
     end
 
     function ow.option:Set(key, value)
-        local ply = LocalPlayer()
+        local ply = ow.localClient
 
         local bResult = hook.Run("PreOptionChanged", ply, key, value)
         if ( bResult == false ) then return false end
