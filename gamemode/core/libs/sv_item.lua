@@ -3,44 +3,57 @@
 
 --- Adds a new item to a character's inventory.
 -- @realm server
--- @param number ownerID The ID of the character who owns the item.
+-- @param number characterID The ID of the character who owns the item.
+-- @param number inventoryID The ID of the inventory where the item will be added.
 -- @param string uniqueID The uniqueID of the item.
 -- @param table data Additional data for the item.
 -- @param function callback The callback function.
 -- @return boolean True if the item was added successfully, false otherwise.
-function ow.item:Add(ownerID, uniqueID, data, callback)
-    if ( !ownerID or !uniqueID or !self.stored[uniqueID] ) then return end
+function ow.item:Add(characterID, inventoryID, uniqueID, data, callback)
+    if ( !characterID or !uniqueID or !self.stored[uniqueID] ) then return end
 
     if ( !data ) then data = {} end
 
     ow.sqlite:Insert("ow_items", {
-        owner_id = ownerID,
+        inventory_id = inventoryID,
+        character_id = characterID,
         unique_id = uniqueID,
-        inv_id = 1,
         data = util.Compress(util.TableToJSON(data))
-    }, function(id)
-        if ( !id ) then return end
-        print("Item " .. uniqueID .. " added to character " .. ownerID .. ".")
-        local receiver = ow.character:GetPlayerByCharacter(ownerID)
+    }, function(result)
+        print("ow.item:Add", result)
+        if ( !result ) then return end
+
+        local item = self:CreateObject(result, uniqueID, data)
+        if ( !item ) then return end
+
+        self.instances[result] = item
+
+        local inventory = ow.inventory:Get(inventoryID)
+        if ( inventory ) then
+            local items = inventory:GetItems()
+            if ( items and !table.HasValue(items, item.ID) ) then
+                table.insert(items, item.ID)
+            end
+        end
+
+        local receiver = ow.character:GetPlayerByCharacter(characterID)
         if ( IsValid(receiver) ) then
-            print("Sending item " .. uniqueID .. " to player " .. receiver:Name() .. ".")
             local compressed = util.Compress(util.TableToJSON(data))
 
             net.Start("ow.item.add")
+                net.WriteUInt(result, 32)
+                net.WriteUInt(inventoryID, 32)
                 net.WriteString(uniqueID)
-                net.WriteUInt(id, 32)
                 net.WriteData(compressed, #compressed)
             net.Send(receiver)
-        else
-            print("Player not found for character " .. ownerID .. ".")
         end
 
         if ( callback ) then
-            callback(id, data)
+            callback(result, data)
         end
     end)
 
-    hook.Run("OnItemAdded", item, ownerID, uniqueID, data)
+    hook.Run("OnItemAdded", item, characterID, uniqueID, data)
 
     return true
 end
@@ -49,11 +62,15 @@ concommand.Add("ow_item_add", function(ply, cmd, args)
     if ( !ply:IsAdmin() ) then return end
 
     local uniqueID = args[1]
+    if ( !uniqueID or !ow.item.stored[uniqueID] ) then return end
 
-    ow.item:Add(1, uniqueID, nil, function(itemID, data)
-        if ( !itemID ) then return end
+    local characterID = ply:GetCharacterID()
+    local inventories = ow.inventory:GetByCharacterID(characterID)
+    if ( #inventories == 0 ) then print("No inventories found for character ID " .. characterID) return end
+    local inventoryID = inventories[1]:GetID()
 
-        ply:ChatPrint("Item " .. uniqueID .. " added with ID " .. itemID .. ".")
+    ow.item:Add(characterID, inventoryID, uniqueID, nil, function(itemID, data)
+        ply:Notify("Item " .. uniqueID .. " added to inventory " .. inventoryID .. ".")
     end)
 end)
 

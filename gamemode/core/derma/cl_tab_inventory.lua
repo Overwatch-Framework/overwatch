@@ -10,8 +10,9 @@ function PANEL:Init()
     title:SetFont("ow.fonts.title")
     title:SetText("INVENTORY")
 
-    self.container = self:Add("DScrollPanel")
-    self.container:Dock(FILL)
+    local inventory = self:Add("ow.inventory")
+    inventory:Dock(FILL)
+    inventory:SetInventory()
 end
 
 vgui.Register("ow.tab.inventory", PANEL, "EditablePanel")

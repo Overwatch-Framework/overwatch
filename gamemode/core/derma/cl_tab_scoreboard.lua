@@ -1,3 +1,4 @@
+local padding = ScreenScale(32)
 local gradientLeft = ow.util:GetMaterial("vgui/gradient-l")
 local gradientBottom = ow.util:GetMaterial("vgui/gradient-d")
 
@@ -15,6 +16,7 @@ function PANEL:Init()
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
+    self.container:DockMargin(0, padding / 8, 0, 0)
 
     self.cache = {}
     self.cache.players = {}

@@ -164,11 +164,11 @@ function ow.sqlite:CreateTable(query, schema)
     sql.Query(insertQuery)
 end
 
---- Inserts a row into a table.
+--- Inserts a row into a table and optionally returns the inserted row ID.
 -- @realm shared
 -- @tparam string query Table name
 -- @tparam table data Row data
--- @tparam function[opt] callback Optional callback function to run after insertion
+-- @tparam function[opt] callback Optional callback to receive last inserted ID
 function ow.sqlite:Insert(query, data, callback)
     local keys, values = {}, {}
 
@@ -177,14 +177,19 @@ function ow.sqlite:Insert(query, data, callback)
         values[#values + 1] = sql.SQLStr(v)
     end
 
-    local insertQuery = string.format("INSERT INTO %s (%s) VALUES (%s);", query, table.concat(keys, ", "), table.concat(values, ", "))
+    local insertQuery = string.format(
+        "INSERT INTO %s (%s) VALUES (%s);",
+        query,
+        table.concat(keys, ", "),
+        table.concat(values, ", ")
+    )
     sql.Query(insertQuery)
-    print(insertQuery)
 
     if ( callback ) then
         local result = sql.QueryRow("SELECT last_insert_rowid();")
         if ( result ) then
-            callback(result["last_insert_rowid()"])
+            local id = tonumber(result["last_insert_rowid()"])
+            callback(id)
         end
     end
 end
@@ -221,7 +226,6 @@ function ow.sqlite:Update(query, data, condition)
 
     local insertQuery = string.format("UPDATE %s SET %s WHERE %s;", query, table.concat(updates, ", "), condition)
     sql.Query(insertQuery)
-    print(insertQuery)
 end
 
 --- Selects rows from a table matching a condition.
@@ -262,7 +266,7 @@ if ( CLIENT ) then return end
 ow.sqlite:CreateTable("ow_characters", {
     id = "INTEGER PRIMARY KEY AUTOINCREMENT",
     steamid = "TEXT",
-    name = "TEXT",
+    inventories = "TEXT",
     data = "TEXT",
 })
 
@@ -276,16 +280,19 @@ ow.sqlite:CreateTable("ow_players", {
 })
 
 ow.sqlite:CreateTable("ow_inventories", {
-    inventory_id = "INTEGER PRIMARY KEY AUTOINCREMENT",
+    id = "INTEGER PRIMARY KEY AUTOINCREMENT",
     character_id = "INTEGER",
-    inventory_type = "TEXT",
+    receivers = "TEXT",
+    name = "TEXT",
+    max_weight = "INTEGER",
+    items = "TEXT",
     data = "TEXT"
 })
 
 ow.sqlite:CreateTable("ow_items", {
     id = "INTEGER PRIMARY KEY AUTOINCREMENT",
-    owner_id = "INTEGER",
+    inventory_id = "INTEGER",
+    character_id = "INTEGER",
     unique_id = "TEXT",
     data = "TEXT",
-    inv_id = "INTEGER",
 })

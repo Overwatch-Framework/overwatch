@@ -13,6 +13,8 @@ util.AddNetworkString("ow.gesture.play")
 util.AddNetworkString("ow.item.add")
 util.AddNetworkString("ow.mainmenu")
 util.AddNetworkString("ow.notification.send")
+util.AddNetworkString("ow.inventory.register")
+util.AddNetworkString("ow.inventory.cache")
 
 net.Receive("ow.config.set", function(len, ply)
     if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end

@@ -9,13 +9,12 @@ function PANEL:Init()
 
     self.buttons = self:Add("DHorizontalScroller")
     self.buttons:Dock(TOP)
-    self.buttons:DockMargin(0, padding / 8, padding, 0)
+    self.buttons:DockMargin(0, padding / 8, 0, 0)
     self.buttons:SetTall(ScreenScale(24))
     self.buttons.Paint = nil
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
-    self.container:DockMargin(0, 0, padding, 0)
     self.container.Paint = nil
 
     local categories = {}
@@ -33,16 +32,6 @@ function PANEL:Init()
 
         button.DoClick = function()
             self:PopulateCategory(v)
-        end
-        button.Paint = function(this, width, height)
-            if ( isstring(self.activeCategory) and self.activeCategory == v ) then
-                surface.SetDrawColor(color_white)
-                surface.DrawRect(0, 0, width, height)
-
-                this:SetTextColor(color_black)
-            else
-                this:SetTextColor(color_white)
-            end
         end
     end
 

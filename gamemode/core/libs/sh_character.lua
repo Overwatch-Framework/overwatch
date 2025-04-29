@@ -82,15 +82,18 @@ function ow.character:GetVariable(id, key)
     return character[key]
 end
 
-function ow.character:CreateObject(id, data, ply)
-    if ( !id or !data ) then return false, "Invalid ID or data" end
-    if ( self.stored[id] ) then return self.stored[id], "Character already exists" end
+function ow.character:CreateObject(characterID, data, ply)
+    if ( !characterID or !data ) then return false, "Invalid ID or data" end
+    if ( self.stored[characterID] ) then return self.stored[characterID], "Character already exists" end
+
+    characterID = tonumber(characterID)
 
     local character = setmetatable({}, self.meta)
-    character.id = id
-    character.player = ply or NULL
-    character.schema = SCHEMA.Folder
-    character.steamid = ply and ply:SteamID64() or nil
+    character.ID = characterID
+    character.Player = ply or NULL
+    character.Schema = SCHEMA.Folder
+    character.SteamID = ply and ply:SteamID64() or nil
+    character.Inventories = data.inventories or {}
 
     for k, v in pairs(self.variables) do
         if ( data[k] ) then
@@ -100,7 +103,7 @@ function ow.character:CreateObject(id, data, ply)
         end
     end
 
-    self.stored[id] = character
+    self.stored[characterID] = character
 
     return character
 end

@@ -158,9 +158,3 @@ ow.character:RegisterVariable("class", {
     Field = "class",
     Default = 0
 })
-
-ow.character:RegisterVariable("inventory", {
-    Type = ow.type.number,
-    Field = "inventory",
-    Default = 0
-})

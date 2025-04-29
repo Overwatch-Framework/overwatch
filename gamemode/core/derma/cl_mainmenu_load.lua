@@ -66,7 +66,7 @@ function PANEL:Populate()
 
         button.DoClick = function()
             net.Start("ow.character.load")
-                net.WriteUInt(v.id, 32)
+                net.WriteUInt(v:GetID(), 32)
             net.SendToServer()
         end
 

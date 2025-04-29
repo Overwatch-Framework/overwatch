@@ -2,6 +2,7 @@
 -- @module ow.item
 
 ow.item = ow.item or {}
+ow.item.meta = ow.item.meta or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
 ow.item.bases = ow.item.bases or {}
@@ -16,8 +17,6 @@ function ow.item:Register(uniqueID, itemData)
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
 
-    local ITEM = {}
-
     -- TODO: Add Inheritance Support in Future
 
     for _, field in ipairs(requiredFields) do
@@ -30,8 +29,8 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Weight = itemData.Weight or 0
     itemData.Category = itemData.Category or "Miscellaneous"
 
-    itemData.functions = itemData.functions or {}
-    itemData.functions.drop = itemData.functions.drop or {
+    itemData.Functions = itemData.Functions or {}
+    itemData.Functions.Drop = itemData.Functions.Drop or {
         Name = "Drop",
         OnRun = function(item)
             -- TODO: Yeah yeah, this
@@ -40,7 +39,7 @@ function ow.item:Register(uniqueID, itemData)
         end
     }
 
-    itemData.functions.take = itemData.functions.take or {
+    itemData.Functions.Take = itemData.Functions.Take or {
         Name = "Take",
         OnRun = function(item)
             -- TODO: Yeah yeah, this
@@ -50,6 +49,7 @@ function ow.item:Register(uniqueID, itemData)
     }
 
     self.stored[uniqueID] = itemData
+
     hook.Run("PostItemRegistered", uniqueID, itemData)
 end
 
@@ -67,11 +67,58 @@ function ow.item:GetAll()
     return self.stored
 end
 
-if ( CLIENT ) then
-    function ow.item:Add(itemID, uniqueID, data, callback)
-        -- Do networking for the inventory in the future here...
-        -- For now, we'll just pretend we added the item.
+function ow.item:GetInstances()
+    return self.instances
+end
 
-        LocalPlayer():ChatPrint("Added item: " .. uniqueID)
+function ow.item:CreateObject(itemID, uniqueID, data)
+    if ( !itemID or !uniqueID or !self.stored[uniqueID] ) then return end
+    if ( self.instances[itemID] ) then return self.instances[itemID] end
+
+    local item = setmetatable({}, self.meta)
+    item.ID = itemID
+    item.UniqueID = uniqueID
+    item.Data = data or {}
+
+    local itemData = self.stored[uniqueID]
+
+    for k, v in pairs(itemData) do
+        if ( isfunction(v) ) then
+            item[k] = v(item)
+        else
+            item[k] = v
+        end
+    end
+
+    return item
+end
+
+if ( CLIENT ) then
+    function ow.item:Add(itemID, inventoryID, uniqueID, data, callback)
+        if ( !itemID or !uniqueID or !self.stored[uniqueID] ) then return end
+
+        if ( !data ) then data = {} end
+
+        local item = self:CreateObject(itemID, uniqueID, data)
+        if ( !item ) then return end
+
+        item.InventoryID = inventoryID
+        item.CharacterID = LocalPlayer():GetCharacterID()
+
+        self.instances[itemID] = item
+
+        local inventory = ow.inventory:Get(inventoryID)
+        if ( inventory ) then
+            local items = inventory:GetItems()
+            if ( items and !table.HasValue(items, item.ID) ) then
+                table.insert(items, item.ID)
+            end
+        end
+
+        if ( callback ) then
+            callback(itemID, data)
+        end
+
+        return item
     end
 end

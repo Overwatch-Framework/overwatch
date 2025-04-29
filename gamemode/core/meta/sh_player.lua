@@ -19,12 +19,12 @@ function PLAYER:GetCharacters()
 end
 
 function PLAYER:GetCharacterID()
-    local selfTable = self:GetTable()
-    if ( selfTable.owCharacter ) then
-        return selfTable.owCharacter:GetID()
+    local character = self:GetCharacter()
+    if ( character ) then
+        return character:GetID()
     end
 
-    return self:EntIndex() -- Use index for now
+    return nil
 end
 
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name

@@ -89,3 +89,22 @@ ow.config:Register("jump.power", {
         end
     end
 })
+
+ow.config:Register("inventory.maxweight", {
+    Name = "config.inventory.maxweight.name",
+    Description = "config.inventory.maxweight.help",
+    Type = ow.type.number,
+    Default = 20,
+    Min = 0,
+    Max = 1000,
+    OnChange = function(value)
+        for _, ply in player.Iterator() do
+            if ( ply:GetCharacter() ) then
+                local inventories = ow.inventory:GetByCharacterID(ply:GetCharacter():GetID())
+                for _, inventory in ipairs(inventories) do
+                    inventory.maxWeight = value
+                end
+            end
+        end
+    end
+})

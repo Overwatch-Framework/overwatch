@@ -14,11 +14,12 @@ net.Receive("ow.gesture.play", function(len)
 end)
 
 net.Receive("ow.item.add", function(len)
-    local uniqueID = net.ReadString()
     local itemID = net.ReadUInt(32)
+    local inventoryID = net.ReadUInt(32)
+    local uniqueID = net.ReadString()
     local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
-    ow.item:Add(itemID, uniqueID, data)
+    ow.item:Add(itemID, inventoryID, uniqueID, data)
 
     print("Item " .. uniqueID .. " received with ID " .. itemID .. ".")
 end)
@@ -83,17 +84,17 @@ net.Receive("ow.character.cache", function(len)
     local ply = LocalPlayer()
     local plyTable = ply:GetTable()
 
-    local character = ow.character:CreateObject(data.id, data, ply)
-    local id = character:GetID()
+    local character = ow.character:CreateObject(data.ID, data, ply)
+    local characterID = character:GetID()
 
     ow.character.stored = ow.character.stored or {}
-    ow.character.stored[id] = character
+    ow.character.stored[characterID] = character
 
     plyTable.owCharacters = plyTable.owCharacters or {}
-    plyTable.owCharacters[id] = character
+    plyTable.owCharacters[characterID] = character
     plyTable.owCharacter = character
 
-    notification.AddLegacy("Character " .. id .. " cached!", NOTIFY_GENERIC, 5)
+    notification.AddLegacy("Character " .. characterID .. " cached!", NOTIFY_GENERIC, 5)
 end)
 
 net.Receive("ow.character.cache.all", function(len)
@@ -104,14 +105,14 @@ net.Receive("ow.character.cache.all", function(len)
     local plyTable = ply:GetTable()
 
     for k, v in pairs(data) do
-        local character = ow.character:CreateObject(v.id, v, ply)
-        local id = character:GetID()
+        local character = ow.character:CreateObject(v.ID, v, ply)
+        local characterID = character:GetID()
 
         ow.character.stored = ow.character.stored or {}
-        ow.character.stored[id] = character
+        ow.character.stored[characterID] = character
 
         plyTable.owCharacters = plyTable.owCharacters or {}
-        plyTable.owCharacters[id] = character
+        plyTable.owCharacters[characterID] = character
     end
 
     notification.AddLegacy("Characters cached!", NOTIFY_GENERIC, 5)
@@ -172,4 +173,54 @@ net.Receive("ow.notification.send", function(len)
     if ( !text ) then return end
 
     notification.AddLegacy(text, type, duration)
+end)
+
+net.Receive("ow.inventory.register", function(len, ply)
+    local inventoryData = net.ReadTable()
+    if ( !istable(inventoryData) ) then return end
+
+    local bResult = hook.Run("PreInventoryRegistered", inventoryData)
+    if ( bResult == false ) then return end
+
+    local inventoryID = inventoryData.ID
+    if ( !inventoryID ) then return end
+
+    local inventory = ow.inventory:CreateObject(inventoryID, inventoryData, ply)
+    if ( !inventory ) then return end
+
+    print("Inventory " .. inventoryID .. " registered!")
+end)
+
+net.Receive("ow.inventory.cache", function(len)
+    local inventoryData = net.ReadTable()
+    if ( !istable(inventoryData) ) then return end
+
+    local bResult = hook.Run("PreInventoryCached", inventoryData)
+    if ( bResult == false ) then return end
+
+    local inventoryID = inventoryData.ID
+    if ( !inventoryID ) then return end
+
+    local inventory = ow.inventory:CreateObject(inventoryID, inventoryData)
+    if ( !inventory ) then return end
+
+    ow.inventory.stored = ow.inventory.stored or {}
+    ow.inventory.stored[inventoryID] = inventory
+
+    -- if the character object exists, add the inventory to it
+    local character = ow.character.stored[inventoryData.characterID]
+    if ( character ) then
+        local inventories = character:GetInventories()
+        if ( !table.HasValue(inventories, inventory) ) then
+            table.insert(inventories, inventory)
+        end
+
+        character:SetInventories(inventories)
+        print("Inventory " .. inventoryID .. " added to character " .. inventoryData.characterID .. "!")
+    end
+
+    print(inventory)
+    PrintTable(inventory)
+
+    print("Inventory " .. inventoryID .. " cached!")
 end)

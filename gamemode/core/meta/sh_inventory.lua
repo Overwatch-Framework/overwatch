@@ -1,7 +1,7 @@
-local INV = ow.meta.inventory or {}
+local INV = ow.inventory.meta or {}
 INV.__index = INV
-INV.id = 0
-INV.items = {}
+INV.ID = 0
+INV.Items = {}
 
 function INV:__tostring()
     return "inventory[" .. self:GetID() .. "]"
@@ -11,35 +11,47 @@ function INV:__eq(other)
     return self.ID == other.ID
 end
 
--- TODO: I believe a sequential table with the value being the item's ID
-
 --- Returns the inventory's ID.
+-- @realm shared
 -- @treturn number The inventory's ID.
 function INV:GetID()
     return self.ID
 end
 
 --- Returns the inventory's name.
+-- @realm shared
 -- @treturn string The inventory's name.
 function INV:GetName()
     return self.Name or Format("Inventory %s", self:GetID())
 end
 
 --- Returns the character that the inventory belongs to.
+-- @realm shared
 -- @treturn number The character's ID.
 function INV:GetOwner()
-    return self.OwnerID -- TODO: Use whatever ow.character table we use to store character IDs | ow.character.cache[self.OwnerID]? Not sure
+    return self.CharacterID
+end
+
+--- Returns the inventory's maximum weight.
+-- @realm shared
+-- @treturn number The inventory's maximum weight.
+function INV:GetMaxWeight()
+    return self.MaxWeight or ow.config:Get("inventory.maxweight", 20)
+end
+
+--- Returns the inventory's data.
+-- @realm shared
+-- @treturn table The inventory's data.
+function INV:GetData()
+    return self.Data or {}
 end
 
 --- Returns the inventory's weight.
+-- @realm shared
 -- @treturn number The inventory's weight.
 function INV:GetWeight()
     local weight = 0
 
-    --[[ -- This is an example of the Inventory's "Items" table
-        [1] = 252,
-        [2] = 323,
-    ]]
     for k, v in ipairs(self:GetItems()) do
         weight = weight + v:GetWeight()
     end
@@ -47,8 +59,12 @@ function INV:GetWeight()
     return weight
 end
 
+--- Returns the inventory's items.
+-- @realm shared
+-- @treturn table A sequential table of items in the inventory.
+-- @usage local items = inventory:GetItems()
+-- for k, v in ipairs(items) do print(v:GetID()) end
+-- > [1] = 252, [2] = 323
 function INV:GetItems()
     return self.Items
 end
-
-ow.meta.inventory = INV
