@@ -144,7 +144,7 @@ function GM:HUDPaint()
     local x, y = 24, 24
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
-        local green = ow.colour:Get("green")
+        local green = ow.config:Get("colour.framework")
         local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(ply:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(ply:EyeAngles())))
 
         ow.util:DrawBlurRect(x - padding, y - padding, width + padding * 2, 95 + padding * 2)
