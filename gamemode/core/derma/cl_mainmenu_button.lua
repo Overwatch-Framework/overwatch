@@ -161,7 +161,7 @@ function PANEL:OnCursorEntered()
     self:SetFont("ow.fonts.button.hover")
 
     self.heightTarget = self.baseHeight * 1.25
-    self.textColorTarget = hook.Run("GetSchemaColor")
+    self.textColorTarget = hook.Run("GetSchemaColour")
     self.textInsetTarget = {ScreenScale(8), 0}
 
     self.inertiaTarget = 1
@@ -211,7 +211,7 @@ function PANEL:Init()
     self.baseTextColorTarget = color_black
     self.textColorTarget = color_black
 
-    self.backgroundColor = Color(255, 255, 255, 255)
+    self.backgroundColor = color_white
 end
 
 function PANEL:SizeToContents()
@@ -236,7 +236,7 @@ function PANEL:Paint(width, height)
 
     paint.startPanel(self)
         mask(function()
-            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 0))
+            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, color_transparent)
         end,
         function()
             local ripple = self.rippleEffect
