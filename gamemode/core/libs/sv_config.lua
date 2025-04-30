@@ -9,7 +9,7 @@ ow.config.stored = ow.config.stored or {}
 -- @param key The key of the configuration.
 -- @param value The value of the configuration.
 -- @treturn boolean Whether the configuration was successfully set.
--- @usage ow.config.Set("color.schema", Color(0, 100, 150)) -- Sets the color of the schema.
+-- @usage ow.config.Set("colour.schema", Color(0, 100, 150)) -- Sets the color of the schema.
 function ow.config:Set(key, value, ply)
     local stored = self.stored[key]
     if ( !istable(stored) ) then
