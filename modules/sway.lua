@@ -151,9 +151,11 @@ local function GetViewModelBob(pos, ang)
     return pos, ang
 end
 
-function MODULE:CalcViewModelView(ply, vm, pos, ang)
-    if ( !IsValid(ply) or !IsValid(vm) ) then return end
+DEFINE_BASECLASS("sway")
+function MODULE:CalcViewModelView(wep, vm, oldPos, oldAng, pos, ang)
+    if ( !IsValid(wep) or !IsValid(vm) ) then return end
 
+    pos, ang = GAMEMODE.BaseClass:CalcViewModelView(wep, vm, oldPos, oldAng, pos, ang)
     pos, ang = GetViewModelBob(pos, ang)
 
     return pos, ang
