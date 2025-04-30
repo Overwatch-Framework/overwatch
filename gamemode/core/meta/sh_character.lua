@@ -37,7 +37,7 @@ function CHAR:GiveMoney(amount)
     local character = self:GetPlayer()
     if ( amount < 0 ) then
         amount = math.abs(amount)
-        ow.util:PrintWarning("Character " .. self:GetID() .. " tried to give negative money, converted to positive number. use :TakeMoney instead!")
+        ow.util:PrintWarning("Character " .. self:GetID() .. " tried to give negative amount, converted to positive number. Call :TakeMoney instead!")
     end
 
     character:SetMoney(character:GetMoney() + amount)
@@ -49,7 +49,7 @@ function CHAR:TakeMoney(amount)
     local character = self:GetPlayer()
     if ( amount < 0 ) then
         amount = math.abs(amount)
-        ow.util:PrintWarning("Character " .. self:GetID() .. " tried to give negative money, converted to positive number. use :TakeMoney instead!")
+        ow.util:PrintWarning("Character " .. self:GetID() .. " tried to take negative amount, converted to positive number. Call :GiveMoney instead!")
     end
 
     character:SetMoney(character:GetMoney() - amount)
