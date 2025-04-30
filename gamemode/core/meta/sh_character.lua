@@ -30,3 +30,27 @@ end
 function CHAR:SetInventories(inventories)
     self.Inventories = inventories
 end
+
+function CHAR:GiveMoney(amount)
+    if ( !self:GetPlayer() ) then return end
+
+    local character = self:GetPlayer()
+    if ( amount < 0 ) then
+        amount = math.abs(amount)
+        ow.util:PrintWarning("Character " .. self:GetID() .. " tried to give negative money, converted to positive number. use :TakeMoney instead!")
+    end
+
+    character:SetMoney(character:GetMoney() + amount)
+end
+
+function CHAR:TakeMoney(amount)
+    if ( !self:GetPlayer() ) then return end
+
+    local character = self:GetPlayer()
+    if ( amount < 0 ) then
+        amount = math.abs(amount)
+        ow.util:PrintWarning("Character " .. self:GetID() .. " tried to give negative money, converted to positive number. use :TakeMoney instead!")
+    end
+
+    character:SetMoney(character:GetMoney() - amount)
+end
