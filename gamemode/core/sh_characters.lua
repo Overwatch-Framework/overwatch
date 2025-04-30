@@ -158,3 +158,9 @@ ow.character:RegisterVariable("class", {
     Field = "class",
     Default = 0
 })
+
+ow.character:RegisterVariable("flags", {
+    Type = ow.type.string,
+    Field = "flags",
+    Default = "",
+})

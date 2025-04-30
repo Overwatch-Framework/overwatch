@@ -1,8 +1,8 @@
 ow.flag = ow.flag or {}
 ow.flag.stored = {}
 
-function ow.flag:Register(flagChar, giveFunction, takeFunction)
-    if ( flagChar == nil or !isstring(flagChar) ) then
+function ow.flag:Register(flagChar, description, callback)
+    if ( !isstring(flagChar) or #flagChar != 1 ) then
         ow.util:PrintError("Attempted to register a flag without a flag character!")
         return false
     end
@@ -13,11 +13,12 @@ function ow.flag:Register(flagChar, giveFunction, takeFunction)
     end
 
     self.stored[flagChar] = {
-        OnGive = giveFunction or nil,
-        OnTake = takeFunction or nil
+        description = description or "No description provided",
+        callback = callback or nil
     }
 
-    hook.Run("OnFlagRegistered", flagChar, giveFunction, takeFunction)
+    hook.Run("OnFlagRegistered", flagChar, callback)
+    return true
 end
 
 function ow.flag:Get(flagChar)
