@@ -77,15 +77,15 @@ local function GetViewModelBob(pos, ang)
 
     local ply = ow.localClient
     local ft = FrameTime()
-    local time = ft * 16
+    local time = ft * 4
 
-    Multiplier = ow.ease:Lerp("InExpo", time, Multiplier, ply:IsSprinting() and swayMultSprint or swayMult)
+    Multiplier = Lerp(time * 50, Multiplier, ply:IsSprinting() and swayMultSprint or swayMult)
 
     local velocityangle = ply:GetVelocity()
     local v = velocityangle:Length()
-    v = math.Clamp(v, 0, 250)
+    v = math.Clamp(v, 0, 500)
     ViewModelBobVelocity = math.Approach(ViewModelBobVelocity, v, ft * 10000)
-    local d = math.Clamp(ViewModelBobVelocity / 250, 0, 1)
+    local d = math.Clamp(ViewModelBobVelocity / 500, 0, 1)
 
     if ( ply:OnGround() and ply:GetMoveType() != MOVETYPE_NOCLIP ) then
         ViewModelNotOnGround = math.Approach(ViewModelNotOnGround, 0, ft / 0.1)
@@ -93,57 +93,57 @@ local function GetViewModelBob(pos, ang)
         ViewModelNotOnGround = math.Approach(ViewModelNotOnGround, 1, ft / 0.1)
     end
 
-    local amount = math.Clamp(math.ease.InExpo(math.Clamp(v, 0, 250) / 250), 0, 1)
+    local amount = 0.1
 
-    d = d * ow.ease:Lerp("InExpo", amount, 1, 0.03) * ow.ease:Lerp("InExpo", ts, 1, 1.5)
+    d = d * Lerp(amount, 1, 0.03) * Lerp(ts, 1, 1.5)
     mag = d * 2
-    mag = mag * ow.ease:Lerp("InExpo", ts, 1, 2)
-    step = ow.ease:Lerp("InExpo", time, step, 10)
+    mag = mag * Lerp(ts, 1, 2)
+    step = Lerp(time, step, 12)
 
     local sidemove = (ply:GetVelocity():Dot(ply:EyeAngles():Right()) / ply:GetMaxSpeed()) * 4 * (1.5-amount)
-    SideMove = ow.ease:Lerp("InExpo", math.Clamp(ft * 8, 0, 1), SideMove, sidemove)
+    SideMove = Lerp(math.Clamp(ft * 8, 0, 1), SideMove, sidemove)
 
-    CrouchMultiplier = ow.ease:Lerp("InExpo", time, CrouchMultiplier, 1)
+    CrouchMultiplier = Lerp(time, CrouchMultiplier, 1)
     if ( ply:Crouching() ) then
-        CrouchMultiplier = ow.ease:Lerp("InExpo", time, CrouchMultiplier, 3.5 + amount * 10)
-        step = ow.ease:Lerp("InExpo", time, step, 6)
+        CrouchMultiplier = Lerp(time, CrouchMultiplier, 3.5 + amount * 10)
+        step = Lerp(time, step, 8)
     end
 
-    local jumpmove = math.Clamp(math.ease.InExpo(math.Clamp(velocityangle.z, -150, 0) / -150) * 0.5 + math.ease.InExpo(math.Clamp(velocityangle.z, 0, 350) / 350) * -50, -4, 2.5) * 0.5
-    JumpMove = ow.ease:Lerp("InExpo", math.Clamp(ft * 8, 0, 1), JumpMove, jumpmove)
-    local smoothjumpmove2 = math.Clamp(JumpMove, -0.3, 0.01) * ( 1.5 - amount )
+    local jumpmove = math.Clamp(math.ease.InExpo(math.Clamp(velocityangle.z, -150, 0) / -150) / 2 + math.ease.InExpo(math.Clamp(velocityangle.z, 0, 500) / 500) * -50, -4, 2.5) / 2
+    JumpMove = Lerp(math.Clamp(ft * 8, 0, 1), JumpMove, jumpmove)
+    local smoothjumpmove2 = math.Clamp(JumpMove, -0.3, 0.01) * (1.5 - amount)
 
     if ( ply:IsSprinting() ) then
-        SprintInertia = ow.ease:Lerp("InExpo", time, SprintInertia, 1)
-        WalkInertia = ow.ease:Lerp("InExpo", time, WalkInertia, 0)
+        SprintInertia = Lerp(ft * 2, SprintInertia, 1)
+        WalkInertia = Lerp(ft * 2, WalkInertia, 0)
     else
-        SprintInertia = ow.ease:Lerp("InExpo", time, SprintInertia, 0)
-        WalkInertia = ow.ease:Lerp("InExpo", time, WalkInertia, 1)
+        SprintInertia = Lerp(ft * 2, SprintInertia, 0)
+        WalkInertia = Lerp(ft * 2, WalkInertia, 1)
     end
 
     if ( SprintInertia > 0 ) then
         SprintMultiplier = Multiplier * SprintInertia
-        pos = pos - (ang:Up() * math.sin(BobCT * step) * 0.45 * ((math.sin(BobCT * 3.515) * 0.2) + 1) * mag * SprintMultiplier)
-        pos = pos + (ang:Forward() * math.sin(BobCT * step * 0.3) * 0.11 * ((math.sin(BobCT * 2) * ts * 1.25) + 1) * ((math.sin(BobCT * 0.615) * 0.2) + 2) * mag * SprintMultiplier)
-        pos = pos + (ang:Right() * (math.sin(BobCT * step * 0.5) + (math.cos(BobCT * step * 0.5))) * 0.55 * mag * SprintMultiplier)
-        ang:RotateAroundAxis(ang:Forward(), math.sin(BobCT * step * 0.5) * ((math.sin(BobCT * 6.151) * 0.2) + 1) * 9 * d * SprintMultiplier + SideMove * 1.5)
-        ang:RotateAroundAxis(ang:Right(), math.sin(BobCT * step * 0.12) * ((math.sin(BobCT * 1.521) * 0.2) + 1) * 1 * d * SprintMultiplier)
-        ang:RotateAroundAxis(ang:Up(), math.sin(BobCT * step * 0.5) * ((math.sin(BobCT * 1.521) * 0.2) + 1) * 6 * d * SprintMultiplier)
+        pos = pos - (ang:Up() * math.sin(BobCT * step) * 0.45 * ((math.sin(BobCT * 3.515) / 6) + 1) * mag * SprintMultiplier)
+        pos = pos + (ang:Forward() * math.sin(BobCT * step / 3) * 0.11 * ((math.sin(BobCT * 2) * ts * 1.25) + 1) * ((math.sin(BobCT * 0.615) / 6) + 2) * mag * SprintMultiplier)
+        pos = pos + (ang:Right() * (math.sin(BobCT * step / 2) + (math.cos(BobCT * step / 2))) * 0.55 * mag * SprintMultiplier)
+        ang:RotateAroundAxis(ang:Forward(), math.sin(BobCT * step / 2) * ((math.sin(BobCT * 6.151) / 6) + 1) * 9 * d * SprintMultiplier + SideMove * 1.5)
+        ang:RotateAroundAxis(ang:Right(), math.sin(BobCT * step * 0.12) * ((math.sin(BobCT * 1.521) / 6) + 1) * 1 * d * SprintMultiplier)
+        ang:RotateAroundAxis(ang:Up(), math.sin(BobCT * step / 2) * ((math.sin(BobCT * 1.521) / 6) + 1) * 6 * d * SprintMultiplier)
         ang:RotateAroundAxis(ang:Right(), smoothjumpmove2 * 5)
     end
 
     if ( WalkInertia > 0 ) then
         WalkMultiplier = Multiplier * WalkInertia
-        pos = pos - (ang:Up() * math.sin(BobCT * step) * 0.1 * ((math.sin(BobCT * 3.515) * 0.2) + 2) * mag * CrouchMultiplier * WalkMultiplier) - (ang:Up() * SideMove * -0.05) - (ang:Up() * smoothjumpmove2 * 0.2)
-        pos = pos + (ang:Forward() * math.sin(BobCT * step * 0.3) * 0.11 * ((math.sin(BobCT * 2) * ts * 1.25) + 1) * ((math.sin(BobCT * 0.615) * 0.2) + 1) * mag * WalkMultiplier)
-        pos = pos + (ang:Right() * (math.sin(BobCT * step * 0.5) + (math.cos(BobCT * step * 0.5))) * 0.55 * mag * WalkMultiplier)
-        ang:RotateAroundAxis(ang:Forward(), math.sin(BobCT * step * 0.5) * ((math.sin(BobCT * 6.151) * 0.2) + 1) * 5 * d * WalkMultiplier + SideMove)
-        ang:RotateAroundAxis(ang:Right(), math.sin(BobCT * step * 0.12) * ((math.sin(BobCT * 1.521) * 0.2) + 1) * 0.1 * d * WalkMultiplier)
+        pos = pos - (ang:Up() * math.sin(BobCT * step) * 0.1 * ((math.sin(BobCT * 3.515) / 6) + 2) * mag * CrouchMultiplier * WalkMultiplier) - (ang:Up() * SideMove * -0.05) - (ang:Up() * smoothjumpmove2 / 6)
+        pos = pos + (ang:Forward() * math.sin(BobCT * step / 3) * 0.11 * ((math.sin(BobCT * 2) * ts * 1.25) + 1) * ((math.sin(BobCT * 0.615) / 6) + 1) * mag * WalkMultiplier)
+        pos = pos + (ang:Right() * (math.sin(BobCT * step / 2) + (math.cos(BobCT * step / 2))) * 0.55 * mag * WalkMultiplier)
+        ang:RotateAroundAxis(ang:Forward(), math.sin(BobCT * step / 2) * ((math.sin(BobCT * 6.151) / 6) + 1) * 5 * d * WalkMultiplier + SideMove)
+        ang:RotateAroundAxis(ang:Right(), math.sin(BobCT * step * 0.12) * ((math.sin(BobCT * 1.521) / 6) + 1) * 0.1 * d * WalkMultiplier)
         ang:RotateAroundAxis(ang:Right(), smoothjumpmove2 * 5)
     end
 
-    local steprate = ow.ease:Lerp("InExpo", d, 1, 2.75)
-    steprate = ow.ease:Lerp("InExpo", ViewModelNotOnGround, steprate, 0.75)
+    local steprate = Lerp(d, 1, 2.75)
+    steprate = Lerp(ViewModelNotOnGround, steprate, 0.75)
 
     if ( IsFirstTimePredicted() or game.SinglePlayer() ) then
         BobCT = BobCT + ( ft * steprate )
