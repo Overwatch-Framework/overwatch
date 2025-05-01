@@ -43,10 +43,10 @@ function ow.inventory:CreateObject(inventoryID, data)
 
     local inventory = setmetatable({}, self.meta)
     inventory.ID = inventoryID
-    inventory.CharacterID = tonumber(data.CharacterID) or data.character_id or 0
-    inventory.Receivers = data.Receivers or data.receivers or {}
+    inventory.CharacterID = tonumber(data.CharacterID) or tonumber(data.character_id) or 0
+    inventory.Receivers = data.Receivers or util.JSONToTable(data.receivers or "[]") or {}
     inventory.Name = data.Name or data.name or "Inventory"
-    inventory.MaxWeight = tonumber(data.MaxWeight) or data.max_weight or ow.config:Get("inventory.maxweight", 20)
+    inventory.MaxWeight = tonumber(data.MaxWeight) or tonumber(data.max_weight) or ow.config:Get("inventory.maxweight", 20)
     inventory.Items = data.Items or util.JSONToTable(data.items or "[]") or {}
     inventory.Data = data.Data or util.JSONToTable(data.data or "[]") or {}
 
