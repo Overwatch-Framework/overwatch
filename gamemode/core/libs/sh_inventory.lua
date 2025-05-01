@@ -47,8 +47,8 @@ function ow.inventory:CreateObject(inventoryID, data)
     inventory.Receivers = data.Receivers or data.receivers or {}
     inventory.Name = data.Name or data.name or "Inventory"
     inventory.MaxWeight = tonumber(data.MaxWeight) or data.max_weight or ow.config:Get("inventory.maxweight", 20)
-    inventory.Items = data.Items or util.JSONToTable(data.items) or {}
-    inventory.Data = data.Data or util.JSONToTable(data.data) or {}
+    inventory.Items = data.Items or util.JSONToTable(data.items or "[]") or {}
+    inventory.Data = data.Data or util.JSONToTable(data.data or "[]") or {}
 
     self.stored[inventoryID] = inventory
 

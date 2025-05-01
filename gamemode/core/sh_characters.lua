@@ -10,9 +10,15 @@ ow.character:RegisterVariable("schema", {
     Default = "overwatch"
 })
 
+ow.character:RegisterVariable("inventories", {
+    Type = ow.type.string,
+    Field = "inventories",
+    Default = "[]"
+})
+
 ow.character:RegisterVariable("data", {
     Type = ow.type.string,
-    Field = "schema",
+    Field = "data",
     Default = "[]"
 })
 
