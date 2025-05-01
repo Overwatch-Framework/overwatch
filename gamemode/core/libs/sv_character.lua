@@ -26,38 +26,40 @@ function ow.character:Create(ply, query)
     insertQuery.play_time = 0
     insertQuery.last_played = os.time()
 
-    local id
+    local characterID
     ow.sqlite:Insert("ow_characters", insertQuery, function(result)
         if ( !result ) then
             ErrorNoHalt("Failed to insert character into database for player " .. tostring(ply) .. "\n")
             return false
         end
 
-        id = result
+        characterID = tonumber(result)
     end)
 
-    if ( !id ) then
+    if ( !characterID ) then
         ErrorNoHalt("Failed to create character: " .. query.name .. "\n")
         return false
     end
 
-    local character = self:CreateObject(id, insertQuery, ply)
+    local character = self:CreateObject(characterID, insertQuery, ply)
     if ( !character ) then
-        ErrorNoHalt("Failed to create character object for ID " .. id .. " for player " .. tostring(ply) .. "\n")
+        ErrorNoHalt("Failed to create character object for ID " .. characterID .. " for player " .. tostring(ply) .. "\n")
         return false
     end
 
     local plyTable = ply:GetTable()
     plyTable.owCharacters = plyTable.owCharacters or {}
-    plyTable.owCharacters[id] = character
+    plyTable.owCharacters[characterID] = character
 
-    self.stored[id] = character
+    self.stored[characterID] = character
 
     local compressed = util.Compress(util.TableToJSON(character))
 
     net.Start("ow.character.cache")
         net.WriteData(compressed, #compressed)
     net.Send(ply)
+
+    ow.inventory:Register({characterID = characterID})
 
     hook.Run("PlayerCreatedCharacter", ply, character, query)
 
@@ -115,10 +117,7 @@ function ow.character:Load(ply, characterID)
         ply:SetTeam(character:GetFaction())
         ply:Spawn()
 
-        -- Cache the characters' inventories
-        for _, inventoryID in ipairs(character:GetInventories()) do
-            ow.inventory:Cache(ply, inventoryID)
-        end
+        ow.inventory:CacheAll(characterID)
 
         hook.Run("PlayerLoadedCharacter", ply, character, currentCharacter)
 

@@ -37,9 +37,9 @@ function ow.inventory:Register(data)
 
     self.stored[id] = inventory
 
-    local result = ow.sqlite:Select("ow_characters", "id = " .. data.characterID)
+    local result = ow.sqlite:Select("ow_characters", nil, "id = " .. data.characterID)
     if ( result ) then
-        local inventories = util.JSONToTable(result.inventories) or {}
+        local inventories = util.JSONToTable(result.inventories or "[]") or {}
         if ( !table.HasValue(inventories, id) ) then
             table.insert(inventories, id)
         end
@@ -55,7 +55,7 @@ function ow.inventory:Register(data)
         table.insert(receivers, owner)
     end
 
-    for k, v in pairs(inventory.receivers) do
+    for k, v in pairs(inventory.receivers or {}) do
         local receiver = ow.character:GetPlayerByCharacter(v)
         if ( IsValid(receiver) ) then
             table.insert(receivers, receiver)
@@ -141,6 +141,24 @@ function ow.inventory:Cache(ply, inventoryID)
     net.Start("ow.inventory.cache")
         net.WriteTable(inventory)
     net.Send(ply)
+end
+
+--- Caches all inventories that the character owns
+-- @realm server
+-- @param characterID The ID of the character to cache inventories for
+function ow.inventory:CacheAll(characterID)
+    if ( !characterID ) then return end
+
+    local result = ow.sqlite:Select("ow_characters", nil, "id = " .. characterID)
+    if ( !result ) then return end
+
+    result = result[1]
+    if ( !result ) then return end
+
+    local inventories = util.JSONToTable(result.inventories) or {}
+    for k, v in pairs(inventories) do
+        self:Cache(ow.character:GetPlayerByCharacter(characterID), v)
+    end
 end
 
 function ow.inventory:PerformAction(item, action) -- prob needs more args
