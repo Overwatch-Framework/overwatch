@@ -48,7 +48,6 @@ ow.ease.list = {
 -- @return The interpolated value based on the easing function.
 function ow.ease:Lerp(easeType, time, startValue, endValue)
     local easeFunc = ow.ease.list[easeType]
-
     if ( !easeFunc ) then
         error("[easeLerp] Invalid easing type: " .. tostring(easeType))
     end
