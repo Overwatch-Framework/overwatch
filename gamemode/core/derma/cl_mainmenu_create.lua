@@ -12,6 +12,7 @@ function PANEL:Init()
     self:SetVisible(false)
 
     self.currentCreatePage = 0
+    self:ResetPayload()
 end
 
 function PANEL:ResetPayload()
@@ -43,7 +44,7 @@ function PANEL:GetPayload(key)
     return self.currentCreatePayload[key]
 end
 
-function PANEL:PopulateFactionSelect()
+function PANEL:Populate()
     local parent = self:GetParent()
     parent:SetGradientLeftTarget(0)
     parent:SetGradientRightTarget(0)
@@ -56,6 +57,21 @@ function PANEL:PopulateFactionSelect()
     self:Clear()
     self:SetVisible(true)
 
+    local availableFactions = 0
+    for k, v in ipairs(ow.faction:GetAll()) do
+        if ( ow.faction:CanSwitchTo(ow.localClient, v:GetID()) ) then
+            availableFactions = availableFactions + 1
+        end
+    end
+
+    if ( availableFactions < 1 or self:GetPayload("faction") ) then
+        self:PopulateCreateCharacter()
+    else
+        self:PopulateFactionSelect()
+    end
+end
+
+function PANEL:PopulateFactionSelect()
     local title = self:Add("ow.text")
     title:Dock(TOP)
     title:DockMargin(padding, padding, padding, 0)
@@ -76,7 +92,7 @@ function PANEL:PopulateFactionSelect()
 
         self:Clear()
         self:SetVisible(false)
-        parent:Populate()
+        self:GetParent():Populate()
     end
 
     local factionList = self:Add("DHorizontalScroller")
@@ -140,17 +156,6 @@ function PANEL:PopulateFactionSelect()
 end
 
 function PANEL:PopulateCreateCharacter()
-    local parent = self:GetParent()
-    parent:SetGradientLeftTarget(0)
-    parent:SetGradientRightTarget(0)
-    parent:SetGradientTopTarget(1)
-    parent:SetGradientBottomTarget(1)
-    parent.container:Clear()
-    parent.container:SetVisible(false)
-
-    self:Clear()
-    self:SetVisible(true)
-
     local title = self:Add("ow.text")
     title:Dock(TOP)
     title:DockMargin(padding, padding, padding, 0)
@@ -180,7 +185,7 @@ function PANEL:PopulateCreateCharacter()
             else
                 self.currentCreatePage = 0
                 self:ResetPayload()
-                parent:Populate()
+                self:GetParent():Populate()
                 self:Clear()
             end
         else
