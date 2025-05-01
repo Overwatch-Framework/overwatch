@@ -192,7 +192,7 @@ function PANEL:PlayMenuTrack()
     if ( !isstring(track) or #track == 0 ) then return end
 
     sound.PlayFile("sound/" .. track, "noplay noblock", function(station, errorID, errorName)
-        if ( IsValid(station) ) then
+        if ( IsValid(station) and IsValid(self) ) then
             station:Play()
             station:SetVolume(ow.option:Get("mainmenu.music.volume", 75) / 100)
             station:EnableLooping(ow.option:Get("mainmenu.music.loop", true))
