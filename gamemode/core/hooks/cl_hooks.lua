@@ -171,9 +171,11 @@ function GM:HUDPaint()
         if ( character ) then
             local name = character:GetName()
             local charModel = character:GetModel()
-            local inventories = character:GetInventories()
-            local inventoryCount = inventories
-            local inventoryText = "Inventories: " .. inventoryCount
+            local inventories = ow.inventory:GetByCharacterID(character:GetID()) or {}
+            for k, v in pairs(inventories) do
+                inventories[k] = tostring(v)
+            end
+            local inventoryText = "Inventories: " .. table.concat(inventories, ", ")
 
             draw.SimpleText("[CHARACTER INFO]", "ow.fonts.developer", x, y + 16 * 7, green, TEXT_ALIGN_LEFT)
             draw.SimpleText("Character: " .. tostring(character), "ow.fonts.developer", x, y + 16 * 8, green, TEXT_ALIGN_LEFT)
