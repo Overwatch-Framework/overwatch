@@ -34,9 +34,6 @@ net.Receive("ow.config.set", function(len)
     local key = net.ReadString()
     local value = net.ReadType()
 
-    local stored = ow.config.stored[key]
-    if ( !istable(stored) ) then return end
-
     ow.config:Set(key, value)
 end)
 
