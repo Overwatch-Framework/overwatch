@@ -197,9 +197,6 @@ net.Receive("ow.inventory.cache", function(len)
     local inventoryData = net.ReadTable()
     if ( !istable(inventoryData) ) then return end
 
-    local bResult = hook.Run("PreInventoryCached", inventoryData)
-    if ( bResult == false ) then return end
-
     local inventoryID = inventoryData.ID
     if ( !inventoryID ) then return end
 
@@ -225,6 +222,24 @@ net.Receive("ow.inventory.cache", function(len)
     PrintTable(inventory)
 
     print("Inventory " .. inventoryID .. " cached!")
+end)
+
+net.Receive("ow.item.cache", function(len)
+    local characterID = net.ReadUInt(32)
+    if ( !characterID ) then return end
+
+    local items = net.ReadTable()
+    if ( !istable(items) ) then return end
+
+    for k, v in ipairs(items) do
+        local uniqueID = v.UniqueID
+        if ( ow.item.stored[uniqueID] ) then
+            ow.item.instances[tonumber(v.ID)] = ow.item:CreateObject(v)
+            print("Item " .. uniqueID .. " cached with ID " .. v.ID .. "!")
+        else
+            print("Item " .. uniqueID .. " not found in stored items!")
+        end
+    end
 end)
 
 net.Receive("ow.entity.setDataVariable", function(len)

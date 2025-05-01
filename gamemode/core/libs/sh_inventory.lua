@@ -36,19 +36,62 @@ function ow.inventory:GetByCharacterID(characterID)
     return inventories
 end
 
+local function ConvertTable(tbl)
+    if ( !tbl ) then return {} end
+
+    if ( isstring(tbl) ) then
+        if ( tbl == "" or tbl == "[]" ) then return {} end
+
+        tbl = util.JSONToTable(tbl) or {}
+    end
+
+    return tbl
+end
+
 function ow.inventory:CreateObject(inventoryID, data)
     if ( !inventoryID or !data ) then return end
 
     inventoryID = tonumber(inventoryID)
 
+    local id = tonumber(data.ID) or tonumber(data.id) or 0
+    local characterID = tonumber(data.CharacterID) or tonumber(data.character_id) or 0
+    local receivers
+    if ( data.Receivers ) then
+        receivers = ConvertTable(data.Receivers)
+    elseif ( data.receivers ) then
+        receivers = ConvertTable(data.receivers)
+    else
+        receivers = {}
+    end
+
+    local name = data.Name or data.name or "Inventory"
+    local maxWeight = tonumber(data.MaxWeight) or tonumber(data.max_weight) or ow.config:Get("inventory.maxweight", 20)
+    local items
+    if ( data.Items ) then
+        items = ConvertTable(data.Items)
+    elseif ( data.items ) then
+        items = ConvertTable(data.items)
+    else
+        items = {}
+    end
+
+    local inventoryData
+    if ( data.Data ) then
+        inventoryData = ConvertTable(data.Data)
+    elseif ( data.data ) then
+        inventoryData = ConvertTable(data.data)
+    else
+        inventoryData = {}
+    end
+
     local inventory = setmetatable({}, self.meta)
-    inventory.ID = inventoryID
-    inventory.CharacterID = tonumber(data.CharacterID) or tonumber(data.character_id) or 0
-    inventory.Receivers = data.Receivers or util.JSONToTable(data.receivers or "[]") or {}
-    inventory.Name = data.Name or data.name or "Inventory"
-    inventory.MaxWeight = tonumber(data.MaxWeight) or tonumber(data.max_weight) or ow.config:Get("inventory.maxweight", 20)
-    inventory.Items = data.Items or util.JSONToTable(data.items or "[]") or {}
-    inventory.Data = data.Data or util.JSONToTable(data.data or "[]") or {}
+    inventory.ID = id
+    inventory.CharacterID = characterID
+    inventory.Receivers = receivers
+    inventory.Name = name
+    inventory.MaxWeight = maxWeight
+    inventory.Items = items
+    inventory.Data = inventoryData
 
     self.stored[inventoryID] = inventory
 

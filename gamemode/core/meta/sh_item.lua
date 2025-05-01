@@ -12,14 +12,14 @@ function ITEM:__eq(other)
     if ( isstring(other) ) then
         return self.Name == other
     elseif ( isnumber(other) ) then
-        return self.ID == other
+        return tonumber(self.ID) == other
     end
 
     return false
 end
 
 function ITEM:GetID()
-    return self.ID or 0
+    return tonumber(self.ID) or 0
 end
 
 function ITEM:GetUniqueID()
@@ -35,7 +35,7 @@ function ITEM:GetDescription()
 end
 
 function ITEM:GetWeight()
-    return self.Weight or 0
+    return tonumber(self.Weight) or 0
 end
 
 function ITEM:GetCategory()
@@ -51,15 +51,15 @@ function ITEM:GetMaterial()
 end
 
 function ITEM:GetSkin()
-    return self.Skin or 0
+    return tonumber(self.Skin) or 0
 end
 
 function ITEM:GetInventory()
-    return self.InventoryID or 0
+    return tonumber(self.InventoryID) or 0
 end
 
 function ITEM:GetOwner()
-    return self.CharacterID or 0
+    return tonumber(self.CharacterID) or 0
 end
 
 function ITEM:GetData(key, default)

@@ -87,15 +87,23 @@ function PANEL:SetInventory(id)
     label:SetFont("ow.fonts.large")
     label:SetText(weight .. "kg / " .. maxWeight .. "kg")
     label:SetTextColor(color_white)
+    label:SetContentAlignment(5)
 
     local items = inventory:GetItems()
-    if ( #items == 0 ) then return end
+    if ( #items == 0 ) then 
+        local label = self.container:Add("ow.text")
+        label:Dock(TOP)
+        label:SetFont("ow.fonts.large")
+        label:SetText("inventory.empty")
+        label:SetContentAlignment(5)
+
+        return
+    end
 
     for k, v in pairs(items) do
         local itemPanel = self.container:Add("ow.item")
         itemPanel:SetItem(v)
         itemPanel:Dock(TOP)
-        itemPanel:DockMargin(0, 0, 0, padding / 8)
     end
 end
 

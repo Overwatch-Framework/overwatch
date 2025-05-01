@@ -18,12 +18,19 @@ function ow.item:Add(characterID, inventoryID, uniqueID, data, callback)
         inventory_id = inventoryID,
         character_id = characterID,
         unique_id = uniqueID,
-        data = util.Compress(util.TableToJSON(data))
+        data = util.TableToJSON(data)
     }, function(result)
-        print("ow.item:Add", result)
         if ( !result ) then return end
 
-        local item = self:CreateObject(result, uniqueID, data)
+        result = tonumber(result) or 0
+
+        local item = self:CreateObject({
+            ID = result,
+            UniqueID = uniqueID,
+            Data = data,
+            InventoryID = inventoryID,
+        })
+
         if ( !item ) then return end
 
         self.instances[result] = item
@@ -54,6 +61,39 @@ function ow.item:Add(characterID, inventoryID, uniqueID, data, callback)
     end)
 
     hook.Run("OnItemAdded", item, characterID, uniqueID, data)
+
+    return true
+end
+
+--- Cache all the items from a character's inventory.
+-- @realm server
+-- @param number characterID The ID of the character.
+-- @return boolean True if the items were cached successfully, false otherwise.
+function ow.item:Cache(characterID)
+    if ( !ow.character:Get(characterID) ) then print("Character " .. characterID .. " not found!") return false end
+
+    local items = ow.sqlite:Select("ow_items", nil, "character_id = " .. characterID)
+    if ( !items ) then print("No items found for character " .. characterID) return false end
+
+    for k, v in pairs(items) do
+        local uniqueID = v.unique_id
+        if ( self.stored[uniqueID] ) then
+            self.instances[tonumber(v.id)] = self:CreateObject(v)
+        end
+    end
+
+    -- All instances for this characterID
+    local instances = {}
+    for k, v in pairs(self.instances) do
+        if ( tonumber(v:GetOwner()) == characterID ) then
+            table.insert(instances, v)
+        end
+    end
+
+    net.Start("ow.item.cache")
+        net.WriteUInt(characterID, 32)
+        net.WriteTable(instances)
+    net.Send(ow.character:GetPlayerByCharacter(characterID))
 
     return true
 end

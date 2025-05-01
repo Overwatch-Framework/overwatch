@@ -71,24 +71,48 @@ function ow.item:GetInstances()
     return self.instances
 end
 
-function ow.item:CreateObject(itemID, uniqueID, data)
-    if ( !itemID or !uniqueID or !self.stored[uniqueID] ) then return end
-    if ( self.instances[itemID] ) then return self.instances[itemID] end
+local function ConvertTable(tbl)
+    if ( !tbl ) then return {} end
+
+    if ( isstring(tbl) ) then
+        if ( tbl == "" or tbl == "[]" ) then return {} end
+
+        tbl = util.JSONToTable(tbl) or {}
+    end
+
+    return tbl
+end
+
+function ow.item:CreateObject(data)
+    if ( !data ) then return end
+
+    local id = tonumber(data.ID) or tonumber(data.id) or 0
+    local uniqueID = data.UniqueID or data.unique_id or "Unknown"
+    local characterID = tonumber(data.CharacterID) or tonumber(data.character_id) or 0
+    local inventoryID = tonumber(data.InventoryID) or tonumber(data.inventory_id) or 0
+    local itemData
+    if ( data.Data ) then
+        itemData = ConvertTable(data.Data)
+    elseif ( data.data ) then
+        itemData = ConvertTable(data.data)
+    else
+        itemData = {}
+    end
 
     local item = setmetatable({}, self.meta)
-    item.ID = itemID
-    item.UniqueID = uniqueID
-    item.Data = data or {}
-
-    local itemData = self.stored[uniqueID]
-
-    for k, v in pairs(itemData) do
-        if ( isfunction(v) ) then
-            item[k] = v(item)
+    for k, v in pairs(self.stored[uniqueID] or {}) do
+        if ( k == "Functions" ) then
+            item[k] = nil
         else
             item[k] = v
         end
     end
+
+    item.ID = id
+    item.UniqueID = uniqueID
+    item.CharacterID = characterID
+    item.InventoryID = inventoryID
+    item.Data = itemData
 
     return item
 end
@@ -99,7 +123,13 @@ if ( CLIENT ) then
 
         if ( !data ) then data = {} end
 
-        local item = self:CreateObject(itemID, uniqueID, data)
+        local item = self:CreateObject({
+            ID = itemID,
+            UniqueID = uniqueID,
+            Data = data,
+            InventoryID = inventoryID,
+        })
+
         if ( !item ) then return end
 
         item.InventoryID = inventoryID

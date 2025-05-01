@@ -138,6 +138,18 @@ function ow.inventory:Cache(ply, inventoryID)
         end
     end
 
+    -- Search through the item database for this characterID and cache them
+    ow.item:Cache(characterID)
+
+    -- Update the item list in the inventory object
+    local itemIDs = {}
+    for k, v in pairs(ow.item.instances) do
+        if ( tonumber(v:GetOwner()) == characterID ) then
+            table.insert(itemIDs, v.ID)
+        end
+    end
+    inventory.Items = itemIDs
+
     net.Start("ow.inventory.cache")
         net.WriteTable(inventory)
     net.Send(ply)
