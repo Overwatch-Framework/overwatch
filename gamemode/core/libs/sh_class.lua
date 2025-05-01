@@ -12,8 +12,8 @@ ow.class.meta = {
     GetDescription = function(self)
         return self.Description or "No description available."
     end,
-    GetIndex = function(self)
-        return self.Index or 0
+    GetID = function(self)
+        return self.ID or 0
     end,
     GetUniqueID = function(self)
         return self.UniqueID or "unknown_class"
@@ -26,7 +26,7 @@ ow.class.meta = {
     end,
 
     __tostring = function(self)
-        return Format("Class #%i] %s (%s)", self.Index, self:GetName(), self:GetUniqueID())
+        return "class [" .. self:GetUniqueID() .. "][" .. self:GetID() .. "]"
     end,
     __eq = function(self, other)
         if ( isstring(other) ) then
@@ -34,11 +34,11 @@ ow.class.meta = {
         end
 
         if ( isnumber(other) ) then
-            return self.Index == other
+            return self:GetID() == other
         end
 
         if ( type(other) == "Player" ) then
-            return self.Index == other:GetFaction()
+            return self:GetID() == other:GetFaction()
         end
 
         return false
@@ -83,14 +83,14 @@ function ow.class:Register(classData)
     self.stored[CLASS.UniqueID] = CLASS
     self.instances[#self.instances + 1] = CLASS
 
-    CLASS.Index = #self.instances
+    CLASS.ID = #self.instances
 
     hook.Run("PostClassRegistered", CLASS)
 
     faction.Classes = faction.Classes or {}
     faction.Classes[#faction.Classes + 1] = CLASS
 
-    return CLASS.Index
+    return CLASS.ID
 end
 
 function ow.class:Get(identifier)

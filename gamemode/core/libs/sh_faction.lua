@@ -35,8 +35,8 @@ ow.faction.meta = {
     GetColor = function(self)
         return self.Color or color_white
     end,
-    GetIndex = function(self)
-        return self.Index or 0
+    GetID = function(self)
+        return self.ID or 0
     end,
     GetUniqueID = function(self)
         return self.UniqueID or "unknown_faction"
@@ -49,7 +49,7 @@ ow.faction.meta = {
     end,
 
     __tostring = function(self)
-        return Format("[Faction #%i] %s (%s)", self.Index, self:GetName(), self:GetUniqueID())
+        return "faction[" .. self:GetUniqueID() .. "][" .. self:GetID() .. "]"
     end,
     __eq = function(self, other)
         if ( isstring(other) ) then
@@ -57,11 +57,11 @@ ow.faction.meta = {
         end
 
         if ( isnumber(other) ) then
-            return self.Index == other
+            return self:Get() == other
         end
 
         if ( type(other) == "Player" ) then
-            return self.Index == other:GetFaction()
+            return self:Get() == other:GetFaction()
         end
 
         return false
@@ -97,12 +97,12 @@ function ow.faction:Register(factionData)
     self.stored[FACTION.UniqueID] = FACTION
     self.instances[#self.instances + 1] = FACTION
 
-    FACTION.Index = #self.instances
+    FACTION.ID = #self.instances
 
-    team.SetUp(FACTION.Index, FACTION.Name, FACTION.Color, false)
+    team.SetUp(FACTION.ID, FACTION.Name, FACTION.Color, false)
     hook.Run("PostFactionRegistered", FACTION)
 
-    return FACTION.Index
+    return FACTION.ID
 end
 
 function ow.faction:Get(identifier)
@@ -137,7 +137,7 @@ function ow.faction:CanSwitchTo(ply, factionID, oldFactionID)
     if ( oldFactionID ) then
         local oldFaction = self:Get(oldFactionID)
         if ( oldFaction ) then
-            if ( oldFaction.Index == faction.Index ) then return false end
+            if ( oldFaction.ID == faction.ID ) then return false end
 
             if ( oldFaction.CanLeave and !oldFaction:CanLeave(ply) ) then
                 return false
