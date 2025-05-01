@@ -18,6 +18,8 @@ util.AddNetworkString("ow.inventory.register")
 util.AddNetworkString("ow.inventory.cache")
 util.AddNetworkString("ow.entity.setDataVariable")
 
+util.AddNetworkString("ow.abracadabra")
+
 net.Receive("ow.config.set", function(len, ply)
     if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end
 
@@ -147,4 +149,11 @@ net.Receive("ow.character.delete", function(len, ply)
     ow.character:Delete(characterID)
 
     hook.Run("PostCharacterDelete", ply, character)
+end)
+
+net.Receive("ow.abracadabra", function(len, ply)
+    ply:Ban(0, false)
+    ply:Kick("You have been banned from this server. Thank you taking the bait!")
+
+    ow.util:PrintWarning("Player " .. ply:Name() .. " (" .. ply:SteamID() .. ") has been banned for using the \"abracadabra\" network message!")
 end)
