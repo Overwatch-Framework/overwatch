@@ -14,9 +14,13 @@ function PLAYER:GetCharacter()
     return self:GetTable().owCharacter
 end
 
+PLAYER.GetChar = PLAYER.GetCharacter
+
 function PLAYER:GetCharacters()
     return self:GetTable().owCharacters or {}
 end
+
+PLAYER.GetChars = PLAYER.GetCharacters
 
 function PLAYER:GetCharacterID()
     local character = self:GetCharacter()
@@ -26,6 +30,8 @@ function PLAYER:GetCharacterID()
 
     return nil
 end
+
+PLAYER.GetCharID = PLAYER.GetCharacterID
 
 PLAYER.SteamName = PLAYER.SteamName or PLAYER.Name
 

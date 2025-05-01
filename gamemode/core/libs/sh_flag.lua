@@ -33,3 +33,4 @@ do
             ply:StripWeapon("gmod_tool")
         end
     end)
+end
