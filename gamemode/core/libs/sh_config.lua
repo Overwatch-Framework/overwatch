@@ -17,6 +17,10 @@ function ow.config:Set(key, value, ply)
         return false
     end
 
+    if ( value == nil ) then
+        value = stored.Default
+    end
+
     if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
         ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
         return false
@@ -34,6 +38,10 @@ function ow.config:Set(key, value, ply)
 
     if ( isfunction(stored.OnChange) ) then
         stored:OnChange(value, oldValue, ply)
+    end
+
+    if ( SERVER ) then
+        self:Save()
     end
 
     return true

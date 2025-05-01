@@ -92,6 +92,8 @@ function ow.config:Reset()
         net.WriteData(compressed, #compressed)
     net.Broadcast()
 
+    self:Save()
+
     hook.Run("PostConfigReset")
 
     return true
