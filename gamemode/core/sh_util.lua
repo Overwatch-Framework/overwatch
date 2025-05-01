@@ -189,7 +189,7 @@ local clientMsgColour = Color(255, 241, 122, 200)
 function ow.util:Print(...)
     local args = self:PreparePackage(...)
 
-    MsgC(hook.Run("GetFrameworkColour"), "Overwatch >> ", SERVER and serverMsgColour or clientMsgColour, unpack(args))
+    MsgC(hook.Run("GetFrameworkColor"), "Overwatch >> ", SERVER and serverMsgColour or clientMsgColour, unpack(args))
 
     return args
 end
@@ -201,7 +201,7 @@ function ow.util:PrintError(...)
     local args = self:PreparePackage(...)
 
     local realmColor = SERVER and serverErrorColour or clientErrorColour
-    MsgC(realmColor, "[ERROR] ", hook.Run("GetFrameworkColour"), "Overwatch >> ", realmColor, unpack(args))
+    MsgC(realmColor, "[ERROR] ", hook.Run("GetFrameworkColor"), "Overwatch >> ", realmColor, unpack(args))
 
     return args
 end
@@ -213,7 +213,7 @@ local colorWarning = Color(255, 200, 120)
 function ow.util:PrintWarning(...)
     local args = self:PreparePackage(...)
 
-    MsgC(colorWarning, "[WARNING] ", hook.Run("GetFrameworkColour"), "Overwatch >> ", colorWarning, unpack(args))
+    MsgC(colorWarning, "[WARNING] ", hook.Run("GetFrameworkColor"), "Overwatch >> ", colorWarning, unpack(args))
 
     return args
 end

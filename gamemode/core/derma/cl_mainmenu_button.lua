@@ -161,7 +161,7 @@ function PANEL:OnCursorEntered()
     self:SetFont("ow.fonts.button.hover")
 
     self.heightTarget = self.baseHeight * 1.25
-    self.textColorTarget = hook.Run("GetSchemaColour")
+    self.textColorTarget = hook.Run("GetSchemaColor")
     self.textInsetTarget = {ScreenScale(8), 0}
 
     self.inertiaTarget = 1

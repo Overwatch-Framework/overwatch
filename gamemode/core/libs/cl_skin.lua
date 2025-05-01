@@ -25,7 +25,7 @@ local grayColor = Color(50, 50, 50, 150)
 function SKIN:PaintFrame(panel, width, height)
     ow.util:DrawBlur(panel)
 
-    draw.RoundedBox(0, 0, 0, width, height, hook.Run("GetFrameworkColour", panel) or grayColor)
+    draw.RoundedBox(0, 0, 0, width, height, hook.Run("GetFrameworkColor", panel) or grayColor)
     draw.RoundedBox(0, 0, 0, width, 24, lightGrayColorMoreTransparent)
 end
 
