@@ -61,7 +61,7 @@ function PANEL:Init()
 end
 
 function PANEL:SetText(text, bNoTranslate, bNoSizeToContents, bNoUppercase)
-    if ( !text or text == "" ) then return end
+    if ( !text ) then return end
 
     if ( !bNoTranslate ) then
         text = ow.localization:GetPhrase(text)
