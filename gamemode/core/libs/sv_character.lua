@@ -23,6 +23,8 @@ function ow.character:Create(ply, query)
 
     insertQuery.steamid = ply:SteamID64()
     insertQuery.schema = SCHEMA.Folder
+    insertQuery.play_time = 0
+    insertQuery.last_played = os.time()
 
     local id
     ow.sqlite:Insert("ow_characters", insertQuery, function(result)
@@ -145,7 +147,14 @@ function ow.character:Delete(characterID)
         plyTable.owCharacters[characterID] = nil
         plyTable.owCharacter = nil
 
-        -- TODO: Uh? Silent Kill? Open Main Menu? What do we do here?
+        ply:SetTeam(0)
+        ply:SetModel("models/player/kleiner.mdl")
+
+        ply:SetNoDraw(true)
+        ply:SetNotSolid(true)
+        ply:SetMoveType(MOVETYPE_NONE)
+
+        ply:KillSilent()
 
         net.Start("ow.character.delete")
             net.WriteUInt(characterID, 32)

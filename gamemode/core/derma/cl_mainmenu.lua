@@ -74,14 +74,26 @@ function PANEL:Init()
 end
 
 function PANEL:Populate()
+    -- Hide all other panels
+    self.createPanel:SetVisible(false)
+    self.selectPanel:SetVisible(false)
+    self.settingsPanel:SetVisible(false)
+
+    -- And clear them
+    self.createPanel:Clear()
+    self.selectPanel:Clear()
+    self.settingsPanel:Clear()
+
+    -- Set the gradients
     self:SetGradientLeftTarget(1)
     self:SetGradientRightTarget(0)
     self:SetGradientTopTarget(0)
     self:SetGradientBottomTarget(0)
     self:SetDimTarget(0)
 
-    self.container:Clear()
+    -- Set the container to be visible and clear it
     self.container:SetVisible(true)
+    self.container:Clear()
 
     local sideButtons = self.container:Add("EditablePanel")
     sideButtons:Dock(LEFT)

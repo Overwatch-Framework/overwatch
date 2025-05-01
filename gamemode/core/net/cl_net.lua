@@ -145,10 +145,10 @@ end)
 
 net.Receive("ow.character.delete", function(len)
     local characterID = net.ReadUInt(32)
-    if ( !isnumber(characterID) ) then return end
+    if ( !isnumber(characterID) ) then print("Failed to delete character " .. characterID .. "!") return end
 
     local character = ow.character.stored[characterID]
-    if ( !character ) then return end
+    if ( !character ) then print("Failed to delete character " .. characterID .. "!") return end
 
     ow.character.stored[characterID] = nil
 
@@ -159,6 +159,10 @@ net.Receive("ow.character.delete", function(len)
     end
 
     plyTable.owCharacter = nil
+
+    if ( IsValid(ow.gui.mainmenu) ) then
+        ow.gui.mainmenu:Populate()
+    end
 
     ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.color:Get("ui.success"))
 end)

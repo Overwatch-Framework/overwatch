@@ -146,8 +146,6 @@ function PANEL:PopulateDelete(characterID)
         net.Start("ow.character.delete")
             net.WriteUInt(characterID, 32)
         net.SendToServer()
-
-        self:Populate()
     end
 end
 

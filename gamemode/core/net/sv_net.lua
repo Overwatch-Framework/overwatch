@@ -135,10 +135,10 @@ end)
 
 net.Receive("ow.character.delete", function(len, ply)
     local characterID = net.ReadUInt(32)
-    if ( !characterID ) then return end
+    if ( !characterID ) then print("Invalid character ID!") return end
 
     local character = ow.character:Get(characterID)
-    if ( !character ) then return end
+    if ( !character ) then print("Character does not exist!") return end
 
     local bResult = hook.Run("PreCharacterDelete", ply, character)
     if ( bResult == false ) then return end
