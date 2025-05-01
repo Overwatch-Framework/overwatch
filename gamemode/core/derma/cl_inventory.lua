@@ -100,7 +100,14 @@ function PANEL:SetInventory(id)
         return
     end
 
-    local sortedItems = table.Copy(items)
+    local sortedItems = {}
+    for _, itemID in pairs(items) do
+        local item = ow.item:Get(itemID)
+        if ( item ) then
+            table.insert(sortedItems, itemID)
+        end
+    end
+
     local sortType = ow.option:Get("inventory.sort")
     table.sort(sortedItems, function(a, b)
         local itemA = ow.item:Get(a)
@@ -119,9 +126,9 @@ function PANEL:SetInventory(id)
         return false
     end)
 
-    for k, v in pairs(sortedItems) do
+    for _, itemData in pairs(sortedItems) do
         local itemPanel = self.container:Add("ow.item")
-        itemPanel:SetItem(v)
+        itemPanel:SetItem(itemData)
         itemPanel:Dock(TOP)
     end
 end
