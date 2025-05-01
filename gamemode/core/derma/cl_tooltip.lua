@@ -13,13 +13,13 @@ function PANEL:Init()
     self:SetMouseInputEnabled(false)
     self:SetPos(gui.MouseX(), gui.MouseY())
     self:SetAlpha(0)
-    self:AlphaTo(255, 0.2, 0)
     self:SetDrawOnTop(true)
 
     self.title = ""
     self.description = ""
     self.next = 0
     self.fading = false
+    self.alpha = 0
     self.panel = nil
 end
 
@@ -63,27 +63,28 @@ end
 
 function PANEL:Think()
     self:SetPos(gui.MouseX() + 16, gui.MouseY())
+    self:SetAlpha(self.alpha)
 
     if ( IsValid(self.panel) ) then
-        self.next = CurTime() + 0.1
+        self.next = nil
+        self.fading = false
         return
+    elseif ( !self.next ) then
+        self.next = CurTime() + 0.2
     end
 
     if ( self.next < CurTime() and !self.fading ) then
         self.fading = true
-        self:AlphaTo(0, 0.2, 0, function()
-            if ( IsValid(self) ) then
-                self:Remove()
-            end
-        end)
     end
 
-    if ( self:GetAlpha() == 0 ) then
+    if ( self:GetAlpha() <= 1 and self.fading ) then
         self:Remove()
     end
 end
 
 function PANEL:Paint(width, height)
+    self.alpha = Lerp(FrameTime() * 5, self.alpha, self.fading and 0 or 255)
+
     ow.util:DrawBlur(self)
     draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 200))
     local title = ow.localization:GetPhrase(self.title) or self.title

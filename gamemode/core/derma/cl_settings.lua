@@ -247,7 +247,12 @@ function PANEL:PopulateCategory(category)
             else
                 ow.gui.tooltip:SetText(v.Name, v.Description)
                 ow.gui.tooltip:SizeToContents()
-                ow.gui.tooltip:SetPanel(this)
+
+                timer.Simple(0, function()
+                    if ( IsValid(ow.gui.tooltip) ) then
+                        ow.gui.tooltip:SetPanel(this)
+                    end
+                end)
             end
         end
 
