@@ -111,7 +111,6 @@ function PANEL:PopulateFactionSelect()
         image:Dock(FILL)
         image:SetMouseInputEnabled(false)
         image:SetSize(factionButton:GetTall(), factionButton:GetTall())
-        --image:SetImage(v.Image or "gamepadui/chapter14")
         image.Paint = function(this, width, height)
             local imageHeight = height * 0.85
             imageHeight = math.Round(imageHeight)
@@ -131,9 +130,10 @@ function PANEL:PopulateFactionSelect()
             local textColor = factionButton:GetTextColor()
 
             draw.SimpleText(name, factionButton:IsHovered() and "ow.fonts.button.large.hover" or "ow.fonts.button.large", tinyPadding, imageHeight - boxHeight + boxHeightStatic / 2, textColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
-            --draw.SimpleText(description, "ow.fonts.button.small", tinyPadding, imageHeight - boxHeight + boxHeightStatic, ColorAlpha(textColor, 255 * inertia), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+
+            local textHeight = ow.util:GetTextHeight("ow.fonts.button.tiny") - 16
             for i = 1, #descriptionWrapped do
-                draw.SimpleText(descriptionWrapped[i], "ow.fonts.button.small", tinyPadding, imageHeight - boxHeight + boxHeightStatic + (i - 1) * ScreenScale(8), ColorAlpha(textColor, 255 * inertia), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+                draw.SimpleText(descriptionWrapped[i], "ow.fonts.button.tiny", tinyPadding, imageHeight - boxHeight + boxHeightStatic + (i - 1) * textHeight, ColorAlpha(textColor, 255 * inertia), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
         end
     end
