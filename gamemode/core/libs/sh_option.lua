@@ -25,8 +25,6 @@ function ow.option:SetDefault(key, default)
 end
 
 if ( CLIENT ) then
-    ow.option.localClient = ow.option.localClient or {}
-
     function ow.option:Load()
         hook.Run("PreOptionsLoad")
 
