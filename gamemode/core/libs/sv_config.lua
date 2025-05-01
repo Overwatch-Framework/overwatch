@@ -25,10 +25,12 @@ function ow.config:Set(key, value, ply)
     local oldValue = stored.Value or stored.Default
     stored.Value = value
 
-    net.Start("ow.config.set")
-        net.WriteString(key)
-        net.WriteType(value)
-    net.Broadcast()
+    if ( !stored.bNoNetworking ) then
+        net.Start("ow.config.set")
+            net.WriteString(key)
+            net.WriteType(value)
+        net.Broadcast()
+    end
 
     if ( isfunction(stored.OnChange) ) then
         stored:OnChange(value, oldValue, ply)
@@ -47,20 +49,26 @@ function ow.config:Load()
 
     hook.Run("PreConfigLoad", config)
 
-    for k, v in pairs(self.stored) do
+    local tableToSend =  self.stored
+    for k, v in pairs(tableToSend) do
+        if ( v.bNoNetworking ) then
+            tableToSend[k] = nil
+            continue
+        end
+
         if ( config[k] != nil ) then
             v.Value = config[k]
         end
     end
 
-    local compressed = util.Compress(util.TableToJSON(self.stored))
+    local compressed = util.Compress(util.TableToJSON(tableToSend))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
     net.Broadcast()
 
     ow.util:Print("Configuration loaded.")
-    hook.Run("PostConfigLoad", config)
+    hook.Run("PostConfigLoad", config, tableToSend)
 
     return true
 end
@@ -68,7 +76,7 @@ end
 function ow.config:GetSaveData()
     local saveData = {}
     for k, v in pairs(self.stored) do
-        if ( v.Value and v.Value != v.Default ) then
+        if ( v.Value != nil and v.Value != v.Default ) then
             saveData[k] = v.Value
         end
     end
@@ -101,13 +109,19 @@ end
 function ow.config:Reset()
     hook.Run("PreConfigReset")
 
-    for k, v in pairs(self.stored) do
-        if ( v.Default != nil ) then
-            v.Value = v.Default
+    local tableToSend =  self.stored
+    for k, v in pairs(tableToSend) do
+        if ( v.bNoNetworking ) then
+            tableToSend[k] = nil
+            continue
+        end
+
+        if ( config[k] != nil ) then
+            v.Value = config[k]
         end
     end
 
-    local compressed = util.Compress(util.TableToJSON(self.stored))
+    local compressed = util.Compress(util.TableToJSON(tableToSend))
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
@@ -126,14 +140,21 @@ end
 function ow.config:Synchronize(ply)
     if ( !IsValid(ply) ) then return false end
 
-    local compressed = util.Compress(util.TableToJSON(self.stored))
+    local tableToSend =  self.stored
+    for k, v in pairs(tableToSend) do
+        if ( v.bNoNetworking ) then
+            tableToSend[k] = nil
+        end
+    end
+
+    local compressed = util.Compress(util.TableToJSON(tableToSend))
     hook.Run("PreConfigSync", ply, compressed)
 
     net.Start("ow.config.sync")
         net.WriteData(compressed, #compressed)
     net.Send(ply)
 
-    hook.Run("PostConfigSync", ply, self.stored)
+    hook.Run("PostConfigSync", ply, self.stored, tableToSend)
 
     return true
 end
