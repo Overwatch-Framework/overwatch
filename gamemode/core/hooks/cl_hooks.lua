@@ -423,8 +423,10 @@ function GM:OnPauseMenuShow()
     if ( !IsValid(ow.gui.mainmenu) ) then
         vgui.Create("ow.mainmenu")
     else
-        ow.gui.mainmenu:Remove()
-        return
+        if ( ow.localClient:GetCharacter() ) then
+            ow.gui.mainmenu:Remove()
+            return
+        end
     end
 
     return false
