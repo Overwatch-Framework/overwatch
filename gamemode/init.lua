@@ -15,3 +15,9 @@ for k, v in ipairs(engine.GetAddons()) do
         resource.AddWorkshop(v.wsid)
     end
 end
+
+resource.AddFile("resource/fonts/gordin-black.ttf")
+resource.AddFile("resource/fonts/gordin-bold.ttf")
+resource.AddFile("resource/fonts/gordin-light.ttf")
+resource.AddFile("resource/fonts/gordin-regular.ttf")
+resource.AddFile("resource/fonts/gordin-semibold.ttf")
