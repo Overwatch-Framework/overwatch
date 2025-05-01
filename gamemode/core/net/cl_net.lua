@@ -225,3 +225,15 @@ net.Receive("ow.inventory.cache", function(len)
 
     print("Inventory " .. inventoryID .. " cached!")
 end)
+
+net.Receive("ow.entity.setDataVariable", function(len)
+    local entity = net.ReadEntity()
+    local key = net.ReadString()
+    local value = net.ReadType()
+
+    if ( !IsValid(entity) ) then return end
+
+    local entityTable = entity:GetTable()
+
+    entityTable[key] = value
+end)

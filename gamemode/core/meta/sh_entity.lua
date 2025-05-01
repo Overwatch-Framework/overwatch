@@ -101,7 +101,7 @@ end
 -- (e.g not a button or door)
 function ENTITY:IsLocked()
     if (SERVER) then
-        if (self:IsVehicle()) then
+        if ( self:IsVehicle() ) then
             return self:GetInternalVariable("VehicleLocked")
         else
             return self:GetInternalVariable("m_bLocked")
@@ -114,5 +114,46 @@ function ENTITY:IsLocked()
 end
 
 function ENTITY:GetSpawnEffect()
-    return self:GetInternalVariable("ow.m_bSpawnEffect") or false
+    return self:GetTable()["ow.m_bSpawnEffect"] or false
+end
+
+function ENTITY:GetDataVariable(key, defaultValue)
+    local selfTable = self:GetTable()
+    key = "ow." .. key
+
+    if ( selfTable[key] != nil ) then
+        return selfTable[key]
+    end
+
+    return defaultValue
+end
+
+if ( SERVER ) then
+    function ENTITY:SetDataVariable(key, value, recipients, bNoNetworking)
+        local selfTable = self:GetTable()
+        key = "ow." .. key
+
+        selfTable[key] = value
+
+        if ( !bNoNetworking ) then
+            local recpFilter = RecipientFilter()
+            if ( recipients == nil ) then
+                recpFilter:AddAllPlayers()
+            elseif ( istable(recipients) ) then
+                for _, v in ipairs(recipients) do
+                    if ( IsValid(v) ) then
+                        recpFilter:AddPlayer(v)
+                    end
+                end
+            elseif ( IsValid(recipients) ) then
+                recpFilter:AddPlayer(recipients)
+            end
+
+            net.Start("ow.entity.setDataVariable")
+                net.WriteEntity(self)
+                net.WriteString(key)
+                net.WriteType(value)
+            net.Send(recpFilter)
+        end
+    end
 end
