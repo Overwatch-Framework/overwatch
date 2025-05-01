@@ -201,7 +201,7 @@ function PANEL:PopulateCreateCharacter()
             if ( isfunction(v.OnValidate) ) then
                 local isValid, errorMessage = v:OnValidate(self.characterCreateForm, self.currentCreatePayload, ow.localClient)
                 if ( !isValid ) then
-                    notification.AddLegacy(errorMessage, NOTIFY_ERROR, 5)
+                    ow.localClient:Notify(errorMessage)
                     return
                 end
             end

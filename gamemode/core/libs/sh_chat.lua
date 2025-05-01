@@ -29,7 +29,7 @@ function ow.chat:Register(uniqueID, chatData)
             local text = table.concat(arguments, " ")
 
             if ( !isstring(text) or #text < 1 ) then
-                ply:Notify("You must provide a message to send!", NOTIFY_ERROR, 5)
+                ply:Notify("You must provide a message to send!")
                 return false
             end
 

@@ -476,13 +476,13 @@ function GM:PopulateTabButtons(buttons)
         Populate = function(this, container)
             -- TODO: Implement this in the future
             -- container:Add("ow.tab.config")
-            ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR, 5)
+            ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR)
         end
     }
     buttons["tab.inventory"] = {
         Populate = function(this, container)
             container:Add("ow.tab.inventory")
-            ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR, 5)
+            ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR)
         end
     }
     buttons["tab.scoreboard"] = {

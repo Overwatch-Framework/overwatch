@@ -91,7 +91,7 @@ ow.util:LoadFile("core/sh_options.lua")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(ply, command, arguments)
-	ply:Notify("This command has been disabled!", NOTIFY_ERROR, 5)
+	ply:Notify("This command has been disabled!")
 end)
 
 -- concommand.Remove("gm_admin_cleanup")

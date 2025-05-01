@@ -13,24 +13,24 @@ function ow.command:Run(ply, command, arguments)
     end
 
     if ( !isstring(command) ) then
-        ply:Notify("You must provide a command to run!", NOTIFY_ERROR, 5)
+        ply:Notify("You must provide a command to run!")
         return false
     end
 
     local info = self:Get(command)
     if ( !istable(info) ) then
-        ply:Notify("This command does not exist!", NOTIFY_ERROR, 5)
+        ply:Notify("This command does not exist!")
         return false
     end
 
     if ( CAMI == nil ) then
         if ( info.AdminOnly and !ply:IsAdmin() ) then
-            ply:Notify("You must be an admin to run this command!", NOTIFY_ERROR, 5)
+            ply:Notify("You must be an admin to run this command!")
             return false
         end
 
         if ( info.SuperAdminOnly and !ply:IsSuperAdmin() ) then
-            ply:Notify("You must be a superadmin to run this command!", NOTIFY_ERROR, 5)
+            ply:Notify("You must be a superadmin to run this command!")
             return false
         end
     else

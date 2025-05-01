@@ -186,7 +186,7 @@ function PANEL:PlayMenuTrack()
             station:EnableLooping(ow.option:Get("mainmenu.music.loop", true))
             self.station = station
         else
-            ow.localClient:Notify("Error playing main menu music: " .. tostring(errorID) .. " (" .. tostring(errorName) .. ")", NOTIFY_ERROR, 5)
+            ow.localClient:Notify("Error playing main menu music: " .. tostring(errorID) .. " (" .. tostring(errorName) .. ")", NOTIFY_ERROR)
         end
     end)
 end

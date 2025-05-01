@@ -71,7 +71,7 @@ net.Receive("ow.character.create.failed", function(len)
     local reason = net.ReadString()
     if ( !reason ) then return end
 
-    notification.AddLegacy(reason, NOTIFY_ERROR, 5)
+    ow.localClient:Notify(reason)
 end)
 
 net.Receive("ow.character.cache", function(len)
@@ -91,7 +91,7 @@ net.Receive("ow.character.cache", function(len)
     plyTable.owCharacters[characterID] = character
     plyTable.owCharacter = character
 
-    notification.AddLegacy("Character " .. characterID .. " cached!", NOTIFY_GENERIC, 5)
+    ow.localClient:Notify("Character " .. characterID .. " cached!")
 end)
 
 net.Receive("ow.character.cache.all", function(len)
@@ -112,7 +112,7 @@ net.Receive("ow.character.cache.all", function(len)
         plyTable.owCharacters[characterID] = character
     end
 
-    notification.AddLegacy("Characters cached!", NOTIFY_GENERIC, 5)
+    ow.localClient:Notify("All characters cached!")
 end)
 
 net.Receive("ow.character.load", function(len)

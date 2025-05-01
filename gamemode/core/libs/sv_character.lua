@@ -69,7 +69,7 @@ function ow.character:Load(ply, characterID)
     end
 
     if ( !characterID ) then
-        ErrorNoHalt("Attempted to load character with invalid ID (" .. tostring(characterID) .. ")\n")
+        ply:Notify("You are attempting to load a character with an invalid ID!")
         return false
     end
 
@@ -79,7 +79,7 @@ function ow.character:Load(ply, characterID)
         --currentCharacter:Save()
 
         if ( currentCharacter:GetID() == characterID ) then
-            ErrorNoHalt("Attempted to load the same character (" .. characterID .. ") for player " .. tostring(ply) .. "\n")
+            ply:Notify("You are already using this character!")
             return false
         end
     end
@@ -92,7 +92,7 @@ function ow.character:Load(ply, characterID)
         local row = result[1]
         local character = self:CreateObject(characterID, row, ply)
         if ( !character ) then
-            ErrorNoHalt("Failed to create character object for ID " .. characterID .. " for player " .. tostring(ply) .. "\n")
+            ply:Notify("Failed to load character!")
             return false
         end
 

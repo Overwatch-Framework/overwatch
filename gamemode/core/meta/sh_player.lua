@@ -107,7 +107,14 @@ end
 function PLAYER:Notify(text, iType, length)
     if ( !text or text == "" ) then return end
 
-    iType = iType or NOTIFY_GENERIC
+    if ( !iType and string.EndsWith(text, "!") ) then
+        iType = NOTIFY_ERROR
+    elseif ( !iType and string.EndsWith(text, "?") ) then
+        iType = NOTIFY_HINT
+    else
+        iType = iType or NOTIFY_GENERIC
+    end
+
     duration = duration or 3
 
     ow.notification:Send(self, text, iType, length)
