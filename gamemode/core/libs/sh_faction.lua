@@ -47,6 +47,25 @@ ow.faction.meta = {
     GetClasses = function(self)
         return self.Classes or {}
     end,
+
+    __tostring = function(self)
+        return Format("[Faction #%i] %s (%s)", self.Index, self:GetName(), self:GetUniqueID())
+    end,
+    __eq = function(self, other)
+        if ( isstring(other) ) then
+            return self:GetUniqueID() == other
+        end
+
+        if ( isnumber(other) ) then
+            return self.Index == other
+        end
+
+        if ( type(other) == "Player" ) then
+            return self.Index == other:GetFaction()
+        end
+
+        return false
+    end,
 }
 
 ow.faction.meta.__index = ow.faction.meta

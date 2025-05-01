@@ -21,6 +21,28 @@ ow.class.meta = {
     GetIsDefault = function(self)
         return self.IsDefault or false
     end,
+    GetFaction = function(self)
+        return self.Faction or 0
+    end,
+
+    __tostring = function(self)
+        return Format("Class #%i] %s (%s)", self.Index, self:GetName(), self:GetUniqueID())
+    end,
+    __eq = function(self, other)
+        if ( isstring(other) ) then
+            return self:GetUniqueID() == other
+        end
+
+        if ( isnumber(other) ) then
+            return self.Index == other
+        end
+
+        if ( type(other) == "Player" ) then
+            return self.Index == other:GetFaction()
+        end
+
+        return false
+    end,
 }
 
 ow.class.meta.__index = ow.class.meta
@@ -35,12 +57,12 @@ local default = {
 
 function ow.class:Register(classData)
     local CLASS = setmetatable(classData, { __index = ow.class.meta })
-    if ( CLASS.faction == nil or !isnumber(CLASS.faction) ) then
+    if ( !isnumber(CLASS.Faction) ) then
         ow.util:PrintError("Attempted to register a class without a valid faction!")
         return false
     end
 
-    local faction = ow.faction:Get(CLASS.faction)
+    local faction = ow.faction:Get(CLASS.Faction)
     if ( faction == nil or !istable(faction) ) then
         ow.util:PrintError("Attempted to register a class for an invalid faction!")
         return false
