@@ -146,11 +146,12 @@ function GM:HUDPaint()
     if ( shouldDraw != false ) then
         local green = ow.config:Get("color.framework")
         local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(ply:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(ply:EyeAngles())))
+        local height = 16 * 12
 
-        ow.util:DrawBlurRect(x - padding, y - padding, width + padding * 2, 95 + padding * 2)
+        ow.util:DrawBlurRect(x - padding, y - padding, width + padding * 2, height + padding * 2)
 
         surface.SetDrawColor(backgroundColor)
-        surface.DrawRect(x - padding, y - padding, width + padding * 2, 95 + padding * 2)
+        surface.DrawRect(x - padding, y - padding, width + padding * 2, height + padding * 2)
 
         draw.SimpleText("[DEVELOPER HUD]", "ow.fonts.developer", x, y, green, TEXT_ALIGN_LEFT)
 
@@ -161,6 +162,21 @@ function GM:HUDPaint()
 
         local fps = math.floor(1 / FrameTime())
         draw.SimpleText("FPS: " .. fps, "ow.fonts.developer", x, y + 16 * 5, green, TEXT_ALIGN_LEFT)
+
+        local character = ply:GetCharacter()
+        if ( character ) then
+            local name = character:GetName()
+            local charModel = character:GetModel()
+            local inventories = character:GetInventories()
+            local inventoryCount = inventories
+            local inventoryText = "Inventories: " .. inventoryCount
+
+            draw.SimpleText("[CHARACTER INFO]", "ow.fonts.developer", x, y + 16 * 7, green, TEXT_ALIGN_LEFT)
+            draw.SimpleText("Character: " .. tostring(character), "ow.fonts.developer", x, y + 16 * 8, green, TEXT_ALIGN_LEFT)
+            draw.SimpleText("Name: " .. name, "ow.fonts.developer", x, y + 16 * 9, green, TEXT_ALIGN_LEFT)
+            draw.SimpleText("Model: " .. charModel, "ow.fonts.developer", x, y + 16 * 10, green, TEXT_ALIGN_LEFT)
+            draw.SimpleText(inventoryText, "ow.fonts.developer", x, y + 16 * 11, green, TEXT_ALIGN_LEFT)
+        end
     end
 
     shouldDraw = hook.Run("ShouldDrawPreviewHUD")
