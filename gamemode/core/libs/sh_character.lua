@@ -12,25 +12,6 @@ ow.character.stored = ow.character.stored or {} -- All currently stored characte
 function ow.character:RegisterVariable(key, data)
     data.Index = table.Count(self.variables) + 1
 
-    local upperKey = key:gsub("^%l", string.upper)
-    -- TODO, add support for custom OnGet and OnSet methods.
-
-    if ( SERVER ) then
-        self.meta["Set" .. upperKey] = function(character, value)
-            self:SetVariable(key, value)
-        end
-
-        local field = data.Field
-        if ( field ) then
-            ow.sqlite:RegisterVar("ow_characters", key, data.Default or nil)
-            self.fields[key] = field
-        end
-    end
-
-    self.meta["Get" .. upperKey] = function(character)
-        return self:GetVariable(character:GetID(), key)
-    end
-
     if ( data.Alias != nil ) then
         if ( isstring(data.Alias) ) then
             data.Alias = { data.Alias }
@@ -41,8 +22,34 @@ function ow.character:RegisterVariable(key, data)
                 return self:GetVariable(character:GetID(), key)
             end
 
-            self.meta["Set" .. v] = function(character, value)
-                self:SetVariable(character:GetID(), key, value)
+            if ( SERVER ) then
+                self.meta["Set" .. v] = function(character, value)
+                    self:SetVariable(key, value)
+                end
+
+                local field = data.Field
+                if ( field ) then
+                    ow.sqlite:RegisterVar("ow_characters", key, data.Default or nil)
+                    self.fields[key] = field
+                end
+            end
+        end
+    else
+        local upperKey = string.upper(key:sub(1, 1)) .. key:sub(2)
+
+        self.meta["Get" .. upperKey] = function(character)
+            return self:GetVariable(character:GetID(), key)
+        end
+
+        if ( SERVER ) then
+            self.meta["Set" .. upperKey] = function(character, value)
+                self:SetVariable(key, value)
+            end
+
+            local field = data.Field
+            if ( field ) then
+                ow.sqlite:RegisterVar("ow_characters", key, data.Default or nil)
+                self.fields[key] = field
             end
         end
     end
