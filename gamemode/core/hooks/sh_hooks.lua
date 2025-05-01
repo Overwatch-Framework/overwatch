@@ -39,7 +39,8 @@ function GM:GetMainMenuMusic()
 end
 
 function GM:PlayerGetToolgun(ply)
-    return CAMI.PlayerHasAccess(ply, "Overwatch - Toolgun", nil)
+    local character = ply:GetCharacter()
+    return CAMI.PlayerHasAccess(ply, "Overwatch - Toolgun", nil) or character and character:HasFlag("t")
 end
 
 function GM:PlayerGetPhysgun(ply)

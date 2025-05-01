@@ -24,3 +24,12 @@ end
 function ow.flag:Get(flagChar)
     return self.stored[flagChar]
 end
+
+do
+    ow.flag:Register("t", "Toolgun", function(ply, hasFlag)
+        if ( hasFlag ) then
+            ply:Give("gmod_tool")
+        else
+            ply:StripWeapon("gmod_tool")
+        end
+    end)
