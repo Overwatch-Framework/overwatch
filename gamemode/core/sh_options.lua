@@ -50,6 +50,21 @@ ow.option:Register("language", {
 })
 */
 
+ow.option:Register("inventory.sort", {
+    Name = "options.inventory.sort",
+    Description = "options.inventory.sort.help",
+    Type = ow.type.array,
+    Default = "name",
+    bNoNetworking = true,
+    Populate = function()
+        return {
+            ["name"] = "Name",
+            ["weight"] = "Weight",
+            ["category"] = "Category",
+        }
+    end
+})
+
 ow.option:Register("vignette", {
     Name = "options.vignette",
     Description = "options.vignette.help",

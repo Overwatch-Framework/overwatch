@@ -91,7 +91,7 @@ function PANEL:SetInventory(id)
 
     local items = inventory:GetItems()
     if ( #items == 0 ) then 
-        local label = self.container:Add("ow.text")
+        label = self.container:Add("ow.text")
         label:Dock(TOP)
         label:SetFont("ow.fonts.large")
         label:SetText("inventory.empty")
@@ -100,7 +100,26 @@ function PANEL:SetInventory(id)
         return
     end
 
-    for k, v in pairs(items) do
+    local sortedItems = table.Copy(items)
+    local sortType = ow.option:Get("inventory.sort")
+    table.sort(sortedItems, function(a, b)
+        local itemA = ow.item:Get(a)
+        local itemB = ow.item:Get(b)
+
+        if ( !itemA or !itemB ) then return false end
+
+        if ( sortType == "name" ) then
+            return itemA:GetName() < itemB:GetName()
+        elseif ( sortType == "weight" ) then
+            return itemA:GetWeight() < itemB:GetWeight()
+        elseif ( sortType == "category" ) then
+            return itemA:GetCategory() < itemB:GetCategory()
+        end
+
+        return false
+    end)
+
+    for k, v in pairs(sortedItems) do
         local itemPanel = self.container:Add("ow.item")
         itemPanel:SetItem(v)
         itemPanel:Dock(TOP)
