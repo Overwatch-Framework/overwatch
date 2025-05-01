@@ -17,12 +17,12 @@ function ow.faction:Join(ply, factionID, bBypass)
         oldFaction:OnLeave(ply)
     end
 
-    ply:SetTeam(faction.Index)
+    ply:SetTeam(faction:GetID())
 
     if ( faction.OnJoin ) then
         faction:OnJoin(ply)
     end
 
-    hook.Run("PlayerJoinedFaction", ply, factionID, oldFaction.Index)
+    hook.Run("PlayerJoinedFaction", ply, factionID, oldFaction.GetID and oldFaction:GetID())
     return true
 end

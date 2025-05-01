@@ -85,8 +85,8 @@ ow.command:Register("SetFaction", {
             return
         end
 
-        character:SetFaction(faction.Index)
-        ow.faction:Join(target, faction.Index, true)
+        character:SetFaction(faction:GetID())
+        ow.faction:Join(target, faction:GetID(), true)
 
         ply:Notify("You have set the faction of " .. target:Nick() .. " to " .. faction.Name .. ".", NOTIFY_HINT, 5)
     end

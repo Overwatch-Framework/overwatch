@@ -127,18 +127,7 @@ function PANEL:Populate()
     createButton:SetText("mainmenu.create.character")
 
     createButton.DoClick = function(this)
-        local availableFactions = 0
-        for k, v in ipairs(ow.faction:GetAll()) do
-            if ( ow.faction:CanSwitchTo(ow.localClient, v.Index) ) then
-                availableFactions = availableFactions + 1
-            end
-        end
-
-        if ( availableFactions > 1 ) then
-            self.createPanel:PopulateFactionSelect()
-        else
-            self.createPanel:PopulateCreateCharacter()
-        end
+        self.createPanel:Populate()
     end
 
     local bHasCharacters = table.Count(plyTable.owCharacters or {}) > 0

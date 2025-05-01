@@ -114,8 +114,8 @@ function ow.character:Load(ply, characterID)
         ply:Spawn()
 
         -- Cache the characters' inventories
-        for _, inventory in ipairs(character:GetInventories()) do
-            ow.inventory:Cache(ply, inventory.ID)
+        for _, inventoryID in ipairs(character:GetInventories()) do
+            ow.inventory:Cache(ply, inventoryID)
         end
 
         hook.Run("PlayerLoadedCharacter", ply, character, currentCharacter)
