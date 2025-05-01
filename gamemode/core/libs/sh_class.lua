@@ -26,7 +26,7 @@ ow.class.meta = {
     end,
 
     __tostring = function(self)
-        return "class [" .. self:GetUniqueID() .. "][" .. self:GetID() .. "]"
+        return "class[" .. self:GetUniqueID() .. "][" .. self:GetID() .. "]"
     end,
     __eq = function(self, other)
         if ( isstring(other) ) then
