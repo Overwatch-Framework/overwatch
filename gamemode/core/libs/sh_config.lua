@@ -99,3 +99,38 @@ function ow.config:Register(key, data)
 
     return true
 end
+
+--- Sets the value of the specified configuration.
+-- @realm server
+-- @param key The key of the configuration.
+-- @param value The value of the configuration.
+-- @treturn boolean Whether the configuration was successfully set.
+-- @usage ow.config.Set("color.schema", Color(0, 100, 150)) -- Sets the color of the schema.
+function ow.config:Set(key, value, ply)
+    local stored = self.stored[key]
+    if ( !istable(stored) ) then
+        ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
+        return false
+    end
+
+    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
+        ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
+        return false
+    end
+
+    local oldValue = stored.Value or stored.Default
+    stored.Value = value
+
+    if ( SERVER and !stored.bNoNetworking ) then
+        net.Start("ow.config.set")
+            net.WriteString(key)
+            net.WriteType(value)
+        net.Broadcast()
+    end
+
+    if ( isfunction(stored.OnChange) ) then
+        stored:OnChange(value, oldValue, ply)
+    end
+
+    return true
+end
