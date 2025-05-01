@@ -97,6 +97,7 @@ ow.config:Register("inventory.maxweight", {
     Default = 20,
     Min = 0,
     Max = 1000,
+    Decimals = 1,
     OnChange = function(value)
         for _, ply in player.Iterator() do
             if ( ply:GetCharacter() ) then
