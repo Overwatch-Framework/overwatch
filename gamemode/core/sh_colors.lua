@@ -27,6 +27,8 @@ ow.color:Register("text.light", color_white)
 ow.color:Register("chat", Color(230, 230, 110, 255))
 ow.color:Register("chat.whisper", Color(70, 110, 230, 255))
 ow.color:Register("chat.yell", Color(230, 110, 70, 255))
+ow.color:Register("chat.action", Color(255, 255, 255, 255))
+ow.color:Register("chat.ooc", Color(200, 25, 0, 255))
 
 -- Garry's Mod colors
 ow.color:Register("gmod.console.error.server", Color(136, 221, 255, 255))
