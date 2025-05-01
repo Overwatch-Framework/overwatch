@@ -482,7 +482,6 @@ function GM:PopulateTabButtons(buttons)
     buttons["tab.inventory"] = {
         Populate = function(this, container)
             container:Add("ow.tab.inventory")
-            ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR)
         end
     }
     buttons["tab.scoreboard"] = {

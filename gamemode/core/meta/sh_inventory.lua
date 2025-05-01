@@ -52,8 +52,14 @@ end
 function INV:GetWeight()
     local weight = 0
 
-    for k, v in ipairs(self:GetItems()) do
-        weight = weight + v:GetWeight()
+    for _, itemID in ipairs(self:GetItems()) do
+        local item = ow.item:Get(itemID)
+        if ( !item ) then continue end
+
+        local itemWeight = item:GetWeight() or 0
+        if ( itemWeight < 0 ) then continue end
+
+        weight = weight + itemWeight
     end
 
     return weight
