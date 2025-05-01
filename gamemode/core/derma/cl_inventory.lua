@@ -67,7 +67,6 @@ function PANEL:SetInventory(id)
     label:SetFont("ow.fonts.large")
     label:SetText(weight .. "kg / " .. maxWeight .. "kg")
     label:SetTextColor(color_white)
-    label:SetExpensiveShadow(0, Color(0, 0, 0, 0))
 
     local items = inventory:GetItems()
     PrintTable(items)
