@@ -90,7 +90,7 @@ function PANEL:SetInventory(id)
     label:SetContentAlignment(5)
 
     local items = inventory:GetItems()
-    if ( #items == 0 ) then 
+    if ( #items == 0 ) then
         label = self.container:Add("ow.text")
         label:Dock(TOP)
         label:SetFont("ow.fonts.large")

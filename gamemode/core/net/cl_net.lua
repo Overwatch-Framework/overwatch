@@ -184,27 +184,22 @@ net.Receive("ow.inventory.register", function(len, ply)
     local bResult = hook.Run("PreInventoryRegistered", inventoryData)
     if ( bResult == false ) then return end
 
-    local inventoryID = inventoryData.ID
-    if ( !inventoryID ) then return end
-
-    local inventory = ow.inventory:CreateObject(inventoryID, inventoryData, ply)
+    local inventory = ow.inventory:CreateObject(inventoryData)
     if ( !inventory ) then return end
 
-    print("Inventory " .. inventoryID .. " registered!")
+    print("Inventory " .. inventory.ID .. " registered!")
 end)
 
 net.Receive("ow.inventory.cache", function(len)
     local inventoryData = net.ReadTable()
     if ( !istable(inventoryData) ) then return end
 
-    local inventoryID = inventoryData.ID
-    if ( !inventoryID ) then return end
-
-    local inventory = ow.inventory:CreateObject(inventoryID, inventoryData)
+    print(inventoryData)
+    local inventory = ow.inventory:CreateObject(inventoryData)
     if ( !inventory ) then return end
 
     ow.inventory.stored = ow.inventory.stored or {}
-    ow.inventory.stored[inventoryID] = inventory
+    ow.inventory.stored[inventory.ID] = inventory
 
     -- if the character object exists, add the inventory to it
     local character = ow.character.stored[inventoryData.characterID]
@@ -214,14 +209,12 @@ net.Receive("ow.inventory.cache", function(len)
             table.insert(inventories, inventory)
         end
 
+        PrintTable(inventories)
         character:SetInventories(inventories)
-        print("Inventory " .. inventoryID .. " added to character " .. inventoryData.characterID .. "!")
+        print("Inventory " .. inventory.ID .. " added to character " .. inventoryData.characterID .. "!")
     end
 
-    print(inventory)
-    PrintTable(inventory)
-
-    print("Inventory " .. inventoryID .. " cached!")
+    print("Inventory " .. inventory.ID .. " cached!")
 end)
 
 net.Receive("ow.item.cache", function(len)

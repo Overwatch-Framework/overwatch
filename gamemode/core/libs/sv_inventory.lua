@@ -29,7 +29,7 @@ function ow.inventory:Register(data)
         return false
     end
 
-    local inventory = self:CreateObject(id, data)
+    local inventory = self:CreateObject(data)
     if ( !inventory ) then
         ErrorNoHalt("Failed to create inventory object for ID " .. id .. "\n")
         return false
@@ -104,7 +104,7 @@ function ow.inventory:Cache(ply, inventoryID)
 
     result = result[1]
 
-    local inventory = self:CreateObject(inventoryID, result)
+    local inventory = self:CreateObject(result)
     if ( !inventory ) then
         ErrorNoHalt("Failed to create inventory object for ID " .. inventoryID .. "\n")
         return false
@@ -148,6 +148,7 @@ function ow.inventory:Cache(ply, inventoryID)
             table.insert(itemIDs, v.ID)
         end
     end
+
     inventory.Items = itemIDs
 
     net.Start("ow.inventory.cache")

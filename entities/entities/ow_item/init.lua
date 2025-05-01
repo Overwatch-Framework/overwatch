@@ -71,6 +71,10 @@ function ENT:SetItem(uniqueID)
     self:SetData(itemData.Data or {})
 end
 
+function ENT:GetData()
+    return self:GetTable().owItemData or {}
+end
+
 function ENT:SetData(data)
     self:GetTable().owItemData = data
 end
@@ -82,17 +86,27 @@ function ENT:Use(ply)
     local itemData = ow.item:Get(self:GetUniqueID())
     if ( !itemData ) then return end
 
-    -- TODO: Should probably move this into some Inventory Action System
-    --[[
-    if ( itemData.OnTaken ) then
-        itemData:OnTaken(ply, self)
-    end
-    ]]
+    local characterID = ply:GetCharacterID()
+    local inventories = ow.inventory:GetByCharacterID(characterID)
+    local inventoryID = inventories[1]:GetID()
 
-    ply:ChatPrint("You took the " .. itemData.Name .. "!")
-    hook.Run("PlayerTookItem", ply, self)
-    
-    SafeRemoveEntity(self)
+    ow.item:Add(characterID, inventoryID, self:GetUniqueID(), self:GetData(), function(result, data)
+        print(result, data)
+        PrintTable(data)
+        if ( result == false ) then
+            ply:Notify("You cannot carry any more items!")
+            return
+        end
+
+        if ( itemData.OnTaken ) then
+            itemData:OnTaken(self, ply, data)
+        end
+
+        hook.Run("OnItemTaken", self, ply, data)
+
+        -- Remove the entity after taking the item
+        SafeRemoveEntity(self)
+    end)
 end
 
 function ENT:OnRemove()

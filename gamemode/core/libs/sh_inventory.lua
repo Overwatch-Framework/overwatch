@@ -48,10 +48,9 @@ local function ConvertTable(tbl)
     return tbl
 end
 
-function ow.inventory:CreateObject(inventoryID, data)
-    if ( !inventoryID or !data ) then return end
-
-    inventoryID = tonumber(inventoryID)
+function ow.inventory:CreateObject(data)
+    print(data)
+    if ( !data or !istable(data) ) then print("Invalid data for inventory object") return end
 
     local id = tonumber(data.ID) or tonumber(data.id) or 0
     local characterID = tonumber(data.CharacterID) or tonumber(data.character_id) or 0
@@ -93,7 +92,7 @@ function ow.inventory:CreateObject(inventoryID, data)
     inventory.Items = items
     inventory.Data = inventoryData
 
-    self.stored[inventoryID] = inventory
+    self.stored[id] = inventory
 
     return inventory
 end

@@ -81,53 +81,22 @@ function ITEM:SetInventory(InventoryID)
     self.InventoryID = InventoryID
 end
 
-function ITEM:Add(uniqueID, data)
-    if ( !uniqueID or !self.stored[uniqueID] ) then return end
-
-    if ( !data ) then data = {} end
-
-    local item = self:CreateObject(self.ID, uniqueID, data)
-    if ( !item ) then return end
-
-    item.InventoryID = self.InventoryID
-    item.CharacterID = self.CharacterID or 0
-
-    self.instances[self.ID] = item
-
-    local inventory = ow.inventory:Get(self.InventoryID)
-    if ( IsValid(inventory) ) then
-        local items = inventory:GetItems()
-        if ( items and !table.HasValue(items, item.ID) ) then
-            table.insert(items, item.ID)
-        end
-    end
-
-    return item
-end
-
 function ITEM:Spawn(position, angles)
-    if (ow.item.instances[self.id]) then
-        local ply
+    if ( !position ) then return end
+    if ( !angles ) then angles = angle_zero end
 
-        local entity = ents.Create("ow_item")
-        entity:Spawn()
-        entity:SetAngles(angles or angle_zero)
-        entity:SetItemID(self.id)
+    local entity = ents.Create("ow_item")
+    entity:Spawn()
+    entity:SetAngles(angles or angle_zero)
+    entity:SetItemID(self:GetID())
 
-        -- If the first argument is a player, then we will find a position to drop
-        -- the item based off their aim.
-        if (type(position) == "Player") then
-            ply = position
-            position = position:GetItemDropPos(entity)
-        end
-
-        entity:SetPos(position)
-
-        if ( IsValid(ply) and ply:GetCharacter() ) then
-            entity:GetTable().owCharID = ply:GetCharacter():GetID()
-        end
-
-        hook.Run("OnItemSpawned", entity)
-        return entity
+    if ( type(position) == "Player" ) then
+        position = position:GetItemDropPos(entity)
     end
+
+    entity:SetPos(position)
+
+    hook.Run("OnItemSpawned", entity)
+
+    return entity
 end
