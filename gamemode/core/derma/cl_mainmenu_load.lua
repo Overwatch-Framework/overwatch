@@ -30,7 +30,7 @@ function PANEL:Populate()
 
     local title = self:Add("ow.text")
     title:Dock(TOP)
-    title:DockMargin(padding, padding, padding, 0)
+    title:DockMargin(padding, padding, 0, 0)
     title:SetFont("ow.fonts.title")
     title:SetText(string.upper("mainmenu.select.character"))
 
@@ -87,14 +87,13 @@ function PANEL:Populate()
         deleteButton:SetTall(button:GetTall())
         deleteButton:SetContentAlignment(5)
         deleteButton.DoClick = function()
-            -- TODO: Add confirmation dialog and delete character
+            self:PopulateDelete(v:GetID())
         end
 
         local name = button:Add("ow.text")
         name:Dock(TOP)
         name:SetFont("ow.fonts.title")
         name:SetText(v:GetName():upper())
-        name:SetExpensiveShadow(0, color_black)
         name.Think = function(this)
             this:SetTextColor(button:GetTextColor())
         end
@@ -107,10 +106,48 @@ function PANEL:Populate()
         lastPlayed:DockMargin(0, 0, 0, tinyPadding)
         lastPlayed:SetFont("ow.fonts.button")
         lastPlayed:SetText(lastPlayedDate, true)
-        lastPlayed:SetExpensiveShadow(0, color_black)
         lastPlayed.Think = function(this)
             this:SetTextColor(button:GetTextColor())
         end
+    end
+end
+
+function PANEL:PopulateDelete(characterID)
+    self:Clear()
+
+    local title = self:Add("ow.text")
+    title:Dock(TOP)
+    title:DockMargin(padding, padding, 0, 0)
+    title:SetFont("ow.fonts.title")
+    title:SetText(string.upper("mainmenu.delete.character"))
+
+    local confirmation = self:Add("ow.text")
+    confirmation:Dock(TOP)
+    confirmation:DockMargin(padding, smallPadding, 0, 0)
+    confirmation:SetFont("ow.fonts.button.large.hover")
+    confirmation:SetText("mainmenu.delete.character.confirm")
+
+    local navigation = self:Add("EditablePanel")
+    navigation:Dock(BOTTOM)
+    navigation:DockMargin(padding, 0, padding, padding)
+    navigation:SetTall(ScreenScale(24))
+
+    local cancelButton = navigation:Add("ow.mainmenu.button.small")
+    cancelButton:Dock(LEFT)
+    cancelButton:SetText("CANCEL")
+    cancelButton.DoClick = function()
+        self:Populate()
+    end
+
+    local okButton = navigation:Add("ow.mainmenu.button.small")
+    okButton:Dock(RIGHT)
+    okButton:SetText("OK")
+    okButton.DoClick = function()
+        net.Start("ow.character.delete")
+            net.WriteUInt(characterID, 32)
+        net.SendToServer()
+
+        self:Populate()
     end
 end
 
