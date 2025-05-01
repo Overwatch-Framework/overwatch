@@ -5,7 +5,6 @@ local PANEL = {}
 function PANEL:Init()
     self:SetFont("ow.fonts.default")
     self:SetTextColor(color_white)
-    self:SetExpensiveShadow(2, color_black)
 end
 
 function PANEL:SetText(text, bNoTranslate, bNoSizeToContents)

@@ -24,7 +24,7 @@ function PANEL:Populate()
 
     local title = self:Add("ow.text")
     title:Dock(TOP)
-    title:DockMargin(padding, padding, padding, 0)
+    title:DockMargin(padding, padding, 0, 0)
     title:SetFont("ow.fonts.title")
     title:SetText("SETTINGS")
 

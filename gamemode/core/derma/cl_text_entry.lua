@@ -37,7 +37,6 @@ local PANEL = {}
 function PANEL:Init()
     self:SetFont("ow.fonts.default")
     self:SetTextColor(color_white)
-    self:SetExpensiveShadow(1, color_black)
     self:SetPaintBackground(false)
     self:SetUpdateOnType(true)
     self:SetCursorColor(color_white)

@@ -58,7 +58,7 @@ function PANEL:PopulateFactionSelect()
 
     local title = self:Add("ow.text")
     title:Dock(TOP)
-    title:DockMargin(padding, padding, padding, 0)
+    title:DockMargin(padding, padding, 0, 0)
     title:SetFont("ow.fonts.title")
     title:SetText(string.upper("mainmenu.create.character.faction"))
 
@@ -153,7 +153,7 @@ function PANEL:PopulateCreateCharacter()
 
     local title = self:Add("ow.text")
     title:Dock(TOP)
-    title:DockMargin(padding, padding, padding, 0)
+    title:DockMargin(padding, padding, 0, 0)
     title:SetFont("ow.fonts.title")
     title:SetText(string.upper("mainmenu.create.character"))
 
