@@ -161,6 +161,11 @@ function PANEL:PopulateCategory(category)
             panel.DoClick = function(this)
                 if ( !slider.bCursorInside ) then
                     ow.option:Reset(v.UniqueID)
+
+                    if ( isfunction(v.OnReset) ) then
+                        v:OnReset()
+                    end
+
                     value = ow.option:Get(v.UniqueID)
                     slider:SetValue(value)
                     label:SetText(value)
