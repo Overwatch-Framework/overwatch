@@ -119,7 +119,7 @@ net.Receive("ow.character.load", function(len)
     local characterID = net.ReadUInt(32)
     if ( !characterID ) then return end
 
-    if ( ow.gui.mainmenu ) then
+    if ( IsValid(ow.gui.mainmenu) ) then
         ow.gui.mainmenu:Remove()
     end
 
