@@ -435,7 +435,7 @@ if ( CLIENT ) then
     -- @param path string The path to the material.
     -- @param parameters string The parameters to apply to the material.
     -- @return Material The material that was created.
-    -- @usage local vignette = ow.util:GetMaterial("overwatch/gui/vignette.png")
+    -- @usage local vignette = ow.util:GetMaterial("overwatch/gui/overlay_vignette.png")
     -- surface.SetMaterial(vignette)
     function ow.util:GetMaterial(path, parameters)
         if ( !tostring(path) ) then
