@@ -11,7 +11,7 @@ local FONT_NAME = "ow.fonts.default.bold"
 -- Utility function to create a notification
 function ow.notification:Add(text, duration, bgColor)
     duration = duration or 3
-    bgColor = bgColor or ow.colour:Get("notification.backgroun", true)
+    bgColor = bgColor or ow.color:Get("notification.backgroun", true)
     bgColor.a = 200
 
     -- Create panel
@@ -103,13 +103,13 @@ end
 notification.AddLegacy = function(text, type, length)
     local color
     if ( type == NOTIFY_ERROR ) then
-        color = ow.colour:Get("ui.error")
+        color = ow.color:Get("ui.error")
         ow.localClient:EmitSound("ow.notification.error")
     elseif ( type == NOTIFY_HINT ) then
-        color = ow.colour:Get("ui.success")
+        color = ow.color:Get("ui.success")
         ow.localClient:EmitSound("ow.notification.hint")
     else
-        color = ow.colour:Get("ui.info")
+        color = ow.color:Get("ui.info")
         ow.localClient:EmitSound("ow.notification.generic")
     end
 

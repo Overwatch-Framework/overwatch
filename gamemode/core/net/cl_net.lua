@@ -163,7 +163,7 @@ net.Receive("ow.character.delete", function(len)
 
     plyTable.owCharacter = nil
 
-    ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.colour:Get("ui.success"))
+    ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.color:Get("ui.success"))
 end)
 
 net.Receive("ow.notification.send", function(len)

@@ -1,13 +1,13 @@
-ow.config:Register("colour.framework", {
-    Name = "config.colour.framework.name",
-    Description = "config.colour.framework.help",
+ow.config:Register("color.framework", {
+    Name = "config.color.framework.name",
+    Description = "config.color.framework.help",
     Type = ow.type.color,
     Default = Color(105, 255, 200)
 })
 
-ow.config:Register("colour.schema", {
-    Name = "config.colour.schema.name",
-    Description = "config.colour.schema.help",
+ow.config:Register("color.schema", {
+    Name = "config.color.schema.name",
+    Description = "config.color.schema.help",
     Type = ow.type.color,
     Default = Color(0, 150, 100)
 })

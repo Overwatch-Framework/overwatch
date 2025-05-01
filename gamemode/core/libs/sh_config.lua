@@ -9,7 +9,7 @@ ow.config.stored = ow.config.stored or {}
 -- @param key The key of the configuration.
 -- @param default The default value of the configuration.
 -- @return The value of the configuration.
--- @usage local color = ow.config.Get("colour.schema", Color(0, 100, 150))
+-- @usage local color = ow.config.Get("color.schema", Color(0, 100, 150))
 -- print(color) -- Prints the color of the schema.
 function ow.config:Get(key, fallback)
     local stored = self.stored[key]
@@ -33,7 +33,7 @@ end
 -- @param key The key of the configuration.
 -- @param value The default value of the configuration.
 -- @treturn boolean Whether the default value of the configuration was successfully set.
--- @usage ow.config.SetDefault("colour.schema", Color(0, 100, 150)) -- Sets the default color of the schema.
+-- @usage ow.config.SetDefault("color.schema", Color(0, 100, 150)) -- Sets the default color of the schema.
 function ow.config:SetDefault(key, value)
     local stored = self.stored[key]
     if ( !istable(stored) ) then
@@ -56,7 +56,7 @@ end
 -- @field Default The default value of the configuration.
 -- @field OnChange The function that is called when the configuration is changed.
 -- @treturn boolean Whether the configuration was successfully registered.
--- @usage ow.config:Register("colour.schema", {
+-- @usage ow.config:Register("color.schema", {
 --     Name = "Schema Color",
 --     Description = "The color of the schema.",
 --     Type = ow.type.color,

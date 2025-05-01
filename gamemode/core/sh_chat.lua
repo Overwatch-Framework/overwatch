@@ -3,7 +3,7 @@ ow.chat:Register("ic", {
         return speaker:GetPos():DistToSqr(listener:GetPos()) < 384 ^ 2
     end,
     OnChatAdd = function(self, speaker, text)
-        chat.AddText(ow.colour:Get("chat"), speaker:Name() .. " says \"" .. text .. "\"")
+        chat.AddText(ow.color:Get("chat"), speaker:Name() .. " says \"" .. text .. "\"")
         chat.PlaySound()
     end
 })
@@ -14,7 +14,7 @@ ow.chat:Register("whisper", {
         return speaker:GetPos():DistToSqr(listener:GetPos()) < 96 ^ 2
     end,
     OnChatAdd = function(self, speaker, text)
-        chat.AddText(ow.colour:Get("chat.whisper"), speaker:Name() .. " whispers \"" .. text .. "\"")
+        chat.AddText(ow.color:Get("chat.whisper"), speaker:Name() .. " whispers \"" .. text .. "\"")
         chat.PlaySound()
     end
 })
@@ -25,7 +25,7 @@ ow.chat:Register("yell", {
         return speaker:GetPos():DistToSqr(listener:GetPos()) < 1024 ^ 2
     end,
     OnChatAdd = function(self, speaker, text)
-        chat.AddText(ow.colour:Get("chat.yell"), speaker:Name() .. " yells \"" .. text .. "\"")
+        chat.AddText(ow.color:Get("chat.yell"), speaker:Name() .. " yells \"" .. text .. "\"")
         chat.PlaySound()
     end
 })

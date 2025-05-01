@@ -27,11 +27,11 @@ function GM:GetPlayerHandsMaxMass(ply)
 end
 
 function GM:GetFrameworkColour()
-    return ow.config:Get("colour.framework", Color(95, 255, 220))
+    return ow.config:Get("color.framework", Color(95, 255, 220))
 end
 
 function GM:GetSchemaColour()
-    return ow.config:Get("colour.schema", Color(0, 150, 100))
+    return ow.config:Get("color.schema", Color(0, 150, 100))
 end
 
 function GM:GetMainMenuMusic()
