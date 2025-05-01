@@ -93,6 +93,10 @@ function PANEL:Init()
 
             ow.gui.mainmenu = vgui.Create("ow.mainmenu")
         end)
+
+        -- Keep them on so it isnt awkward when they expect to move their mouse
+        self:SetMouseInputEnabled(true)
+        self:SetKeyboardInputEnabled(true)
     end
 
     self.container = self:Add("DPanel")
