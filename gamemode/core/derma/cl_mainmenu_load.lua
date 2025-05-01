@@ -61,7 +61,7 @@ function PANEL:Populate()
         local button = characterList:Add("ow.mainmenu.button.small")
         button:Dock(TOP)
         button:DockMargin(0, 0, 0, 16)
-        button:SetText(v.name or "Unknown Character")
+        button:SetText("", true, true, true)
         button:SetTall(characterList:GetWide() / 8)
 
         button.DoClick = function()
@@ -88,6 +88,28 @@ function PANEL:Populate()
         deleteButton:SetContentAlignment(5)
         deleteButton.DoClick = function()
             -- TODO: Add confirmation dialog and delete character
+        end
+
+        local name = button:Add("ow.text")
+        name:Dock(TOP)
+        name:SetFont("ow.fonts.title")
+        name:SetText(v:GetName():upper())
+        name:SetExpensiveShadow(0, color_black)
+        name.Think = function(this)
+            this:SetTextColor(button:GetTextColor())
+        end
+
+        -- Example: Sat Feb 19 19:49:00 2022
+        local lastPlayedDate = os.date("%a %b %d %H:%M:%S %Y", v:GetLastPlayed())
+
+        local lastPlayed = button:Add("ow.text")
+        lastPlayed:Dock(BOTTOM)
+        lastPlayed:DockMargin(0, 0, 0, tinyPadding)
+        lastPlayed:SetFont("ow.fonts.button")
+        lastPlayed:SetText(lastPlayedDate, true)
+        lastPlayed:SetExpensiveShadow(0, color_black)
+        lastPlayed.Think = function(this)
+            this:SetTextColor(button:GetTextColor())
         end
     end
 end

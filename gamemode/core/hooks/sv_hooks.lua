@@ -13,7 +13,6 @@ function GM:PlayerInitialSpawn(ply)
 
         ply:SetDBVar("name", ply:SteamName())
         ply:SetDBVar("ip", ply:IPAddress())
-        ply:SetDBVar("play_time", 0)
         ply:SetDBVar("last_played", os.time())
         ply:SetDBVar("data", IsValid(data) and data.data or "[]")
 
@@ -61,9 +60,16 @@ end
 
 function GM:PlayerDisconnected(ply)
     if ( !ply:IsBot() ) then
-        ply:SetDBVar("play_time", ply:GetDBVar("play_time") + math.floor(CurTime() - ply:GetDBVar("last_played")))
+        ply:SetDBVar("play_time", ply:GetDBVar("play_time") + (os.time() - ply:GetDBVar("last_played")))
         ply:SetDBVar("last_played", os.time())
         ply:SaveDB()
+
+        local character = ply:GetCharacter()
+        if ( character ) then
+            character:SetPlayTime(character:GetPlayTime() + (os.time() - character:GetLastPlayed()))
+            character:SetLastPlayed(os.time())
+            character:SaveDB()
+        end
     end
 end
 

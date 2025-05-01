@@ -115,7 +115,7 @@ ow.character:RegisterVariable("model", {
                 icon:SetSize(64, 128)
                 icon:SetTooltip(v)
                 icon.DoClick = function()
-                    notification.AddLegacy("Model set to " .. v, NOTIFY_GENERIC, 5)
+                    ow.localClient:Notify("You have selected " .. v .. " as your model!")
                     payload.model = v
                 end
             end
@@ -163,4 +163,18 @@ ow.character:RegisterVariable("flags", {
     Type = ow.type.string,
     Field = "flags",
     Default = "",
+})
+
+ow.character:RegisterVariable("play_time", {
+    Type = ow.type.number,
+    Field = "play_time",
+    Alias = "PlayTime",
+    Default = 0
+})
+
+ow.character:RegisterVariable("last_played", {
+    Type = ow.type.number,
+    Field = "last_played",
+    Alias = "LastPlayed",
+    Default = 0
 })
