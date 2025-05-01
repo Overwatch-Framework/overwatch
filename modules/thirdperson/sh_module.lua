@@ -23,6 +23,8 @@ ow.localization:Register("en", {
     ["options.thirdperson.position.z.help"] = "Set the Z position of the third person camera.",
     ["options.thirdperson.reset"] = "Reset third person camera position.",
     ["options.thirdperson.toggle"] = "Toggle third person view.",
+    ["options.thirdperson.traceplayercheck"] = "Trace Player Check",
+    ["options.thirdperson.traceplayercheck.help"] = "Draw only the players that the person would see as if they were in firstperson.",
 })
 
 ow.option:Register("thirdperson", {
@@ -94,6 +96,14 @@ ow.option:Register("thirdperson.position.z", {
     Decimals = 0,
     Description = "options.thirdperson.position.z.help",
     bNoNetworking = true,
+    Category = "category.thirdperson"
+})
+
+ow.config:Register("thirdperson.tracecheck", {
+    Name = "options.thirdperson.traceplayercheck",
+    Type = ow.type.bool,
+    Default = false,
+    Description = "options.thirdperson.traceplayercheck.help",
     Category = "category.thirdperson"
 })
 

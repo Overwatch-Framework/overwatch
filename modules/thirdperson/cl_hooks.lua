@@ -103,6 +103,20 @@ function MODULE:ShouldDrawLocalPlayer(ply)
     return ow.option:Get("thirdperson", false)
 end
 
+function MODULE:PrePlayerDraw(client, flags)
+    if ( ow.config:Get("thirdperson.tracecheck") ) then
+        local traceLine = util.TraceLine({
+            start = ow.localClient:GetShootPos(),
+            endpos = client:GetPos() + Vector(0, 0, 5),
+            filter = ow.localClient
+        })
+
+        if ( traceLine.Hit ) then
+            return false
+        end
+    end
+end
+
 /*
 function MODULE:AddToolMenuCategories()
     spawnmenu.AddToolCategory("Overwatch", "User", "User")
