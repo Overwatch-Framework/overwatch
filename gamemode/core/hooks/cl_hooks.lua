@@ -146,7 +146,12 @@ function GM:HUDPaint()
     if ( shouldDraw != false ) then
         local green = ow.config:Get("color.framework")
         local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(ply:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(ply:EyeAngles())))
-        local height = 16 * 12
+        local height = 16 * 6
+
+        local character = ply:GetCharacter()
+        if ( character ) then
+            height = height + 16 * 6
+        end
 
         ow.util:DrawBlurRect(x - padding, y - padding, width + padding * 2, height + padding * 2)
 
@@ -163,7 +168,6 @@ function GM:HUDPaint()
         local fps = math.floor(1 / FrameTime())
         draw.SimpleText("FPS: " .. fps, "ow.fonts.developer", x, y + 16 * 5, green, TEXT_ALIGN_LEFT)
 
-        local character = ply:GetCharacter()
         if ( character ) then
             local name = character:GetName()
             local charModel = character:GetModel()
