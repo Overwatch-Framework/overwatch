@@ -491,28 +491,45 @@ function GM:ShouldDrawVignette()
     return true
 end
 
+function GM:ShouldShowInventory()
+    return true
+end
+
 function GM:GetCharacterName(ply, target)
     -- TODO: Empty hook, implement this in the future
 end
 
 function GM:PopulateTabButtons(buttons)
-    buttons["tab.config"] = {
-        Populate = function(this, container)
-            -- TODO: Implement this in the future
-            -- container:Add("ow.tab.config")
-            ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR)
-        end
-    }
+    if ( CAMI.PlayerHasAccess(ow.localClient, "Overwatch - Manage Config", nil) ) then
+        buttons["tab.config"] = {
+            Populate = function(this, container)
+                -- TODO: Implement this in the future
+                -- container:Add("ow.tab.config")
+                ow.notification:Send(nil, "Sorry, this feature is not yet implemented.", NOTIFY_ERROR)
+            end
+        }
+    end
+
+    if ( hook.Run("ShouldShowInventory") != false ) then
+        buttons["tab.inventory"] = {
+            Populate = function(this, container)
+                container:Add("ow.tab.inventory")
+            end
+        }
+    end
+
     buttons["tab.inventory"] = {
         Populate = function(this, container)
             container:Add("ow.tab.inventory")
         end
     }
+
     buttons["tab.scoreboard"] = {
         Populate = function(this, container)
             container:Add("ow.tab.scoreboard")
         end
     }
+
     buttons["tab.settings"] = {
         Populate = function(this, container)
             container:Add("ow.tab.settings")
