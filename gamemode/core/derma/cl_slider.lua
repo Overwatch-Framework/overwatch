@@ -22,8 +22,8 @@ function PANEL:SetValue(value, bNoNotify)
         local pitch = math.Clamp((self.value - self.min) / (self.max - self.min), 0, 1) * 100 + 50
         ow.localClient:EmitSound("ui/buttonrollover.wav", 60, pitch, 0.05, CHAN_STATIC)
 
-        if ( self.OnValueChanged ) then
-            self:OnValueChanged(self.value)
+        if ( self.OnValueSet ) then
+            self:OnValueSet(self.value)
         end
     end
 end
@@ -54,6 +54,10 @@ end
 function PANEL:OnMouseReleased()
     self.dragging = false
     self:MouseCapture(false)
+
+    if ( self.OnValueChanged ) then
+        self:OnValueChanged(self.value)
+    end
 end
 
 function PANEL:OnCursorMoved(x, y)

@@ -77,3 +77,15 @@ function MODULE:PlayerSpawnedSWEP(ply, model, entity)
 end
 
 MODULE.PlayerGiveSWEP = MODULE.PlayerSpawnedSWEP
+
+function MODULE:PostPlayerConfigChanged(ply, key, value, oldValue)
+    if ( key == "logging" ) then
+        if ( value == true ) then
+            self:SendLog(ow.color:Get("green"), self:FormatPlayer(ply) .. " enabled logging")
+        else
+            self:SendLog(ow.color:Get("red"), self:FormatPlayer(ply) .. " disabled logging")
+        end
+    else
+        self:SendLog(ow.color:Get("yellow"), self:FormatPlayer(ply) .. " changed config " .. key .. " from " .. tostring(oldValue) .. " to " .. tostring(value))
+    end
+end

@@ -1,65 +1,84 @@
 ow.config:Register("color.framework", {
-    Name = "config.color.framework.name",
+    Name = "config.color.framework",
     Description = "config.color.framework.help",
     Type = ow.type.color,
     Default = Color(105, 255, 200)
 })
 
 ow.config:Register("color.schema", {
-    Name = "config.color.schema.name",
+    Name = "config.color.schema",
     Description = "config.color.schema.help",
     Type = ow.type.color,
     Default = Color(0, 150, 100)
 })
 
 ow.config:Register("voice.distance", {
-    Name = "config.voice.distance.name",
+    Name = "config.voice.distance",
     Description = "config.voice.distance.help",
     Type = ow.type.number,
-    Default = 384
+    Default = 384,
+    Min = 0,
+    Max = 1024,
+    Decimals = 0
 })
 
 ow.config:Register("mainmenu.music", {
-    Name = "config.mainmenu.music.name",
+    Name = "config.mainmenu.music",
     Description = "config.mainmenu.music.help",
+    SubCategory = "config.mainmenu",
     Type = ow.type.string,
     Default = "music/hl2_song20_submix0.mp3"
 })
 
 ow.config:Register("mainmenu.pos", {
-    Name = "config.mainmenu.pos.name",
+    Name = "config.mainmenu.pos",
     Description = "config.mainmenu.pos.help",
+    SubCategory = "config.mainmenu",
     Type = ow.type.vector,
     Default = vector_origin
 })
 
 ow.config:Register("mainmenu.ang", {
-    Name = "config.mainmenu.ang.name",
+    Name = "config.mainmenu.ang",
     Description = "config.mainmenu.ang.help",
+    SubCategory = "config.mainmenu",
     Type = ow.type.angle,
     Default = angle_zero
 })
 
 ow.config:Register("mainmenu.fov", {
-    Name = "config.mainmenu.fov.name",
+    Name = "config.mainmenu.fov",
     Description = "config.mainmenu.fov.help",
+    SubCategory = "config.mainmenu",
     Type = ow.type.number,
-    Default = 90
+    Default = 90,
+    Min = 0,
+    Max = 120,
+    Decimals = 0
 })
 
 ow.config:Register("save.interval", {
-    Name = "config.save.interval.name",
+    Name = "config.save.interval",
     Description = "config.save.interval.help",
     Type = ow.type.number,
-    Default = 300
+    Default = 300,
+    Min = 0,
+    Max = 3600,
+    Decimals = 0
 })
 
 ow.config:Register("speed.walk", {
-    Name = "config.speed.walk.name",
+    Name = "config.speed.walk",
     Description = "config.speed.walk.help",
+    SubCategory = "config.player",
     Type = ow.type.number,
     Default = 80,
-    OnChange = function(value)
+    Min = 0,
+    Max = 1000,
+    Decimals = 0,
+    OnChange = function(_, value)
+        if ( CLIENT ) then return end
+
         for _, ply in player.Iterator() do
             ply:SetWalkSpeed(value)
         end
@@ -67,11 +86,17 @@ ow.config:Register("speed.walk", {
 })
 
 ow.config:Register("speed.run", {
-    Name = "config.speed.run.name",
+    Name = "config.speed.run",
     Description = "config.speed.run.help",
+    SubCategory = "config.player",
     Type = ow.type.number,
     Default = 180,
-    OnChange = function(value)
+    Min = 0,
+    Max = 1000,
+    Decimals = 0,
+    OnChange = function(_, value)
+        if ( CLIENT ) then return end
+
         for _, ply in player.Iterator() do
             ply:SetRunSpeed(value)
         end
@@ -79,11 +104,17 @@ ow.config:Register("speed.run", {
 })
 
 ow.config:Register("jump.power", {
-    Name = "config.jump.power.name",
+    Name = "config.jump.power",
     Description = "config.jump.power.help",
+    SubCategory = "config.player",
     Type = ow.type.number,
     Default = 160,
-    OnChange = function(value)
+    Min = 0,
+    Max = 1000,
+    Decimals = 0,
+    OnChange = function(_, value)
+        if ( CLIENT ) then return end
+
         for _, ply in player.Iterator() do
             ply:SetJumpPower(value)
         end
@@ -91,14 +122,15 @@ ow.config:Register("jump.power", {
 })
 
 ow.config:Register("inventory.maxweight", {
-    Name = "config.inventory.maxweight.name",
+    Name = "config.inventory.maxweight",
     Description = "config.inventory.maxweight.help",
+    SubCategory = "config.inventory",
     Type = ow.type.number,
     Default = 20,
     Min = 0,
-    Max = 1000,
-    Decimals = 1,
-    OnChange = function(value)
+    Max = 100,
+    Decimals = 2,
+    OnChange = function(_, value)
         for _, ply in player.Iterator() do
             if ( ply:GetCharacter() ) then
                 local inventories = ow.inventory:GetByCharacterID(ply:GetCharacter():GetID())

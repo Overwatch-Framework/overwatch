@@ -19,7 +19,7 @@ function PANEL:Init()
     self.container.Paint = nil
 
     local categories = {}
-    for k, v in pairs(ow.option.stored) do
+    for k, v in pairs(ow.config.stored) do
         if ( table.HasValue(categories, v.Category) ) then continue end
 
         table.insert(categories, v.Category)
@@ -36,31 +36,31 @@ function PANEL:Init()
         end
     end
 
-    if ( ow.gui.settingsLast ) then
-        self:PopulateCategory(ow.gui.settingsLast)
+    if ( ow.gui.configLast ) then
+        self:PopulateCategory(ow.gui.configLast)
     else
         self:PopulateCategory(categories[1])
     end
 end
 
 function PANEL:PopulateCategory(category)
-    ow.gui.settingsLast = category
+    ow.gui.configLast = category
 
     self.container:Clear()
 
-    local settings = {}
-    for k, v in pairs(ow.option.stored) do
+    local config = {}
+    for k, v in pairs(ow.config.stored) do
         if ( string.lower(v.Category) == string.lower(category) ) then
-            table.insert(settings, v)
+            table.insert(config, v)
         end
     end
 
-    table.sort(settings, function(a, b)
+    table.sort(config, function(a, b)
         return ow.localization:GetPhrase(a.Name) < ow.localization:GetPhrase(b.Name)
     end)
 
     local subCategories = {}
-    for k, v in ipairs(settings) do
+    for k, v in ipairs(config) do
         local subCategory = string.lower(v.SubCategory or "")
         if ( subCategory and !subCategories[subCategory] ) then
             subCategories[subCategory] = true
@@ -75,25 +75,25 @@ function PANEL:PopulateCategory(category)
             label:SetFont("ow.fonts.title")
             label:SetText(string.upper(k))
 
-            for k2, v2 in SortedPairs(settings) do
+            for k2, v2 in SortedPairs(config) do
                 if ( string.lower(v2.SubCategory or "") == string.lower(k) ) then
-                    self:AddSetting(v2)
+                    self:AddConfig(v2)
                 end
             end
         end
     else
-        for k, v in SortedPairs(settings) do
-            self:AddSetting(v)
+        for k, v in SortedPairs(config) do
+            self:AddConfig(v)
         end
     end
 end
 
-function PANEL:AddSetting(settingData)
-    local value = ow.option:Get(settingData.UniqueID)
+function PANEL:AddConfig(configData)
+    local value = ow.config:Get(configData.UniqueID)
 
     local panel = self.container:Add("ow.mainmenu.button.small")
     panel:Dock(TOP)
-    panel:SetText(settingData.Name)
+    panel:SetText(configData.Name)
     panel:SetTall(ScreenScale(20))
     panel:SetContentAlignment(4)
     panel:SetTextInset(ScreenScale(6), 0)
@@ -103,8 +103,8 @@ function PANEL:AddSetting(settingData)
     local unknown = ow.localization:GetPhrase("unknown")
 
     local label
-    local options
-    if ( settingData.Type == ow.type.bool ) then
+    local configs
+    if ( configData.Type == ow.type.bool ) then
         label = panel:Add("ow.text")
         label:Dock(RIGHT)
         label:DockMargin(0, 0, ScreenScale(8), 0)
@@ -117,12 +117,16 @@ function PANEL:AddSetting(settingData)
         end
 
         panel.DoClick = function()
-            ow.option:Set(settingData.UniqueID, !value)
+            net.Start("ow.config.set")
+                net.WriteString(configData.UniqueID)
+                net.WriteType(!value)
+            net.SendToServer()
+
             value = !value
 
             label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
         end
-    elseif ( settingData.Type == ow.type.number ) then
+    elseif ( configData.Type == ow.type.number ) then
         local slider = panel:Add("ow.slider")
         slider:Dock(RIGHT)
         slider:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -148,9 +152,9 @@ function PANEL:AddSetting(settingData)
             end
         end
 
-        slider:SetMin(settingData.Min or 0)
-        slider:SetMax(settingData.Max or 100)
-        slider:SetDecimals(settingData.Decimals or 0)
+        slider:SetMin(configData.Min or 0)
+        slider:SetMax(configData.Max or 100)
+        slider:SetDecimals(configData.Decimals or 0)
         slider:SetValue(value, true)
 
         label = panel:Add("ow.text")
@@ -165,23 +169,28 @@ function PANEL:AddSetting(settingData)
         end
 
         slider.OnValueSet = function(this, _)
-            ow.option:Set(settingData.UniqueID, this:GetValue())
             value = this:GetValue()
             label:SetText(this:GetValue())
         end
 
+        slider.OnValueChanged = function(this, _)
+            net.Start("ow.config.set")
+                net.WriteString(configData.UniqueID)
+                net.WriteType(this:GetValue())
+            net.SendToServer()
+            ow.localClient:EmitSound("ui/buttonrollover.wav", 100, 100, 1, CHAN_STATIC)
+        end
+
         panel.DoClick = function(this)
             if ( !slider.bCursorInside ) then
-                local oldValue = value
-                ow.option:Reset(settingData.UniqueID)
+                net.Start("ow.config.reset")
+                    net.WriteString(configData.UniqueID)
+                net.SendToServer()
 
-                value = ow.option:Get(settingData.UniqueID)
+                value = ow.config:GetDefault(configData.UniqueID)
                 slider:SetValue(value)
                 label:SetText(value)
 
-                if ( isfunction(settingData.OnReset) ) then
-                    settingData:OnReset(oldValue, value)
-                end
                 return
             end
 
@@ -189,14 +198,14 @@ function PANEL:AddSetting(settingData)
             slider:MouseCapture(true)
             slider:OnCursorMoved(slider:CursorPos())
         end
-    elseif ( settingData.Type == ow.type.array ) then
-        options = settingData:Populate()
+    elseif ( configData.Type == ow.type.array ) then
+        configs = configData:Populate()
         local keys = {}
-        for k2, _ in pairs(options) do
+        for k2, _ in pairs(configs) do
             table.insert(keys, k2)
         end
 
-        local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+        local phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
 
         label = panel:Add("ow.text")
         label:Dock(RIGHT)
@@ -225,21 +234,29 @@ function PANEL:AddSetting(settingData)
             nextKey = nextKey or keys[1]
             nextKey = tostring(nextKey)
 
-            ow.option:Set(settingData.UniqueID, nextKey)
+            net.Start("ow.config.set")
+                net.WriteString(configData.UniqueID)
+                net.WriteType(nextKey)
+            net.SendToServer()
+
             value = nextKey
 
-            label:SetText("< " .. (options and options[value] or "Unknown") .. " >", true)
+            label:SetText("< " .. (configs and configs[value] or "Unknown") .. " >", true)
             label:SizeToContents()
         end
 
         panel.DoRightClick = function()
             local menu = DermaMenu()
-            for k2, v2 in SortedPairs(options) do
+            for k2, v2 in SortedPairs(configs) do
                 menu:AddOption(v2, function()
-                    ow.option:Set(settingData.UniqueID, k2)
+                    net.Start("ow.config.set")
+                        net.WriteString(configData.UniqueID)
+                        net.WriteType(k2)
+                    net.SendToServer()
+
                     value = k2
 
-                    phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+                    phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
                     label:SetText( panel:IsHovered() and "< " .. phrase .. " >" or phrase, true )
 
                     label:SizeToContents()
@@ -250,20 +267,20 @@ function PANEL:AddSetting(settingData)
     end
 
     panel.OnHovered = function(this)
-        if ( settingData.Type == ow.type.bool ) then
+        if ( configData.Type == ow.type.bool ) then
             label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
-        elseif ( settingData.Type == ow.type.array ) then
-            local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+        elseif ( configData.Type == ow.type.array ) then
+            local phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
             label:SetText("< " .. phrase .. " >", true)
         end
 
         if ( !IsValid(ow.gui.tooltip) ) then
             ow.gui.tooltip = vgui.Create("ow.tooltip")
-            ow.gui.tooltip:SetText(settingData.Name, settingData.Description)
+            ow.gui.tooltip:SetText(configData.Name, configData.Description)
             ow.gui.tooltip:SizeToContents()
             ow.gui.tooltip:SetPanel(this)
         else
-            ow.gui.tooltip:SetText(settingData.Name, settingData.Description)
+            ow.gui.tooltip:SetText(configData.Name, configData.Description)
             ow.gui.tooltip:SizeToContents()
 
             timer.Simple(0, function()
@@ -275,10 +292,10 @@ function PANEL:AddSetting(settingData)
     end
 
     panel.OnUnHovered = function(this)
-        if ( settingData.Type == ow.type.bool ) then
+        if ( configData.Type == ow.type.bool ) then
             label:SetText(value and enabled or disabled, true)
-        elseif ( settingData.Type == ow.type.array ) then
-            local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
+        elseif ( configData.Type == ow.type.array ) then
+            local phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
             label:SetText(phrase, true)
         end
 
@@ -288,6 +305,6 @@ function PANEL:AddSetting(settingData)
     end
 end
 
-vgui.Register("ow.settings", PANEL, "EditablePanel")
+vgui.Register("ow.config", PANEL, "EditablePanel")
 
-ow.gui.settingsLast = nil
+ow.gui.configLast = nil

@@ -4,49 +4,6 @@
 ow.config = ow.config or {}
 ow.config.stored = ow.config.stored or {}
 
---- Sets the value of the specified configuration.
--- @realm server
--- @param key The key of the configuration.
--- @param value The value of the configuration.
--- @treturn boolean Whether the configuration was successfully set.
--- @usage ow.config.Set("color.schema", Color(0, 100, 150)) -- Sets the color of the schema.
-function ow.config:Set(key, value, ply)
-    local stored = self.stored[key]
-    if ( !istable(stored) ) then
-        ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
-        return false
-    end
-
-    if ( value == nil ) then
-        value = stored.Default
-    end
-
-    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
-        ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
-        return false
-    end
-
-    local oldValue = stored.Value != nil and stored.Value or stored.Default
-    stored.Value = value
-
-    if ( SERVER and !stored.bNoNetworking ) then
-        net.Start("ow.config.set")
-            net.WriteString(key)
-            net.WriteType(value)
-        net.Broadcast()
-    end
-
-    if ( isfunction(stored.OnChange) ) then
-        stored:OnChange(value, oldValue, ply)
-    end
-
-    if ( SERVER ) then
-        self:Save()
-    end
-
-    return true
-end
-
 --- Gets the current value of the specified configuration.
 -- @realm shared
 -- @param key The key of the configuration.
@@ -55,20 +12,29 @@ end
 -- @usage local color = ow.config.Get("color.schema", Color(0, 100, 150))
 -- print(color) -- Prints the color of the schema.
 function ow.config:Get(key, fallback)
-    local stored = self.stored[key]
-    if ( !istable(stored) ) then
+    local configData = self.stored[key]
+    if ( !istable(configData) ) then
         ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
-        return fallback or nil
-    end
-
-    local value = stored.Value
-
-    local defaultValue = stored.Default
-    if ( defaultValue == nil ) then
         return fallback
     end
 
-    return value != nil and value or defaultValue
+    return configData.Value == nil and configData.Default or configData.Value
+end
+
+--- Gets the default value of the specified configuration.
+-- @realm shared
+-- @param key The key of the configuration.
+-- @return The default value of the configuration.
+-- @usage local defaultColor = ow.config.GetDefault("color.schema")
+-- print(defaultColor) -- Prints the default color of the schema.
+function ow.config:GetDefault(key)
+    local configData = self.stored[key]
+    if ( !istable(configData) ) then
+        ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
+        return nil
+    end
+
+    return configData.Default
 end
 
 --- Sets the default value of the specified configuration.
@@ -136,6 +102,16 @@ function ow.config:Register(key, data)
             return false
         end
     end
+
+    if ( data.Category == nil ) then
+        data.Category = "misc"
+    end
+
+    if ( data.SubCategory == nil ) then
+        data.SubCategory = "other"
+    end
+
+    data.UniqueID = key
 
     self.stored[key] = data
     hook.Run("PostConfigRegistered", key, data)

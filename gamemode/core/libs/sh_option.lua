@@ -55,33 +55,37 @@ if ( CLIENT ) then
     end
 
     function ow.option:Set(key, value)
-        local ply = ow.localClient
-
-        local bResult = hook.Run("PreOptionChanged", ply, key, value)
-        if ( bResult == false ) then return false end
-
         local stored = self.stored[key]
         if ( !istable(stored) ) then
             ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
             return false
         end
 
-        if ( isfunction(stored.OnChange) ) then
-            stored:OnChange(value, ply)
+        if ( value == nil ) then
+            value = stored.Default
         end
+
+        local ply = ow.localClient
+        local oldValue = stored.Value != nil and stored.Value or stored.Default
+        local bResult = hook.Run("PreOptionChanged", ply, key, value, oldValue)
+        if ( bResult == false ) then return false end
 
         stored.Value = value
 
-        if ( !stored.bNoNetworking ) then
+        if ( stored.bNoNetworking != true ) then
             net.Start("ow.option.set")
                 net.WriteString(key)
                 net.WriteType(value)
             net.SendToServer()
         end
 
+        if ( isfunction(stored.OnChange) ) then
+            stored:OnChange(value, oldValue, ply)
+        end
+
         ow.data:Set("options", self:GetSaveData(), true, false)
 
-        hook.Run("PostOptionChanged", ply, key, value)
+        hook.Run("PostOptionChanged", ply, key, value, oldValue)
 
         return true
     end
@@ -106,7 +110,11 @@ if ( CLIENT ) then
         return optionData.Default
     end
 
-    -- Set the option to the default value
+    --- Set the option to the default value
+    -- @realm client
+    -- @string key The option key to reset
+    -- @treturn boolean Returns true if the option was reset successfully, false otherwise
+    -- @usage ow.option:Reset(key)
     function ow.option:Reset(key)
         local optionData = self.stored[key]
         if ( !istable(optionData) ) then

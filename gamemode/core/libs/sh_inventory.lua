@@ -29,7 +29,6 @@ function ow.inventory:GetByCharacterID(characterID)
     for k, v in pairs(self.stored) do
         if ( v:GetOwner() == characterID ) then
             table.insert(inventories, v)
-            print("Found inventory for character ID " .. characterID .. ": " .. v:GetID())
         end
     end
 

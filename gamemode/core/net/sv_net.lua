@@ -1,3 +1,4 @@
+util.AddNetworkString("ow.abracadabra")
 util.AddNetworkString("ow.character.cache")
 util.AddNetworkString("ow.character.cache.all")
 util.AddNetworkString("ow.character.create")
@@ -6,19 +7,33 @@ util.AddNetworkString("ow.character.delete")
 util.AddNetworkString("ow.character.load")
 util.AddNetworkString("ow.character.load.failed")
 util.AddNetworkString("ow.chat.text")
+util.AddNetworkString("ow.config.reset")
 util.AddNetworkString("ow.config.set")
 util.AddNetworkString("ow.config.sync")
 util.AddNetworkString("ow.database.save")
+util.AddNetworkString("ow.entity.setDataVariable")
 util.AddNetworkString("ow.gesture.play")
+util.AddNetworkString("ow.inventory.cache")
+util.AddNetworkString("ow.inventory.register")
 util.AddNetworkString("ow.item.add")
 util.AddNetworkString("ow.item.cache")
 util.AddNetworkString("ow.mainmenu")
 util.AddNetworkString("ow.notification.send")
-util.AddNetworkString("ow.inventory.register")
-util.AddNetworkString("ow.inventory.cache")
-util.AddNetworkString("ow.entity.setDataVariable")
 
-util.AddNetworkString("ow.abracadabra")
+net.Receive("ow.config.reset", function(len, ply)
+    if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end
+
+    local key = net.ReadString()
+    local stored = ow.config.stored[key]
+    if ( !istable(stored) ) then return end
+
+    local bResult = hook.Run("PrePlayerConfigReset", ply, key)
+    if ( bResult == false ) then return end
+
+    ow.config:Reset(key)
+
+    hook.Run("PostPlayerConfigReset", ply, key)
+end)
 
 net.Receive("ow.config.set", function(len, ply)
     if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end
@@ -32,12 +47,12 @@ net.Receive("ow.config.set", function(len, ply)
 
     local oldValue = ow.config:Get(key)
 
-    local bResult = hook.Run("PreConfigChanged", key, value, oldValue, ply)
-    if ( tobool(bResult) == false ) then return end
+    local bResult = hook.Run("PrePlayerConfigChanged", ply, key, value, oldValue)
+    if ( bResult == false ) then return end
 
-    ow.config:Set(key, value, ply)
+    ow.config:Set(key, value)
 
-    hook.Run("PostConfigChanged", key, value, oldValue, ply)
+    hook.Run("PostPlayerConfigChanged", ply, key, value, oldValue)
 end)
 
 util.AddNetworkString("ow.character.create")
