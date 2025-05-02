@@ -5,6 +5,8 @@
 
 ow.crypto = ow.crypto or {}
 
+ow.crypto.DefaultKey = "ltPjQ96MXCVC8Awo"
+
 -- write a 2-byte big-endian integer
 local function write_u16(n)
     local hi = bit.band(bit.rshift(n, 8), 0xFF)
@@ -167,9 +169,10 @@ end
 --- Packs data into a compressed, encrypted blob.
 -- @realm shared
 -- @tparam any data The Lua value to pack
--- @tparam string key The encryption key
+-- @tparam string key (optional) The encryption key
 -- @treturn string The final blob
 function ow.crypto:Pack(data, key)
+    key = key or self.DefaultKey
     local raw = self:Serialize(data)
     local cmp = self:Compress(raw)
     return self:Encrypt(cmp, key)
@@ -178,9 +181,10 @@ end
 --- Unpacks a blob back into original data.
 -- @realm shared
 -- @tparam string blob The packed blob
--- @tparam string key The encryption key
+-- @tparam string key (optional) The encryption key
 -- @treturn any The original Lua value
 function ow.crypto:Unpack(blob, key)
+    key = key or self.DefaultKey
     local dec = self:Decrypt(blob, key)
     local raw = self:Decompress(dec)
     return self:Deserialize(raw)
