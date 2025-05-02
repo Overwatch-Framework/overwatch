@@ -397,6 +397,20 @@ function ow.util:GetCharacters()
     return characters
 end
 
+function ow.util:IsPlayerReceiver(obj)
+    return IsValid(obj) and obj:IsPlayer()
+end
+
+function ow.util:SafeParseTable(input)
+    if ( istable(input) ) then
+        return input
+    elseif ( isstring(input) and input != "" and input != "[]" ) then
+        return util.JSONToTable(input) or {}
+    end
+
+    return {}
+end
+
 if ( CLIENT ) then
     --- Returns the given text's width.
     -- @realm client

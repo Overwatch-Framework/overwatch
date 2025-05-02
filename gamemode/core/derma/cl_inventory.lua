@@ -240,39 +240,6 @@ function PANEL:DoClick()
     inventoryPanel:SetInfo(self:GetID())
 end
 
--- Boss didnt want tooltips :(
-/*
-function PANEL:OnHovered()
-    local item = ow.item:Get(self:GetID())
-    if ( !item ) then return end
-
-    local name = item:GetName()
-    local description = item:GetDescription()
-
-    if ( !IsValid(ow.gui.tooltip) ) then
-        ow.gui.tooltip = vgui.Create("ow.tooltip")
-        ow.gui.tooltip:SetText(name, description)
-        ow.gui.tooltip:SizeToContents()
-        ow.gui.tooltip:SetPanel(self)
-    else
-        ow.gui.tooltip:SetText(name, description)
-        ow.gui.tooltip:SizeToContents()
-
-        timer.Simple(0, function()
-            if ( IsValid(ow.gui.tooltip) ) then
-                ow.gui.tooltip:SetPanel(self)
-            end
-        end)
-    end
-end
-
-function PANEL:OnUnHovered()
-    if ( IsValid(ow.gui.tooltip) ) then
-        ow.gui.tooltip:SetPanel(nil)
-    end
-end
-*/
-
 function PANEL:Think()
     BaseClass.Think(self)
 

@@ -13,13 +13,6 @@ util.AddNetworkString("ow.config.sync")
 util.AddNetworkString("ow.database.save")
 util.AddNetworkString("ow.entity.setDataVariable")
 util.AddNetworkString("ow.gesture.play")
-util.AddNetworkString("ow.inventory.cache")
-util.AddNetworkString("ow.inventory.item.add")
-util.AddNetworkString("ow.inventory.item.remove")
-util.AddNetworkString("ow.inventory.register")
-util.AddNetworkString("ow.item.add")
-util.AddNetworkString("ow.item.cache")
-util.AddNetworkString("ow.item.entity")
 util.AddNetworkString("ow.mainmenu")
 util.AddNetworkString("ow.notification.send")
 
@@ -174,4 +167,60 @@ net.Receive("ow.abracadabra", function(len, ply)
     ply:Kick("You have been banned from this server. Thank you taking the bait!")
 
     ow.util:PrintWarning("Player " .. ply:Name() .. " (" .. ply:SteamID() .. ") has been banned for using the \"abracadabra\" network message!")
+end)
+
+util.AddNetworkString("ow.inventory.cache")
+util.AddNetworkString("ow.inventory.item.add")
+util.AddNetworkString("ow.inventory.item.remove")
+util.AddNetworkString("ow.inventory.register")
+util.AddNetworkString("ow.item.add")
+util.AddNetworkString("ow.item.cache")
+util.AddNetworkString("ow.item.entity")
+util.AddNetworkString("ow.item.perform")
+util.AddNetworkString("ow.item.spawn")
+
+net.Receive("ow.inventory.cache", function(len, ply)
+    local inventoryID = net.ReadUInt(32)
+    if ( !inventoryID ) then return end
+
+    ow.inventory:Cache(ply, inventoryID)
+end)
+
+net.Receive("ow.item.entity", function(len, ply)
+    local itemID = net.ReadUInt(32)
+    local entity = net.ReadEntity()
+
+    if ( !IsValid(entity) ) then return end
+
+    local item = ow.item:Get(itemID)
+    if ( !item ) then return end
+
+    item:SetEntity(entity)
+end)
+
+net.Receive("ow.item.perform", function(len, ply)
+    local itemID = net.ReadUInt(32)
+    local actionName = net.ReadString()
+
+    if ( !itemID or !actionName ) then return end
+
+    local item = ow.item:Get(itemID)
+    if ( !item or item:GetOwner() != ply:GetCharacterID() ) then return end
+
+    ow.item:PerformAction(itemID, actionName)
+end)
+
+net.Receive("ow.item.spawn", function(len, ply)
+    local uniqueID = net.ReadString()
+    if ( !uniqueID or !ow.item.stored[uniqueID] ) then return end
+
+    local pos = ply:GetEyeTrace().HitPos + Vector(0, 0, 10)
+
+    ow.item:Spawn(nil, uniqueID, pos, nil, function(entity)
+        if ( IsValid(entity) ) then
+            ply:Notify("Spawned item: " .. uniqueID)
+        else
+            ply:Notify("Failed to spawn item.")
+        end
+    end)
 end)

@@ -1,27 +1,28 @@
---- Item library
+-- Item management library.
 -- @module ow.item
 
 ow.item = ow.item or {}
 ow.item.meta = ow.item.meta or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
-ow.item.bases = ow.item.bases or {}
+
+local ITEM = ow.item.meta
+ITEM.__index = ITEM
 
 local requiredFields = {
     "Name",
-    "Description",
+    "Description"
 }
 
--- TODO: Base Items support
 function ow.item:Register(uniqueID, itemData)
+    if ( !uniqueID or !istable(itemData) ) then return false end
+
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
 
-    -- TODO: Add Inheritance Support in Future
-
     for _, field in ipairs(requiredFields) do
         if ( itemData[field] == nil ) then
-            ow.util:PrintError("Item \"" .. uniqueID .. "\" is missing required field \"" .. field .. "\"!\n")
+            ow.util:PrintError("Item '" .. uniqueID .. "' is missing required field '" .. field .. "'!")
             return false
         end
     end
@@ -33,6 +34,7 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Actions.Drop = itemData.Actions.Drop or {
         Name = "Drop",
         OnRun = function(_, item)
+            item:Spawn(item:GetOwner())
         end,
         OnCanRun = function(_, item)
             return !IsValid(item:GetEntity())
@@ -43,42 +45,47 @@ function ow.item:Register(uniqueID, itemData)
         Name = "Take",
         OnRun = function(_, item)
             local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
-            if ( !IsValid(ply) ) then print("Player " .. item:GetOwner() .. " not found!") return end
+            if ( !IsValid(ply) ) then return end
 
             local char = ow.character:Get(item:GetOwner())
-            if ( !char ) then print("Character " .. item:GetOwner() .. " not found!") return end
-
-            local inventoryMain = char:GetInventory()
-            if ( !inventoryMain ) then print("Inventory not found!") return end
+            local inventoryMain = char and char:GetInventory()
+            if ( !inventoryMain ) then return end
 
             local entity = item:GetEntity()
-            if ( !IsValid(entity) ) then print("Entity not found!") return end
+            if ( !IsValid(entity) ) then return end
 
-            ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function()
-                local weight = item:GetWeight()
-                local maxWeight = inventoryMain:GetMaxWeight()
-                if ( weight > maxWeight ) then
-                    ply:Notify("You cannot take this item, it is too heavy!")
-                    return
+            local weight = item:GetWeight()
+            if ( inventoryMain:GetWeight() + weight > inventoryMain:GetMaxWeight() ) then
+                ply:Notify("You cannot take this item, it is too heavy!")
+                return
+            end
+
+            ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function(success)
+                if ( success ) then
+                    if ( item.OnTaken ) then
+                        item:OnTaken(entity)
+                    end
+
+                    hook.Run("OnItemTaken", entity)
+                    SafeRemoveEntity(entity)
+                else
+                    local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
+                    if ( IsValid(ply) ) then
+                        ply:Notify("Failed to transfer item to inventory.")
+                    end
                 end
-
-                if ( item.OnTaken ) then
-                    item:OnTaken(entity)
-                end
-
-                hook.Run("OnItemTaken", entity)
-
-                SafeRemoveEntity(entity)
             end)
         end,
         OnCanRun = function(_, item)
-            return IsValid(item:GetEntity())
+            return true
         end
     }
 
     self.stored[uniqueID] = itemData
 
     hook.Run("PostItemRegistered", uniqueID, itemData)
+
+    return true
 end
 
 function ow.item:Get(identifier)
@@ -99,39 +106,22 @@ function ow.item:GetInstances()
     return self.instances
 end
 
-local function ConvertTable(tbl)
-    if ( !tbl ) then return {} end
-
-    if ( isstring(tbl) ) then
-        if ( tbl == "" or tbl == "[]" ) then return {} end
-
-        tbl = util.JSONToTable(tbl) or {}
-    end
-
-    return tbl
-end
-
 function ow.item:CreateObject(data)
-    if ( !data ) then return end
+    if ( !istable(data) ) then return end
 
-    local id = tonumber(data.ID) or tonumber(data.id) or 0
-    local uniqueID = data.UniqueID or data.unique_id or "Unknown"
-    local characterID = tonumber(data.CharacterID) or tonumber(data.character_id) or 0
-    local inventoryID = tonumber(data.InventoryID) or tonumber(data.inventory_id) or 0
-    local itemData
-    if ( data.Data ) then
-        itemData = ConvertTable(data.Data)
-    elseif ( data.data ) then
-        itemData = ConvertTable(data.data)
-    else
-        itemData = {}
-    end
+    local id = tonumber(data.ID or data.id)
+    local uniqueID = data.UniqueID or data.unique_id
+    local characterID = tonumber(data.CharacterID or data.character_id or 0)
+    local inventoryID = tonumber(data.InventoryID or data.inventory_id or 0)
+    local itemData = ow.util:SafeParseTable(data.Data or data.data)
+
+    local base = self.stored[uniqueID]
+    if ( !base ) then return end
 
     local item = setmetatable({}, self.meta)
-    for k, v in pairs(self.stored[uniqueID] or {}) do
-        if ( k == "Actions" ) then
-            item[k] = nil
-        else
+
+    for k, v in pairs(base) do
+        if ( k != "Actions" ) then
             item[k] = v
         end
     end
@@ -145,31 +135,30 @@ function ow.item:CreateObject(data)
     return item
 end
 
+-- client-side addition
 if ( CLIENT ) then
     function ow.item:Add(itemID, inventoryID, uniqueID, data, callback)
         if ( !itemID or !uniqueID or !self.stored[uniqueID] ) then return end
 
-        if ( !data ) then data = {} end
+        data = data or {}
 
         local item = self:CreateObject({
             ID = itemID,
             UniqueID = uniqueID,
             Data = data,
             InventoryID = inventoryID,
+            CharacterID = ow.localClient and ow.localClient:GetCharacterID() or 0
         })
 
         if ( !item ) then return end
-
-        item.InventoryID = inventoryID
-        item.CharacterID = ow.localClient:GetCharacterID()
 
         self.instances[itemID] = item
 
         local inventory = ow.inventory:Get(inventoryID)
         if ( inventory ) then
             local items = inventory:GetItems()
-            if ( items and !table.HasValue(items, item.ID) ) then
-                table.insert(items, item.ID)
+            if ( !table.HasValue(items, itemID) ) then
+                table.insert(items, itemID)
             end
         end
 

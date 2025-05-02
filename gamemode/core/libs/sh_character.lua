@@ -100,7 +100,14 @@ function ow.character:CreateObject(characterID, data, ply)
     character.Player = ply or NULL
     character.Schema = SCHEMA.Folder
     character.SteamID = ply and ply:SteamID64() or nil
-    character.Inventories = data.inventories or {}
+
+    if ( istable(data.inventories) ) then
+        character.Inventories = data.inventories
+    elseif ( isstring(data.inventories) and data.inventories != "" ) then
+        character.Inventories = util.JSONToTable(data.inventories) or {}
+    else
+        character.Inventories = {}
+    end
 
     for k, v in pairs(self.variables) do
         if ( data[k] ) then

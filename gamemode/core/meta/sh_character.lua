@@ -24,7 +24,20 @@ function CHAR:GetPlayer()
 end
 
 function CHAR:GetInventories()
-    return isstring(self.Inventories) and util.JSONToTable(self.Inventories) or self.Inventories or {}
+    local parsed = {}
+
+    print("Parsing inventories for character " .. self:GetID())
+
+    if ( isstring(self.Inventories) ) then
+        print("Parsing inventories from string")
+        parsed = util.JSONToTable(self.Inventories) or {}
+        self.Inventories = parsed -- patch it for future use
+    elseif ( istable(self.Inventories) ) then
+        print("Parsing inventories from table")
+        parsed = self.Inventories
+    end
+
+    return parsed
 end
 
 function CHAR:SetInventories(inventories)

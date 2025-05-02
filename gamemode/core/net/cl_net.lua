@@ -13,17 +13,6 @@ net.Receive("ow.gesture.play", function(len)
     ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, ply:LookupSequence(name), 0, true)
 end)
 
-net.Receive("ow.item.add", function(len)
-    local itemID = net.ReadUInt(32)
-    local inventoryID = net.ReadUInt(32)
-    local uniqueID = net.ReadString()
-    local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
-
-    ow.item:Add(itemID, inventoryID, uniqueID, data)
-
-    print("Item " .. uniqueID .. " received with ID " .. itemID .. ".")
-end)
-
 net.Receive("ow.config.sync", function(len)
     local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
 
@@ -177,83 +166,6 @@ net.Receive("ow.notification.send", function(len)
     notification.AddLegacy(text, type, duration)
 end)
 
-net.Receive("ow.inventory.register", function(len, ply)
-    local inventoryData = net.ReadTable()
-    if ( !istable(inventoryData) ) then return end
-
-    local bResult = hook.Run("PreInventoryRegistered", inventoryData)
-    if ( bResult == false ) then return end
-
-    local inventory = ow.inventory:CreateObject(inventoryData)
-    if ( !inventory ) then return end
-
-    print("Inventory " .. inventory.ID .. " registered.")
-end)
-
-net.Receive("ow.inventory.cache", function(len)
-    local inventoryData = net.ReadTable()
-    if ( !istable(inventoryData) ) then return end
-
-    local inventory = ow.inventory:CreateObject(inventoryData)
-    if ( !inventory ) then return end
-
-    ow.inventory.stored = ow.inventory.stored or {}
-    ow.inventory.stored[inventory.ID] = inventory
-
-    -- if the character object exists, add the inventory to it
-    local character = ow.character.stored[inventoryData.characterID]
-    if ( character ) then
-        local inventories = character:GetInventories()
-        if ( !table.HasValue(inventories, inventory) ) then
-            table.insert(inventories, inventory)
-        end
-
-        character:SetInventories(inventories)
-    end
-end)
-
-net.Receive("ow.inventory.item.add", function(len)
-    local inventoryID = net.ReadUInt(32)
-    local itemID = net.ReadUInt(32)
-    local uniqueID = net.ReadString()
-    local data = net.ReadTable()
-
-    ow.inventory:AddItem(inventoryID, itemID, uniqueID, data)
-end)
-
-net.Receive("ow.inventory.item.remove", function(len)
-    local inventoryID = net.ReadUInt(32)
-    local itemID = net.ReadUInt(32)
-
-    ow.inventory:RemoveItem(inventoryID, itemID)
-end)
-
-net.Receive("ow.item.cache", function(len)
-    local characterID = net.ReadUInt(32)
-    if ( !characterID ) then return end
-
-    local items = net.ReadTable()
-    if ( !istable(items) ) then return end
-
-    for k, v in ipairs(items) do
-        local uniqueID = v.UniqueID
-        if ( ow.item.stored[uniqueID] ) then
-            ow.item.instances[tonumber(v.ID)] = ow.item:CreateObject(v)
-        end
-    end
-end)
-
-net.Receive("ow.item.entity", function(len)
-    local itemID = net.ReadUInt(32)
-    local entity = net.ReadEntity()
-    if ( !IsValid(entity) ) then return end
-
-    local item = ow.item.instances[itemID]
-    if ( !item ) then return end
-
-    item:SetEntity(entity)
-end)
-
 net.Receive("ow.entity.setDataVariable", function(len)
     local entity = net.ReadEntity()
     local key = net.ReadString()
@@ -264,4 +176,114 @@ net.Receive("ow.entity.setDataVariable", function(len)
     local entityTable = entity:GetTable()
 
     entityTable[key] = value
+end)
+
+net.Receive("ow.item.add", function()
+    local itemID = net.ReadUInt(32)
+    local inventoryID = net.ReadUInt(32)
+    local uniqueID = net.ReadString()
+    local data = util.JSONToTable(util.Decompress(net.ReadData(net.BytesLeft())))
+
+    ow.item:Add(itemID, inventoryID, uniqueID, data)
+end)
+
+net.Receive("ow.item.cache", function()
+    local characterID = net.ReadUInt(32)
+    local items = net.ReadTable()
+
+    for _, itemData in ipairs(items) do
+        local uniqueID = itemData.UniqueID
+        if ( ow.item.stored[uniqueID] ) then
+            ow.item.instances[tonumber(itemData.ID)] = ow.item:CreateObject(itemData)
+        end
+    end
+end)
+
+net.Receive("ow.item.entity", function()
+    local itemID = net.ReadUInt(32)
+    local entity = net.ReadEntity()
+    if ( !IsValid(entity) ) then return end
+
+    local item = ow.item:Get(itemID)
+    if ( item ) then
+        item:SetEntity(entity)
+    end
+end)
+
+net.Receive("ow.inventory.cache", function()
+    local inventoryData = net.ReadTable()
+    if ( !istable(inventoryData) ) then return end
+
+    local inventory = ow.inventory:CreateObject(inventoryData)
+    if ( inventory ) then
+        ow.inventory.stored[inventory:GetID()] = inventory
+
+        local character = ow.character.stored[inventory.CharacterID]
+        if ( character ) then
+            local inventories = character:GetInventories()
+            print("Inventories: ", inventories)
+            if ( !table.HasValue(inventories, inventory) ) then
+                table.insert(inventories, inventory)
+            end
+
+            character:SetInventories(inventories)
+        end
+    end
+end)
+
+net.Receive("ow.inventory.register", function()
+    local inventoryData = net.ReadTable()
+    if ( !istable(inventoryData) ) then return end
+
+    local inventory = ow.inventory:CreateObject(inventoryData)
+    if ( inventory ) then
+        ow.inventory.stored[inventory.ID] = inventory
+    end
+end)
+
+net.Receive("ow.inventory.item.add", function()
+    local inventoryID = net.ReadUInt(32)
+    local itemID = net.ReadUInt(32)
+    local uniqueID = net.ReadString()
+    local data = net.ReadTable()
+
+    local item = ow.item:Add(itemID, inventoryID, uniqueID, data)
+    if ( !item ) then return end
+
+    local inventory = ow.inventory:Get(inventoryID)
+    if ( inventory ) then
+        local items = inventory:GetItems()
+        if ( !table.HasValue(items, itemID) ) then
+            table.insert(items, itemID)
+        end
+    end
+end)
+
+net.Receive("ow.inventory.item.remove", function()
+    local inventoryID = net.ReadUInt(32)
+    local itemID = net.ReadUInt(32)
+
+    local inventory = ow.inventory:Get(inventoryID)
+    if ( !inventory ) then return end
+
+    local items = inventory:GetItems()
+    if ( table.HasValue(items, itemID) ) then
+        table.RemoveByValue(items, itemID)
+    end
+
+    local item = ow.item:Get(itemID)
+    if ( item ) then
+        item:SetInventory(0)
+    end
+end)
+
+net.Receive("ow.entity.setDataVariable", function()
+    local entity = net.ReadEntity()
+    local key = net.ReadString()
+    local value = net.ReadType()
+
+    if ( IsValid(entity) ) then
+        local entTable = entity:GetTable()
+        entTable[key] = value
+    end
 end)
