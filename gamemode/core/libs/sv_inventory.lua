@@ -11,7 +11,7 @@ function ow.inventory:Register(data)
     ow.sqlite:Insert("ow_inventories", {
         character_id = data.characterID,
         receivers = util.TableToJSON(data.receivers or {}),
-        name = data.name or "Inventory",
+        name = data.name or "Main",
         max_weight = data.maxWeight or ow.config:Get("inventory.maxweight", 20),
         items = util.TableToJSON(data.items or {}),
         data = util.TableToJSON(data.data or {})

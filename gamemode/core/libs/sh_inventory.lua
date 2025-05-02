@@ -49,7 +49,6 @@ local function ConvertTable(tbl)
 end
 
 function ow.inventory:CreateObject(data)
-    print(data)
     if ( !data or !istable(data) ) then print("Invalid data for inventory object") return end
 
     local id = tonumber(data.ID) or tonumber(data.id) or 0
