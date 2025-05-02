@@ -37,6 +37,54 @@ function ow.config:GetDefault(key)
     return configData.Default
 end
 
+--- Sets the value of the specified configuration.
+-- @realm shared
+-- @param key The key of the configuration.
+-- @param value The value of the configuration.
+-- @treturn boolean Whether the configuration was successfully set.
+-- @usage ow.config.Set("color.schema", Color(0, 100, 150)) -- Sets the color of the schema.
+function ow.config:Set(key, value)
+    local stored = self.stored[key]
+    if ( !istable(stored) ) then
+        ow.util:PrintError("Config \"" .. key .. "\" does not exist!")
+        return false
+    end
+
+    if ( value == nil ) then
+        value = stored.Default
+    end
+
+    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
+        ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
+        return false
+    end
+
+    local oldValue = stored.Value != nil and stored.Value or stored.Default
+    local bResult = hook.Run("PreConfigChanged", key, value, oldValue)
+    if ( bResult == false ) then return false end
+
+    stored.Value = value
+
+    if ( SERVER and stored.bNoNetworking != true ) then
+        net.Start("ow.config.set")
+            net.WriteString(key)
+            net.WriteType(value)
+        net.Broadcast()
+    end
+
+    if ( isfunction(stored.OnChange) ) then
+        stored:OnChange(value, oldValue, ply)
+    end
+
+    if ( SERVER ) then
+        self:Save()
+    end
+
+    hook.Run("PostConfigChanged", key, value, oldValue)
+
+    return true
+end
+
 --- Sets the default value of the specified configuration.
 -- @realm shared
 -- @param key The key of the configuration.

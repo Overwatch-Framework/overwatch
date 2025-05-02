@@ -194,7 +194,6 @@ net.Receive("ow.inventory.cache", function(len)
     local inventoryData = net.ReadTable()
     if ( !istable(inventoryData) ) then return end
 
-    print(inventoryData)
     local inventory = ow.inventory:CreateObject(inventoryData)
     if ( !inventory ) then return end
 
