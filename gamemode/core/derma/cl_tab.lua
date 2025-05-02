@@ -117,8 +117,6 @@ function PANEL:Init()
         button.DoClick = function()
             ow.gui.tabLast = k
 
-            self.container:Clear()
-
             self:Populate(v)
         end
     end

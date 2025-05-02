@@ -91,3 +91,70 @@ ow.command:Register("SetFaction", {
         ply:Notify("You have set the faction of " .. target:Nick() .. " to " .. faction.Name .. ".", NOTIFY_HINT)
     end
 })
+
+ow.command:Register("CharGiveFlags", {
+    Description = "Give a character a flag.",
+    AdminOnly = true,
+    Callback = function(info, ply, arguments)
+        local target = ow.util:FindPlayer(arguments[1])
+        if ( !IsValid(target) ) then
+            ply:Notify("You must provide a valid player to give a flag to!")
+            return
+        end
+
+        local flags = arguments[2]
+        if ( !isstring(flags) or #flags == 0 ) then
+            ply:Notify("You must provide either single flag or a set of flags!")
+            return
+        end
+
+        local character = target:GetCharacter()
+        if ( !character ) then
+            ply:Notify("The targeted player does not have a character!")
+            return
+        end
+
+        local given = {}
+        for i = 1, #flags do
+            local flag = flags[i]
+            table.insert(given, flag)
+        end
+
+        -- Check if the flags are valid
+        local validFlags = true
+        for i = 1, #given do
+            local flag = given[i]
+            if ( !ow.flag:Get(flag) ) then
+                validFlags = false
+                break
+            end
+        end
+
+        if ( !validFlags ) then
+            ply:Notify("You must provide valid flags to give!")
+            return
+        end
+
+        -- Check if we already have all the flags
+        local hasAllFlags = true
+        for k, v in ipairs(given) do
+            if ( character:HasFlag(v) ) then
+                hasAllFlags = false
+            end
+        end
+
+        if ( hasAllFlags ) then
+            ply:Notify("They already have all the flags you are trying to give!")
+            return
+        end
+
+        -- Give the flags to the character
+        for k, v in ipairs(given) do
+            character:GiveFlag(v)
+        end
+
+        local flagString = table.concat(given, ", ")
+        ply:Notify("You have given " .. target:Nick() .. " the flag(s) \"" .. flagString .. "\".", NOTIFY_HINT)
+        target:Notify("You have been given the flag(s) \"" .. flagString .. "\" for your character!", NOTIFY_HINT)
+    end
+})

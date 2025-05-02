@@ -26,7 +26,7 @@ function ow.flag:Get(flagChar)
 end
 
 do
-    ow.flag:Register("t", "Toolgun", function(ply, hasFlag)
+    ow.flag:Register("t", "flag.toolgun", function(ply, hasFlag)
         if ( hasFlag ) then
             ply:Give("gmod_tool")
         else

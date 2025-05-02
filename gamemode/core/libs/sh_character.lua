@@ -24,7 +24,7 @@ function ow.character:RegisterVariable(key, data)
 
             if ( SERVER ) then
                 self.meta["Set" .. v] = function(character, value)
-                    self:SetVariable(key, value)
+                    self:SetVariable(character:GetID(), key, value)
                 end
 
                 local field = data.Field
@@ -43,7 +43,7 @@ function ow.character:RegisterVariable(key, data)
 
         if ( SERVER ) then
             self.meta["Set" .. upperKey] = function(character, value)
-                self:SetVariable(key, value)
+                self:SetVariable(character:GetID(), key, value)
             end
 
             local field = data.Field
@@ -58,7 +58,7 @@ function ow.character:RegisterVariable(key, data)
 end
 
 function ow.character:SetVariable(id, key, value)
-    if ( !self.variables[key] ) then return end
+    if ( !self.variables[key] ) then print("Attempted to set a variable that does not exist!") return end
 
     local character = self.stored[id]
     if ( !character ) then return end
@@ -72,6 +72,21 @@ function ow.character:SetVariable(id, key, value)
 
     if ( SERVER ) then
         ow.sqlite:Update("ow_characters", { [key] = value }, { id = id })
+
+        if ( data.Field ) then
+            local field = data.Field
+            if ( field ) then
+                ow.sqlite:Update("ow_characters", { [field] = value }, { id = id })
+            end
+        end
+
+        if ( !data.NoNetworking ) then
+            net.Start("ow.character.variable.set")
+                net.WriteUInt(id, 32)
+                net.WriteString(key)
+                net.WriteType(value)
+            net.Broadcast()
+        end
     end
 end
 

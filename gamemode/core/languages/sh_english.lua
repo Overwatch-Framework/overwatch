@@ -78,9 +78,11 @@ localization["scoreboard"] = "Scoreboard"
 localization["settings"] = "Settings"
 localization["tab.close"] = "Close"
 localization["tab.config"] = "Config"
+localization["tab.help"] = "Help"
 localization["tab.inventory"] = "Inventory"
 localization["tab.mainmenu"] = "Main Menu"
 localization["tab.scoreboard"] = "Scoreboard"
 localization["tab.settings"] = "Settings"
+localization["flag.toolgun"] = "Gives the player a toolgun"
 
 ow.localization:Register("en", localization)

@@ -508,6 +508,12 @@ function GM:PopulateTabButtons(buttons)
         }
     end
 
+    buttons["tab.help"] = {
+        Populate = function(this, container)
+            container:Add("ow.tab.help")
+        end
+    }
+
     if ( hook.Run("ShouldShowInventory") != false ) then
         buttons["tab.inventory"] = {
             Populate = function(this, container)
@@ -533,6 +539,48 @@ function GM:PopulateTabButtons(buttons)
             container:Add("ow.tab.settings")
         end
     }
+end
+
+function GM:PopulateHelpCategories(categories)
+    categories["flags"] = function(container)
+        for k, v in SortedPairs(ow.flag.stored) do
+            local char = ow.localClient:GetCharacter()
+            if ( !char ) then return end
+
+            local hasFlag = char:HasFlag(k)
+
+            local button = container:Add("ow.mainmenu.button.small")
+            button:Dock(TOP)
+            button:SetText("")
+            button:SetBackgroundAlphaHovered(1)
+            button:SetBackgroundAlphaUnHovered(0.5)
+            button:SetBackgroundColor(hasFlag and ow.color:Get("ui.success") or ow.color:Get("ui.error"))
+
+            local key = button:Add("ow.text")
+            key:Dock(LEFT)
+            key:DockMargin(ScreenScale(8), 0, 0, 0)
+            key:SetFont("ow.fonts.button.hover")
+            key:SetText(k)
+
+            local seperator = button:Add("ow.text")
+            seperator:Dock(LEFT)
+            seperator:SetFont("ow.fonts.button")
+            seperator:SetText(" - ")
+
+            local description = button:Add("ow.text")
+            description:Dock(LEFT)
+            description:SetFont("ow.fonts.button")
+            description:SetText(v.description)
+
+            local function Think(this)
+                this:SetTextColor(button:GetTextColor())
+            end
+
+            key.Think = Think
+            seperator.Think = Think
+            description.Think = Think
+        end
+    end
 end
 
 -- Idk if this is good

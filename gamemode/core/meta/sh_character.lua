@@ -82,3 +82,24 @@ function CHAR:TakeMoney(amount)
 
     character:SetMoney(character:GetMoney() - amount)
 end
+
+if ( SERVER ) then
+    function CHAR:GiveFlag(flag)
+        return ow.flag:Give(self:GetPlayer(), flag)
+    end
+
+    function CHAR:TakeFlag(flag)
+        return ow.flag:Take(self:GetPlayer(), flag)
+    end
+end
+
+function CHAR:HasFlag(flag)
+    local flags = self:GetFlags()
+    for i = 1, #flags do
+        if ( flags[i] == flag ) then
+            return true
+        end
+    end
+
+    return false
+end

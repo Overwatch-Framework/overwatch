@@ -156,6 +156,19 @@ net.Receive("ow.character.delete", function(len)
     ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.color:Get("ui.success"))
 end)
 
+net.Receive("ow.character.variable.set", function(len, ply)
+    local characterID = net.ReadUInt(32)
+    local key = net.ReadString()
+    local value = net.ReadType()
+
+    if ( !characterID or !key or !value ) then return end
+
+    local character = ow.character:Get(characterID)
+    if ( !character ) then return end
+
+    character[key] = value
+end)
+
 net.Receive("ow.notification.send", function(len)
     local text = net.ReadString()
     local type = net.ReadUInt(8)

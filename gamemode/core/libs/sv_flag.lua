@@ -32,7 +32,7 @@ function ow.flag:Take(ply, flagChar)
         local flags = character:GetFlags()
         for i = 1, #flags do
             if ( flags[i] == flagChar ) then
-                character:SetFlags(flags:sub(1, i - 1) .. flags:sub(i + 1))
+                character:SetFlags(string.gsub(flags, flagChar, ""))
 
                 if ( isfunction(flagData.callback) ) then
                     flagData:callback(ply, false)
@@ -46,27 +46,4 @@ function ow.flag:Take(ply, flagChar)
     end
 
     return false
-end
-
-do
-    local charMeta = ow.character.meta
-
-    if ( SERVER ) then
-        function charMeta:GiveFlag(flag)
-            return ow.flag:Give(self:GetPlayer(), flag)
-        end
-
-        function charMeta:TakeFlag(flag)
-            return ow.flag:Take(self:GetPlayer(), flag)
-        end
-    end
-
-    function charMeta:HasFlag(flag)
-        local flags = self:GetFlags()
-        for i = 1, #flags do
-            if ( flags[i] == flag ) then return true end
-        end
-
-        return false
-    end
 end

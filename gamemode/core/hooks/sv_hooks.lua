@@ -68,7 +68,7 @@ function GM:PlayerDisconnected(ply)
         if ( character ) then
             character:SetPlayTime(character:GetPlayTime() + (os.time() - character:GetLastPlayed()))
             character:SetLastPlayed(os.time())
-            character:SaveDB()
+            character:Save()
         end
     end
 end

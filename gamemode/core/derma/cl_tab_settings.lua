@@ -15,5 +15,3 @@ function PANEL:Init()
 end
 
 vgui.Register("ow.tab.settings", PANEL, "EditablePanel")
-
-ow.gui.settingsLast = nil
