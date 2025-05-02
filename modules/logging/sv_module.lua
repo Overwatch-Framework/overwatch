@@ -18,8 +18,9 @@ function MODULE:SendLog(...)
     end
 
     -- Send to clients who are permitted to see the log
-    local compressed = util.Compress(util.TableToJSON({...}))
+    local payload = ow.crypto:Pack({...})
     net.Start("ow.logging.send")
-        net.WriteData(compressed, #compressed)
+        net.WriteUInt(#payload, 32)
+        net.WriteData(payload, #payload)
     net.Send(receivers)
 end

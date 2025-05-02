@@ -1,9 +1,11 @@
 local MODULE = MODULE
 
-net.Receive("ow.logging.send", function(len)
-    local compressed = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
+net.Receive("ow.logging.send", function()
+    local len = net.ReadUInt(32)
+    local payload = net.ReadData(len)
+    if ( !payload ) then return end
 
-    MODULE:SendLog(unpack(compressed))
+    ow.util:Print(ow.color:Get("log.message"), "Logging >> ", color_white, unpack(ow.crypto:Unpack(payload)))
 end)
 
 function MODULE:SendLog(...)
