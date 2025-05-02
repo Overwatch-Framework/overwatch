@@ -103,7 +103,8 @@ function PANEL:Paint(width, height)
     self.textInset[1] = Lerp(time, self.textInset[1], self.textInsetTarget[1])
     self.textInset[2] = Lerp(time, self.textInset[2], self.textInsetTarget[2])
 
-    draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 100 * self.inertia))
+    local backgroundColor = Color(self.textColor.r / 8, self.textColor.g / 8, self.textColor.b / 8)
+    draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(backgroundColor, 100 * self.inertia))
 
     paint.startPanel(self)
         mask(function()
@@ -232,7 +233,7 @@ function PANEL:Paint(width, height)
     self.inertia = Lerp(time, self.inertia, self.inertiaTarget)
     self.textColor = self.textColor:Lerp(self.textColorTarget, time)
 
-    draw.RoundedBox(0, 0, 0, width, height, Color(self.backgroundColor.r, self.backgroundColor.g, self.backgroundColor.b, 255 * self.inertia))
+    draw.RoundedBox(0, 0, 0, width, height, ColorAlpha(self.backgroundColor, 255 * self.inertia))
 
     paint.startPanel(self)
         mask(function()
