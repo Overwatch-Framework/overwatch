@@ -191,6 +191,10 @@ DEFINE_BASECLASS("ow.mainmenu.button")
 
 PANEL = {}
 
+AccessorFunc(PANEL, "backgroundAlphaHovered", "BackgroundAlphaHovered", FORCE_NUMBER)
+AccessorFunc(PANEL, "backgroundAlphaUnHovered", "BackgroundAlphaUnHovered", FORCE_NUMBER)
+AccessorFunc(PANEL, "backgroundColor", "BackgroundColor")
+
 function PANEL:Init()
     self:SetFont("ow.fonts.button.small")
     self:SetTextColorProperty(color_white)
@@ -199,6 +203,9 @@ function PANEL:Init()
     self:SetTextInset(ScreenScale(2), 0)
 
     self:SetWide(ScreenScale(64))
+
+    self.backgroundAlphaHovered = 1
+    self.backgroundAlphaUnHovered = 0
 
     self.inertia = 0
     self.inertiaTarget = 0
@@ -266,7 +273,7 @@ function PANEL:Think()
 
         self.textColorTarget = self.baseTextColor or color_white
 
-        self.inertiaTarget = 0
+        self.inertiaTarget = self.backgroundAlphaUnHovered or 0
 
         if ( self.OnUnHovered ) then
             self:OnUnHovered()
@@ -283,7 +290,7 @@ function PANEL:OnCursorEntered()
 
     self.textColorTarget = self.baseTextColorTarget or color_black
 
-    self.inertiaTarget = 1
+    self.inertiaTarget = self.backgroundAlphaHovered or 1
 
     if ( self.OnHovered ) then
         self:OnHovered()

@@ -264,6 +264,63 @@ function PANEL:AddConfig(configData)
             end
             menu:Open()
         end
+    elseif ( configData.Type == ow.type.color ) then
+        local button = panel:Add("ow.mainmenu.button.small")
+        button:Dock(RIGHT)
+        button:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
+        button:SetText("", true, true, true)
+        button:SetWide(ScreenScale(128))
+        button:SetBackgroundAlphaHovered(1)
+        button:SetBackgroundAlphaUnHovered(1)
+        button:SetBackgroundColor(value)
+        button:SetMouseInputEnabled(false)
+
+        panel.DoClick = function()
+            local blocker = vgui.Create("DPanel", self)
+            blocker:SetSize(ScrW(), ScrH())
+            blocker:SetPos(0, 0)
+            blocker:MakePopup()
+            blocker.Paint = function(this, width, height)
+                ow.util:DrawBlur(this, 2)
+                draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 200))
+            end
+            blocker.OnMousePressed = function(this, key)
+                if ( key == MOUSE_LEFT ) then
+                    this:Remove()
+                end
+            end
+            blocker.OnKeyPressed = function(this, key)
+                this:Remove()
+            end
+            blocker.Think = function(this)
+                if ( ! system.HasFocus() ) then
+                    this:Remove()
+                end
+            end
+            blocker.OnRemove = function(this)
+                net.Start("ow.config.set")
+                    net.WriteString(configData.UniqueID)
+                    net.WriteType(value)
+                net.SendToServer()
+            end
+
+            local frame = blocker:Add("DPanel")
+            frame:SetSize(300, 200)
+            frame:SetPos(gui.MouseX() - 150, gui.MouseY() - 100)
+            frame.Paint = nil
+
+            local mixer = frame:Add("DColorMixer")
+            mixer:Dock(FILL)
+            mixer:SetAlphaBar(false)
+            mixer:SetPalette(true)
+            mixer:SetWangs(true)
+            mixer:SetColor(value)
+            mixer.ValueChanged = function(this, color)
+                local new = Color(color.r, color.g, color.b, 255)
+                value = new
+                button:SetBackgroundColor(new)
+            end
+        end
     end
 
     panel.OnHovered = function(this)
