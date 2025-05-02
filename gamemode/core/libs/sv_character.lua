@@ -118,6 +118,7 @@ function ow.character:Load(ply, characterID)
         ply:Spawn()
 
         ow.inventory:CacheAll(characterID)
+        ow.item:Cache(characterID)
 
         hook.Run("PlayerLoadedCharacter", ply, character, currentCharacter)
 

@@ -134,33 +134,50 @@ function ow.item:PerformAction(itemID, actionName, callback)
 
     return true
 end
-
 function ow.item:Cache(characterID)
-    if ( !characterID or !ow.character:Get(characterID) ) then return false end
+    if ( !ow.character:Get(characterID) ) then return false end
 
-    local results = ow.sqlite:Select("ow_items", nil, "character_id = " .. characterID)
-    if ( !results ) then return false end
+    local items = ow.sqlite:Select("ow_items", nil, "character_id = " .. characterID .. " OR character_id = 0")
+    if ( !items ) then return false end
 
-    for _, row in pairs(results) do
+    for _, row in pairs(items) do
+        local itemID = tonumber(row.id)
         local uniqueID = row.unique_id
+
         if ( self.stored[uniqueID] ) then
-            self.instances[tonumber(row.id)] = self:CreateObject(row)
+            local item = self:CreateObject(row)
+
+            -- Fix invalid character ownership by looking at the inventory owner
+            if ( item:GetOwner() == 0 ) then
+                local inv = ow.inventory:Get(item:GetInventory())
+                if ( inv ) then
+                    local newCharID = inv:GetOwner()
+                    item:SetOwner(newCharID)
+
+                    ow.sqlite:Update("ow_items", {
+                        character_id = newCharID
+                    }, "id = " .. itemID)
+                end
+            end
+
+            self.instances[itemID] = item
         end
     end
 
-    local instances = {}
+    -- Send all items to client
+    local instanceList = {}
     for _, item in pairs(self.instances) do
         if ( item:GetOwner() == characterID ) then
-            table.insert(instances, item)
+            table.insert(instanceList, item)
         end
     end
 
-    local receiver = ow.character:GetPlayerByCharacter(characterID)
-    if ( IsValid(receiver) ) then
+    local ply = ow.character:GetPlayerByCharacter(characterID)
+    if ( IsValid(ply) ) then
         net.Start("ow.item.cache")
             net.WriteUInt(characterID, 32)
-            net.WriteTable(instances)
-        net.Send(receiver)
+            net.WriteTable(instanceList)
+        net.Send(ply)
     end
 
     return true
