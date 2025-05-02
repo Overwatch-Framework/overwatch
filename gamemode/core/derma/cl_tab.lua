@@ -125,6 +125,11 @@ function PANEL:Init()
 
     if ( ow.gui.tabLast and buttons[ow.gui.tabLast] ) then
         self:Populate(buttons[ow.gui.tabLast])
+    else
+        for k, v in SortedPairs(buttons) do
+            self:Populate(v)
+            break
+        end
     end
 
     self:SetGradientLeftTarget(1)
