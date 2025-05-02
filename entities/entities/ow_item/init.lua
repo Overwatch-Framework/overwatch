@@ -112,6 +112,7 @@ function ENT:Use(ply)
     itemInst:SetEntity(self)
     itemInst:SetOwner(ply:GetCharacterID())
 
+    self.owPickingUp = CurTime() + 1
     ow.item:PerformAction(itemInst:GetID(), "Take")
 end
 
@@ -148,6 +149,8 @@ function ENT:OnTakeDamage(dmg)
 end
 
 function ENT:OnRemove()
+    if ( self.owPickingUp and self.owPickingUp > CurTime() ) then return end
+
     local item = ow.item:Get(self:GetItemID())
     if ( item and item.OnRemoved ) then
         item:OnRemoved(self)
