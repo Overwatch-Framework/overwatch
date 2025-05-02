@@ -60,34 +60,30 @@ function CHAR:GetInventory(name)
 end
 
 function CHAR:GiveMoney(amount)
-    if ( !self:GetPlayer() ) then return end
-
-    local character = self:GetPlayer()
     if ( amount < 0 ) then
         amount = math.abs(amount)
         ow.util:PrintWarning("Character " .. self:GetID() .. " tried to give negative amount, converted to positive number. Call :TakeMoney instead!")
     end
 
-    character:SetMoney(character:GetMoney() + amount)
+    self:SetMoney(self:GetMoney() + amount)
+    hook.Run("OnCharacterGiveMoney", self, amount)
 end
 
 function CHAR:TakeMoney(amount)
-    if ( !self:GetPlayer() ) then return end
-
-    local character = self:GetPlayer()
     if ( amount < 0 ) then
         amount = math.abs(amount)
         ow.util:PrintWarning("Character " .. self:GetID() .. " tried to take negative amount, converted to positive number. Call :GiveMoney instead!")
     end
 
-    character:SetMoney(character:GetMoney() - amount)
+    self:SetMoney(self:GetMoney() - amount)
+    hook.Run("OnCharacterTakeMoney", self, amount)
 end
 
 function CHAR:HasFlag(flag)
     if ( !ow.flag:Get(flag) ) then return false end
 
     local flags = self:GetFlags()
-    if ( !flags or flags == "" ) then return false end
+    if ( !isstring(flags) or flags == "" ) then return false end
 
     if ( string.find(flags, flag) ) then return true end
 
