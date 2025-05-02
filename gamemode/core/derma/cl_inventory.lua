@@ -240,6 +240,32 @@ function PANEL:DoClick()
     inventoryPanel:SetInfo(self:GetID())
 end
 
+function PANEL:DoRightClick()
+    local itemID = self:GetID()
+    local item = ow.item:Get(itemID)
+    if ( !item ) then return end
+
+    local base = ow.item:Get(item:GetUniqueID())
+    if ( !base or !base.Actions ) then return end
+
+    local menu = DermaMenu()
+    for actionName, actionData in pairs(base.Actions) do
+        if ( actionName == "Take" ) then continue end
+        if ( isfunction(actionData.OnCanRun) and actionData:OnCanRun(item) == false ) then continue end
+
+        menu:AddOption(actionData.Name or actionName, function()
+            net.Start("ow.item.perform")
+                net.WriteUInt(itemID, 32)
+                net.WriteString(actionName)
+            net.SendToServer()
+        end)
+    end
+
+    if ( menu:ChildCount() > 0 ) then
+        menu:Open()
+    end
+end
+
 function PANEL:Think()
     BaseClass.Think(self)
 

@@ -34,7 +34,24 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Actions.Drop = itemData.Actions.Drop or {
         Name = "Drop",
         OnRun = function(_, item)
-            item:Spawn(item:GetOwner())
+            local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
+            if ( !IsValid(ply) ) then return end
+
+            local pos = ply:GetDropPosition()
+            if ( !pos ) then return end
+
+            local prevent = hook.Run("PrePlayerDropItem", ply, item, pos)
+            if ( prevent == false ) then return end
+
+            ow.item:Spawn(item:GetID(), item:GetUniqueID(), pos, Angle(0, 0, 0), function(entity)
+                ow.inventory:RemoveItem(item:GetInventory(), item:GetID())
+
+                net.Start("ow.inventory.refresh")
+                    net.WriteUInt(item:GetInventory(), 32)
+                net.Send(ply)
+
+                hook.Run("PostPlayerDropItem", ply, item, entity)
+            end, item:GetData())
         end,
         OnCanRun = function(_, item)
             return !IsValid(item:GetEntity())
@@ -60,19 +77,19 @@ function ow.item:Register(uniqueID, itemData)
                 return
             end
 
+            local prevent = hook.Run("PrePlayerTakeItem", ply, item, entity)
+            if ( prevent == false ) then return end
+
             ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function(success)
                 if ( success ) then
                     if ( item.OnTaken ) then
                         item:OnTaken(entity)
                     end
 
-                    hook.Run("OnItemTaken", entity)
+                    hook.Run("PostPlayerTakeItem", ply, item, entity)
                     SafeRemoveEntity(entity)
                 else
-                    local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
-                    if ( IsValid(ply) ) then
-                        ply:Notify("Failed to transfer item to inventory.")
-                    end
+                    ply:Notify("Failed to transfer item to inventory.")
                 end
             end)
         end,

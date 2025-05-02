@@ -277,6 +277,15 @@ net.Receive("ow.inventory.item.remove", function()
     end
 end)
 
+net.Receive("ow.inventory.refresh", function()
+    local inventoryID = net.ReadUInt(32)
+
+    local panel = ow.gui.inventory
+    if ( IsValid(panel) ) then
+        panel:SetInventory(inventoryID)
+    end
+end)
+
 net.Receive("ow.entity.setDataVariable", function()
     local entity = net.ReadEntity()
     local key = net.ReadString()

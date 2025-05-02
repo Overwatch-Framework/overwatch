@@ -100,21 +100,27 @@ function ITEM:SetEntity(entity)
 end
 
 function ITEM:Spawn(position, angles)
-    if ( !position ) then return end
-    if ( !angles ) then angles = angle_zero end
+    local ply = ow.character:GetPlayerByCharacter(self:GetOwner())
+    if ( !IsValid(ply) ) then print("Invalid player!") return end
 
-    local entity = ents.Create("ow_item")
-    entity:Spawn()
-    entity:SetAngles(angles or angle_zero)
-    entity:SetItemID(self:GetID())
+    position = position or ply:GetDropPosition()
+    if ( !position ) then print("Invalid position!") return end
 
-    if ( type(position) == "Player" ) then
-        position = position:GetItemDropPos(entity)
-    end
+    local item = ow.item:Spawn(nil, uniqueID, position, angles, function()
+        if ( self.OnSpawned ) then
+            self:OnSpawned(item)
+        end
 
-    entity:SetPos(position)
+        item:SetUniqueID(self:GetUniqueID())
+        item:SetData(self:GetData())
+        item:SetEntity(self:GetEntity())
 
-    hook.Run("OnItemSpawned", entity)
+        if ( self.OnSpawned ) then
+            self:OnSpawned(item)
+        end
 
-    return entity
+        print("Item spawned: " .. item:GetUniqueID() .. " at " .. tostring(position))
+
+        return item
+    end)
 end

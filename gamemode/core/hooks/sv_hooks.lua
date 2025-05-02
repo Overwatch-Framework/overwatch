@@ -234,6 +234,18 @@ function GM:PlayerDeath(ply, inflictor, attacker) -- Test
     end
 end
 
+function GM:PostPlayerDropItem(ply, item, entity)
+    if ( !item or !IsValid(entity) ) then return end
+
+    entity:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 4) .. ".wav", 75, math.random(90, 110), 1, CHAN_ITEM)
+end
+
+function GM:PostPlayerTakeItem(ply, item, entity)
+    if ( !item or !IsValid(entity) ) then return end
+
+    entity:EmitSound("physics/body/body_medium_impact_soft" .. math.random(5, 7) .. ".wav", 75, math.random(90, 110), 1, CHAN_ITEM)
+end
+
 local function IsAdmin(_, ply)
     return ply:IsAdmin()
 end

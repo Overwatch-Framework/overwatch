@@ -66,20 +66,17 @@ function ow.item:Transfer(itemID, fromInventoryID, toInventoryID, callback)
     local fromInventory = ow.inventory:Get(fromInventoryID)
     local toInventory = ow.inventory:Get(toInventoryID)
 
-    print("[Transfer] itemID:", itemID)
-    print(" -> fromInventory:", fromInventoryID)
-    print(" -> toInventory:", toInventoryID)
-    print(" -> item weight:", item:GetWeight())
-    print(" -> toInventory object:", toInventory)
-    print(" -> toInventory weight:", toInventory and toInventory:GetWeight())
-    print(" -> max weight:", toInventory and toInventory:GetMaxWeight())
-    print(" -> item owner:", item:GetOwner())
-
     if ( toInventory and !toInventory:HasSpaceFor(item:GetWeight()) ) then
         local receiver = ow.character:GetPlayerByCharacter(item:GetOwner())
         if ( IsValid(receiver) ) then
             receiver:Notify("Inventory is too full to transfer this item.")
         end
+
+        return false
+    end
+
+    local prevent = hook.Run("PreItemTransferred", item, fromInventoryID, toInventoryID)
+    if ( prevent == false ) then
         return false
     end
 
@@ -101,6 +98,8 @@ function ow.item:Transfer(itemID, fromInventoryID, toInventoryID, callback)
         callback(true)
     end
 
+    hook.Run("PostItemTransferred", item, fromInventoryID, toInventoryID)
+
     return true
 end
 
@@ -118,6 +117,11 @@ function ow.item:PerformAction(itemID, actionName, callback)
         return false
     end
 
+    local prevent = hook.Run("PreItemAction", item, actionName)
+    if ( prevent == false ) then
+        return false
+    end
+
     if ( action.OnRun ) then
         action:OnRun(item)
     end
@@ -125,6 +129,8 @@ function ow.item:PerformAction(itemID, actionName, callback)
     if ( callback ) then
         callback()
     end
+
+    hook.Run("PostItemAction", item, actionName)
 
     return true
 end
