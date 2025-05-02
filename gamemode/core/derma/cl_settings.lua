@@ -122,6 +122,17 @@ function PANEL:AddSetting(settingData)
 
             label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
         end
+
+        panel.DoRightClick = function(this)
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                ow.option:Reset(settingData.UniqueID)
+                value = ow.option:Get(settingData.UniqueID)
+
+                label:SetText(value and enabled or disabled, true)
+            end):SetIcon("icon16/arrow_refresh.png")
+            menu:Open()
+        end
     elseif ( settingData.Type == ow.type.number ) then
         local slider = panel:Add("ow.slider")
         slider:Dock(RIGHT)
@@ -156,7 +167,7 @@ function PANEL:AddSetting(settingData)
         label = panel:Add("ow.text")
         label:Dock(RIGHT)
         label:DockMargin(0, 0, -ScreenScale(4), 8)
-        label:SetText(value)
+        label:SetText(value, true, true, true)
         label:SetFont("ow.fonts.button.small")
         label:SetWide(ScreenScale(128))
         label:SetContentAlignment(6)
@@ -167,7 +178,7 @@ function PANEL:AddSetting(settingData)
         slider.OnValueSet = function(this, _)
             ow.option:Set(settingData.UniqueID, this:GetValue())
             value = this:GetValue()
-            label:SetText(this:GetValue())
+            label:SetText(this:GetValue(), true, true, true)
         end
 
         panel.DoClick = function(this)
@@ -176,18 +187,35 @@ function PANEL:AddSetting(settingData)
                 ow.option:Reset(settingData.UniqueID)
 
                 value = ow.option:Get(settingData.UniqueID)
-                slider:SetValue(value)
-                label:SetText(value)
+                slider:SetValue(value, true)
+                label:SetText(value, true, true, true)
 
                 if ( isfunction(settingData.OnReset) ) then
                     settingData:OnReset(oldValue, value)
                 end
+
                 return
             end
 
             slider.dragging = true
             slider:MouseCapture(true)
             slider:OnCursorMoved(slider:CursorPos())
+        end
+
+        panel.DoRightClick = function(this)
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                ow.option:Reset(settingData.UniqueID)
+                value = ow.option:Get(settingData.UniqueID)
+
+                slider:SetValue(value, true)
+                label:SetText(value, true, true, true)
+
+                if ( isfunction(settingData.OnReset) ) then
+                    settingData:OnReset(oldValue, value)
+                end
+            end):SetIcon("icon16/arrow_refresh.png")
+            menu:Open()
         end
     elseif ( settingData.Type == ow.type.array ) then
         options = settingData:Populate()
@@ -229,20 +257,24 @@ function PANEL:AddSetting(settingData)
             value = nextKey
 
             label:SetText("< " .. (options and options[value] or "Unknown") .. " >", true)
-            label:SizeToContents()
         end
 
         panel.DoRightClick = function()
             local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                ow.option:Reset(settingData.UniqueID)
+                value = ow.option:Get(settingData.UniqueID)
+
+                label:SetText("< " .. (options and options[value] or "Unknown") .. " >", true)
+            end):SetIcon("icon16/arrow_refresh.png")
+            menu:AddSpacer()
             for k2, v2 in SortedPairs(options) do
                 menu:AddOption(v2, function()
                     ow.option:Set(settingData.UniqueID, k2)
                     value = k2
 
                     phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
-                    label:SetText( panel:IsHovered() and "< " .. phrase .. " >" or phrase, true )
-
-                    label:SizeToContents()
+                    label:SetText(panel:IsHovered() and "< " .. phrase .. " >" or phrase, true)
                 end)
             end
             menu:Open()
@@ -300,6 +332,17 @@ function PANEL:AddSetting(settingData)
                 value = new
                 color:SetBackgroundColor(new)
             end
+        end
+
+        panel.DoRightClick = function(this)
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                ow.option:Reset(settingData.UniqueID)
+                value = ow.option:Get(settingData.UniqueID)
+
+                color:SetBackgroundColor(value)
+            end):SetIcon("icon16/arrow_refresh.png")
+            menu:Open()
         end
     end
 

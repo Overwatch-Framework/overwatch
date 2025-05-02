@@ -126,6 +126,19 @@ function PANEL:AddConfig(configData)
 
             label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
         end
+
+        panel.DoRightClick = function()
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                net.Start("ow.config.reset")
+                    net.WriteString(configData.UniqueID)
+                net.SendToServer()
+
+                value = ow.config:GetDefault(configData.UniqueID)
+                label:SetText(value and enabled or disabled, true)
+            end)
+            menu:Open()
+        end
     elseif ( configData.Type == ow.type.number ) then
         local slider = panel:Add("ow.slider")
         slider:Dock(RIGHT)
@@ -198,6 +211,20 @@ function PANEL:AddConfig(configData)
             slider:MouseCapture(true)
             slider:OnCursorMoved(slider:CursorPos())
         end
+
+        panel.DoRightClick = function(this)
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                net.Start("ow.config.reset")
+                    net.WriteString(configData.UniqueID)
+                net.SendToServer()
+
+                value = ow.config:GetDefault(configData.UniqueID)
+                slider:SetValue(value)
+                label:SetText(value)
+            end)
+            menu:Open()
+        end
     elseif ( configData.Type == ow.type.array ) then
         configs = configData:Populate()
         local keys = {}
@@ -242,11 +269,19 @@ function PANEL:AddConfig(configData)
             value = nextKey
 
             label:SetText("< " .. (configs and configs[value] or "Unknown") .. " >", true)
-            label:SizeToContents()
         end
 
         panel.DoRightClick = function()
             local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                net.Start("ow.config.reset")
+                    net.WriteString(configData.UniqueID)
+                net.SendToServer()
+
+                value = ow.config:GetDefault(configData.UniqueID)
+                label:SetText(configs and configs[value] or unknown, true)
+            end)
+            menu:AddSpacer()
             for k2, v2 in SortedPairs(configs) do
                 menu:AddOption(v2, function()
                     net.Start("ow.config.set")
@@ -257,9 +292,7 @@ function PANEL:AddConfig(configData)
                     value = k2
 
                     phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
-                    label:SetText( panel:IsHovered() and "< " .. phrase .. " >" or phrase, true )
-
-                    label:SizeToContents()
+                    label:SetText(panel:IsHovered() and "< " .. phrase .. " >" or phrase, true)
                 end)
             end
             menu:Open()
@@ -320,6 +353,19 @@ function PANEL:AddConfig(configData)
                 value = new
                 color:SetBackgroundColor(new)
             end
+        end
+
+        panel.DoRightClick = function()
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                net.Start("ow.config.reset")
+                    net.WriteString(configData.UniqueID)
+                net.SendToServer()
+
+                value = ow.config:GetDefault(configData.UniqueID)
+                color:SetBackgroundColor(value)
+            end)
+            menu:Open()
         end
     end
 
