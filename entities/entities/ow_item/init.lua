@@ -8,7 +8,6 @@ function ENT:Initialize()
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
-    self:SetHealth(50)
     self:PhysWake()
 end
 
@@ -24,6 +23,7 @@ function ENT:SetItem(itemID, uniqueID)
     self:SetColor(isfunction(itemDef.GetColor) and itemDef:GetColor(self) or (itemDef.Color or color_white))
     self:SetMaterial(isfunction(itemDef.GetMaterial) and itemDef:GetMaterial(self) or (itemDef.Material or ""))
     self:SetModelScale(isfunction(itemDef.GetScale) and itemDef:GetScale(self) or (itemDef.Scale or 1))
+    self:SetHealth(itemDef.Health or 25)
 
     -- Reinitialize physics due to model change
     self:PhysicsInit(SOLID_VPHYSICS)
@@ -129,6 +129,29 @@ function ENT:OnTakeDamage(dmg)
     self:SetHealth(self:Health() - dmg:GetDamage())
 
     if ( self:Health() <= 0 and hook.Run("ItemCanBeDestroyed", self, dmg) != false ) then
+        self:EmitSound("physics/cardboard/cardboard_box_break" .. math.random(1, 3) .. ".wav")
+
+        local position = self:LocalToWorld(self:OBBCenter())
+        local effect = EffectData()
+        effect:SetStart(position)
+        effect:SetOrigin(position)
+        effect:SetScale(3)
+        util.Effect("GlassImpact", effect)
+
+        local itemDef = ow.item:Get(self:GetUniqueID())
+        if ( itemDef and itemDef.OnDestroyed ) then
+            itemDef:OnDestroyed(self)
+        end
+
         SafeRemoveEntity(self)
     end
+end
+
+function ENT:OnRemove()
+    local item = ow.item:Get(self:GetItemID())
+    if ( item and item.OnRemoved ) then
+        item:OnRemoved(self)
+    end
+
+    ow.sqlite:Delete("ow_items", string.format("id = %s", sql.SQLStr(self:GetItemID())))
 end
