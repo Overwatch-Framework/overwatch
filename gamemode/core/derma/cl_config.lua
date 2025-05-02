@@ -315,10 +315,10 @@ function PANEL:AddConfig(configData)
             mixer:SetPalette(true)
             mixer:SetWangs(true)
             mixer:SetColor(value)
-            mixer.ValueChanged = function(this, color)
-                local new = Color(color.r, color.g, color.b, 255)
+            mixer.ValueChanged = function(this, old)
+                local new = Color(old.r, old.g, old.b, 255)
                 value = new
-                button:SetBackgroundColor(new)
+                color:SetBackgroundColor(new)
             end
         end
     end
