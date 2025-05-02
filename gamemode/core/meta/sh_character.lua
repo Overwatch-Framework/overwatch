@@ -83,23 +83,55 @@ function CHAR:TakeMoney(amount)
     character:SetMoney(character:GetMoney() - amount)
 end
 
-if ( SERVER ) then
-    function CHAR:GiveFlag(flag)
-        return ow.flag:Give(self:GetPlayer(), flag)
-    end
+function CHAR:HasFlag(flag)
+    if ( !ow.flag:Get(flag) ) then return false end
 
-    function CHAR:TakeFlag(flag)
-        return ow.flag:Take(self:GetPlayer(), flag)
-    end
+    local flags = self:GetFlags()
+    if ( !flags or flags == "" ) then return false end
+
+    if ( string.find(flags, flag) ) then return true end
+
+    return false
 end
 
-function CHAR:HasFlag(flag)
-    local flags = self:GetFlags()
-    for i = 1, #flags do
-        if ( flags[i] == flag ) then
-            return true
+if ( SERVER ) then
+    function CHAR:GiveFlag(flag)
+        if ( !ow.flag:Get(flag) ) then return end
+
+        local hasFlag = self:HasFlag(flag)
+        if ( hasFlag ) then return end
+
+        local flags = self:GetFlags()
+        if ( !flags or flags == "" ) then
+            flags = flag
+        else
+            flags = flags .. flag
+        end
+
+        self:SetFlags(flags)
+
+        local flagInfo = ow.flag:Get(flag)
+        if ( flagInfo and flagInfo.callback ) then
+            flagInfo.callback(self, true)
         end
     end
 
-    return false
+    function CHAR:TakeFlag(flag)
+        if ( !ow.flag:Get(flag) ) then return end
+
+        local hasFlag = self:HasFlag(flag)
+        if ( !hasFlag ) then return end
+
+        local flags = self:GetFlags()
+        if ( !flags or flags == "" ) then return end
+
+        flags = string.Replace(flags, flag, "")
+        flags = string.Trim(flags)
+        self:SetFlags(flags)
+
+        local flagInfo = ow.flag:Get(flag)
+        if ( flagInfo and flagInfo.callback ) then
+            flagInfo.callback(self, false)
+        end
+    end
 end

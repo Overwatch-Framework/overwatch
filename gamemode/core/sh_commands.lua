@@ -138,7 +138,7 @@ ow.command:Register("CharGiveFlags", {
         -- Check if we already have all the flags
         local hasAllFlags = true
         for k, v in ipairs(given) do
-            if ( character:HasFlag(v) ) then
+            if ( !character:HasFlag(v) ) then
                 hasAllFlags = false
             end
         end
@@ -156,5 +156,72 @@ ow.command:Register("CharGiveFlags", {
         local flagString = table.concat(given, ", ")
         ply:Notify("You have given " .. target:Nick() .. " the flag(s) \"" .. flagString .. "\".", NOTIFY_HINT)
         target:Notify("You have been given the flag(s) \"" .. flagString .. "\" for your character!", NOTIFY_HINT)
+    end
+})
+
+ow.command:Register("CharTakeFlags", {
+    Description = "Take a flag from a character.",
+    AdminOnly = true,
+    Callback = function(info, ply, arguments)
+        local target = ow.util:FindPlayer(arguments[1])
+        if ( !IsValid(target) ) then
+            ply:Notify("You must provide a valid player to take a flag from!")
+            return
+        end
+
+        local flags = arguments[2]
+        if ( !isstring(flags) or #flags == 0 ) then
+            ply:Notify("You must provide either single flag or a set of flags!")
+            return
+        end
+
+        local character = target:GetCharacter()
+        if ( !character ) then
+            ply:Notify("The targeted player does not have a character!")
+            return
+        end
+
+        local taken = {}
+        for i = 1, #flags do
+            local flag = flags[i]
+            table.insert(taken, flag)
+        end
+
+        -- Check if the flags are valid
+        local validFlags = true
+        for i = 1, #taken do
+            local flag = taken[i]
+            if ( !ow.flag:Get(flag) ) then
+                validFlags = false
+                break
+            end
+        end
+
+        if ( !validFlags ) then
+            ply:Notify("You must provide valid flags to take!")
+            return
+        end
+
+        -- Check if we already dont have the flags we are trying to take
+        local hasNoFlags = true
+        for k, v in ipairs(taken) do
+            if ( character:HasFlag(v) ) then
+                hasNoFlags = false
+            end
+        end
+
+        if ( hasNoFlags ) then
+            ply:Notify("They already don't have the flags you are trying to take!")
+            return
+        end
+
+        -- Take the flags from the character
+        for k, v in ipairs(taken) do
+            character:TakeFlag(v)
+        end
+
+        local flagString = table.concat(taken, ", ")
+        ply:Notify("You have taken the flag(s) \"" .. flagString .. "\" from " .. target:Nick() .. ".", NOTIFY_HINT)
+        target:Notify("You have had the flag(s) \"" .. flagString .. "\" taken from your character!", NOTIFY_HINT)
     end
 })
