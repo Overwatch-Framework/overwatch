@@ -62,6 +62,14 @@ function ITEM:GetOwner()
     return tonumber(self.CharacterID) or 0
 end
 
+function ITEM:SetOwner(characterID)
+    characterID = tonumber(characterID) or 0
+
+    if ( !characterID ) then return end
+
+    self.CharacterID = characterID
+end
+
 function ITEM:GetData(key, default)
     if ( !key ) then return end
 
@@ -79,6 +87,16 @@ function ITEM:SetInventory(InventoryID)
     if ( !inventory ) then return end
 
     self.InventoryID = InventoryID
+end
+
+function ITEM:GetEntity()
+    return self.Entity or nil
+end
+
+function ITEM:SetEntity(entity)
+    if ( !entity ) then return end
+
+    self.Entity = entity
 end
 
 function ITEM:Spawn(position, angles)

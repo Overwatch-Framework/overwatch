@@ -31,6 +31,21 @@ function CHAR:SetInventories(inventories)
     self.Inventories = inventories
 end
 
+function CHAR:GetInventory(name)
+    name = name or "Main"
+
+    local inventories = ow.inventory:GetByCharacterID(self:GetID())
+    if ( !inventories or #inventories == 0 ) then return end
+
+    for inventoryID, inventory in pairs(inventories) do
+        if ( inventory:GetName() == name ) then
+            return inventory
+        end
+    end
+
+    return nil
+end
+
 function CHAR:GiveMoney(amount)
     if ( !self:GetPlayer() ) then return end
 

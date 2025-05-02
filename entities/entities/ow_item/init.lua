@@ -11,7 +11,7 @@ function ENT:Initialize()
     self:PhysWake()
 end
 
-function ENT:SetItem(uniqueID)
+function ENT:SetItem(itemID, uniqueID)
     local itemData = ow.item:Get(uniqueID)
     if ( !istable(itemData) ) then print("Item \"" .. uniqueID .. "\" not found!") return end
 
@@ -67,8 +67,26 @@ function ENT:SetItem(uniqueID)
         itemData:OnSpawned(self)
     end
 
+    if ( !itemID ) then
+        itemID = ow.item:Add(0, 0, uniqueID)
+    end
+
     self:SetUniqueID(uniqueID)
+    self:SetItemID(itemID)
     self:SetData(itemData.Data or {})
+
+    -- Update the item object in the table for the entity index
+    local item = ow.item:Get(itemID)
+    if ( item ) then
+        item:SetEntity(self)
+    end
+
+    -- Transmit this then to all players
+    net.Start("ow.item.entity")
+        net.WriteUInt(self:EntIndex(), 32)
+        net.WriteUInt(itemID, 32)
+        net.WriteString(uniqueID)
+    net.Broadcast()
 end
 
 function ENT:GetData()
@@ -86,27 +104,16 @@ function ENT:Use(ply)
     local itemData = ow.item:Get(self:GetUniqueID())
     if ( !itemData ) then return end
 
-    local characterID = ply:GetCharacterID()
-    local inventories = ow.inventory:GetByCharacterID(characterID)
-    local inventoryID = inventories[1]:GetID()
+    local itemInstance = ow.item:Get(self:GetItemID())
+    if ( !itemInstance ) then return end
 
-    ow.item:Add(characterID, inventoryID, self:GetUniqueID(), self:GetData(), function(result, data)
-        print(result, data)
-        PrintTable(data)
-        if ( result == false ) then
-            ply:Notify("You cannot carry any more items!")
-            return
-        end
+    itemInstance:SetEntity(self)
+    itemInstance:SetOwner(ply:GetCharacterID())
 
-        if ( itemData.OnTaken ) then
-            itemData:OnTaken(self, ply, data)
-        end
+    ow.item:PerformAction(self:GetItemID(), "Take")
 
-        hook.Run("OnItemTaken", self, ply, data)
-
-        -- Remove the entity after taking the item
-        SafeRemoveEntity(self)
-    end)
+    itemInstance:SetEntity(nil)
+    itemInstance:SetOwner(nil)
 end
 
 function ENT:OnRemove()

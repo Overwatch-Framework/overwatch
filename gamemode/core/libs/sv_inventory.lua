@@ -1,6 +1,10 @@
 --- Inventory library
 -- @module ow.inventory
 
+--- Registers a new inventory for a character.
+-- @realm server
+-- @param data A table containing inventory data. Must include `characterID`.
+-- @return table|boolean The created inventory object or false if registration failed.
 function ow.inventory:Register(data)
     if ( !data or !data.characterID ) then return end
 
@@ -10,10 +14,8 @@ function ow.inventory:Register(data)
     local id
     ow.sqlite:Insert("ow_inventories", {
         character_id = data.characterID,
-        receivers = util.TableToJSON(data.receivers or {}),
         name = data.name or "Main",
         max_weight = data.maxWeight or ow.config:Get("inventory.maxweight", 20),
-        items = util.TableToJSON(data.items or {}),
         data = util.TableToJSON(data.data or {})
     }, function(result)
         if ( !result ) then
@@ -71,10 +73,10 @@ function ow.inventory:Register(data)
     return inventory
 end
 
---- Syncs the inventory with the receivers
+--- Synchronizes an inventory with specified receivers.
 -- @realm server
--- @param inventoryID The ID of the inventory to sync
--- @param receivers The players to sync the inventory with
+-- @param inventoryID The ID of the inventory to sync.
+-- @param receivers A table of players to sync the inventory with.
 function ow.inventory:Sync(inventoryID, receivers)
     if ( !inventoryID or !receivers ) then return end
 
@@ -90,6 +92,11 @@ function ow.inventory:Sync(inventoryID, receivers)
     end
 end
 
+--- Caches an inventory for a player.
+-- @realm server
+-- @param ply The player to cache the inventory for.
+-- @param inventoryID The ID of the inventory to cache.
+-- @return boolean True if caching was successful, false otherwise.
 function ow.inventory:Cache(ply, inventoryID)
     if ( !IsValid(ply) or !ply:IsPlayer() ) then
         ErrorNoHalt("Attempted to cache character for invalid player (" .. tostring(ply) .. ")\n")
@@ -156,9 +163,9 @@ function ow.inventory:Cache(ply, inventoryID)
     net.Send(ply)
 end
 
---- Caches all inventories that the character owns
+--- Caches all inventories owned by a character.
 -- @realm server
--- @param characterID The ID of the character to cache inventories for
+-- @param characterID The ID of the character to cache inventories for.
 function ow.inventory:CacheAll(characterID)
     if ( !characterID ) then return end
 
@@ -173,15 +180,3 @@ function ow.inventory:CacheAll(characterID)
         self:Cache(ow.character:GetPlayerByCharacter(characterID), v)
     end
 end
-
-function ow.inventory:PerformAction(item, action) -- prob needs more args
-    if ( item == nil ) then return end
-
-    -- TODO: Implement
-end
-
-concommand.Add("ow_inventory_register", function(ply, cmd, args)
-    if ( !ply:IsAdmin() ) then return end
-
-    ow.inventory:Register({characterID = ply:GetCharacterID()})
-end)

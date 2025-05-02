@@ -282,10 +282,8 @@ ow.sqlite:CreateTable("ow_players", {
 ow.sqlite:CreateTable("ow_inventories", {
     id = "INTEGER PRIMARY KEY AUTOINCREMENT",
     character_id = "INTEGER",
-    receivers = "TEXT",
     name = "TEXT",
     max_weight = "INTEGER",
-    items = "TEXT",
     data = "TEXT"
 })
 

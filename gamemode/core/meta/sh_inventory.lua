@@ -22,7 +22,7 @@ end
 -- @realm shared
 -- @treturn string The inventory's name.
 function INV:GetName()
-    return self.Name or Format("Inventory %s", self:GetID())
+    return self.Name or "Inventory"
 end
 
 --- Returns the character that the inventory belongs to.
@@ -73,4 +73,68 @@ end
 -- > [1] = 252, [2] = 323
 function INV:GetItems()
     return self.Items
+end
+
+function INV:AddItem(itemID, itemData)
+    if ( !itemID or !itemData ) then return end
+
+    local item = ow.item:Get(itemID)
+    if ( !item ) then return end
+
+    table.insert(self.Items, itemID)
+
+    if ( item.OnAdded ) then
+        item:OnAdded(self, itemData)
+    end
+end
+
+function INV:RemoveItem(itemID)
+    if ( !itemID ) then return end
+
+    local item = ow.item:Get(itemID)
+    if ( !item ) then return end
+
+    table.RemoveByValue(self.Items, itemID)
+
+    if ( item.OnRemoved ) then
+        item:OnRemoved(self)
+    end
+end
+
+function INV:GetReceivers()
+    local receivers = {}
+    table.insert(receivers, ow.character:GetPlayerByCharacter(self.CharacterID))
+
+    if ( self.Receivers ) then
+        for _, receiver in ipairs(self.Receivers) do
+            if ( IsValid(receiver) and receiver:IsPlayer() ) then
+                table.insert(receivers, receiver)
+            end
+        end
+    end
+
+    return receivers
+end
+
+function INV:AddReceiver(receiver)
+    if ( !IsValid(receiver) or !receiver:IsPlayer() ) then return end
+
+    if ( !self.Receivers ) then self.Receivers = {} end
+
+    table.insert(self.Receivers, receiver)
+end
+
+function INV:RemoveReceiver(receiver)
+    if ( !IsValid(receiver) or !receiver:IsPlayer() ) then return end
+
+    if ( !self.Receivers ) then return end
+
+    table.RemoveByValue(self.Receivers, receiver)
+end
+
+function INV:ClearReceivers()
+    local receivers = {}
+    table.insert(receivers, ow.character:GetPlayerByCharacter(self.CharacterID))
+
+    self.Receivers = receivers
 end

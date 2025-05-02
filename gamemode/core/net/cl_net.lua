@@ -187,7 +187,7 @@ net.Receive("ow.inventory.register", function(len, ply)
     local inventory = ow.inventory:CreateObject(inventoryData)
     if ( !inventory ) then return end
 
-    print("Inventory " .. inventory.ID .. " registered!")
+    print("Inventory " .. inventory.ID .. " registered.")
 end)
 
 net.Receive("ow.inventory.cache", function(len)
@@ -208,12 +208,24 @@ net.Receive("ow.inventory.cache", function(len)
             table.insert(inventories, inventory)
         end
 
-        PrintTable(inventories)
         character:SetInventories(inventories)
-        print("Inventory " .. inventory.ID .. " added to character " .. inventoryData.characterID .. "!")
     end
+end)
 
-    print("Inventory " .. inventory.ID .. " cached!")
+net.Receive("ow.inventory.item.add", function(len)
+    local inventoryID = net.ReadUInt(32)
+    local itemID = net.ReadUInt(32)
+    local uniqueID = net.ReadString()
+    local data = net.ReadTable()
+
+    ow.inventory:AddItem(inventoryID, itemID, uniqueID, data)
+end)
+
+net.Receive("ow.inventory.item.remove", function(len)
+    local inventoryID = net.ReadUInt(32)
+    local itemID = net.ReadUInt(32)
+
+    ow.inventory:RemoveItem(inventoryID, itemID)
 end)
 
 net.Receive("ow.item.cache", function(len)
@@ -227,11 +239,19 @@ net.Receive("ow.item.cache", function(len)
         local uniqueID = v.UniqueID
         if ( ow.item.stored[uniqueID] ) then
             ow.item.instances[tonumber(v.ID)] = ow.item:CreateObject(v)
-            print("Item " .. uniqueID .. " cached with ID " .. v.ID .. "!")
-        else
-            print("Item " .. uniqueID .. " not found in stored items!")
         end
     end
+end)
+
+net.Receive("ow.item.entity", function(len)
+    local itemID = net.ReadUInt(32)
+    local entity = net.ReadEntity()
+    if ( !IsValid(entity) ) then return end
+
+    local item = ow.item.instances[itemID]
+    if ( !item ) then return end
+
+    item:SetEntity(entity)
 end)
 
 net.Receive("ow.entity.setDataVariable", function(len)

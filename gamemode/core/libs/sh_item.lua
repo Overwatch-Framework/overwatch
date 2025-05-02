@@ -29,22 +29,50 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Weight = itemData.Weight or 0
     itemData.Category = itemData.Category or "Miscellaneous"
 
-    itemData.Functions = itemData.Functions or {}
-    itemData.Functions.Drop = itemData.Functions.Drop or {
+    itemData.Actions = itemData.Actions or {}
+    itemData.Actions.Drop = itemData.Actions.Drop or {
         Name = "Drop",
-        OnRun = function(item)
-            -- TODO: Yeah yeah, this
+        OnRun = function(_, item)
         end,
-        OnCanRun = function(item)
+        OnCanRun = function(_, item)
+            return !IsValid(item:GetEntity())
         end
     }
 
-    itemData.Functions.Take = itemData.Functions.Take or {
+    itemData.Actions.Take = itemData.Actions.Take or {
         Name = "Take",
-        OnRun = function(item)
-            -- TODO: Yeah yeah, this
+        OnRun = function(_, item)
+            local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
+            if ( !IsValid(ply) ) then print("Player " .. item:GetOwner() .. " not found!") return end
+
+            local char = ow.character:Get(item:GetOwner())
+            if ( !char ) then print("Character " .. item:GetOwner() .. " not found!") return end
+
+            local inventoryMain = char:GetInventory()
+            if ( !inventoryMain ) then print("Inventory not found!") return end
+
+            local entity = item:GetEntity()
+            if ( !IsValid(entity) ) then print("Entity not found!") return end
+
+            ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function()
+                local weight = item:GetWeight()
+                local maxWeight = inventoryMain:GetMaxWeight()
+                if ( weight > maxWeight ) then
+                    ply:Notify("You cannot take this item, it is too heavy!")
+                    return
+                end
+
+                if ( item.OnTaken ) then
+                    item:OnTaken(entity)
+                end
+
+                hook.Run("OnItemTaken", entity)
+
+                SafeRemoveEntity(entity)
+            end)
         end,
-        OnCanRun = function(item)
+        OnCanRun = function(_, item)
+            return IsValid(item:GetEntity())
         end
     }
 
@@ -101,7 +129,7 @@ function ow.item:CreateObject(data)
 
     local item = setmetatable({}, self.meta)
     for k, v in pairs(self.stored[uniqueID] or {}) do
-        if ( k == "Functions" ) then
+        if ( k == "Actions" ) then
             item[k] = nil
         else
             item[k] = v
