@@ -6,9 +6,6 @@ ow.item.meta = ow.item.meta or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
 
-local ITEM = ow.item.meta
-ITEM.__index = ITEM
-
 local requiredFields = {
     "Name",
     "Description"
@@ -103,6 +100,39 @@ function ow.item:Register(uniqueID, itemData)
     hook.Run("PostItemRegistered", uniqueID, itemData)
 
     return true
+end
+
+function ow.item:LoadFolder(path)
+    if ( !path or !isstring(path) ) then return end
+
+    local files, _ = file.Find(path .. "/*.lua", "LUA")
+    if ( !files or #files == 0 ) then return end
+
+    for _, v in ipairs(files) do
+        local filePath = path .. "/" .. v
+        self:LoadFile(filePath)
+    end
+end
+
+function ow.item:LoadFile(path)
+    if ( !path or !isstring(path) ) then return end
+
+    local uniqueID = string.match(path, "sh_([%w_]+)%.lua$")
+    if ( !uniqueID ) then return end
+
+    ITEM = {}
+
+    ITEM.UniqueID = uniqueID
+
+    include(path)
+
+    if ( SERVER ) then
+        AddCSLuaFile(path)
+    end
+
+    self:Register(uniqueID, ITEM)
+
+    ITEM = nil
 end
 
 function ow.item:Get(identifier)

@@ -19,6 +19,7 @@ function PANEL:Init()
 
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
+    self.container:GetVBar():SetWide(0)
     self.container.Paint = nil
 
     self.info = self:Add("DPanel")
