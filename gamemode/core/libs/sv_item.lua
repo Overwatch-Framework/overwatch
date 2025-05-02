@@ -113,7 +113,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
     local action = base.Actions[actionName]
     if ( !action ) then return false end
 
-    if ( action.OnCanRun and !action:OnCanRun(item) ) then
+    if ( action.OnCanRun and !action:OnCanRun(item, ow.character:GetPlayerByCharacter(item:GetOwner())) ) then
         return false
     end
 
@@ -123,7 +123,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
     end
 
     if ( action.OnRun ) then
-        action:OnRun(item)
+        action:OnRun(item, ow.character:GetPlayerByCharacter(item:GetOwner()))
     end
 
     if ( callback ) then

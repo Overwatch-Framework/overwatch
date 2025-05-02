@@ -30,8 +30,7 @@ function ow.item:Register(uniqueID, itemData)
     itemData.Actions = itemData.Actions or {}
     itemData.Actions.Drop = itemData.Actions.Drop or {
         Name = "Drop",
-        OnRun = function(_, item)
-            local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
+        OnRun = function(this, item, ply)
             if ( !IsValid(ply) ) then return end
 
             local pos = ply:GetDropPosition()
@@ -50,15 +49,14 @@ function ow.item:Register(uniqueID, itemData)
                 hook.Run("PostPlayerDropItem", ply, item, entity)
             end, item:GetData())
         end,
-        OnCanRun = function(_, item)
+        OnCanRun = function(this, item, ply)
             return !IsValid(item:GetEntity())
         end
     }
 
     itemData.Actions.Take = itemData.Actions.Take or {
         Name = "Take",
-        OnRun = function(_, item)
-            local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
+        OnRun = function(this, item, ply)
             if ( !IsValid(ply) ) then return end
 
             local char = ow.character:Get(item:GetOwner())
@@ -90,7 +88,7 @@ function ow.item:Register(uniqueID, itemData)
                 end
             end)
         end,
-        OnCanRun = function(_, item)
+        OnCanRun = function(this, item, ply)
             return true
         end
     }
@@ -123,6 +121,10 @@ function ow.item:LoadFile(path)
     ITEM = {}
 
     ITEM.UniqueID = uniqueID
+    ITEM.Weight = ITEM.Weight or 0
+    ITEM.Category = ITEM.Category or "Miscellaneous"
+
+    ITEM.Actions = ITEM.Actions or {}
 
     include(path)
 

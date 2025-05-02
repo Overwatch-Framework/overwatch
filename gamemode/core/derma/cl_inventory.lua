@@ -252,7 +252,7 @@ function PANEL:DoRightClick()
     local menu = DermaMenu()
     for actionName, actionData in pairs(base.Actions) do
         if ( actionName == "Take" ) then continue end
-        if ( isfunction(actionData.OnCanRun) and actionData:OnCanRun(item) == false ) then continue end
+        if ( isfunction(actionData.OnCanRun) and actionData:OnCanRun(item, ow.localClient) == false ) then continue end
 
         menu:AddOption(actionData.Name or actionName, function()
             net.Start("ow.item.perform")
