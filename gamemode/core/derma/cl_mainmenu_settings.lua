@@ -33,7 +33,7 @@ function PANEL:Populate()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("ow.mainmenu.button.small")
+    local backButton = navigation:Add("ow.button.small")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
     backButton.DoClick = function()

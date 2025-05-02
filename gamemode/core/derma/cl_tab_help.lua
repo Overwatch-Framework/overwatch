@@ -26,7 +26,7 @@ function PANEL:Init()
     local categories = {}
     hook.Run("PopulateHelpCategories", categories)
     for k, v in SortedPairs(categories) do
-        local button = self.buttons:Add("ow.mainmenu.button.small")
+        local button = self.buttons:Add("ow.button.small")
         button:Dock(LEFT)
         button:SetText(k)
         button:SizeToContents()

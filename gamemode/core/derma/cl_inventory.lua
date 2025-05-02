@@ -42,7 +42,7 @@ function PANEL:Init()
     end
 
     for _, inventory in pairs(inventories) do
-        local button = self.buttons:Add("ow.mainmenu.button.small")
+        local button = self.buttons:Add("ow.button.small")
         button:Dock(LEFT)
         button:SetText(inventory:GetName())
         button:SizeToContents()
@@ -175,7 +175,7 @@ end
 
 vgui.Register("ow.inventory", PANEL, "EditablePanel")
 
-DEFINE_BASECLASS("ow.mainmenu.button.small")
+DEFINE_BASECLASS("ow.button.small")
 
 PANEL = {}
 
@@ -274,4 +274,4 @@ function PANEL:Think()
     self.weight:SetTextColor(self:GetTextColor())
 end
 
-vgui.Register("ow.item", PANEL, "ow.mainmenu.button.small")
+vgui.Register("ow.item", PANEL, "ow.button.small")

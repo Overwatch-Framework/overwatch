@@ -26,7 +26,7 @@ function PANEL:Init()
     end
 
     for k, v in SortedPairs(categories) do
-        local button = self.buttons:Add("ow.mainmenu.button.small")
+        local button = self.buttons:Add("ow.button.small")
         button:Dock(LEFT)
         button:SetText(v)
         button:SizeToContents()
@@ -91,7 +91,7 @@ end
 function PANEL:AddConfig(configData)
     local value = ow.config:Get(configData.UniqueID)
 
-    local panel = self.container:Add("ow.mainmenu.button.small")
+    local panel = self.container:Add("ow.button.small")
     panel:Dock(TOP)
     panel:SetText(configData.Name)
     panel:SetTall(ScreenScale(20))

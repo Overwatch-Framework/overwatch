@@ -67,7 +67,7 @@ function PANEL:PopulateFactionSelect()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("ow.mainmenu.button.small")
+    local backButton = navigation:Add("ow.button.small")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
     backButton.DoClick = function()
@@ -93,7 +93,7 @@ function PANEL:PopulateFactionSelect()
         local descriptionWrapped = ow.util:WrapText(description, "ow.fonts.button.small", factionList:GetTall() * 1.5)
 
         -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
-        local factionButton = factionList:Add("ow.mainmenu.button.small")
+        local factionButton = factionList:Add("ow.button.small")
         factionButton:Dock(LEFT)
         factionButton:DockMargin(0, 0, 16, 0)
         factionButton:SetText(v.Name or "Unknown Faction")
@@ -162,7 +162,7 @@ function PANEL:PopulateCreateCharacter()
     navigation:DockMargin(padding, 0, padding, padding)
     navigation:SetTall(ScreenScale(24))
 
-    local backButton = navigation:Add("ow.mainmenu.button.small")
+    local backButton = navigation:Add("ow.button.small")
     backButton:Dock(LEFT)
     backButton:SetText("BACK")
 
@@ -189,7 +189,7 @@ function PANEL:PopulateCreateCharacter()
         end
     end
 
-    local nextButton = navigation:Add("ow.mainmenu.button.small")
+    local nextButton = navigation:Add("ow.button.small")
     nextButton:Dock(RIGHT)
     nextButton:SetText("NEXT")
 

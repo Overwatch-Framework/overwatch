@@ -549,7 +549,7 @@ function GM:PopulateHelpCategories(categories)
 
             local hasFlag = char:HasFlag(k)
 
-            local button = container:Add("ow.mainmenu.button.small")
+            local button = container:Add("ow.button.small")
             button:Dock(TOP)
             button:SetText("")
             button:SetBackgroundAlphaHovered(1)

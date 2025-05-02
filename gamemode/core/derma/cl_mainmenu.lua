@@ -123,7 +123,7 @@ function PANEL:Populate()
     local ply = ow.localClient
     local plyTable = ply:GetTable()
     if ( plyTable.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
-        local playButton = buttons:Add("ow.mainmenu.button")
+        local playButton = buttons:Add("ow.button")
         playButton:Dock(TOP)
         playButton:DockMargin(0, 0, 0, 16)
         playButton:SetText("mainmenu.play")
@@ -133,7 +133,7 @@ function PANEL:Populate()
         end
     end
 
-    local createButton = buttons:Add("ow.mainmenu.button")
+    local createButton = buttons:Add("ow.button")
     createButton:Dock(TOP)
     createButton:DockMargin(0, 0, 0, 16)
     createButton:SetText("mainmenu.create.character")
@@ -155,7 +155,7 @@ function PANEL:Populate()
 
     local bHasCharacters = table.Count(plyTable.owCharacters or {}) > 0
     if ( bHasCharacters ) then
-        local selectButton = buttons:Add("ow.mainmenu.button")
+        local selectButton = buttons:Add("ow.button")
         selectButton:Dock(TOP)
         selectButton:DockMargin(0, 0, 0, 16)
         selectButton:SetText("mainmenu.select.character")
@@ -165,7 +165,7 @@ function PANEL:Populate()
         end
     end
 
-    local settingsButton = buttons:Add("ow.mainmenu.button")
+    local settingsButton = buttons:Add("ow.button")
     settingsButton:Dock(TOP)
     settingsButton:DockMargin(0, 0, 0, 16)
     settingsButton:SetText("mainmenu.settings")
@@ -174,7 +174,7 @@ function PANEL:Populate()
         self.settingsPanel:Populate()
     end
 
-    local disconnectButton = buttons:Add("ow.mainmenu.button")
+    local disconnectButton = buttons:Add("ow.button")
     disconnectButton:Dock(TOP)
     disconnectButton:DockMargin(0, 0, 0, 16)
     disconnectButton:SetText("mainmenu.leave")

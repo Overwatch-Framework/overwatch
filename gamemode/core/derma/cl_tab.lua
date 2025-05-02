@@ -71,7 +71,7 @@ function PANEL:Init()
 
     -- eon did not like the close button :(
     /*
-    local closeButton = self.buttons:Add("ow.mainmenu.button")
+    local closeButton = self.buttons:Add("ow.button")
     closeButton:Dock(BOTTOM)
     closeButton:DockMargin(0, 16, 0, 0)
     closeButton:SetText("tab.close")
@@ -81,7 +81,7 @@ function PANEL:Init()
     end
     */
 
-    local menuButton = self.buttons:Add("ow.mainmenu.button")
+    local menuButton = self.buttons:Add("ow.button")
     menuButton:Dock(BOTTOM)
     menuButton:SetText("tab.mainmenu")
 
@@ -109,7 +109,7 @@ function PANEL:Init()
     local buttons = {}
     hook.Run("PopulateTabButtons", buttons)
     for k, v in SortedPairs(buttons) do
-        local button = self.buttons:Add("ow.mainmenu.button")
+        local button = self.buttons:Add("ow.button")
         button:Dock(TOP)
         button:DockMargin(0, 0, 0, 16)
         button:SetText(k)

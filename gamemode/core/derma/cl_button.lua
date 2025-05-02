@@ -185,9 +185,9 @@ function PANEL:OnMousePressed(key)
     end
 end
 
-vgui.Register("ow.mainmenu.button", PANEL, "DButton")
+vgui.Register("ow.button", PANEL, "DButton")
 
-DEFINE_BASECLASS("ow.mainmenu.button")
+DEFINE_BASECLASS("ow.button")
 
 PANEL = {}
 
@@ -297,7 +297,7 @@ function PANEL:OnCursorEntered()
     end
 end
 
-vgui.Register("ow.mainmenu.button.small", PANEL, "ow.mainmenu.button")
+vgui.Register("ow.button.small", PANEL, "ow.button")
 
 sound.Add({
     name = "ow.button.click",
