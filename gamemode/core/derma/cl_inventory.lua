@@ -186,11 +186,15 @@ function PANEL:Init()
 
     self.id = 0
 
-    self.icon = self:Add("SpawnIcon")
+    self.icon = self:Add("DModelPanel")
     self.icon:Dock(LEFT)
     self.icon:DockMargin(0, 0, padding / 8, 0)
     self.icon:SetSize(self:GetTall(), self:GetTall())
     self.icon:SetMouseInputEnabled(false)
+    self.icon.LayoutEntity = function(this, entity)
+        -- Disable the rotation of the model
+        -- Do not set this to nil, it will spew out errors
+    end
 
     self.name = self:Add("ow.text")
     self.name:Dock(FILL)
@@ -215,8 +219,18 @@ function PANEL:SetItem(id)
     if ( !item ) then return end
 
     self.icon:SetModel(item:GetModel())
+    self.icon:SetSkin(item:GetSkin())
     self.name:SetText(item:GetName(), true)
     self.weight:SetText(item:GetWeight() .. "kg", true, true)
+
+    local entity = self.icon:GetEntity()
+    local pos = entity:GetPos()
+    local camData = PositionSpawnIcon(entity, pos)
+    if ( camData ) then
+        self.icon:SetCamPos(camData.origin)
+        self.icon:SetFOV(camData.fov)
+        self.icon:SetLookAng(camData.angles)
+    end
 end
 
 function PANEL:DoClick()
