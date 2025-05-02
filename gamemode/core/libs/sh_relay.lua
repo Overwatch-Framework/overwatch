@@ -79,7 +79,7 @@ if ( CLIENT ) then
         if ( !payload ) then return end
 
         local value = ow.crypto:Unpack(payload)
-        local ply   = LocalPlayer()
+        local ply = LocalPlayer()
 
         ow.relay.user[ply] = ow.relay.user[ply] or {}
         ow.relay.user[ply][key] = value
@@ -97,7 +97,11 @@ function entityMeta:SetEntity(key, value, recipient)
             net.WriteString(key)
             net.WriteUInt(#blob, 32)
             net.WriteData(blob, #blob)
-        if ( recipient ) then net.Send(recipient) else net.Broadcast() end
+        if ( recipient ) then
+            net.Send(recipient)
+        else
+            net.Broadcast()
+        end
     end
 end
 
