@@ -27,11 +27,12 @@ end
 -- @treturn string The serialized byte-string
 function ow.crypto:Serialize(data)
     local t = type(data)
+
     if ( t == "table" ) then
         local parts = { "T" }
         local count = 0
         for _ in pairs(data) do count = count + 1 end
-        parts[#parts + 1] = write_u16(count)
+        parts[#parts + 1] = string.char(bit.rshift(count, 8), bit.band(count, 0xFF))
         for k, v in pairs(data) do
             parts[#parts + 1] = self:Serialize(k)
             parts[#parts + 1] = self:Serialize(v)
@@ -39,14 +40,15 @@ function ow.crypto:Serialize(data)
         return table.concat(parts)
     elseif ( t == "string" ) then
         local len = #data
-        return "S" .. write_u16(len) .. data
-
+        return "S" .. string.char(bit.rshift(len, 8), bit.band(len, 0xFF)) .. data
     elseif ( t == "number" ) then
-        local s = tostring(data)
-        return "N" .. write_u16(#s) .. s
-
+        local str = tostring(data)
+        local len = #str
+        return "N" .. string.char(bit.rshift(len, 8), bit.band(len, 0xFF)) .. str
     elseif ( t == "boolean" ) then
         return "B" .. ( data and "\1" or "\0" )
+    elseif ( t == "Entity" or IsEntity(data) ) then
+        return "E" .. string.char(bit.rshift(data:EntIndex(), 8), bit.band(data:EntIndex(), 0xFF))
     else
         error("ow.crypto:Serialize() unsupported type: " .. t)
     end
@@ -56,39 +58,47 @@ end
 -- @realm shared
 -- @tparam string blob The serialized byte-string
 -- @treturn any The original Lua value
-function ow.crypto:Deserialize(blob)
+function ow.crypto:Deserialize(data)
     local i = 1
 
+    local function read_u16()
+        local a, b = data:byte(i, i + 1)
+        i = i + 2
+        return bit.bor(bit.lshift(a, 8), b)
+    end
+
     local function parse()
-        local tag = blob:sub(i, i)
+        local tag = data:sub(i, i)
         i = i + 1
 
         if ( tag == "T" ) then
-            local num, ni = read_u16(blob, i)
-            i = ni
+            local count = read_u16()
             local out = {}
-            for _ = 1, num do
+            for _ = 1, count do
                 local k = parse()
                 local v = parse()
                 out[k] = v
             end
             return out
-        elseif ( tag == "S" or tag == "N" ) then
-            local len, ni = read_u16(blob, i)
-            i = ni
-            local s = blob:sub(i, i + len - 1)
+        elseif ( tag == "S" ) then
+            local len = read_u16()
+            local str = data:sub(i, i + len - 1)
             i = i + len
-            if ( tag == "N" ) then
-                return tonumber(s)
-            else
-                return s
-            end
+            return str
+        elseif ( tag == "N" ) then
+            local len = read_u16()
+            local str = data:sub(i, i + len - 1)
+            i = i + len
+            return tonumber(str)
         elseif ( tag == "B" ) then
-            local b = blob:byte(i) == 1
+            local val = data:sub(i, i) == "\1"
             i = i + 1
-            return b
+            return val
+        elseif ( tag == "E" ) then
+            local entIndex = read_u16()
+            return Entity(entIndex)
         else
-            error("ow.crypto:Deserialize() bad tag: " .. tostring(tag))
+            error("ow.crypto:Deserialize() unknown tag: " .. tostring(tag))
         end
     end
 
