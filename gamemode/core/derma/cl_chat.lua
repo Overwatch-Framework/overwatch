@@ -12,10 +12,6 @@ function PANEL:Init()
     self:SetSize(hook.Run("GetChatboxSize"))
     self:SetPos(hook.Run("GetChatboxPos"))
 
-    self.history = vgui.Create("DScrollPanel")
-    self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts.small") - 20)
-    self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts.small") + 10)
-
     self.entry = self:Add("ow.text.entry")
     self.entry:Dock(BOTTOM)
     self.entry:SetPlaceholderText("Say something...")
@@ -34,6 +30,10 @@ function PANEL:Init()
     self.entry.OnLoseFocus = function(s)
         self:SetVisible(false)
     end
+
+    self.history = vgui.Create("DScrollPanel")
+    self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts.small") - 20 - self.entry:GetTall())
+    self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts.small") + 10)
 
     self:SetVisible(true)
 end
