@@ -11,8 +11,16 @@ local requiredFields = {
     "Description"
 }
 
-function ow.item:Register(uniqueID, itemData)
-    if ( !uniqueID or !istable(itemData) ) then return false end
+function ow.item:Register(itemData)
+    if ( !istable(itemData) ) then return false end
+
+    -- get the file's name from where the function is called
+    local uniqueID = debug.getinfo(2, "S").source
+    if ( uniqueID:StartsWith("sh_") ) then
+        uniqueID = uniqueID:sub(4)
+    end
+
+    print("Registering item '" .. uniqueID .. "' from file '" .. fileName .. "'")
 
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
