@@ -476,6 +476,11 @@ function GM:OnPauseMenuShow()
         return false
     end
 
+    if ( IsValid(ow.gui.chatbox) and ow.gui.chatbox:IsVisible() ) then
+        ow.gui.chatbox:SetVisible(false)
+        return false
+    end
+
     if ( !IsValid(ow.gui.mainmenu) ) then
         vgui.Create("ow.mainmenu")
     else
@@ -645,14 +650,16 @@ end
 
 function GM:GetChatboxSize()
     local width = ScrW() * 0.4
-    local height = ScrH() * 0.25
+    local height = ScrH() * 0.35
 
     return width, height
 end
 
 function GM:GetChatboxPos()
+    local width, height = self:GetChatboxSize()
     local x = ScrW() * 0.0125
-    local y = ScrH() * 0.725
+    local y = ScrH() * 0.025
+    y = ScrH() - height - y
 
     return x, y
 end

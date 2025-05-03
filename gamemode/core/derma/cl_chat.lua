@@ -32,8 +32,8 @@ function PANEL:Init()
     end
 
     self.history = vgui.Create("DScrollPanel")
-    self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts.small") - 20 - self.entry:GetTall())
-    self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts.small") + 10)
+    self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts") - 20 - self.entry:GetTall())
+    self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts") + 10)
     self.history:SetDrawOnTop(true)
 
     self:SetVisible(false)
@@ -74,6 +74,12 @@ function PANEL:OnRemove()
     end
 end
 
+function PANEL:Think()
+    if ( input.IsKeyDown(KEY_ESCAPE) and self:IsVisible() ) then
+        self:SetVisible(false)
+    end
+end
+
 function PANEL:Paint(width, height)
     ow.util:DrawBlur(self)
 
@@ -81,9 +87,9 @@ function PANEL:Paint(width, height)
     surface.DrawRect(0, 0, width, height)
 
     surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawRect(0, 0, width, ow.util:GetTextHeight("ow.fonts.small") + 10)
+    surface.DrawRect(0, 0, width, ow.util:GetTextHeight("ow.fonts") + 10)
 
-    draw.SimpleText("Chat", "ow.fonts.small", 10, 5, color_white)
+    draw.SimpleText("Chat", "ow.fonts", 10, 5, color_white)
 end
 
 vgui.Register("ow.chatbox", PANEL, "EditablePanel")
