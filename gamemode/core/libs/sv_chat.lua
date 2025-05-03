@@ -1,7 +1,6 @@
 --- Chat library
 -- @module ow.chat
 
-util.AddNetworkString("ow.chat.send")
 function ow.chat:Send(speaker, uniqueID, text)
     local players = {}
     for k, v in player.Iterator() do

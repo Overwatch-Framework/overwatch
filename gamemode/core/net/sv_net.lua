@@ -83,6 +83,7 @@ end)
     Chat Networking
 -----------------------------------------------------------------------------]]--
 
+util.AddNetworkString("ow.chat.send")
 util.AddNetworkString("ow.chat.text")
 
 --[[-----------------------------------------------------------------------------
@@ -133,6 +134,8 @@ end)
 -----------------------------------------------------------------------------]]--
 
 util.AddNetworkString("ow.option.set")
+util.AddNetworkString("ow.option.sync")
+
 net.Receive("ow.option.set", function(len, ply)
     local key = net.ReadString()
     local value = net.ReadType()
@@ -145,8 +148,7 @@ net.Receive("ow.option.set", function(len, ply)
     hook.Run("PostOptionChanged", ply, key, value)
 end)
 
-util.AddNetworkString("ow.option.syncServer")
-net.Receive("ow.option.syncServer", function(len, ply)
+net.Receive("ow.option.sync", function(len, ply)
     if ( !IsValid(ply) ) then return end
 
     local data = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
@@ -190,6 +192,10 @@ net.Receive("ow.inventory.cache", function(len, ply)
 
     ow.inventory:Cache(ply, inventoryID)
 end)
+
+--[[-----------------------------------------------------------------------------
+    Item Networking
+-----------------------------------------------------------------------------]]--
 
 util.AddNetworkString("ow.item.add")
 util.AddNetworkString("ow.item.cache")

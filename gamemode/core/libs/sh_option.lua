@@ -16,7 +16,7 @@ function ow.option:SetDefault(key, default)
     if ( SERVER ) then
         local compressed = util.Compress(util.TableToJSON(self.stored))
 
-        net.Start("ow.option.syncServer")
+        net.Start("ow.option.sync")
             net.WriteData(compressed, #compressed)
         net.SendToServer()
     end
@@ -36,7 +36,7 @@ if ( CLIENT ) then
 
         local compressed = util.Compress(util.TableToJSON(self:GetSaveData()))
 
-        net.Start("ow.option.syncServer")
+        net.Start("ow.option.sync")
             net.WriteData(compressed, #compressed)
         net.SendToServer()
 
@@ -135,7 +135,7 @@ if ( CLIENT ) then
         ow.data:Set("options", {}, true, false)
 
         local compressed = util.Compress("[]")
-        net.Start("ow.option.syncServer")
+        net.Start("ow.option.sync")
             net.WriteData(compressed, #compressed)
         net.SendToServer()
     end
