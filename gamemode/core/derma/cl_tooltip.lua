@@ -53,9 +53,9 @@ function PANEL:SizeToContents()
         width = math.max(width, descWidth)
     end
 
-    local height = ow.util:GetTextHeight("ow.fonts.large.bold") + 16
+    local height = ow.util:GetTextHeight("ow.fonts.large.bold")
     for i = 1, #descWrapped do
-        height = height + 16
+        height = height + ow.util:GetTextHeight("ow.fonts")
     end
 
     self:SetSize(width + 32, height)
@@ -93,7 +93,7 @@ function PANEL:Paint(width, height)
     local desc = ow.localization:GetPhrase(self.description) or self.description
     local descWrapped = ow.util:WrapText(desc, "ow.fonts", width - 32)
     for i = 1, #descWrapped do
-        draw.SimpleText(descWrapped[i], "ow.fonts", 16, 32 + (i - 1) * 16, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(descWrapped[i], "ow.fonts", 16, 32 + (i - 1) * ow.util:GetTextHeight("ow.fonts"), color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 end
 
