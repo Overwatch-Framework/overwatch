@@ -12,26 +12,7 @@ local requiredFields = {
 }
 
 function ow.item:Register(itemData)
-    if ( !istable(itemData) ) then return false end
-
-    itemData = setmetatable(itemData, self.meta)
-    itemData.__index = itemData
-
-    local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
-    if ( bResult == false ) then return false end
-
-    for _, field in ipairs(requiredFields) do
-        if ( itemData[field] == nil ) then
-            ow.util:PrintError("Item '" .. uniqueID .. "' is missing required field '" .. field .. "'!")
-            return false
-        end
-    end
-
-    self.stored[uniqueID] = itemData
-
-    hook.Run("PostItemRegistered", uniqueID, itemData)
-
-    return true
+    ow.util:PrintWarning("This function is deprecated.")
 end
 
 function ow.item:LoadFolder(path)
@@ -46,6 +27,10 @@ function ow.item:LoadFolder(path)
         ITEM.__index = ITEM
 
         ITEM.UniqueID = string.StripExtension(v):sub(4)
+
+        local bResult = hook.Run("PreItemRegistered", ITEM.UniqueID, ITEM)
+        if ( bResult == false ) then continue end
+
         ITEM.Weight = ITEM.Weight or 0
         ITEM.Category = ITEM.Category or "Miscellaneous"
 
@@ -121,6 +106,8 @@ function ow.item:LoadFolder(path)
         if ( isfunction(ITEM.OnRegistered) ) then
             ITEM:OnRegistered()
         end
+
+        hook.Run("PostItemRegistered", ITEM.UniqueID, ITEM)
         ITEM = nil
     end
 end

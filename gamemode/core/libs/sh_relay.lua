@@ -86,7 +86,7 @@ if ( CLIENT ) then
     end)
 end
 
-function entityMeta:SetEntity(key, value, recipient)
+function entityMeta:RelaySetEntity(key, value, recipient)
     if ( SERVER ) then
         ow.relay.entity[self] = ow.relay.entity[self] or {}
         ow.relay.entity[self][key] = value
@@ -105,7 +105,7 @@ function entityMeta:SetEntity(key, value, recipient)
     end
 end
 
-function entityMeta:GetEntity(key, default)
+function entityMeta:RelayGetEntity(key, default)
     local t = ow.relay.entity[self]
     return t and t[key] or default
 end
