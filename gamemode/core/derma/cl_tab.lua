@@ -6,7 +6,7 @@ local gradientRight = ow.util:GetMaterial("vgui/gradient-r")
 local gradientTop = ow.util:GetMaterial("vgui/gradient-u")
 local gradientBottom = ow.util:GetMaterial("vgui/gradient-d")
 
-DEFINE_BASECLASS("DPanel")
+DEFINE_BASECLASS("EditablePanel")
 
 local PANEL = {}
 
@@ -62,12 +62,11 @@ function PANEL:Init()
     self:SetPos(0, 0)
     self:MakePopup()
 
-    self.buttons = self:Add("DPanel")
+    self.buttons = self:Add("EditablePanel")
     self.buttons:SetSize(ScrW() / 4 - paddingSmall, ScrH() - padding)
     self.buttons:SetPos(-self.buttons:GetWide(), paddingSmall)
     self.buttons.pos = {self.buttons:GetX(), self.buttons:GetY()}
     self.buttons.posTarget = {paddingTiny, paddingSmall}
-    self.buttons.Paint = nil
 
     -- eon did not like the close button :(
     /*
@@ -99,12 +98,11 @@ function PANEL:Init()
         self:SetKeyboardInputEnabled(true)
     end
 
-    self.container = self:Add("DPanel")
+    self.container = self:Add("EditablePanel")
     self.container:SetSize(self:GetWide() - self.buttons:GetWide() - padding - paddingSmall, self:GetTall() - padding)
     self.container:SetPos(self:GetWide(), paddingSmall)
     self.container.pos = {self.container:GetX(), self.container:GetY()}
     self.container.posTarget = {self:GetWide() - self.container:GetWide() - paddingTiny, paddingSmall}
-    self.container.Paint = nil
 
     local buttons = {}
     hook.Run("PopulateTabButtons", buttons)
@@ -247,7 +245,7 @@ function PANEL:Paint(width, height)
     surface.DrawTexturedRect(0, height / 2, width, height / 2)
 end
 
-vgui.Register("ow.tab", PANEL, "DPanel")
+vgui.Register("ow.tab", PANEL, "EditablePanel")
 
 if ( IsValid(ow.gui.tab) ) then
     ow.gui.tab:Remove()

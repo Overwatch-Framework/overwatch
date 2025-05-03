@@ -239,8 +239,8 @@ function PANEL:AddSetting(settingData)
 
         panel.DoClick = function()
             -- Pick the next key depending on where the cursor is near the label, if the cursor is near the left side of the label, pick the previous key, if it's near the right side, pick the next key.
-            local x, y = label:CursorPos() -- not used
-            local w, h = label:GetSize() -- not used
+            local x, _ = label:CursorPos() -- not used
+            local w, _ = label:GetSize() -- not used
             local percent = x / w
             local nextKey = nil
             for i = 1, #keys do
@@ -280,7 +280,7 @@ function PANEL:AddSetting(settingData)
             menu:Open()
         end
     elseif ( configData.Type == ow.type.color ) then
-        local color = panel:Add("DPanel")
+        local color = panel:Add("EditablePanel")
         color:Dock(RIGHT)
         color:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
         color:SetWide(ScreenScale(128))
@@ -291,7 +291,7 @@ function PANEL:AddSetting(settingData)
         end
 
         panel.DoClick = function()
-            local blocker = vgui.Create("DPanel", self)
+            local blocker = vgui.Create("EditablePanel", self)
             blocker:SetSize(ScrW(), ScrH())
             blocker:SetPos(0, 0)
             blocker:MakePopup()
@@ -316,10 +316,9 @@ function PANEL:AddSetting(settingData)
                 ow.option:Set(settingData.UniqueID, value)
             end
 
-            local frame = blocker:Add("DPanel")
+            local frame = blocker:Add("EditablePanel")
             frame:SetSize(300, 200)
             frame:SetPos(gui.MouseX() - 150, gui.MouseY() - 100)
-            frame.Paint = nil
 
             local mixer = frame:Add("DColorMixer")
             mixer:Dock(FILL)
@@ -341,6 +340,33 @@ function PANEL:AddSetting(settingData)
                 value = ow.option:Get(settingData.UniqueID)
 
                 color:SetBackgroundColor(value)
+            end):SetIcon("icon16/arrow_refresh.png")
+            menu:Open()
+        end
+    elseif ( configData.Type == ow.type.string ) then
+        local text = panel:Add("ow.text.entry")
+        text:Dock(RIGHT)
+        text:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
+        text:SetWide(ScreenScale(128))
+        text:SetText(value)
+
+        text.OnEnter = function(this)
+            local newValue = this:GetText()
+            if ( newValue == value ) then return end
+
+            ow.option:Set(settingData.UniqueID, newValue)
+            value = newValue
+
+            ow.localClient:EmitSound("ui/buttonclickrelease.wav", 60, pitch, 0.1, CHAN_STATIC)
+        end
+
+        panel.DoClick = function()
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                ow.option:Reset(settingData.UniqueID)
+                value = ow.option:Get(settingData.UniqueID)
+
+                text:SetText(value)
             end):SetIcon("icon16/arrow_refresh.png")
             menu:Open()
         end

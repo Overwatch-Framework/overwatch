@@ -47,7 +47,7 @@ function ow.notification:Add(text, duration, bgColor)
     end
 
     -- Initial position off-screen
-    local scrW, scrH = ScrW(), ScrH()
+    local scrW, _ = ScrW(), ScrH()
     panel.CurrentX = (scrW - PANEL_WIDTH) / 2
     panel.CurrentY = -panel:GetTall()
     panel.TargetX = panel.CurrentX

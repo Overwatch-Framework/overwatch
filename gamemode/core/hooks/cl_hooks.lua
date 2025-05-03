@@ -665,8 +665,7 @@ function GM:PlayerBindPress(ply, bind, pressed)
 
         ow.gui.chatbox:SetVisible(true)
 
-        -- Reset fade on all chat messages
-        for _, pnl in ipairs(ow.chat.messages or {}) do
+        for _, pnl in ipairs(ow.chat.messages) do
             if ( IsValid(pnl) ) then
                 pnl.alpha = 1
             end

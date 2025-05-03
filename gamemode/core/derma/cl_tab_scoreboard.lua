@@ -89,7 +89,7 @@ function PANEL:Init()
     self.teamName:SetFont("ow.fonts.italic.bold")
     self.teamName:SetContentAlignment(7)
 
-    self.container = self:Add("DPanel")
+    self.container = self:Add("EditablePanel")
     self.container:Dock(FILL)
     self.container.Paint = function(this, width, height)
         surface.SetDrawColor(0, 0, 0, 200)
