@@ -108,33 +108,8 @@ function ow.item:LoadFolder(path)
 
     for _, v in ipairs(files) do
         local filePath = path .. "/" .. v
-        self:LoadFile(filePath)
+        ow.util:LoadFile(filePath, "shared")
     end
-end
-
-function ow.item:LoadFile(path)
-    if ( !path or !isstring(path) ) then return end
-
-    local uniqueID = string.match(path, "sh_([%w_]+)%.lua$")
-    if ( !uniqueID ) then return end
-
-    ITEM = {}
-
-    ITEM.UniqueID = uniqueID
-    ITEM.Weight = ITEM.Weight or 0
-    ITEM.Category = ITEM.Category or "Miscellaneous"
-
-    ITEM.Actions = ITEM.Actions or {}
-
-    include(path)
-
-    if ( SERVER ) then
-        AddCSLuaFile(path)
-    end
-
-    self:Register(uniqueID, ITEM)
-
-    ITEM = nil
 end
 
 function ow.item:Get(identifier)
