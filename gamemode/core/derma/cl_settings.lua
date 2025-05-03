@@ -343,6 +343,33 @@ function PANEL:AddSetting(settingData)
             end):SetIcon("icon16/arrow_refresh.png")
             menu:Open()
         end
+    elseif ( configData.Type == ow.type.string ) then
+        local text = panel:Add("ow.text.entry")
+        text:Dock(RIGHT)
+        text:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
+        text:SetWide(ScreenScale(128))
+        text:SetText(value)
+
+        text.OnEnter = function(this)
+            local newValue = this:GetText()
+            if ( newValue == value ) then return end
+
+            ow.option:Set(settingData.UniqueID, newValue)
+            value = newValue
+
+            ow.localClient:EmitSound("ui/buttonclickrelease.wav", 60, pitch, 0.1, CHAN_STATIC)
+        end
+
+        panel.DoClick = function()
+            local menu = DermaMenu()
+            menu:AddOption(ow.localization:GetPhrase("reset"), function()
+                ow.option:Reset(settingData.UniqueID)
+                value = ow.option:Get(settingData.UniqueID)
+
+                text:SetText(value)
+            end):SetIcon("icon16/arrow_refresh.png")
+            menu:Open()
+        end
     end
 
     panel.OnHovered = function(this)
