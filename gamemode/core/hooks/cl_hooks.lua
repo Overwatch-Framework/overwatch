@@ -668,8 +668,6 @@ function GM:PlayerBindPress(ply, bind, pressed)
     bind = bind:lower()
 
     if ( bind:find("messagemode") and pressed ) then
-        input.SetCursorPos(ScrW() / 2, ScrH() / 2)
-
         ow.gui.chatbox:SetVisible(true)
 
         for _, pnl in ipairs(ow.chat.messages) do

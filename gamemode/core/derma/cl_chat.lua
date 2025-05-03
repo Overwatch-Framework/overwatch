@@ -12,6 +12,12 @@ function PANEL:Init()
     self:SetSize(hook.Run("GetChatboxSize"))
     self:SetPos(hook.Run("GetChatboxPos"))
 
+    local title = self:Add("ow.button.small")
+    title:Dock(TOP)
+    title:SetText("chat", true, true)
+    title:SetFont("ow.fonts.button.tiny")
+    title:SetContentAlignment(4)
+
     self.entry = self:Add("ow.text.entry")
     self.entry:Dock(BOTTOM)
     self.entry:SetPlaceholderText("Say something...")
@@ -20,57 +26,52 @@ function PANEL:Init()
 
     self.entry.OnEnter = function(this)
         local text = this:GetValue()
-        if ( #text < 1 ) then return end
+        if ( #text > 0 ) then
+            RunConsoleCommand("say", text)
+            this:SetText("")
+        end
 
-        RunConsoleCommand("say", text)
-        this:SetText("")
         self:SetVisible(false)
     end
 
-    self.entry.OnLoseFocus = function(this)
-        self:SetVisible(false)
+    self.history = self:Add("DScrollPanel")
+    self.history:SetPos(8, title:GetTall() + 8)
+    self.history:SetSize(self:GetWide() - 16, self:GetTall() - 16 - title:GetTall() - self.entry:GetTall())
+    self.history:GetVBar():SetWide(0)
+    self.history.PerformLayout = function(this)
+        local scrollBar = this:GetVBar()
+        if ( scrollBar ) then
+            scrollBar:SetScroll(scrollBar.CanvasSize)
+        end
     end
-
-    self.history = vgui.Create("DScrollPanel")
-    self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts") - 20 - self.entry:GetTall())
-    self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts") + 10)
-    self.history:SetDrawOnTop(true)
 
     self:SetVisible(false)
-    self:SetMouseInputEnabled(false)
-    self:SetKeyboardInputEnabled(false)
-end
 
-function PANEL:AddLine(text, color)
-    local label = self.history:Add("DLabel")
-    label:SetFont("ChatFont")
-    label:SetText(text)
-    label:SetTextColor(color or color_white)
-    label:SetWrap(true)
-    label:SizeToContentsY()
-    label:Dock(TOP)
-    label:DockMargin(0, 0, 0, 4)
+    chat.GetChatBoxPos = function()
+        return self:GetPos()
+    end
 
-    self.history:InvalidateLayout(true)
-    self.history:ScrollToChild(label)
+    chat.GetChatBoxSize = function()
+        return self:GetSize()
+    end
 end
 
 function PANEL:SetVisible(visible)
-    BaseClass.SetVisible(self, visible)
+    -- BaseClass.SetVisible(self, visible)
 
     if ( visible ) then
+        input.SetCursorPos(self:LocalToScreen(self:GetWide() / 2, self:GetTall() / 2))
+
+        self:SetAlpha(255)
         self:MakePopup()
         self.entry:RequestFocus()
+        self.entry:SetVisible(true)
     else
+        self:SetAlpha(0)
         self:SetMouseInputEnabled(false)
         self:SetKeyboardInputEnabled(false)
         self.entry:SetText("")
-    end
-end
-
-function PANEL:OnRemove()
-    if ( IsValid(self.history) ) then
-        self.history:Remove()
+        self.entry:SetVisible(false)
     end
 end
 
@@ -85,11 +86,6 @@ function PANEL:Paint(width, height)
 
     surface.SetDrawColor(0, 0, 0, 200)
     surface.DrawRect(0, 0, width, height)
-
-    surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawRect(0, 0, width, ow.util:GetTextHeight("ow.fonts") + 10)
-
-    draw.SimpleText("Chat", "ow.fonts", 10, 5, color_white)
 end
 
 vgui.Register("ow.chatbox", PANEL, "EditablePanel")

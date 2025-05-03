@@ -37,10 +37,9 @@ function chat.AddText(...)
 
     local rich = markup.Parse("<font=" .. font .. ">" .. markupStr .. "</font>", maxWidth)
 
-    local panel = ow.gui.chatbox.history:Add("DPanel")
+    local panel = ow.gui.chatbox.history:Add("EditablePanel")
     panel:SetTall(rich:GetHeight())
     panel:Dock(TOP)
-    panel:DockMargin(0, 0, 0, 2)
 
     panel.alpha = 1
     panel.created = CurTime()
@@ -63,7 +62,4 @@ function chat.AddText(...)
     end
 
     table.insert(ow.chat.messages, panel)
-
-    ow.gui.chatbox.history:InvalidateLayout(true)
-    ow.gui.chatbox.history:ScrollToChild(panel)
 end
