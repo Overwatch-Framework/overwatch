@@ -166,7 +166,6 @@
     end)
 // @endsection
 
-
 util.AddNetworkString("ow.database.save")
 util.AddNetworkString("ow.entity.setDataVariable")
 util.AddNetworkString("ow.gesture.play")
