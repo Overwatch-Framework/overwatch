@@ -1,8 +1,9 @@
 local ITEM = ow.item.meta or {}
-ITEM.__index = ITEM
 ITEM.Name = "Undefined"
 ITEM.Description = ITEM.Description or "An item that is undefined."
 ITEM.ID = ITEM.ID or 0
+
+ITEM.__index = ITEM
 
 function ITEM:__tostring()
     return "item[" .. self:GetUniqueID() .. "][" .. self:GetID() .. "]"
