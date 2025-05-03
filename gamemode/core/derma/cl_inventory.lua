@@ -20,7 +20,7 @@ function PANEL:Init()
     self.container:GetVBar():SetWide(0)
     self.container.Paint = nil
 
-    self.info = self:Add("DPanel")
+    self.info = self:Add("EditablePanel")
     self.info:Dock(RIGHT)
     self.info:DockPadding(16, 16, 16, 16)
     self.info:SetWide(ScreenScale(128))

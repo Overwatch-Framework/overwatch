@@ -280,7 +280,7 @@ function PANEL:AddSetting(settingData)
             menu:Open()
         end
     elseif ( configData.Type == ow.type.color ) then
-        local color = panel:Add("DPanel")
+        local color = panel:Add("EditablePanel")
         color:Dock(RIGHT)
         color:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
         color:SetWide(ScreenScale(128))
@@ -291,7 +291,7 @@ function PANEL:AddSetting(settingData)
         end
 
         panel.DoClick = function()
-            local blocker = vgui.Create("DPanel", self)
+            local blocker = vgui.Create("EditablePanel", self)
             blocker:SetSize(ScrW(), ScrH())
             blocker:SetPos(0, 0)
             blocker:MakePopup()
@@ -316,10 +316,9 @@ function PANEL:AddSetting(settingData)
                 ow.option:Set(settingData.UniqueID, value)
             end
 
-            local frame = blocker:Add("DPanel")
+            local frame = blocker:Add("EditablePanel")
             frame:SetSize(300, 200)
             frame:SetPos(gui.MouseX() - 150, gui.MouseY() - 100)
-            frame.Paint = nil
 
             local mixer = frame:Add("DColorMixer")
             mixer:Dock(FILL)

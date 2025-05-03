@@ -1,4 +1,4 @@
-DEFINE_BASECLASS("DPanel")
+DEFINE_BASECLASS("EditablePanel")
 
 local PANEL = {}
 
@@ -97,7 +97,7 @@ function PANEL:Paint(width, height)
     end
 end
 
-vgui.Register("ow.tooltip", PANEL, "DPanel")
+vgui.Register("ow.tooltip", PANEL, "EditablePanel")
 
 if ( IsValid(ow.gui.tooltip) ) then
     ow.gui.tooltip:Remove()
