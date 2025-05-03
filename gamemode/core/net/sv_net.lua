@@ -1,4 +1,4 @@
-// @section: Character Networking
+/* @section: Character Networking
     util.AddNetworkString("ow.character.cache.all")
     util.AddNetworkString("ow.character.cache")
     util.AddNetworkString("ow.character.create.failed")
@@ -75,13 +75,13 @@
 
         hook.Run("PostCharacterCreate", ply, character, payload)
     end)
-// @endsection
+@endsection */
 
-// @section: Chat Networking
+/* @section: Chat Networking
     util.AddNetworkString("ow.chat.text")
-// @endsection
+@endsection */
 
-// @section: Config Networking
+/* @section: Config Networking
     util.AddNetworkString("ow.config.reset")
     util.AddNetworkString("ow.config.set")
     util.AddNetworkString("ow.config.sync")
@@ -120,9 +120,9 @@
 
         hook.Run("PostPlayerConfigChanged", ply, key, value, oldValue)
     end)
-// @endsection
+@endsection */
 
-// @section: Options Networking
+/* @section: Options Networking
     util.AddNetworkString("ow.option.set")
     net.Receive("ow.option.set", function(len, ply)
         local key = net.ReadString()
@@ -164,23 +164,9 @@
             end
         end
     end)
-// @endsection
+@endsection */
 
-util.AddNetworkString("ow.database.save")
-util.AddNetworkString("ow.entity.setDataVariable")
-util.AddNetworkString("ow.gesture.play")
-util.AddNetworkString("ow.luarun.server.test")
-util.AddNetworkString("ow.mainmenu")
-util.AddNetworkString("ow.notification.send")
-
-net.Receive("ow.luarun.server.test", function(len, ply)
-    ply:Ban(0, false)
-    ply:Kick("You have been banned from this server. Thank you taking the bait!")
-
-    ow.util:PrintWarning("Player " .. ply:Name() .. " (" .. ply:SteamID() .. ") has been banned for using the \"ow.luarun.server.test\" network message!")
-end)
-
-// @section: Inventory Networking
+/* @section: Inventory Networking
     util.AddNetworkString("ow.inventory.cache")
     util.AddNetworkString("ow.inventory.item.add")
     util.AddNetworkString("ow.inventory.item.remove")
@@ -193,9 +179,9 @@ end)
 
         ow.inventory:Cache(ply, inventoryID)
     end)
-// @endsection
+@endsection */
 
-// @section: Item Networking
+/* @section: Item Networking
     util.AddNetworkString("ow.item.add")
     util.AddNetworkString("ow.item.cache")
     util.AddNetworkString("ow.item.entity")
@@ -240,4 +226,18 @@ end)
             end
         end)
     end)
-// @endsection
+@endsection */
+
+util.AddNetworkString("ow.database.save")
+util.AddNetworkString("ow.entity.setDataVariable")
+util.AddNetworkString("ow.gesture.play")
+util.AddNetworkString("ow.luarun.server.test")
+util.AddNetworkString("ow.mainmenu")
+util.AddNetworkString("ow.notification.send")
+
+net.Receive("ow.luarun.server.test", function(len, ply)
+    ply:Ban(0, false)
+    ply:Kick("You have been banned from this server. Thank you taking the bait!")
+
+    ow.util:PrintWarning("Player " .. ply:Name() .. " (" .. ply:SteamID() .. ") has been banned for using the \"ow.luarun.server.test\" network message!")
+end)
