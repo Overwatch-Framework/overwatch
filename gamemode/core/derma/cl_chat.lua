@@ -14,7 +14,7 @@ function PANEL:Init()
 
     self.history = self:Add("DScrollPanel")
     self.history:Dock(FILL)
-    self.history:DockMargin(5, 5, 5, 5)
+    self.history:DockMargin(8, ow.util:GetTextHeight("ow.fonts.small") + 10 + 8, 8, 8)
 
     self.entry = self:Add("ow.text.entry")
     self.entry:Dock(BOTTOM)
@@ -78,7 +78,7 @@ function PANEL:Paint(width, height)
     surface.DrawRect(0, 0, width, height)
 
     surface.SetDrawColor(0, 0, 0, 200)
-    surface.DrawRect(0, 0, width, 40)
+    surface.DrawRect(0, 0, width, ow.util:GetTextHeight("ow.fonts.small") + 10)
 
     draw.SimpleText("Chat", "ow.fonts.small", 10, 5, color_white)
 end
