@@ -35,6 +35,10 @@ end
 function GM:InitPostEntity()
     ow.localClient = LocalPlayer()
     ow.option:Load()
+
+    if ( !IsValid(ow.gui.chatbox) ) then
+        vgui.Create("ow.chatbox")
+    end
 end
 
 function GM:OnCloseCaptionEmit()
@@ -653,28 +657,29 @@ function GM:GetChatboxPos()
     return x, y
 end
 
-function GM:StartChat()
-    input.SetCursorPos(ScrW() / 2, ScrH() / 2)
+function GM:PlayerBindPress(ply, bind, pressed)
+    bind = bind:lower()
 
-    if ( !IsValid(ow.gui.chatbox) ) then
-        ow.gui.chatbox = vgui.Create("ow.chatbox")
-    end
+    if ( bind:find("messagemode") and pressed ) then
+        input.SetCursorPos(ScrW() / 2, ScrH() / 2)
 
-    -- Reset fade on all chat messages
-    for _, pnl in ipairs(ow.chat.messages or {}) do
-        if ( IsValid(pnl) ) then
-            pnl.alpha = 1
+        ow.gui.chatbox:SetVisible(true)
+
+        -- Reset fade on all chat messages
+        for _, pnl in ipairs(ow.chat.messages or {}) do
+            if ( IsValid(pnl) ) then
+                pnl.alpha = 1
+            end
         end
-    end
 
-    ow.gui.chatbox:SetVisible(true)
-    return true
+        return true
+    end
+end
+
+function GM:StartChat()
 end
 
 function GM:FinishChat()
-    if ( IsValid(ow.gui.chatbox) ) then
-        ow.gui.chatbox:SetVisible(false)
-    end
 end
 
 function GM:OnPlayerChat(ply, text, team, dead)

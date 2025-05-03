@@ -34,8 +34,11 @@ function PANEL:Init()
     self.history = vgui.Create("DScrollPanel")
     self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts.small") - 20 - self.entry:GetTall())
     self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts.small") + 10)
+    self.history:SetDrawOnTop(true)
 
-    self:SetVisible(true)
+    self:SetVisible(false)
+    self:SetMouseInputEnabled(false)
+    self:SetKeyboardInputEnabled(false)
 end
 
 function PANEL:AddLine(text, color)
@@ -56,13 +59,12 @@ function PANEL:SetVisible(visible)
     BaseClass.SetVisible(self, visible)
 
     if ( visible ) then
-        self.entry:SetMouseInputEnabled(true)
-        self.entry:SetKeyboardInputEnabled(true)
+        self:MakePopup()
         self.entry:RequestFocus()
     else
-        self.entry:SetMouseInputEnabled(false)
-        self.entry:SetKeyboardInputEnabled(false)
-        self.entry:Clear()
+        self:SetMouseInputEnabled(false)
+        self:SetKeyboardInputEnabled(false)
+        self.entry:SetText("")
     end
 end
 
@@ -88,4 +90,6 @@ vgui.Register("ow.chatbox", PANEL, "EditablePanel")
 
 if ( IsValid(ow.gui.chatbox) ) then
     ow.gui.chatbox:Remove()
+
+    vgui.Create("ow.chatbox")
 end
