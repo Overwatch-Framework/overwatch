@@ -20,8 +20,6 @@ function ow.item:Register(itemData)
         uniqueID = uniqueID:sub(4)
     end
 
-    print("Registering item '" .. uniqueID .. "' from file '" .. fileName .. "'")
-
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
 
