@@ -164,11 +164,11 @@ function PANEL:SetInfo(id)
     name:SetText(item:GetName(), true)
 
     local description = item:GetDescription()
-    local descriptionWrapped = ow.util:WrapText(description, "ow.fonts.default", self.info:GetWide() - 32)
+    local descriptionWrapped = ow.util:WrapText(description, "ow.fonts", self.info:GetWide() - 32)
     for k, v in pairs(descriptionWrapped) do
         local text = self.info:Add("ow.text")
         text:Dock(TOP)
-        text:SetFont("ow.fonts.default")
+        text:SetFont("ow.fonts")
         text:SetText(v, true)
     end
 end
@@ -206,7 +206,7 @@ function PANEL:Init()
     self.weight = self:Add("ow.text")
     self.weight:Dock(RIGHT)
     self.weight:DockMargin(0, 0, padding / 8, 0)
-    self.weight:SetFont("ow.fonts.default")
+    self.weight:SetFont("ow.fonts")
     self.weight:SetContentAlignment(6)
     self.weight:SetWide(ScreenScale(64))
     self.weight:SetMouseInputEnabled(false)

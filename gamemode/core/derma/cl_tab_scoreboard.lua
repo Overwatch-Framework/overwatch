@@ -86,7 +86,7 @@ function PANEL:Init()
     self.teamName:SetTall(ScreenScale(10))
     self.teamName:Dock(TOP)
     self.teamName:DockMargin(ScreenScale(2), 0, 0, 0)
-    self.teamName:SetFont("ow.fonts.default.italic.bold")
+    self.teamName:SetFont("ow.fonts.italic.bold")
     self.teamName:SetContentAlignment(7)
 
     self.container = self:Add("DPanel")

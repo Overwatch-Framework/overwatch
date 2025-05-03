@@ -229,7 +229,7 @@ function GM:HUDPaint()
         local clip = activeWeapon:Clip1()
         local ammoText = clip .. " / " .. ammo
 
-        draw.SimpleTextOutlined(ammoText, "ow.fonts.default.bold", ScrW() - 16, ScrH() - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+        draw.SimpleTextOutlined(ammoText, "ow.fonts.bold", ScrW() - 16, ScrH() - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
     end
 end
 
@@ -259,6 +259,8 @@ function GM:HUDShouldDraw(name)
 end
 
 function GM:LoadFonts()
+    local scale4 = ScreenScale(4)
+    local scale6 = ScreenScale(6)
     local scale8 = ScreenScale(8)
     local scale10 = ScreenScale(10)
     local scale12 = ScreenScale(12)
@@ -266,21 +268,49 @@ function GM:LoadFonts()
     local scale20 = ScreenScale(20)
     local scale24 = ScreenScale(24)
 
-    surface.CreateFont("ow.fonts.default", {
+    surface.CreateFont("ow.fonts.tiny", {
         font = "GorDIN Regular",
-        size = ScreenScale(8),
+        size = scale4,
         weight = 500,
         antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.bold", {
+    surface.CreateFont("ow.fonts.tiny.bold", {
+        font = "GorDIN Bold",
+        size = scale4,
+        weight = 700,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.small", {
+        font = "GorDIN Regular",
+        size = scale6,
+        weight = 500,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.small.bold", {
+        font = "GorDIN Bold",
+        size = scale6,
+        weight = 700,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts", {
+        font = "GorDIN Regular",
+        size = scale8,
+        weight = 500,
+        antialias = true
+    })
+
+    surface.CreateFont("ow.fonts.bold", {
         font = "GorDIN Bold",
         size = scale8,
         weight = 700,
         antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.italic", {
+    surface.CreateFont("ow.fonts.italic", {
         font = "GorDIN Regular",
         size = ScreenScale(8),
         weight = 500,
@@ -288,7 +318,7 @@ function GM:LoadFonts()
         antialias = true
     })
 
-    surface.CreateFont("ow.fonts.default.italic.bold", {
+    surface.CreateFont("ow.fonts.italic.bold", {
         font = "GorDIN Bold",
         size = scale8,
         weight = 700,
@@ -609,9 +639,43 @@ function GM:OnChatTab(text)
     end
 end
 
--- TODO: Maybe if it looks good someday
---[[
-function GM:ForceDermaSkin()
-    return "Overwatch"
+function GM:GetChatboxSize()
+    local width = ScrW() * 0.4
+    local height = ScrH() * 0.25
+
+    return width, height
 end
-]]
+
+function GM:GetChatboxPos()
+    local x = ScrW() * 0.0125
+    local y = ScrH() * 0.725
+
+    return x, y
+end
+
+function GM:StartChat()
+    input.SetCursorPos(ScrW() / 2, ScrH() / 2)
+
+    if ( IsValid(ow.gui.chatbox) ) then
+        ow.gui.chatbox:SetVisible(true)
+        return true
+    end
+
+    ow.gui.chatbox = vgui.Create("ow.chatbox")
+    return true
+end
+
+function GM:FinishChat()
+    if ( IsValid(ow.gui.chatbox) ) then
+        ow.gui.chatbox:SetVisible(false)
+    end
+end
+
+function GM:OnPlayerChat(ply, text, team, dead)
+    if ( !IsValid(ow.gui.chatbox) ) then return end
+
+    local prefix = IsValid(ply) and ply:Nick() .. ": " or ""
+    local msg = prefix .. text
+
+    ow.gui.chatbox:AddLine(msg, team and Color(150, 200, 255) or color_white)
+end

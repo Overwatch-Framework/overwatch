@@ -43,13 +43,13 @@ end
 function PANEL:SizeToContents()
     local title = ow.localization:GetPhrase(self.title) or self.title
     local desc = ow.localization:GetPhrase(self.description) or self.description
-    local descWrapped = ow.util:WrapText(desc, "ow.fonts.default", ScreenScale(128))
+    local descWrapped = ow.util:WrapText(desc, "ow.fonts", ScreenScale(128))
 
     local width = 0
     local titleWidth = ow.util:GetTextWidth("ow.fonts.large.bold", title)
     width = math.max(width, titleWidth)
     for i = 1, #descWrapped do
-        local descWidth = ow.util:GetTextWidth("ow.fonts.default", descWrapped[i])
+        local descWidth = ow.util:GetTextWidth("ow.fonts", descWrapped[i])
         width = math.max(width, descWidth)
     end
 
@@ -91,9 +91,9 @@ function PANEL:Paint(width, height)
     draw.SimpleText(title, "ow.fonts.large.bold", 8, 0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
     local desc = ow.localization:GetPhrase(self.description) or self.description
-    local descWrapped = ow.util:WrapText(desc, "ow.fonts.default", width - 32)
+    local descWrapped = ow.util:WrapText(desc, "ow.fonts", width - 32)
     for i = 1, #descWrapped do
-        draw.SimpleText(descWrapped[i], "ow.fonts.default", 16, 32 + (i - 1) * 16, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+        draw.SimpleText(descWrapped[i], "ow.fonts", 16, 32 + (i - 1) * 16, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end
 end
 

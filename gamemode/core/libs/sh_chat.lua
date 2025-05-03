@@ -1,8 +1,8 @@
 --- Chat library
 -- @module ow.chat
 
-ow.chat = {}
-ow.chat.classes = {}
+ow.chat = ow.chat or {}
+ow.chat.classes = ow.chat.classes or {}
 
 function ow.chat:Register(uniqueID, chatData)
     if ( !isstring(uniqueID) ) then

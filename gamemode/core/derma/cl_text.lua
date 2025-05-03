@@ -3,7 +3,7 @@ DEFINE_BASECLASS("DLabel")
 local PANEL = {}
 
 function PANEL:Init()
-    self:SetFont("ow.fonts.default")
+    self:SetFont("ow.fonts")
     self:SetTextColor(color_white)
 end
 
