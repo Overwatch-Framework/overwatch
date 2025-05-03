@@ -7,20 +7,6 @@ ow.crypto = ow.crypto or {}
 
 ow.crypto.DefaultKey = "ltPjQ96MXCVC8Awo"
 
--- write a 2-byte big-endian integer
-local function write_u16(n)
-    local hi = bit.band(bit.rshift(n, 8), 0xFF)
-    local lo = bit.band(n, 0xFF)
-    return string.char(hi, lo)
-end
-
--- read a 2-byte big-endian integer
-local function read_u16(s, i)
-    local b1, b2 = s:byte(i, i + 1)
-    local num = bit.bor(bit.lshift(b1, 8), b2)
-    return num, i + 2
-end
-
 --- Serializes any supported Lua value into a byte-string.
 -- @realm shared
 -- @tparam any data The data to serialize (table, string, number, boolean)
