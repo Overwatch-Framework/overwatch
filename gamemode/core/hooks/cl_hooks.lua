@@ -476,7 +476,7 @@ function GM:OnPauseMenuShow()
         return false
     end
 
-    if ( IsValid(ow.gui.chatbox) and ow.gui.chatbox:IsVisible() ) then
+    if ( IsValid(ow.gui.chatbox) and ow.gui.chatbox:GetAlpha() == 255 ) then
         ow.gui.chatbox:SetVisible(false)
         return false
     end
