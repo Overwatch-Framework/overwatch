@@ -112,11 +112,11 @@ function ow.sqlite:LoadRow(query, key, value, callback)
 
         if ( callback ) then
             if ( isfunction(callback) ) then
-                print("Row not found, inserting default row")
+                ow.util:PrintWarning("Database Row not found, inserting default row")
                 PrintTable(row)
                 callback(row)
             else
-                error("Callback must be a function")
+                ow.util:PrintError("Database LoadRow Callback must be a function")
             end
         end
 
@@ -144,8 +144,6 @@ end
 -- @tparam table data The row data to save
 -- @tparam string key Column name to use for matching
 function ow.sqlite:SaveRow(query, data, key)
-    print("Saving row", query, key, data[key])
-    PrintTable(data)
     local condition = string.format("%s = %s", key, sql.SQLStr(data[key]))
     self:Update(query, data, condition)
 end
@@ -204,7 +202,7 @@ function ow.sqlite:Delete(query, condition)
     local result = sql.Query(insertQuery)
 
     if ( result == false ) then
-        print("Failed to remove row:", insertQuery, sql.LastError())
+        ow.util:PrintError("Database Failed to remove row: ", insertQuery, sql.LastError())
         return false
     else
         return true

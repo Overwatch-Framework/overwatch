@@ -134,6 +134,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
 
     return true
 end
+
 function ow.item:Cache(characterID)
     if ( !ow.character:Get(characterID) ) then return false end
 
@@ -147,7 +148,6 @@ function ow.item:Cache(characterID)
         if ( self.stored[uniqueID] ) then
             local item = self:CreateObject(row)
 
-            -- Fix invalid character ownership by looking at the inventory owner
             if ( item:GetOwner() == 0 ) then
                 local inv = ow.inventory:Get(item:GetInventory())
                 if ( inv ) then
@@ -157,14 +157,19 @@ function ow.item:Cache(characterID)
                     ow.sqlite:Update("ow_items", {
                         character_id = newCharID
                     }, "id = " .. itemID)
+                else
+                    ow.util:PrintError("Invalid orphaned item #" .. itemID .. " (no inventory)")
+                    ow.sqlite:Delete("ow_items", "id = " .. itemID)
+                    continue
                 end
             end
 
             self.instances[itemID] = item
+        else
+            ow.util:PrintError("Unknown item unique ID '" .. tostring(uniqueID) .. "' in DB, skipping")
         end
     end
 
-    -- Send all items to client
     local instanceList = {}
     for _, item in pairs(self.instances) do
         if ( item:GetOwner() == characterID ) then
@@ -175,7 +180,6 @@ function ow.item:Cache(characterID)
     local ply = ow.character:GetPlayerByCharacter(characterID)
     if ( IsValid(ply) ) then
         net.Start("ow.item.cache")
-            net.WriteUInt(characterID, 32)
             net.WriteTable(instanceList)
         net.Send(ply)
     end

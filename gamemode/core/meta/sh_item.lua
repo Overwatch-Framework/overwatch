@@ -101,10 +101,10 @@ end
 
 function ITEM:Spawn(position, angles)
     local ply = ow.character:GetPlayerByCharacter(self:GetOwner())
-    if ( !IsValid(ply) ) then print("Invalid player!") return end
+    if ( !IsValid(ply) ) then return end
 
     position = position or ply:GetDropPosition()
-    if ( !position ) then print("Invalid position!") return end
+    if ( !position ) then return end
 
     local item = ow.item:Spawn(nil, uniqueID, position, angles, function()
         if ( self.OnSpawned ) then
@@ -118,8 +118,6 @@ function ITEM:Spawn(position, angles)
         if ( self.OnSpawned ) then
             self:OnSpawned(item)
         end
-
-        print("Item spawned: " .. item:GetUniqueID() .. " at " .. tostring(position))
 
         return item
     end)

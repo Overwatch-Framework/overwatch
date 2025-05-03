@@ -53,7 +53,7 @@ net.Receive("ow.database.save", function(len)
 end)
 
 net.Receive("ow.character.create", function(len)
-    print("Character created!")
+    -- Do something here...
 end)
 
 net.Receive("ow.character.create.failed", function(len)
@@ -115,8 +115,10 @@ net.Receive("ow.character.load", function(len)
     local ply = ow.localClient
 
     local character, reason = ow.character:CreateObject(characterID, ow.character.stored[characterID], ply)
-    if ( !character ) then print("Failed to load character " .. characterID .. "!", reason) return end
-    print("Character " .. characterID .. " loaded.", character)
+    if ( !character ) then
+        ow.util:PrintError("Failed to load character ", characterID, ", ", reason, "!")
+        return
+    end
 
     local plyTable = ply:GetTable()
 
@@ -134,10 +136,10 @@ end)
 
 net.Receive("ow.character.delete", function(len)
     local characterID = net.ReadUInt(32)
-    if ( !isnumber(characterID) ) then print("Failed to delete character " .. characterID .. "!") return end
+    if ( !isnumber(characterID) ) then return end
 
     local character = ow.character.stored[characterID]
-    if ( !character ) then print("Failed to delete character " .. characterID .. "!") return end
+    if ( !character ) then return end
 
     ow.character.stored[characterID] = nil
 
@@ -201,7 +203,6 @@ net.Receive("ow.item.add", function()
 end)
 
 net.Receive("ow.item.cache", function()
-    local characterID = net.ReadUInt(32)
     local items = net.ReadTable()
 
     for _, itemData in ipairs(items) do
@@ -234,7 +235,6 @@ net.Receive("ow.inventory.cache", function()
         local character = ow.character.stored[inventory.CharacterID]
         if ( character ) then
             local inventories = character:GetInventories()
-            print("Inventories: ", inventories)
             if ( !table.HasValue(inventories, inventory) ) then
                 table.insert(inventories, inventory)
             end

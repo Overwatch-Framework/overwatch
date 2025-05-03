@@ -203,6 +203,16 @@ function ow.util:PrintError(...)
     local realmColor = SERVER and serverErrorColour or clientErrorColour
     MsgC(realmColor, "[ERROR] ", hook.Run("GetFrameworkColor"), "Overwatch >> ", realmColor, unpack(args))
 
+    if ( SERVER ) then
+        for k, v in player.Iterator() do
+            if ( v:IsAdmin() ) then
+                v:Notify("An error has occurred in the server. Check the console for more information.", NOTIFY_ERROR)
+            end
+        end
+    else
+        ow.localClient:Notify("An error has occurred in the client. Check the console for more information.", NOTIFY_ERROR)
+    end
+
     return args
 end
 
