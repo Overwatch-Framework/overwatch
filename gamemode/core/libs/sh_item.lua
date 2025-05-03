@@ -15,7 +15,7 @@ function ow.item:Register(itemData)
     if ( !istable(itemData) ) then return false end
 
     itemData = setmetatable(itemData, self.meta)
-    itemData.__index = itemData
+    --itemData.__index = itemData
 
     local bResult = hook.Run("PreItemRegistered", uniqueID, itemData)
     if ( bResult == false ) then return false end
@@ -43,7 +43,7 @@ function ow.item:LoadFolder(path)
     for _, v in ipairs(files) do
         local filePath = path .. "/" .. v
         ITEM = setmetatable({}, self.meta)
-        ITEM.__index = ITEM
+        --ITEM.__index = ITEM
 
         ITEM.UniqueID = string.StripExtension(v):sub(4)
         ITEM.Weight = ITEM.Weight or 0
