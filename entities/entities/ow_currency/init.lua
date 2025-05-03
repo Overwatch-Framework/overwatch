@@ -21,12 +21,11 @@ function ENT:Use(ply)
         return
     end
 
-    if ( hook.Run("CanPlayerTakeMoney", ply, self, amount) == false ) then return end
-
     local character = ply:GetCharacter()
     if ( !character ) then return end
 
-    hook.Run("PrePlayerTakeMoney", ply, self, amount)
+    local prevent = hook.Run("PrePlayerTakeMoney", ply, self, amount)
+    if ( prevent == false ) then return end
 
     character:GiveMoney(amount)
     net.Start("ow.currency.give")
