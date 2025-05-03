@@ -255,3 +255,47 @@ ow.config:Register("mainmenu.branchwarning", {
     Type = ow.type.bool,
     Default = true
 })
+
+ow.config:Register("hands.max.carry", {
+    Name = "config.hands.max.carry",
+    Description = "config.hands.max.carry.help",
+    Category = "config.hands",
+    Type = ow.type.number,
+    Default = 160,
+    Min = 0,
+    Max = 500,
+    Decimals = 0
+})
+
+ow.config:Register("hands.max.force", {
+    Name = "config.hands.max.force",
+    Description = "config.hands.max.force.help",
+    Category = "config.hands",
+    Type = ow.type.number,
+    Default = 16500,
+    Min = 0,
+    Max = 50000,
+    Decimals = 0
+})
+
+ow.config:Register("hands.max.throw", {
+    Name = "config.hands.max.throw",
+    Description = "config.hands.max.throw.help",
+    Category = "config.hands",
+    Type = ow.type.number,
+    Default = 150,
+    Min = 0,
+    Max = 256,
+    Decimals = 0
+})
+
+ow.config:Register("hands.range", {
+    Name = "config.hands.range",
+    Description = "config.hands.range.help",
+    Category = "config.hands",
+    Type = ow.type.number,
+    Default = 96,
+    Min = 0,
+    Max = 256,
+    Decimals = 0
+})
