@@ -141,3 +141,11 @@ ow.config:Register("inventory.maxweight", {
         end
     end
 })
+
+ow.config:Register("chat.ooc", {
+    Name = "config.chat.ooc",
+    Description = "config.chat.ooc.help",
+    Category = "config.chat",
+    Type = ow.type.bool,
+    Default = true,
+})

@@ -94,5 +94,9 @@ localization["tab.mainmenu"] = "Main Menu"
 localization["tab.scoreboard"] = "Scoreboard"
 localization["tab.settings"] = "Settings"
 localization["currency.pickedup"] = "You picked up %s."
+localization["config.chat"] = "Chat"
+localization["config.chat.ooc"] = "Out of Character"
+localization["config.chat.ooc.help"] = "Enable or disable the out of character chat."
+
 
 ow.localization:Register("en", localization)
