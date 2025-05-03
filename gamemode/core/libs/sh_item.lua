@@ -6,11 +6,6 @@ ow.item.meta = ow.item.meta or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
 
-local requiredFields = {
-    "Name",
-    "Description"
-}
-
 function ow.item:Register(itemData)
     ow.util:PrintWarning("This function is deprecated.")
 end
