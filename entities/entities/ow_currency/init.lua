@@ -8,6 +8,7 @@ function ENT:Initialize()
     self:SetSolid(SOLID_VPHYSICS)
     self:PhysicsInit(SOLID_VPHYSICS)
     self:SetUseType(SIMPLE_USE)
+    self:SetAmount(0)
     self:PhysWake()
 end
 

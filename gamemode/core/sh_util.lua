@@ -210,7 +210,11 @@ function ow.util:PrintError(...)
             end
         end
     else
-        ow.localClient:Notify("An error has occurred in the client. Check the console for more information.", NOTIFY_ERROR)
+        if ( IsValid(ow.localClient) ) then
+            ow.localClient:Notify("An error has occurred in the client. Check the console for more information.", NOTIFY_ERROR)
+        end
+
+        chat.AddText(realmColor, "[ERROR] ", hook.Run("GetFrameworkColor"), "Overwatch >> ", realmColor, unpack(args))
     end
 
     return args
