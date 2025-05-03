@@ -2,6 +2,7 @@
 -- @module ow.chat
 
 ow.chat = ow.chat or {}
+ow.chat.messages = ow.chat.messages or {}
 
 local nativeAddText = chat.AddText
 
@@ -13,56 +14,52 @@ function chat.AddText(...)
 
     local args = {...}
     local currentColor = color_white
-    local segments = {}
+    local font = "ow.fonts.small"
+    local maxWidth = ow.gui.chatbox:GetWide() - 20
 
-    -- Parse arguments into color-tagged text segments
+    local textParts = ""
     for _, v in ipairs(args) do
         if ( IsColor(v) ) then
             currentColor = v
         elseif ( IsValid(v) and v:IsPlayer() ) then
-            table.insert(segments, {text = v:Nick(), color = team.GetColor(v:Team())})
+            local c = team.GetColor(v:Team())
+            textParts = textParts .. string.format("<color=%d %d %d>%s</color>", c.r, c.g, c.b, v:Nick())
         else
-            table.insert(segments, {text = tostring(v), color = currentColor})
+            local c = currentColor
+            textParts = textParts .. string.format("<color=%d %d %d>%s</color>", c.r, c.g, c.b, tostring(v))
         end
     end
 
-    -- Merge segments into wrapped lines
-    local font = "ow.fonts.small"
-    local maxWidth = ow.gui.chatbox:GetWide() - 20
-    local buffer = ""
-    local bufferColor = color_white
-    local lineQueue = {}
+    local wrappedLines = ow.util:WrapText(textParts, font, maxWidth)
+    for _, line in ipairs(wrappedLines) do
+        local rich = markup.Parse("<font=" .. font .. ">" .. line .. "</font>", maxWidth)
 
-    for i, seg in ipairs(segments) do
-        local lines = ow.util:WrapText(seg.text, font, maxWidth)
+        local panel = ow.gui.chatbox.history:Add("DPanel")
+        panel:SetTall(rich:GetHeight())
+        panel:Dock(TOP)
+        panel:DockMargin(0, 0, 0, 2)
 
-        for k, wrapped in ipairs(lines) do
-            if (k == 1) then
-                buffer = buffer .. wrapped
-                bufferColor = seg.color
+        panel.alpha = 1
+        panel.created = CurTime()
+
+        panel.Paint = function(s, w, h)
+            surface.SetAlphaMultiplier(s.alpha)
+            rich:Draw(0, 0)
+            surface.SetAlphaMultiplier(1)
+        end
+
+        panel.Think = function(s)
+            if ( !ow.gui.chatbox:IsVisible() ) then
+                local dt = CurTime() - s.created
+                if ( dt >= 8 ) then
+                    s.alpha = math.max(0, 1 - (dt - 8) / 4)
+                end
             else
-                table.insert(lineQueue, {text = buffer, color = bufferColor})
-                buffer = wrapped
-                bufferColor = seg.color
+                s.alpha = 1
             end
         end
-    end
 
-    if (#buffer > 0) then
-        table.insert(lineQueue, {text = buffer, color = bufferColor})
-    end
-
-    -- Display each wrapped line
-    for _, line in ipairs(lineQueue) do
-        local label = ow.gui.chatbox.history:Add("DLabel")
-        label:SetFont(font)
-        label:SetText(line.text)
-        label:SetTextColor(line.color)
-        label:SetWrap(true)
-        label:SetAutoStretchVertical(true)
-        label:Dock(TOP)
-        label:DockMargin(0, 0, 0, 2)
-        label:SetContentAlignment(7)
+        table.insert(ow.chat.messages, panel)
     end
 
     ow.gui.chatbox.history:InvalidateLayout(true)

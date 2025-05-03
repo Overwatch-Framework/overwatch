@@ -656,12 +656,18 @@ end
 function GM:StartChat()
     input.SetCursorPos(ScrW() / 2, ScrH() / 2)
 
-    if ( IsValid(ow.gui.chatbox) ) then
-        ow.gui.chatbox:SetVisible(true)
-        return true
+    if ( !IsValid(ow.gui.chatbox) ) then
+        ow.gui.chatbox = vgui.Create("ow.chatbox")
     end
 
-    ow.gui.chatbox = vgui.Create("ow.chatbox")
+    -- Reset fade on all chat messages
+    for _, pnl in ipairs(ow.chat.messages or {}) do
+        if ( IsValid(pnl) ) then
+            pnl.alpha = 1
+        end
+    end
+
+    ow.gui.chatbox:SetVisible(true)
     return true
 end
 

@@ -18,16 +18,16 @@ function PANEL:Init()
     self.entry:SetTextColor(color_white)
     self.entry:SetDrawLanguageID(false)
 
-    self.entry.OnEnter = function(s)
-        local text = s:GetValue()
-        if (#text < 1) then return end
+    self.entry.OnEnter = function(this)
+        local text = this:GetValue()
+        if ( #text < 1 ) then return end
 
         RunConsoleCommand("say", text)
-        s:SetText("")
+        this:SetText("")
         self:SetVisible(false)
     end
 
-    self.entry.OnLoseFocus = function(s)
+    self.entry.OnLoseFocus = function(this)
         self:SetVisible(false)
     end
 
