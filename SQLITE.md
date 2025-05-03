@@ -1,101 +1,79 @@
-# SQLite Utility Library for the Overwatch Framework
+# ow.sqlite
 
-This library provides a modular, extensible system to manage persistent data using SQLite in Garry's Mod. It allows schemas or modules to dynamically register variables for any SQL table (like `users`, `characters`, etc.), and ensures the tables are created, loaded, and saved correctly with default values.
-
-## 🌟 Features
-- Dynamic variable registration for different tables.
-- Default row generation with schema-defined defaults.
-- Automatic table creation based on registered variables.
-- Row loading with fallback to default insertion.
-- Support for saving updated rows.
-- Generalized for use across multiple systems, not just players.
+`ow.sqlite` is a utility library for managing structured SQLite tables in Garry’s Mod. It allows dynamic variable registration, automatic schema creation, and safe row load/save operations.
 
 ---
 
-## 🧠 How It Works
-The system revolves around the concept of registering variables for a table. These variables define what kind of data the table should store. Once variables are registered, you can:
+## 📌 Quick Start
 
-- Initialize the table.
-- Load a row (e.g., for a user or character).
-- Save updates to a row.
+### Register Variables
 
-Each row is automatically populated with default values on first load.
-
----
-
-## 🔧 API Usage
-
-### Register a Variable
 ```lua
-ow.sqlite:RegisterVar("characters", "xp", 0)
-ow.sqlite:RegisterVar("users", "credits", 100)
+ow.sqlite:RegisterVar("users", "credits", 0)
+ow.sqlite:RegisterVar("users", "rank", "citizen")
 ```
 
-### Initialize a Table
+---
+
+### Initialize Table
+
 ```lua
-ow.sqlite:InitializeTable("characters")
 ow.sqlite:InitializeTable("users")
 ```
-This will create the table if it doesn't exist using the registered variables as schema.
+
+---
 
 ### Load a Row
+
 ```lua
-ow.sqlite:LoadRow("users", "steamid", ply:SteamID(), function(data)
-    ply.databaseInfo = data
+ow.sqlite:LoadRow("users", "steamid", "STEAM_0:1:12345", function(row)
+    print("Credits:", row.credits)
 end)
 ```
-This will either return an existing row or insert a default one.
+
+---
 
 ### Save a Row
-```lua
-ow.sqlite:SaveRow("users", ply.databaseInfo, "steamid")
-```
-This saves the updated row into the database using the steamid as a unique key.
 
-### Create Table with Custom Schema
 ```lua
-ow.sqlite:InitializeTable("inventory", {
-    id = "INTEGER PRIMARY KEY AUTOINCREMENT"
+ow.sqlite:SaveRow("users", {
+    steamid = "STEAM_0:1:12345",
+    credits = 200,
+    rank = "vip"
+}, "steamid")
+```
+
+---
+
+### Create a Table Manually
+
+```lua
+ow.sqlite:CreateTable("bans", {
+    steamid = "TEXT PRIMARY KEY",
+    reason = "TEXT",
+    time = "INTEGER"
 })
 ```
-You can pass additional schema fields if necessary.
 
 ---
 
-## 💡 Use Cases
-- Storing user data like SteamID, credits, permissions.
-- Character data like XP, stats, role, flags.
-- Plugin support for adding new persistent variables without modifying core schema logic.
-- Any other system requiring SQLite-backed persistence.
+## 🧱 API Overview
+
+- `RegisterVar(tableName, key, default)`
+- `InitializeTable(tableName, extraSchema)`
+- `GetDefaultRow(tableName, override)`
+- `LoadRow(tableName, key, value, callback)`
+- `SaveRow(tableName, data, key)`
+- `Insert(tableName, data, callback)`
+- `Update(tableName, data, condition)`
+- `Delete(tableName, condition)`
+- `Select(tableName, columns, condition)`
+- `Count(tableName, condition)`
 
 ---
 
-## 📁 Example: Character Plugin Adding Custom XP Field
-```lua
-MODULE.name = "XP System"
-MODULE.author = "Riggs"
+## Notes
 
-function MODULE:ModulesInitialized()
-    ow.sqlite:RegisterVar("characters", "xp", 0)
-end
-```
-
-In your character loading logic:
-```lua
-ow.sqlite:LoadRow("characters", "steamid", ply:SteamID(), function(data)
-    ply.characterData = data
-end)
-```
-
-To save:
-```lua
-ow.sqlite:SaveRow("characters", ply.characterData, "steamid")
-```
-
----
-
-## ✅ Benefits
-- Easy to extend by other developers or modules.
-- Reduces need to manually manage tables and schema.
-- Avoids schema conflicts and hardcoded SQL logic.
-- Works for any number of systems or table types.
+- Automatically adds missing columns with correct type.
+- Works well with `users`, `characters`, `inventories`, etc.
+- Use `ow.util:PrintWarning` and `PrintTable` for debug info.
