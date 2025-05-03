@@ -284,10 +284,10 @@ function PANEL:AddSetting(settingData)
         color:Dock(RIGHT)
         color:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
         color:SetWide(ScreenScale(128))
-        color:SetBackgroundColor(value)
         color:SetMouseInputEnabled(false)
+        color.color = value
         color.Paint = function(this, width, height)
-            draw.RoundedBox(0, 0, 0, width, height, this:GetBackgroundColor())
+            draw.RoundedBox(0, 0, 0, width, height, this.color)
         end
 
         panel.DoClick = function()
@@ -329,7 +329,7 @@ function PANEL:AddSetting(settingData)
             mixer.ValueChanged = function(this, old)
                 local new = Color(old.r, old.g, old.b, 255)
                 value = new
-                color:SetBackgroundColor(new)
+                color.color = new
             end
         end
 
@@ -339,7 +339,7 @@ function PANEL:AddSetting(settingData)
                 ow.option:Reset(settingData.UniqueID)
                 value = ow.option:Get(settingData.UniqueID)
 
-                color:SetBackgroundColor(value)
+                color.color = value
             end):SetIcon("icon16/arrow_refresh.png")
             menu:Open()
         end

@@ -302,10 +302,10 @@ function PANEL:AddConfig(configData)
         color:Dock(RIGHT)
         color:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
         color:SetWide(ScreenScale(128))
-        color:SetBackgroundColor(value)
         color:SetMouseInputEnabled(false)
+        color.color = value
         color.Paint = function(this, width, height)
-            draw.RoundedBox(0, 0, 0, width, height, this:GetBackgroundColor())
+            draw.RoundedBox(0, 0, 0, width, height, this.color)
         end
 
         panel.DoClick = function()
@@ -350,7 +350,7 @@ function PANEL:AddConfig(configData)
             mixer.ValueChanged = function(this, old)
                 local new = Color(old.r, old.g, old.b, 255)
                 value = new
-                color:SetBackgroundColor(new)
+                color.color = new
             end
         end
 
@@ -362,7 +362,7 @@ function PANEL:AddConfig(configData)
                 net.SendToServer()
 
                 value = ow.config:GetDefault(configData.UniqueID)
-                color:SetBackgroundColor(value)
+                color.color = value
             end)
             menu:Open()
         end
