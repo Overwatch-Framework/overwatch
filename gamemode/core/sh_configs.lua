@@ -181,3 +181,11 @@ ow.config:Register("currency.model", {
     Type = ow.type.string,
     Default = "models/props_junk/cardboard_box004a.mdl"
 })
+
+ow.config:Register("mainmenu.branchwarning", {
+    Name = "config.mainmenu.branchwarning",
+    Description = "config.mainmenu.branchwarning.help",
+    Category = "config.mainmenu",
+    Type = ow.type.bool,
+    Default = true
+})

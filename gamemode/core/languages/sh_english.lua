@@ -98,5 +98,8 @@ localization["tab.inventory"] = "Inventory"
 localization["tab.mainmenu"] = "Main Menu"
 localization["tab.scoreboard"] = "Scoreboard"
 localization["tab.settings"] = "Settings"
+localization["config.mainmenu.branchwarning"] = "Branch Warning"
+localization["config.mainmenu.branchwarning.help"] = "Inform the player that the \"x86-64\" is recommended for the best performance."
+localization["mainmenu.branchwarning"] = "You aren't using the recommended \"x86-64\" branch. Please switch to it for the best performance."
 
 ow.localization:Register("en", localization)

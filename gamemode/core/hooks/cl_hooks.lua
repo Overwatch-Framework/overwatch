@@ -515,7 +515,7 @@ function GM:ShouldDrawPreviewHUD()
     if ( IsValid(ow.gui.mainmenu) ) then return false end
     if ( IsValid(ow.gui.tab) ) then return false end
 
-    return !ow.localClient:IsAdmin()
+    return !hook.Run("ShouldDrawDebugHUD")
 end
 
 function GM:ShouldDrawVignette()

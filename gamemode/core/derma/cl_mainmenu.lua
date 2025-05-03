@@ -69,6 +69,10 @@ function PANEL:Init()
     self.container:SetSize(self:GetWide(), self:GetTall())
     self.container:SetPos(0, 0)
 
+    if ( ow.config:Get("mainmenu.branchwarning") and BRANCH != "x86-64" )  then
+        Derma_Query(ow.localization:GetPhrase("mainmenu.branchwarning"), "Overwatch", "I acknowledge")
+    end
+
     self:Populate()
     self:PlayMenuTrack()
 end
