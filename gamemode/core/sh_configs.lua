@@ -143,6 +143,72 @@ ow.config:Register("inventory.maxweight", {
     end
 })
 
+ow.config:Register("chat.radius.ic", {
+    Name = "config.chat.radius.ic",
+    Description = "config.chat.radius.ic.help",
+    Category = "config.chat",
+    Type = ow.type.number,
+    Default = 384,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
+ow.config:Register("chat.radius.whisper", {
+    Name = "config.chat.radius.whisper",
+    Description = "config.chat.radius.whisper.help",
+    Category = "config.chat",
+    Type = ow.type.number,
+    Default = 96,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
+ow.config:Register("chat.radius.yell", {
+    Name = "config.chat.radius.yell",
+    Description = "config.chat.radius.yell.help",
+    Category = "config.chat",
+    Type = ow.type.number,
+    Default = 1024,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
+ow.config:Register("chat.radius.me", {
+    Name = "config.chat.radius.me",
+    Description = "config.chat.radius.me.help",
+    Category = "config.chat",
+    Type = ow.type.number,
+    Default = 512,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
+ow.config:Register("chat.radius.it", {
+    Name = "config.chat.radius.it",
+    Description = "config.chat.radius.it.help",
+    Category = "config.chat",
+    Type = ow.type.number,
+    Default = 512,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
+ow.config:Register("chat.radius.looc", {
+    Name = "config.chat.radius.looc",
+    Description = "config.chat.radius.looc.help",
+    Category = "config.chat",
+    Type = ow.type.number,
+    Default = 512,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
 ow.config:Register("chat.ooc", {
     Name = "config.chat.ooc",
     Description = "config.chat.ooc.help",
