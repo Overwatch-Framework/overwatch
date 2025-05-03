@@ -17,51 +17,53 @@ function chat.AddText(...)
     local font = "ow.fonts.small"
     local maxWidth = ow.gui.chatbox:GetWide() - 20
 
-    local textParts = ""
+    local markupStr = ""
+
     for _, v in ipairs(args) do
         if ( IsColor(v) ) then
             currentColor = v
+        elseif ( istable(v) and v.r and v.g and v.b ) then
+            currentColor = Color(v.r, v.g, v.b)
         elseif ( IsValid(v) and v:IsPlayer() ) then
             local c = team.GetColor(v:Team())
-            textParts = textParts .. string.format("<color=%d %d %d>%s</color>", c.r, c.g, c.b, v:Nick())
+            markupStr = markupStr .. string.format("<color=%d %d %d>%s</color>", c.r, c.g, c.b, v:Nick())
         else
-            local c = currentColor
-            textParts = textParts .. string.format("<color=%d %d %d>%s</color>", c.r, c.g, c.b, tostring(v))
+            markupStr = markupStr .. string.format(
+                "<color=%d %d %d>%s</color>",
+                currentColor.r, currentColor.g, currentColor.b, tostring(v)
+            )
         end
     end
 
-    local wrappedLines = ow.util:WrapText(textParts, font, maxWidth)
-    for _, line in ipairs(wrappedLines) do
-        local rich = markup.Parse("<font=" .. font .. ">" .. line .. "</font>", maxWidth)
+    local rich = markup.Parse("<font=" .. font .. ">" .. markupStr .. "</font>", maxWidth)
 
-        local panel = ow.gui.chatbox.history:Add("DPanel")
-        panel:SetTall(rich:GetHeight())
-        panel:Dock(TOP)
-        panel:DockMargin(0, 0, 0, 2)
+    local panel = ow.gui.chatbox.history:Add("DPanel")
+    panel:SetTall(rich:GetHeight())
+    panel:Dock(TOP)
+    panel:DockMargin(0, 0, 0, 2)
 
-        panel.alpha = 1
-        panel.created = CurTime()
+    panel.alpha = 1
+    panel.created = CurTime()
 
-        panel.Paint = function(s, w, h)
-            surface.SetAlphaMultiplier(s.alpha)
-            rich:Draw(0, 0)
-            surface.SetAlphaMultiplier(1)
-        end
+    function panel:Paint(w, h)
+        surface.SetAlphaMultiplier(self.alpha)
+        rich:Draw(0, 0)
+        surface.SetAlphaMultiplier(1)
+    end
 
-        panel.Think = function(s)
-            if ( !ow.gui.chatbox:IsVisible() ) then
-                local dt = CurTime() - s.created
-                if ( dt >= 8 ) then
-                    s.alpha = math.max(0, 1 - (dt - 8) / 4)
-                end
-            else
-                s.alpha = 1
+    function panel:Think()
+        if ( !ow.gui.chatbox:IsVisible() ) then
+            local dt = CurTime() - self.created
+            if ( dt >= 8 ) then
+                self.alpha = math.max(0.1, 1 - (dt - 8) / 4)
             end
+        else
+            self.alpha = 1
         end
-
-        table.insert(ow.chat.messages, panel)
     end
+
+    table.insert(ow.chat.messages, panel)
 
     ow.gui.chatbox.history:InvalidateLayout(true)
-    ow.gui.chatbox.history:ScrollToChild(ow.gui.chatbox.history:GetChildren()[#ow.gui.chatbox.history:GetChildren()])
+    ow.gui.chatbox.history:ScrollToChild(panel)
 end
