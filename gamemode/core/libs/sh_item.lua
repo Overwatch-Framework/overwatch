@@ -24,7 +24,7 @@ function ow.item:LoadFolder(path)
     for _, v in ipairs(files) do
         local filePath = path .. "/" .. v
         ITEM = setmetatable({}, self.meta)
-        ITEM.__index = ITEM
+        --ITEM.__index = ITEM
 
         ITEM.UniqueID = string.StripExtension(v):sub(4)
 
