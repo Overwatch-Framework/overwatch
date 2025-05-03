@@ -62,4 +62,13 @@ function chat.AddText(...)
     end
 
     table.insert(ow.chat.messages, panel)
+
+    timer.Simple(0.1, function()
+        if ( !IsValid(panel) ) then return end
+
+        local scrollBar = ow.gui.chatbox.history:GetVBar()
+        if ( scrollBar ) then
+            scrollBar:AnimateTo(scrollBar.CanvasSize, 0.2, 0, 0.2)
+        end
+    end)
 end

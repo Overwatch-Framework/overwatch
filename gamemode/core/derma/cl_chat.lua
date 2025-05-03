@@ -38,12 +38,6 @@ function PANEL:Init()
     self.history:SetPos(8, title:GetTall() + 8)
     self.history:SetSize(self:GetWide() - 16, self:GetTall() - 16 - title:GetTall() - self.entry:GetTall())
     self.history:GetVBar():SetWide(0)
-    self.history.PerformLayout = function(this)
-        local scrollBar = this:GetVBar()
-        if ( scrollBar ) then
-            scrollBar:SetScroll(scrollBar.CanvasSize)
-        end
-    end
 
     self:SetVisible(false)
 
