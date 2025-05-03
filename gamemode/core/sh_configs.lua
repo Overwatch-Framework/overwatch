@@ -132,8 +132,9 @@ ow.config:Register("inventory.maxweight", {
     Decimals = 2,
     OnChange = function(_, value)
         for _, ply in player.Iterator() do
-            if ( ply:GetCharacter() ) then
-                local inventories = ow.inventory:GetByCharacterID(ply:GetCharacter():GetID())
+            local character = ply:GetCharacter()
+            if ( character ) then
+                local inventories = ow.inventory:GetByCharacterID(character:GetID())
                 for _, inventory in ipairs(inventories) do
                     inventory.maxWeight = value
                 end
