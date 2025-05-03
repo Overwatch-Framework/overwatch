@@ -12,9 +12,9 @@ function PANEL:Init()
     self:SetSize(hook.Run("GetChatboxSize"))
     self:SetPos(hook.Run("GetChatboxPos"))
 
-    self.history = self:Add("DScrollPanel")
-    self.history:Dock(FILL)
-    self.history:DockMargin(8, ow.util:GetTextHeight("ow.fonts.small") + 10 + 8, 8, 8)
+    self.history = vgui.Create("DScrollPanel")
+    self.history:SetSize(self:GetWide() - 16, self:GetTall() - ow.util:GetTextHeight("ow.fonts.small") - 20)
+    self.history:SetPos(self:GetX() + 8, self:GetY() + ow.util:GetTextHeight("ow.fonts.small") + 10)
 
     self.entry = self:Add("ow.text.entry")
     self.entry:Dock(BOTTOM)
@@ -52,9 +52,6 @@ function PANEL:AddLine(text, color)
     self.history:ScrollToChild(label)
 end
 
-function PANEL:Think()
-end
-
 function PANEL:SetVisible(visible)
     BaseClass.SetVisible(self, visible)
 
@@ -66,8 +63,12 @@ function PANEL:SetVisible(visible)
         self.entry:SetMouseInputEnabled(false)
         self.entry:SetKeyboardInputEnabled(false)
         self.entry:Clear()
+    end
+end
 
-        self.history:SetVisible(true)
+function PANEL:OnRemove()
+    if ( IsValid(self.history) ) then
+        self.history:Remove()
     end
 end
 
