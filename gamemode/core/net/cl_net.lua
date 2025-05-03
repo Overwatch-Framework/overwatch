@@ -291,6 +291,21 @@ net.Receive("ow.item.entity", function()
 end)
 
 --[[-----------------------------------------------------------------------------
+    Currency Networking
+-----------------------------------------------------------------------------]]--
+
+net.Receive("ow.currency.give", function()
+    local amount = net.ReadUInt(32)
+    local entity = net.ReadEntity()
+    if ( !IsValid(entity) ) then return end
+
+    local phrase = ow.localization:GetPhrase("currency.pickup")
+    phrase = string.format(phrase, amount .. ow.currency:GetSymbol())
+
+    ow.localClient:Notify(phrase)
+end)
+
+--[[-----------------------------------------------------------------------------
     Miscellaneous Networking
 -----------------------------------------------------------------------------]]--
 

@@ -149,3 +149,34 @@ ow.config:Register("chat.ooc", {
     Type = ow.type.bool,
     Default = true,
 })
+
+ow.config:Register("currency.singular", {
+    Name = "config.currency.singular",
+    Description = "config.currency.singular.help",
+    Category = "config.currency",
+    Type = ow.type.string,
+    Default = "Dollar"
+})
+
+ow.config:Register("currency.plural", {
+    Name = "config.currency.plural",
+    Description = "config.currency.plural.help",
+    Category = "config.currency",
+    Type = ow.type.string,
+    Default = "Dollars"
+})
+ow.config:Register("currency.symbol", {
+    Name = "config.currency.symbol",
+    Description = "config.currency.symbol.help",
+    Category = "config.currency",
+    Type = ow.type.string,
+    Default = "$"
+})
+
+ow.config:Register("currency.model", {
+    Name = "config.currency.model",
+    Description = "config.currency.model.help",
+    Category = "config.currency",
+    Type = ow.type.string,
+    Default = "models/props_junk/cardboard_box004a.mdl"
+})

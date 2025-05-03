@@ -24,10 +24,13 @@ function ENT:Use(ply)
     local character = ply:GetCharacter()
     if ( !character ) then return end
 
-    local bPlural = amount > 1
-
+    hook.Run("PrePlayerTakeMoney", ply, self, amount)
     character:GiveMoney(amount)
+    net.Start("ow.currency.give")
+        net.WriteUInt(amount, 32)
+        net.WriteEntity(self)
+    net.Send(ply)
+    hook.Run("PostPlayerTakeMoney", ply, self, amount)
+
     SafeRemoveEntity(self)
-    -- can't add localization, serverside ;9
-    ply:Notify(Format("You have taken %s %s.", ow.currency:Format(amount, false, true), bPlural and ow.currency:GetPlural() or ow.currency:GetSingular()))
 end
