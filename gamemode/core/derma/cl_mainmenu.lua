@@ -112,7 +112,12 @@ function PANEL:Populate()
     subtitle:Dock(TOP)
     subtitle:DockMargin(padding / 4, -padding / 8, 0, 0)
     subtitle:SetFont("ow.fonts.subtitle")
-    subtitle:SetText(string.upper(SCHEMA.Name or "UNKNOWN SCHEMA"))
+    local schemaName = string.upper(SCHEMA.Name) or "UNKNOWN SCHEMA"
+    if ( isfunction(SCHEMA.GetMenuTitle) ) then
+        schemaName = SCHEMA:GetMenuTitle()
+    end
+
+    subtitle:SetText(schemaName)
     subtitle:SetTextColor(hook.Run("GetSchemaColor"))
     subtitle:SizeToContents()
 
