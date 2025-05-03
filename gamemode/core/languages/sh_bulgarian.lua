@@ -102,4 +102,4 @@ localization["tab.mainmenu"] = "Главно меню"
 localization["tab.scoreboard"] = "Табло"
 localization["tab.settings"] = "Настройки"
 
-ow.localization:Register("en", localization)
+ow.localization:Register("bg", localization)
