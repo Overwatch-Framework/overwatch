@@ -34,14 +34,14 @@ local function sendPacked(msg, key, value, recipient)
     end
 end
 
-function ow.relay:SetShared(key, value, recipient)
+function ow.relay:SetRelay(key, value, recipient)
     if ( SERVER ) then
         self.shared[key] = value
         sendPacked("ow.relay.shared", key, value, recipient)
     end
 end
 
-function ow.relay:GetShared(key, default)
+function ow.relay:GetRelay(key, default)
     local v = self.shared[key]
     return v != nil and v or default
 end
@@ -58,7 +58,10 @@ if ( CLIENT ) then
     end)
 end
 
-function playerMeta:SetUser(key, value, recipient)
+function playerMeta:SetRelay(key, value, recipient)
+    if ( !IsValid(self) ) then return end
+    if ( !self:IsPlayer() ) then return end
+
     if ( SERVER ) then
         ow.relay.user[self] = ow.relay.user[self] or {}
         ow.relay.user[self][key] = value
@@ -66,7 +69,10 @@ function playerMeta:SetUser(key, value, recipient)
     end
 end
 
-function playerMeta:GetUser(key, default)
+function playerMeta:GetRelay(key, default)
+    if ( !IsValid(self) ) then return end
+    if ( !self:IsPlayer() ) then return end
+
     local t = ow.relay.user[self]
     return t and t[key] or default
 end
@@ -86,7 +92,10 @@ if ( CLIENT ) then
     end)
 end
 
-function entityMeta:RelaySetEntity(key, value, recipient)
+function entityMeta:SetRelay(key, value, recipient)
+    if ( !IsValid(self) ) then return end
+    if ( self:IsPlayer() ) then return end
+
     if ( SERVER ) then
         ow.relay.entity[self] = ow.relay.entity[self] or {}
         ow.relay.entity[self][key] = value
@@ -105,7 +114,10 @@ function entityMeta:RelaySetEntity(key, value, recipient)
     end
 end
 
-function entityMeta:RelayGetEntity(key, default)
+function entityMeta:GetRelay(key, default)
+    if ( !IsValid(self) ) then return end
+    if ( self:IsPlayer() ) then return end
+
     local t = ow.relay.entity[self]
     return t and t[key] or default
 end
