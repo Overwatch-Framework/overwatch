@@ -656,7 +656,7 @@ function GM:GetChatboxSize()
 end
 
 function GM:GetChatboxPos()
-    local width, height = self:GetChatboxSize()
+    local _, height = self:GetChatboxSize()
     local x = ScrW() * 0.0125
     local y = ScrH() * 0.025
     y = ScrH() - height - y
