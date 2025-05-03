@@ -51,7 +51,7 @@ function chat.AddText(...)
     end
 
     function panel:Think()
-        if ( !ow.gui.chatbox:IsVisible() ) then
+        if ( ow.gui.chatbox:GetAlpha() != 255 ) then
             local dt = CurTime() - self.created
             if ( dt >= 8 ) then
                 self.alpha = math.max(0, 1 - (dt - 8) / 4)
