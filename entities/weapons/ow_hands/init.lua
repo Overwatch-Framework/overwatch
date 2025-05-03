@@ -45,7 +45,7 @@ function SWEP:Think()
     end
 
     if ( curTime > standTime ) then
-        if ( isPlayerStandsOn(self.owHoldingEntity) ) then
+        if ( self:IsEntityStoodOn(self.owHoldingEntity) ) then
             self:Reset()
             return
         end

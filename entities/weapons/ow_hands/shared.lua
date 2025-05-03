@@ -235,7 +235,7 @@ function SWEP:CheckValidity()
     end
 end
 
-local function IsPlayerStandingOn(entity)
+function SWEP:IsEntityStoodOn(entity)
     for k, v in player.Iterator() do
         if ( v:GetGroundEntity() == entity ) then
             return true
@@ -332,7 +332,7 @@ function SWEP:AllowPickup(target)
     local physicsObject = target:GetPhysicsObject()
     local ply = self:GetOwner()
 
-    return ( IsValid(physicsObject) and IsValid(ply) and !physicsObject:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP) and physicsObject:GetMass() < ow.config:Get("hands.max.carry", 160) and !IsPlayerStandingOn(target) and target.CanPickup != false )
+    return ( IsValid(physicsObject) and IsValid(ply) and !physicsObject:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP) and physicsObject:GetMass() < ow.config:Get("hands.max.carry", 160) and !self:IsEntityStoodOn(target) and target.CanPickup != false )
 end
 
 function SWEP:DoPickup(throw)
