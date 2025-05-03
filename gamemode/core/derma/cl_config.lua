@@ -247,8 +247,8 @@ function PANEL:AddConfig(configData)
 
         panel.DoClick = function()
             -- Pick the next key depending on where the cursor is near the label, if the cursor is near the left side of the label, pick the previous key, if it's near the right side, pick the next key.
-            local x, y = label:CursorPos() -- not used
-            local w, h = label:GetSize() -- not used
+            local x, _ = label:CursorPos() -- not used
+            local w, _ = label:GetSize() -- not used
             local percent = x / w
             local nextKey = nil
             for i = 1, #keys do

@@ -39,7 +39,7 @@ function PANEL:Init()
     end
 
     for k, v in SortedPairs(categories) do
-        if ( ow.gui.helpLast ) then 
+        if ( ow.gui.helpLast ) then
             if ( ow.gui.helpLast == k ) then
                 self:Populate(v)
                 break
