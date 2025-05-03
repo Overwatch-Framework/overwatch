@@ -123,3 +123,5 @@ function ITEM:Spawn(position, angles)
         return item
     end)
 end
+
+ow.item.meta = ITEM

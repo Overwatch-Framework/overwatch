@@ -43,84 +43,84 @@ function ow.item:LoadFolder(path)
     for _, v in ipairs(files) do
         local filePath = path .. "/" .. v
         ITEM = setmetatable({}, self.meta)
-            ITEM.UniqueID = string.StripExtension(v)
-            ITEM.Weight = ITEM.Weight or 0
-            ITEM.Category = ITEM.Category or "Miscellaneous"
+        ITEM.__index = ITEM
 
-            ITEM.Actions = ITEM.Actions or {}
-            ITEM.Actions.Drop = ITEM.Actions.Drop or {
-                Name = "Drop",
-                OnRun = function(this, item, ply)
-                    if ( !IsValid(ply) ) then return end
+        ITEM.UniqueID = string.StripExtension(v):sub(4)
+        ITEM.Weight = ITEM.Weight or 0
+        ITEM.Category = ITEM.Category or "Miscellaneous"
 
-                    local pos = ply:GetDropPosition()
-                    if ( !pos ) then return end
+        ITEM.Actions = ITEM.Actions or {}
+        ITEM.Actions.Drop = ITEM.Actions.Drop or {
+            Name = "Drop",
+            OnRun = function(this, item, ply)
+                if ( !IsValid(ply) ) then return end
 
-                    local prevent = hook.Run("PrePlayerDropItem", ply, item, pos)
-                    if ( prevent == false ) then return end
+                local pos = ply:GetDropPosition()
+                if ( !pos ) then return end
 
-                    ow.item:Spawn(item:GetID(), item:GetUniqueID(), pos, Angle(0, 0, 0), function(entity)
-                        ow.inventory:RemoveItem(item:GetInventory(), item:GetID())
+                local prevent = hook.Run("PrePlayerDropItem", ply, item, pos)
+                if ( prevent == false ) then return end
 
-                        net.Start("ow.inventory.refresh")
-                            net.WriteUInt(item:GetInventory(), 32)
-                        net.Send(ply)
+                ow.item:Spawn(item:GetID(), item:GetUniqueID(), pos, Angle(0, 0, 0), function(entity)
+                    ow.inventory:RemoveItem(item:GetInventory(), item:GetID())
 
-                        hook.Run("PostPlayerDropItem", ply, item, entity)
-                    end, item:GetData())
-                end,
-                OnCanRun = function(this, item, ply)
-                    return !IsValid(item:GetEntity())
+                    net.Start("ow.inventory.refresh")
+                        net.WriteUInt(item:GetInventory(), 32)
+                    net.Send(ply)
+
+                    hook.Run("PostPlayerDropItem", ply, item, entity)
+                end, item:GetData())
+            end,
+            OnCanRun = function(this, item, ply)
+                return !IsValid(item:GetEntity())
+            end
+        }
+
+        ITEM.Actions.Take = ITEM.Actions.Take or {
+            Name = "Take",
+            OnRun = function(this, item, ply)
+                if ( !IsValid(ply) ) then return end
+
+                local char = ow.character:Get(item:GetOwner())
+                local inventoryMain = char and char:GetInventory()
+                if ( !inventoryMain ) then return end
+
+                local entity = item:GetEntity()
+                if ( !IsValid(entity) ) then return end
+
+                local weight = item:GetWeight()
+                if ( inventoryMain:GetWeight() + weight > inventoryMain:GetMaxWeight() ) then
+                    ply:Notify("You cannot take this item, it is too heavy!")
+                    return
                 end
-            }
 
-            ITEM.Actions.Take = ITEM.Actions.Take or {
-                Name = "Take",
-                OnRun = function(this, item, ply)
-                    if ( !IsValid(ply) ) then return end
+                local prevent = hook.Run("PrePlayerTakeItem", ply, item, entity)
+                if ( prevent == false ) then return end
 
-                    local char = ow.character:Get(item:GetOwner())
-                    local inventoryMain = char and char:GetInventory()
-                    if ( !inventoryMain ) then return end
-
-                    local entity = item:GetEntity()
-                    if ( !IsValid(entity) ) then return end
-
-                    local weight = item:GetWeight()
-                    if ( inventoryMain:GetWeight() + weight > inventoryMain:GetMaxWeight() ) then
-                        ply:Notify("You cannot take this item, it is too heavy!")
-                        return
-                    end
-
-                    local prevent = hook.Run("PrePlayerTakeItem", ply, item, entity)
-                    if ( prevent == false ) then return end
-
-                    ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function(success)
-                        if ( success ) then
-                            if ( item.OnTaken ) then
-                                item:OnTaken(entity)
-                            end
-
-                            hook.Run("PostPlayerTakeItem", ply, item, entity)
-                            SafeRemoveEntity(entity)
-                        else
-                            ply:Notify("Failed to transfer item to inventory.")
+                ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function(success)
+                    if ( success ) then
+                        if ( item.OnTaken ) then
+                            item:OnTaken(entity)
                         end
-                    end)
-                end,
-                OnCanRun = function(this, item, ply)
-                    return true
-                end
-            }
 
-            ow.util:LoadFile(filePath, "shared")
+                        hook.Run("PostPlayerTakeItem", ply, item, entity)
+                        SafeRemoveEntity(entity)
+                    else
+                        ply:Notify("Failed to transfer item to inventory.")
+                    end
+                end)
+            end,
+            OnCanRun = function(this, item, ply)
+                return true
+            end
+        }
 
-            ITEM.__index = ITEM
+        ow.util:LoadFile(filePath, "shared")
+        self.stored[ITEM.UniqueID] = ITEM
 
         if ( isfunction(ITEM.OnRegistered) ) then
             ITEM:OnRegistered()
         end
-
         ITEM = nil
     end
 end
