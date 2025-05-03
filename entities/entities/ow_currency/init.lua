@@ -25,10 +25,12 @@ function ENT:Use(ply)
     local character = ply:GetCharacter()
     if ( !character ) then return end
 
-    hook.Run("PrePlayerTakeMoney", ply, self, amount)
+    local prevent = hook.Run("PrePlayerTakeMoney", ply, self, amount)
+    if ( prevent == false ) then return end
+
     character:GiveMoney(amount)
     net.Start("ow.currency.give")
-        net.WriteUInt(amount, 32)
+        net.WriteFloat(amount, 32)
         net.WriteEntity(self)
     net.Send(ply)
     hook.Run("PostPlayerTakeMoney", ply, self, amount)

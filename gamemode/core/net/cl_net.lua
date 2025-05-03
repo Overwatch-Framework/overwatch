@@ -295,7 +295,7 @@ end)
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.currency.give", function()
-    local amount = net.ReadUInt(32)
+    local amount = net.ReadFloat(32)
     local entity = net.ReadEntity()
     if ( !IsValid(entity) ) then return end
 
