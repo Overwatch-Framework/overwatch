@@ -120,7 +120,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
         return false
     end
 
-    local prevent = hook.Run("PreItemAction", item, actionName)
+    local prevent = hook.Run("PrePlayerItemAction", ply, actionName, item)
     if ( prevent == false ) then
         return false
     end
@@ -146,7 +146,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
         net.WriteUInt(item:GetInventory(), 32)
     net.Send(ply)
 
-    hook.Run("PostItemAction", item, actionName)
+    hook.Run("PostPlayerItemAction", ply, actionName, item)
 
     return true
 end

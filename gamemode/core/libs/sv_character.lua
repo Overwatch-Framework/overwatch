@@ -187,6 +187,11 @@ function ow.character:Cache(ply, characterID)
         return false
     end
 
+    -- Make sure we are not loading a character from a different schema
+    if ( result[1].schema != SCHEMA.Folder ) then
+        return false
+    end
+
     local plyTable = ply:GetTable()
     plyTable.owCharacters = plyTable.owCharacters or {}
     plyTable.owCharacters[characterID] = result[1]
@@ -221,6 +226,11 @@ function ow.character:CacheAll(ply)
             local id = tonumber(row.id)
             if ( !id ) then
                 ErrorNoHalt("Failed to convert character ID " .. row.id .. " to number for player " .. tostring(ply) .. "\n")
+                continue
+            end
+
+            -- Make sure we are not loading a character from a different schema
+            if ( row.schema != SCHEMA.Folder ) then
                 continue
             end
 

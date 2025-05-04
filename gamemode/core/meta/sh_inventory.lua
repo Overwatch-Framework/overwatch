@@ -107,3 +107,16 @@ function INV:ClearReceivers()
         table.insert(self.Receivers, owner)
     end
 end
+
+function INV:HasItem(itemUniqueID)
+    if ( !itemUniqueID ) then return false end
+
+    for _, itemID in ipairs(self:GetItems()) do
+        local item = ow.item:Get(itemID)
+        if ( item and item:GetUniqueID() == itemUniqueID ) then
+            return item
+        end
+    end
+
+    return nil
+end
