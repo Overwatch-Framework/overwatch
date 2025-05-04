@@ -269,12 +269,13 @@ net.Receive("ow.item.add", function()
 end)
 
 net.Receive("ow.item.cache", function()
-    local items = net.ReadTable()
+    local instanceList = net.ReadTable()
+    if ( !istable(instanceList) ) then return end
 
-    for _, itemData in ipairs(items) do
-        local uniqueID = itemData.UniqueID
-        if ( ow.item.stored[uniqueID] ) then
-            ow.item.instances[tonumber(itemData.ID)] = ow.item:CreateObject(itemData)
+    for k, v in pairs(instanceList) do
+        local item = ow.item:CreateObject(v)
+        if ( item ) then
+            ow.item.instances[item.ID] = item
         end
     end
 end)

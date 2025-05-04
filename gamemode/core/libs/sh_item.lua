@@ -2,6 +2,7 @@
 -- @module ow.item
 
 ow.item = ow.item or {}
+ow.item.base = ow.item.base or {}
 ow.item.meta = ow.item.meta or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
@@ -13,15 +14,33 @@ end
 function ow.item:LoadFolder(path)
     if ( !path or !isstring(path) ) then return end
 
-    local files, _ = file.Find(path .. "/*.lua", "LUA")
+    local files, folders = file.Find(path .. "/*", "LUA")
     if ( !files or #files == 0 ) then return end
+    for _, v in ipairs(folders) do
+        self:LoadFolder(path .. "/" .. v)
+    end
 
     for _, v in ipairs(files) do
         local filePath = path .. "/" .. v
         ITEM = setmetatable({}, self.meta)
-        --ITEM.__index = ITEM
 
         ITEM.UniqueID = string.StripExtension(v):sub(4)
+
+        -- Check if we are in the /base/ folder, if so, we need to set the base table
+        -- to the ITEM table so we can use it in the item.
+        if ( string.find(path, "/base") ) then
+            ITEM.IsBase = true
+            self.base[ITEM.UniqueID] = ITEM
+        end
+
+        -- If we are inside of a folder that is in the ow.item.base table, we need to set the base of the item to the base of the folder.
+        -- This allows us to inherit from the base item.
+        for k, _ in pairs(self.base) do
+            if ( string.find(path, "/" .. k) ) then
+                ITEM.Base = k
+                break
+            end
+        end
 
         local bResult = hook.Run("PreItemRegistered", ITEM.UniqueID, ITEM)
         if ( bResult == false ) then continue end
@@ -95,7 +114,30 @@ function ow.item:LoadFolder(path)
             end
         }
 
+        -- Inherit the info from the base and add it to the item table.
+        if ( ITEM.Base ) then
+            local baseTable = self.base[ITEM.Base]
+            if ( baseTable ) then
+                for k2, v2 in pairs(baseTable) do
+                    if ( ITEM[k2] == nil ) then
+                        ITEM[k2] = v2
+                    end
+
+                    ITEM.BaseTable = baseTable
+                end
+
+                local mergeTable = table.Copy(baseTable)
+                ITEM = table.Merge(mergeTable, ITEM)
+            else
+                ow.util:PrintError("Base item " .. ITEM.Base .. " not found for item " .. ITEM.UniqueID)
+            end
+        end
+
         ow.util:LoadFile(filePath, "shared")
+
+        print("Loaded item: " .. ITEM.UniqueID)
+        PrintTable(ITEM)
+
         self.stored[ITEM.UniqueID] = ITEM
 
         if ( isfunction(ITEM.OnRegistered) ) then
@@ -113,8 +155,6 @@ function ow.item:Get(identifier)
     elseif ( isnumber(identifier) ) then
         return self.instances[identifier]
     end
-
-    return nil
 end
 
 function ow.item:GetAll()
@@ -139,11 +179,7 @@ function ow.item:CreateObject(data)
 
     local item = setmetatable({}, self.meta)
 
-    for k, v in pairs(base) do
-        if ( k != "Actions" ) then
-            item[k] = v
-        end
-    end
+    table.Merge(item, base)
 
     item.ID = id
     item.UniqueID = uniqueID

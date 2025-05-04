@@ -130,6 +130,15 @@ function ow.item:PerformAction(itemID, actionName, callback)
         callback()
     end
 
+    local hooks = base.Hooks or {}
+    if ( hooks[actionName] ) then
+        for _, hookFunc in pairs(hooks[actionName]) do
+            if ( hookFunc ) then
+                hookFunc(item, ow.character:GetPlayerByCharacter(item:GetOwner()))
+            end
+        end
+    end
+
     hook.Run("PostItemAction", item, actionName)
 
     return true
@@ -147,6 +156,10 @@ function ow.item:Cache(characterID)
 
         if ( self.stored[uniqueID] ) then
             local item = self:CreateObject(row)
+            if ( !item ) then
+                ow.util:PrintError("Failed to create object for item #" .. itemID .. ", skipping")
+                continue
+            end
 
             if ( item:GetOwner() == 0 ) then
                 local inv = ow.inventory:Get(item:GetInventory())
@@ -173,7 +186,12 @@ function ow.item:Cache(characterID)
     local instanceList = {}
     for _, item in pairs(self.instances) do
         if ( item:GetOwner() == characterID ) then
-            table.insert(instanceList, item)
+            table.insert(instanceList, {
+                ID = item:GetID(),
+                UniqueID = item:GetUniqueID(),
+                Data = item:GetData(),
+                InventoryID = item:GetInventory()
+            })
         end
     end
 

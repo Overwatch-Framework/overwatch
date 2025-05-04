@@ -124,4 +124,18 @@ function ITEM:Spawn(position, angles)
     end)
 end
 
+function ITEM:Hook(name, func)
+    if ( !name or !func ) then return end
+
+    if ( !self.Hooks ) then
+        self.Hooks = {}
+    end
+
+    if ( !self.Hooks[name] ) then
+        self.Hooks[name] = {}
+    end
+
+    table.insert(self.Hooks[name], func)
+end
+
 ow.item.meta = ITEM
