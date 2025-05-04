@@ -112,7 +112,7 @@ function INV:ClearReceivers()
 end
 
 function INV:HasItem(itemUniqueID)
-    if ( !itemUniqueID ) then return false end
+    if ( !isstring(itemUniqueID) ) then return false end
 
     for _, itemID in ipairs(self:GetItems()) do
         local item = ow.item:Get(itemID)
@@ -122,4 +122,19 @@ function INV:HasItem(itemUniqueID)
     end
 
     return nil
+end
+
+function INV:HasItemQuantity(itemUniqueID, quantity)
+    if ( !isstring(itemUniqueID) or !isnumber(quantity) ) then return false end
+
+    local count = 0
+
+    for _, itemID in ipairs(self:GetItems()) do
+        local item = ow.item:Get(itemID)
+        if ( item and item:GetUniqueID() == itemUniqueID ) then
+            count = count + 1
+        end
+    end
+
+    return count >= quantity
 end
