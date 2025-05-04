@@ -105,7 +105,7 @@ function GM:CalcView(ply, pos, angles, fov)
     end
 end
 
-local vignette = ow.util:GetMaterial("overwatch/gui/overlay_vignette.png", "noclamp smooth")
+local vignette = ow.util:GetMaterial("overwatch/overlay_vignette.png", "noclamp smooth")
 local vignetteColor = Color(0, 0, 0, 255)
 function GM:HUDPaintBackground()
     if ( tobool(hook.Run("ShouldDrawVignette")) ) then
