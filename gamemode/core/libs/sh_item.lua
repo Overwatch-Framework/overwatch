@@ -72,10 +72,6 @@ function ow.item:LoadFolder(path)
                 ow.item:Spawn(item:GetID(), item:GetUniqueID(), pos, Angle(0, 0, 0), function(entity)
                     ow.inventory:RemoveItem(item:GetInventory(), item:GetID())
 
-                    net.Start("ow.inventory.refresh")
-                        net.WriteUInt(item:GetInventory(), 32)
-                    net.Send(ply)
-
                     hook.Run("PostPlayerDropItem", ply, item, entity)
                 end, item:GetData())
             end,

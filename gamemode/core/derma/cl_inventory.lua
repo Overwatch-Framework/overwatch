@@ -230,6 +230,15 @@ function PANEL:SetItem(id)
         self.icon:SetFOV(camData.fov)
         self.icon:SetLookAng(camData.angles)
     end
+
+    if ( item.Actions.Equip or item.Actions.EquipUn ) then
+        local equipped = item:GetData("equipped")
+        if ( equipped ) then
+            self:SetBackgroundColor(ow.color:Get("success"))
+        else
+            self:SetBackgroundColor(ow.color:Get("warning"))
+        end
+    end
 end
 
 function PANEL:DoClick()

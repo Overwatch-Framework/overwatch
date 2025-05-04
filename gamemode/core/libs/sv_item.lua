@@ -113,7 +113,10 @@ function ow.item:PerformAction(itemID, actionName, callback)
     local action = base.Actions[actionName]
     if ( !action ) then return false end
 
-    if ( action.OnCanRun and !action:OnCanRun(item, ow.character:GetPlayerByCharacter(item:GetOwner())) ) then
+    local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
+    if ( !IsValid(ply) ) then return false end
+
+    if ( action.OnCanRun and !action:OnCanRun(item, ply) ) then
         return false
     end
 
@@ -123,7 +126,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
     end
 
     if ( action.OnRun ) then
-        action:OnRun(item, ow.character:GetPlayerByCharacter(item:GetOwner()))
+        action:OnRun(item, ply)
     end
 
     if ( callback ) then
@@ -134,10 +137,14 @@ function ow.item:PerformAction(itemID, actionName, callback)
     if ( hooks[actionName] ) then
         for _, hookFunc in pairs(hooks[actionName]) do
             if ( hookFunc ) then
-                hookFunc(item, ow.character:GetPlayerByCharacter(item:GetOwner()))
+                hookFunc(item, ply)
             end
         end
     end
+
+    net.Start("ow.inventory.refresh")
+        net.WriteUInt(item:GetInventory(), 32)
+    net.Send(ply)
 
     hook.Run("PostItemAction", item, actionName)
 
@@ -178,6 +185,10 @@ function ow.item:Cache(characterID)
             end
 
             self.instances[itemID] = item
+
+            if ( item.OnCache ) then
+                item:OnCache()
+            end
         else
             ow.util:PrintError("Unknown item unique ID '" .. tostring(uniqueID) .. "' in DB, skipping")
         end

@@ -81,6 +81,37 @@ function ITEM:GetData(key, default)
     return default or nil
 end
 
+function ITEM:SetData(key, value)
+    if ( !key ) then return end
+
+    if ( !self.Data ) then
+        self.Data = {}
+    end
+
+    if ( value == nil ) then
+        self.Data[key] = nil
+    else
+        self.Data[key] = value
+    end
+
+    if ( SERVER ) then
+        self:SendData(key, value)
+    end
+end
+
+if ( SERVER ) then
+    function ITEM:SendData(key, value)
+        local ply = ow.character:GetPlayerByCharacter(self:GetOwner())
+        if ( !IsValid(ply) ) then return end
+
+        net.Start("ow.item.data")
+            net.WriteUInt(self:GetID(), 32)
+            net.WriteString(key)
+            net.WriteType(value)
+        net.Send(ply)
+    end
+end
+
 function ITEM:SetInventory(InventoryID)
     if ( !InventoryID ) then return end
 

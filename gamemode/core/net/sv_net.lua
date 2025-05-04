@@ -199,6 +199,7 @@ end)
 
 util.AddNetworkString("ow.item.add")
 util.AddNetworkString("ow.item.cache")
+util.AddNetworkString("ow.item.data")
 util.AddNetworkString("ow.item.entity")
 util.AddNetworkString("ow.item.perform")
 util.AddNetworkString("ow.item.spawn")

@@ -276,8 +276,23 @@ net.Receive("ow.item.cache", function()
         local item = ow.item:CreateObject(v)
         if ( item ) then
             ow.item.instances[item.ID] = item
+
+            if ( item.OnCache ) then
+                item:OnCache()
+            end
         end
     end
+end)
+
+net.Receive("ow.item.data", function()
+    local itemID = net.ReadUInt(32)
+    local key = net.ReadString()
+    local value = net.ReadType()
+
+    local item = ow.item:Get(itemID)
+    if ( !item ) then return end
+
+    item:SetData(key, value)
 end)
 
 net.Receive("ow.item.entity", function()
