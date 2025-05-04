@@ -12,6 +12,13 @@ ow.config:Register("color.schema", {
     Default = Color(0, 150, 100)
 })
 
+ow.config:Register("voice", {
+    Name = "config.voice",
+    Description = "config.voice.help",
+    Type = ow.type.bool,
+    Default = true
+})
+
 ow.config:Register("voice.distance", {
     Name = "config.voice.distance",
     Description = "config.voice.distance.help",
@@ -298,4 +305,56 @@ ow.config:Register("hands.range", {
     Min = 0,
     Max = 256,
     Decimals = 0
+})
+
+ow.config:Register("stamina.drain", {
+    Name = "config.stamina.drain",
+    Description = "config.stamina.drain.help",
+    Category = "config.stamina",
+    Type = ow.type.number,
+    Default = 5,
+    Min = 0,
+    Max = 100,
+    Decimals = 1
+})
+
+ow.config:Register("stamina", {
+    Name = "config.stamina",
+    Description = "config.stamina.help",
+    Category = "config.stamina",
+    Type = ow.type.bool,
+    Default = true
+})
+
+ow.config:Register("stamina.max", {
+    Name = "config.stamina.max",
+    Description = "config.stamina.max.help",
+    Category = "config.stamina",
+    Type = ow.type.number,
+    Default = 100,
+    Min = 0,
+    Max = 1000,
+    Decimals = 0
+})
+
+ow.config:Register("stamina.regen", {
+    Name = "config.stamina.regen",
+    Description = "config.stamina.regen.help",
+    Category = "config.stamina",
+    Type = ow.type.number,
+    Default = 2,
+    Min = 0,
+    Max = 100,
+    Decimals = 1
+})
+
+ow.config:Register("stamina.tick", {
+    Name = "config.stamina.tick",
+    Description = "config.stamina.tick.help",
+    Category = "config.stamina",
+    Type = ow.type.number,
+    Default = 0.1,
+    Min = 0,
+    Max = 1,
+    Decimals = 2
 })

@@ -141,11 +141,16 @@ end
 
 local padding = 16
 local backgroundColor = Color(10, 10, 10, 220)
+local staminaLerp = 0
+local staminaAlpha = 0
+local staminaTime = 0
+local staminaLast = ow.stamina:GetFraction()
 function GM:HUDPaint()
     local ply = ow.localClient
     if ( !IsValid(ply) ) then return end
 
     local x, y = 24, 24
+    local scrW, scrH = ScrW(), ScrH()
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
         local green = ow.config:Get("color.framework")
@@ -233,7 +238,35 @@ function GM:HUDPaint()
         local clip = activeWeapon:Clip1()
         local ammoText = clip .. " / " .. ammo
 
-        draw.SimpleTextOutlined(ammoText, "ow.fonts.bold", ScrW() - 16, ScrH() - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+        draw.SimpleTextOutlined(ammoText, "ow.fonts.bold", scrW - 16, scrH - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
+    end
+
+    shouldDraw = hook.Run("ShouldDrawStamina")
+    if ( shouldDraw != nil and shouldDraw != false ) then
+        local staminaFraction = ow.stamina:GetFraction()
+        staminaLerp = Lerp(FrameTime() * 5, staminaLerp, staminaFraction)
+
+        if ( staminaLast != staminaFraction ) then
+            staminaTime = CurTime() + 5
+            staminaLast = staminaFraction
+        elseif ( staminaTime < CurTime() ) then
+            staminaAlpha = Lerp(FrameTime() * 5, staminaAlpha, 0)
+        elseif ( staminaAlpha < 255 ) then
+            staminaAlpha = Lerp(FrameTime() * 5, staminaAlpha, 255)
+        end
+
+        if ( staminaAlpha > 0 ) then
+            local barWidth, barHeight = scrW / 3, ScreenScale(10)
+            local barX, barY = scrW / 2 - barWidth / 2, scrH / 1.25 - barHeight / 2
+
+            ow.util:DrawBlurRect(barX, barY, barWidth, barHeight, 2, nil, staminaAlpha)
+
+            surface.SetDrawColor(ColorAlpha(ow.color:Get("background.transparent"), staminaAlpha / 2))
+            surface.DrawRect(barX, barY, barWidth, barHeight)
+
+            surface.SetDrawColor(ColorAlpha(ow.color:Get("white"), staminaAlpha))
+            surface.DrawRect(barX, barY, barWidth * staminaLerp, barHeight)
+        end
     end
 end
 
@@ -507,6 +540,13 @@ function GM:ShouldDrawAmmoBox()
     return true
 end
 
+function GM:ShouldDrawStamina()
+    if ( IsValid(ow.gui.mainmenu) ) then return false end
+    if ( IsValid(ow.gui.tab) ) then return false end
+
+    return true
+end
+
 function GM:ShouldDrawDebugHUD()
     if ( !ow.convars:Get("ow_debug"):GetBool() ) then return false end
     if ( IsValid(ow.gui.mainmenu) ) then return false end
@@ -593,7 +633,7 @@ function GM:PopulateHelpCategories(categories)
             button:SetText("")
             button:SetBackgroundAlphaHovered(1)
             button:SetBackgroundAlphaUnHovered(0.5)
-            button:SetBackgroundColor(hasFlag and ow.color:Get("ui.success") or ow.color:Get("ui.error"))
+            button:SetBackgroundColor(hasFlag and ow.color:Get("success") or ow.color:Get("error"))
 
             local key = button:Add("ow.text")
             key:Dock(LEFT)
@@ -693,4 +733,8 @@ function GM:OnPlayerChat(ply, text, team, dead)
     local msg = prefix .. text
 
     ow.gui.chatbox:AddLine(msg, team and Color(150, 200, 255) or color_white)
+end
+
+function GM:ForceDermaSkin()
+    return "Overwatch"
 end

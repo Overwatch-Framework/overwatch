@@ -95,3 +95,20 @@ end
 
 function GM:PostConfigChanged(key, value, oldValue, ply)
 end
+
+function GM:SetupMove(ply, mv, cmd)
+    if ( !ply.owStamina ) then return end
+
+    local st = ply.owStamina
+    local cur = st.current or 0
+
+    if ( cur <= 0 ) then
+        mv:SetMaxSpeed(0)
+        mv:SetMaxClientSpeed(0)
+    end
+
+    -- Prevent sprinting by blocking the key
+    if ( cur <= 0 and mv:KeyDown(IN_SPEED) ) then
+        mv:SetButtons(mv:GetButtons() - IN_SPEED)
+    end
+end

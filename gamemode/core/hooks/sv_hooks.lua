@@ -74,6 +74,8 @@ function GM:PlayerDisconnected(ply)
 end
 
 function GM:PlayerSpawn(ply)
+    ow.stamina:Initialize(ply)
+
     hook.Run("PlayerLoadout", ply)
 end
 
@@ -161,30 +163,74 @@ function GM:PlayerCreatedCharacter(ply, character)
 end
 
 local nextThink = 0
+local nextStamina = 0
 local nextSave = 0
 local playerVoiceListeners = {}
 function GM:Think()
-    if ( CurTime() < nextThink ) then return end
-    nextThink = CurTime() + 1
+    if ( CurTime() >= nextThink ) then
+        nextThink = CurTime() + 1
 
-    for _, ply in player.Iterator() do
-        if ( !IsValid(ply) or !ply:Alive() ) then continue end
+        for _, ply in player.Iterator() do
+            if ( !IsValid(ply) or !ply:Alive() ) then continue end
+            if ( ply:Team() == 0 ) then continue end
 
-        local voiceListeners = {}
-        for _, listener in player.Iterator() do
-            if ( listener == ply ) then continue end
-            if ( listener:EyePos():DistToSqr(ply:EyePos()) > ow.config:Get("voice.distance", 384) ^ 2 ) then continue end
+            -- Voice chat listeners
+            local voiceListeners = {}
 
-            voiceListeners[listener] = true
+            for _, listener in player.Iterator() do
+                if ( listener == ply ) then continue end
+                if ( listener:EyePos():DistToSqr(ply:EyePos()) > ow.config:Get("voice.distance", 384) ^ 2 ) then continue end
+
+                voiceListeners[listener] = true
+            end
+
+            -- Overwrite the voice listeners if the config is disabled
+            if ( ow.config:Get("voice", true) ) then
+                playerVoiceListeners[ply] = voiceListeners
+            else
+                playerVoiceListeners = {}
+            end
         end
-
-        playerVoiceListeners[ply] = voiceListeners
     end
 
-    if ( CurTime() < nextSave ) then return end
-    nextSave = CurTime() + ow.config:Get("save.interval", 300)
+    if ( CurTime() >= nextStamina ) then
+        local regen = ow.config:Get("stamina.regen", 20) / 10
+        local drain = ow.config:Get("stamina.drain", 10) / 10
+        nextStamina = CurTime() + ow.config:Get("stamina.tick", 0.1)
 
-    hook.Run("SaveData")
+        for _, ply in player.Iterator() do
+            if ( !IsValid(ply) or !ply:Alive() ) then continue end
+            if ( ply:Team() == 0 ) then continue end
+
+            if ( ply.owStamina ) then
+                local st = ply.owStamina
+                local isSprinting = ply:KeyDown(IN_SPEED) and ply:KeyDown(IN_FORWARD) and ply:OnGround()
+
+                if ( isSprinting and ply:GetVelocity():Length2DSqr() > 1 ) then
+                    if ( ow.stamina:Consume(ply, drain) ) then
+                        st.depleted = false
+                        st.regenBlockedUntil = CurTime() + 2
+                    else
+                        if ( !st.depleted ) then
+                            st.depleted = true
+                            st.regenBlockedUntil = CurTime() + 10
+                        end
+                    end
+                else
+                    if ( st.regenBlockedUntil and CurTime() >= st.regenBlockedUntil ) then
+                        ow.stamina:Set(ply, math.min(st.current + regen, st.max))
+                    end
+                end
+
+                print("Stamina: " .. st.current .. "/" .. st.max)
+            end
+        end
+    end
+
+    if ( CurTime() >= nextSave ) then
+        nextSave = CurTime() + ow.config:Get("save.interval", 300)
+        hook.Run("SaveData")
+    end
 end
 
 function GM:SaveData()
