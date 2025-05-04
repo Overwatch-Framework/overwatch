@@ -16,7 +16,16 @@ function ow.item:LoadFolder(path)
 
     local files, folders = file.Find(path .. "/*", "LUA")
     if ( !files or #files == 0 ) then return end
+
+    -- If there is a base folder, we need to load it first so we can inherit from it later.
+    if ( table.HasValue(folders, "base") ) then
+        self:LoadFolder(path .. "/base")
+    end
+
+    -- Now we can load the rest of the folders and files.
     for _, v in ipairs(folders) do
+        if ( v == "base" ) then continue end
+
         self:LoadFolder(path .. "/" .. v)
     end
 
