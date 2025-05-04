@@ -12,6 +12,22 @@ ow.animations.stored["citizen_male"] = {
     [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE}
 }
 
+ow.animations.stored["citizen_female"] = {
+    [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE}
+}
+
+ow.animations.stored["overwatch"] = {
+    [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE}
+}
+
+ow.animations.stored["metrocop"] = {
+    [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE}
+}
+
+ow.animations.stored["vortigaunt"] = {
+    [ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE}
+}
+
 function ow.animations:SetModelClass(model, class)
     if ( !model or !class ) then return end
 
