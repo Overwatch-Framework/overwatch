@@ -28,5 +28,5 @@ function ow.chat:Send(uniqueID, text)
             UniqueID = uniqueID,
             Text = text
         })
-    net.Send(players)
+    net.Broadcast()
 end
