@@ -114,7 +114,7 @@ function GM:PlayerSay(ply, text, teamChat)
 
         ow.command:Run(ply, command, arguments)
     else
-        ow.chat:SendPlayer(ply, "ic", text)
+        ow.chat:SendSpeaker(ply, "ic", text)
     end
 
     return ""

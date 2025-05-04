@@ -1,7 +1,7 @@
 --- Chat library
 -- @module ow.chat
 
-function ow.chat:SendPlayer(speaker, uniqueID, text)
+function ow.chat:SendSpeaker(speaker, uniqueID, text)
     local players = {}
     for k, v in player.Iterator() do
         if ( !IsValid(v) or !v:Alive() ) then continue end
@@ -22,11 +22,13 @@ function ow.chat:SendPlayer(speaker, uniqueID, text)
     hook.Run("OnChatMessageSent", speaker, players, uniqueID, text)
 end
 
-function ow.chat:Send(uniqueID, text)
+function ow.chat:SendTo(players, uniqueID, text)
+    players = players or player.GetAll()
+
     net.Start("ow.chat.send")
         net.WriteTable({
             UniqueID = uniqueID,
             Text = text
         })
-    net.Broadcast()
+    net.Send(players)
 end

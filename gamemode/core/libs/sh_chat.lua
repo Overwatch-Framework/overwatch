@@ -34,7 +34,7 @@ function ow.chat:Register(uniqueID, chatData)
                     return false
                 end
 
-                self:SendPlayer(ply, uniqueID, text)
+                self:SendSpeaker(ply, uniqueID, text)
             end
         })
     end
