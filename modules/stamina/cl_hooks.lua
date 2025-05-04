@@ -21,16 +21,16 @@ function MODULE:HUDPaint()
             staminaTime = CurTime() + 5
             staminaLast = staminaFraction
         elseif ( staminaTime < CurTime() ) then
-            staminaAlpha = Lerp(FrameTime() * 5, staminaAlpha, 0)
+            staminaAlpha = Lerp(FrameTime() * 2, staminaAlpha, 0)
         elseif ( staminaAlpha < 255 ) then
-            staminaAlpha = Lerp(FrameTime() * 5, staminaAlpha, 255)
+            staminaAlpha = Lerp(FrameTime() * 8, staminaAlpha, 255)
         end
 
         if ( staminaAlpha > 0 ) then
             local scrW, scrH = ScrW(), ScrH()
 
-            local barWidth, barHeight = scrW / 3, ScreenScale(10)
-            local barX, barY = scrW / 2 - barWidth / 2, scrH / 1.25 - barHeight / 2
+            local barWidth, barHeight = scrW / 3, ScreenScale(8)
+            local barX, barY = scrW / 2 - barWidth / 2, scrH / 1.05 - barHeight / 2
 
             ow.util:DrawBlurRect(barX, barY, barWidth, barHeight, 2, nil, staminaAlpha)
 
