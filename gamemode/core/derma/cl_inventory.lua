@@ -71,6 +71,7 @@ function PANEL:SetInventory(id)
     progress:Dock(TOP)
     progress:SetFraction(total)
     progress:SetTall(ScreenScale(12))
+    progress:DockMargin(0, 0, 5, 0)
     progress.Paint = function(this, width, height)
         draw.RoundedBox(0, 0, 0, width, height, Color(0, 0, 0, 150))
 
@@ -129,6 +130,7 @@ function PANEL:SetInventory(id)
         local itemPanel = self.container:Add("ow.item")
         itemPanel:SetItem(itemData)
         itemPanel:Dock(TOP)
+        itemPanel:DockMargin(0, 0, 5, 0)
     end
 end
 
