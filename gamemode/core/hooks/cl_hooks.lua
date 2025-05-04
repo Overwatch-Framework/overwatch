@@ -144,7 +144,7 @@ local backgroundColor = Color(10, 10, 10, 220)
 local staminaLerp = 0
 local staminaAlpha = 0
 local staminaTime = 0
-local staminaLast = ow.stamina:GetFraction()
+local staminaLast = 0
 function GM:HUDPaint()
     local ply = ow.localClient
     if ( !IsValid(ply) ) then return end

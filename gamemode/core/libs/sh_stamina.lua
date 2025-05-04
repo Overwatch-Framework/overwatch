@@ -20,25 +20,12 @@ if ( SERVER ) then
         })
     end
 
-    --- Updates the player's stamina
-    -- @param ply Player
-    -- @param dt number
-    function ow.stamina:Update(ply, dt)
-        local st = ply:GetRelay("stamina")
-        if ( !st ) then return end
-
-        if ( CurTime() - st.lastUsed >= st.regenDelay ) then
-            st.current = math.min(st.current + (st.regenRate * dt), st.max)
-            ply:SetRelay("stamina", st)
-        end
-    end
-
     --- Consumes stamina from a player
     -- @param ply Player
     -- @param amount number
     -- @return boolean
     function ow.stamina:Consume(ply, amount)
-        local st = ply.owStamina
+        local st = ply:GetRelay("stamina")
         if ( !st ) then return false end
 
         st.current = math.Clamp(st.current - amount, 0, st.max)
@@ -81,17 +68,13 @@ if ( CLIENT ) then
     --- Gets the local player's stamina from relay
     -- @return number
     function ow.stamina:GetLocal()
-        if ( !IsValid(LocalPlayer()) ) then return 0 end
-
-        return LocalPlayer():GetRelay("stamina").current
+        return ow.localClient:GetRelay("stamina").current
     end
 
     --- Gets the local player's stamina as a fraction [0–1]
     -- @return number
     function ow.stamina:GetFraction()
-        if ( !IsValid(LocalPlayer()) ) then return 0 end
-
-        local max = LocalPlayer():GetRelay("stamina").max
+        local max = ow.localClient:GetRelay("stamina").max
         return self:GetLocal() / max
     end
 end

@@ -202,10 +202,9 @@ function GM:Think()
             if ( !IsValid(ply) or !ply:Alive() ) then continue end
             if ( ply:Team() == 0 ) then continue end
 
-            if ( ply.owStamina ) then
-                local st = ply.owStamina
+            local st = ply:GetRelay("stamina")
+            if ( st ) then
                 local isSprinting = ply:KeyDown(IN_SPEED) and ply:KeyDown(IN_FORWARD) and ply:OnGround()
-
                 if ( isSprinting and ply:GetVelocity():Length2DSqr() > 1 ) then
                     if ( ow.stamina:Consume(ply, drain) ) then
                         st.depleted = false
