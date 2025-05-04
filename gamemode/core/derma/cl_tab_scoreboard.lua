@@ -23,13 +23,13 @@ function PANEL:Init()
 end
 
 function PANEL:Think()
-    if ( #self.cache.players != #player.GetAll() ) then
+    if ( #self.cache.players != player.GetCount() ) then
         self:Populate()
     end
 end
 
 function PANEL:Populate()
-    self.cache.players = player.GetAll()
+    self.cache.players = select(2, player.Iterator())
 
     -- Divide the players into teams
     local teams = {}

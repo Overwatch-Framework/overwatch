@@ -23,7 +23,7 @@ function ow.chat:SendSpeaker(speaker, uniqueID, text)
 end
 
 function ow.chat:SendTo(players, uniqueID, text)
-    players = players or player.GetAll()
+    players = players or select(2, player.Iterator())
 
     net.Start("ow.chat.send")
         net.WriteTable({
