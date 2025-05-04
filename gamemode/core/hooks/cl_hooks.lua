@@ -583,6 +583,11 @@ function GM:PopulateTabButtons(buttons)
     }
 end
 
+local developers = {
+    {"Riggs", "76561197963057641", "Co-founder, lead UI designer, backend engineer, back and frontend engineer."},
+    {"bloodycop", "76561198373309941", "Co-founder, backend engineer, quality-of-life systems designer."}
+}
+
 function GM:PopulateHelpCategories(categories)
     categories["flags"] = function(container)
         for k, v in SortedPairs(ow.flag.stored) do
@@ -621,6 +626,41 @@ function GM:PopulateHelpCategories(categories)
             key.Think = Think
             seperator.Think = Think
             description.Think = Think
+        end
+    end
+
+    categories["credits"] = function(container)
+        for _, devData in ipairs(developers) do
+            local creditPanel = container:Add("EditablePanel")
+            creditPanel:Dock(TOP)
+            creditPanel:DockMargin(0, 4, 0, 0)
+            creditPanel:SetTall(70)
+
+            local avatarImage = creditPanel:Add("AvatarImage")
+            avatarImage:Dock(LEFT)
+            avatarImage:SetTall(creditPanel:GetTall())
+            avatarImage:SetSteamID(devData[2])
+            avatarImage:SetMouseInputEnabled(true)
+
+            local nameLabel = creditPanel:Add("DLabel")
+            nameLabel:Dock(LEFT)
+            nameLabel:DockMargin(4, 0, 0, 0)
+            nameLabel:SetFont("ow.fonts.button")
+            nameLabel:SetTextColor(color_white)
+            nameLabel:SetText(devData[1])
+            nameLabel:SetContentAlignment(4)
+            nameLabel:SetWide(ow.util:GetTextWidth("ow.fonts.button", devData[1]))
+            nameLabel:SetTall(ow.util:GetTextHeight("ow.fonts.button", devData[1]))
+
+            local descriptionLabel = creditPanel:Add("DLabel")
+            descriptionLabel:Dock(LEFT)
+            descriptionLabel:DockMargin(4, 0, 0, 0)
+            descriptionLabel:SetFont("ow.fonts.button.small")
+            descriptionLabel:SetTextColor(color_white)
+            descriptionLabel:SetText(devData[3])
+            descriptionLabel:SetContentAlignment(4)
+            descriptionLabel:SetWide(ow.util:GetTextWidth("ow.fonts.button.small", devData[3]))
+            descriptionLabel:SetTall(ow.util:GetTextHeight("ow.fonts.button.small", devData[3]))
         end
     end
 end
