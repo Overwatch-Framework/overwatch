@@ -81,13 +81,17 @@ if ( CLIENT ) then
     --- Gets the local player's stamina from relay
     -- @return number
     function ow.stamina:GetLocal()
-        return ow.localClient:GetRelay("stamina").current
+        if ( !IsValid(LocalPlayer()) ) then return 0 end
+
+        return LocalPlayer():GetRelay("stamina").current
     end
 
     --- Gets the local player's stamina as a fraction [0–1]
     -- @return number
     function ow.stamina:GetFraction()
-        local max = ow.localClient:GetRelay("stamina").max
+        if ( !IsValid(LocalPlayer()) ) then return 0 end
+
+        local max = LocalPlayer():GetRelay("stamina").max
         return self:GetLocal() / max
     end
 end
