@@ -27,6 +27,7 @@ function GM:ScoreboardHide()
 end
 
 function GM:Initialize()
+    ow.module:LoadFolder("overwatch/modules")
     ow.schema:Initialize()
 
     hook.Run("LoadFonts")

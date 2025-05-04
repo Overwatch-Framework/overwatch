@@ -129,9 +129,12 @@ end)
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.chat.send", function(len)
-    local speaker = net.ReadPlayer()
-    local uniqueID = net.ReadString()
-    local text = net.ReadString()
+    local data = net.ReadTable()
+    if ( !istable(data) ) then return end
+
+    local speaker = data.Speaker and Entity(data.Speaker) or nil
+    local uniqueID = data.UniqueID
+    local text = data.Text
 
     local chatData = ow.chat:Get(uniqueID)
     if ( istable(chatData) ) then

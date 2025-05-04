@@ -163,6 +163,6 @@ if ( CLIENT ) then
     end
 end
 
-ow.util:LoadFile("sv_hooks.lua")
 ow.util:LoadFile("cl_hooks.lua")
 ow.util:LoadFile("sh_hooks.lua")
+ow.util:LoadFile("sv_hooks.lua")

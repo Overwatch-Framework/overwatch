@@ -114,7 +114,7 @@ function GM:PlayerSay(ply, text, teamChat)
 
         ow.command:Run(ply, command, arguments)
     else
-        ow.chat:Send(ply, "ic", text)
+        ow.chat:SendPlayer(ply, "ic", text)
     end
 
     return ""
@@ -125,6 +125,7 @@ function GM:PlayerUseSpawnSaver(ply)
 end
 
 function GM:Initialize()
+    ow.module:LoadFolder("overwatch/modules")
     ow.schema:Initialize()
 end
 

@@ -140,9 +140,6 @@ function ow.item:LoadFolder(path)
 
         ow.util:LoadFile(filePath, "shared")
 
-        print("Loaded item: " .. ITEM.UniqueID)
-        PrintTable(ITEM)
-
         self.stored[ITEM.UniqueID] = ITEM
 
         if ( isfunction(ITEM.OnRegistered) ) then

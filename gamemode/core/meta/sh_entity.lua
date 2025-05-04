@@ -157,3 +157,15 @@ if ( SERVER ) then
         end
     end
 end
+
+ENTITY.SetModelInternal = ENTITY.SetModelInternal or ENTITY.SetModel
+function ENTITY:SetModel(model)
+    if ( !model or model == "" ) then return end
+
+    local canSet = hook.Run("PreEntitySetModel", self, model)
+    if ( canSet == false ) then return end
+
+    self:SetModelInternal(model)
+
+    hook.Run("PostEntitySetModel", self, model)
+end

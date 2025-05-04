@@ -43,7 +43,6 @@ function ow.schema:Initialize()
     end
 
     ow.hooks:Register("SCHEMA")
-    ow.util:LoadFolder(folder .. "/modules", true)
     ow.util:LoadFolder(folder .. "/schema/factions", true)
     ow.item:LoadFolder(folder .. "/schema/items", true)
     ow.util:LoadFolder(folder .. "/schema/config", true)
@@ -61,6 +60,8 @@ function ow.schema:Initialize()
     if ( SERVER ) then
         ow.config:Load()
     end
+
+    ow.module:LoadFolder(folder .. "/modules")
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
 

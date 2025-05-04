@@ -37,7 +37,6 @@ net.Receive("ow.character.create", function(len, ply)
     -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
     local payload = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
     if ( !istable(payload) ) then return end
-    PrintTable(payload)
 
     local bResult = hook.Run("PreCharacterCreate", ply, payload)
     if ( bResult == false ) then return end

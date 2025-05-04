@@ -22,20 +22,22 @@ function ow.chat:Register(uniqueID, chatData)
         end
     end
 
-    ow.command:Register(uniqueID, {
-        Description = chatData.Description or "",
-        Prefixes = chatData.Prefixes,
-        Callback = function(this, ply, arguments)
-            local text = table.concat(arguments, " ")
+    if ( chatData.Prefixes ) then
+        ow.command:Register(uniqueID, {
+            Description = chatData.Description or "",
+            Prefixes = chatData.Prefixes,
+            Callback = function(this, ply, arguments)
+                local text = table.concat(arguments, " ")
 
-            if ( !isstring(text) or #text < 1 ) then
-                ply:Notify("You must provide a message to send!")
-                return false
+                if ( !isstring(text) or #text < 1 ) then
+                    ply:Notify("You must provide a message to send!")
+                    return false
+                end
+
+                self:SendPlayer(ply, uniqueID, text)
             end
-
-            self:Send(ply, uniqueID, text)
-        end
-    })
+        })
+    end
 
     self.classes[uniqueID] = chatData
 end

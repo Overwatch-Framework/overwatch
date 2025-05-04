@@ -113,7 +113,6 @@ function ow.sqlite:LoadRow(query, key, value, callback)
         if ( callback ) then
             if ( isfunction(callback) ) then
                 ow.util:PrintWarning("Database Row not found, inserting default row")
-                PrintTable(row)
                 callback(row)
             else
                 ow.util:PrintError("Database LoadRow Callback must be a function")
