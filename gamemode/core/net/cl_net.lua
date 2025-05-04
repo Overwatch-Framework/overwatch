@@ -75,7 +75,7 @@ net.Receive("ow.character.delete", function(len)
         ow.gui.mainmenu:Populate()
     end
 
-    ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.color:Get("ui.success"))
+    ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.color:Get("success"))
 end)
 
 net.Receive("ow.character.load.failed", function(len)

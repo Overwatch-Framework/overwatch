@@ -103,13 +103,13 @@ end
 notification.AddLegacy = function(text, type, length)
     local color
     if ( type == NOTIFY_ERROR ) then
-        color = ow.color:Get("ui.error")
+        color = ow.color:Get("error")
         ow.localClient:EmitSound("ow.notification.error")
     elseif ( type == NOTIFY_HINT ) then
-        color = ow.color:Get("ui.success")
+        color = ow.color:Get("success")
         ow.localClient:EmitSound("ow.notification.hint")
     else
-        color = ow.color:Get("ui.info")
+        color = ow.color:Get("info")
         ow.localClient:EmitSound("ow.notification.generic")
     end
 

@@ -141,7 +141,7 @@ function PANEL:AddSetting(settingData)
         slider:SetMouseInputEnabled(false)
 
         slider.Paint = function(this, width, height)
-            draw.RoundedBox(0, 0, 0, width, height, ow.color:Get("slider.background"))
+            draw.RoundedBox(0, 0, 0, width, height, ow.color:Get("background.slider"))
             local fraction = (this.value - this.min) / (this.max - this.min)
             local barWidth = math.Clamp(fraction * width, 0, width)
             local inertia = panel:GetInertia()

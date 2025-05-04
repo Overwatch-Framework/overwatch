@@ -20,15 +20,25 @@ ow.color:Register("olive", Color(130, 130, 0, 255))
 ow.color:Register("silver", Color(190, 190, 190, 255))
 
 -- Framework colors
-ow.color:Register("background", Color(30, 30, 30, 255))
-ow.color:Register("foreground", Color(50, 50, 50, 255))
-ow.color:Register("text", Color(200, 200, 200, 255))
-ow.color:Register("text.light", color_white)
+ow.color:Register("background", Color(0, 0, 0, 255))
+ow.color:Register("background.transparent", Color(0, 0, 0, 255 / 2))
+ow.color:Register("background.notification", Color(50, 50, 50, 200))
+ow.color:Register("background.slider", Color(200, 200, 200, 100))
 ow.color:Register("chat", Color(230, 230, 110, 255))
-ow.color:Register("chat.whisper", Color(70, 110, 230, 255))
-ow.color:Register("chat.yell", Color(230, 110, 70, 255))
 ow.color:Register("chat.action", Color(255, 255, 255, 255))
 ow.color:Register("chat.ooc", Color(200, 25, 0, 255))
+ow.color:Register("chat.whisper", Color(70, 110, 230, 255))
+ow.color:Register("chat.yell", Color(230, 110, 70, 255))
+ow.color:Register("foreground", Color(50, 50, 50, 255))
+ow.color:Register("foreground.transparent", Color(50, 50, 50, 255 / 2))
+ow.color:Register("settings.shadow", Color(0, 0, 0, 150))
+ow.color:Register("text", Color(200, 200, 200, 255))
+ow.color:Register("text.light", color_white)
+
+ow.color:Register("error", Color(255, 75, 75))
+ow.color:Register("info", Color(75, 165, 255))
+ow.color:Register("success", Color(50, 255, 120))
+ow.color:Register("warning", Color(255, 215, 60))
 
 -- Garry's Mod colors
 ow.color:Register("gmod.console.error.server", Color(136, 221, 255, 255))
@@ -36,13 +46,3 @@ ow.color:Register("gmod.console.error.client", Color(255, 221, 102, 255))
 
 ow.color:Register("gmod.console.msg.server", Color(156, 241, 255, 200))
 ow.color:Register("gmod.console.msg.client", Color(255, 241, 122, 200))
-
-ow.color:Register("slider.background", Color(200, 200, 200, 100))
-
-ow.color:Register("ui.success", Color(50, 255, 120))
-ow.color:Register("ui.error", Color(255, 75, 75))
-ow.color:Register("ui.warning", Color(255, 215, 60))
-ow.color:Register("ui.info", Color(75, 165, 255))
-ow.color:Register("notification.background", Color(50, 50, 50, 200))
-
-ow.color:Register("settings.shadow", Color(0, 0, 0, 150))

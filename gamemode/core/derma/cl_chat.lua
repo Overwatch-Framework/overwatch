@@ -78,7 +78,7 @@ end
 function PANEL:Paint(width, height)
     ow.util:DrawBlur(self)
 
-    surface.SetDrawColor(0, 0, 0, 200)
+    surface.SetDrawColor(ow.color:Get("background.transparent"))
     surface.DrawRect(0, 0, width, height)
 end
 

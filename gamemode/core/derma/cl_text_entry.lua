@@ -57,7 +57,7 @@ function PANEL:Paint(width, height)
 
     paint.startPanel(self)
         mask(function()
-            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, Color(0, 0, 0, 50))
+            paint.roundedBoxes.roundedBox(0, 0, 0, width, height, ow.color:Get("background.transparent"))
         end,
         function()
             local ripple = self.rippleEffect
