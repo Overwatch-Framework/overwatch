@@ -631,6 +631,7 @@ function GM:PopulateHelpCategories(categories)
 
     categories["credits"] = function(container)
         for _, devData in ipairs(developers) do
+            -- TODO: Overwatch Delieved to you by:
             local creditPanel = container:Add("EditablePanel")
             creditPanel:Dock(TOP)
             creditPanel:DockMargin(0, 4, 0, 0)
