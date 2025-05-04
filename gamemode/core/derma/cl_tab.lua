@@ -80,6 +80,8 @@ function PANEL:Init()
     end
     */
 
+    -- eon did not like the main menu button :(
+    /*
     local menuButton = self.buttons:Add("ow.button")
     menuButton:Dock(BOTTOM)
     menuButton:SetText("tab.mainmenu")
@@ -97,6 +99,7 @@ function PANEL:Init()
         self:SetMouseInputEnabled(true)
         self:SetKeyboardInputEnabled(true)
     end
+    */
 
     self.container = self:Add("EditablePanel")
     self.container:SetSize(self:GetWide() - self.buttons:GetWide() - padding - paddingSmall, self:GetTall() - padding)
