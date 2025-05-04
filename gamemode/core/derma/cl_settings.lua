@@ -13,6 +13,9 @@ function PANEL:Init()
     self.buttons:SetTall(ScreenScale(24))
     self.buttons.Paint = nil
 
+    self.buttons.btnLeft:SetAlpha(0)
+    self.buttons.btnRight:SetAlpha(0)
+
     self.container = self:Add("DScrollPanel")
     self.container:Dock(FILL)
     self.container:GetVBar():SetWide(0)
@@ -34,6 +37,8 @@ function PANEL:Init()
         button.DoClick = function()
             self:PopulateCategory(v)
         end
+
+        self.buttons:AddPanel(button)
     end
 
     if ( ow.gui.settingsLast ) then
