@@ -85,6 +85,9 @@ function PANEL:PopulateFactionSelect()
     factionList:InvalidateParent(true)
     factionList.Paint = nil
 
+    factionList.btnLeft:SetAlpha(0)
+    factionList.btnRight:SetAlpha(0)
+
     for k, v in ipairs(ow.faction:GetAll()) do
         if ( !ow.faction:CanSwitchTo(ow.localClient, v:GetID()) ) then continue end
 
@@ -136,6 +139,8 @@ function PANEL:PopulateFactionSelect()
                 draw.SimpleText(descriptionWrapped[i], "ow.fonts.button.tiny", tinyPadding, imageHeight - boxHeight + boxHeightStatic + (i - 1) * textHeight, ColorAlpha(textColor, 255 * inertia), TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
             end
         end
+
+        factionList:AddPanel(factionButton)
     end
 end
 
