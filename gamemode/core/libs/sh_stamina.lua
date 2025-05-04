@@ -39,9 +39,9 @@ if ( SERVER ) then
     -- @return boolean
     function ow.stamina:Consume(ply, amount)
         local st = ply.owStamina
-        if ( !st or st.current < amount ) then return false end
+        if ( !st ) then return false end
 
-        st.current = st.current - amount
+        st.current = math.Clamp(st.current - amount, 0, st.max)
         st.lastUsed = CurTime()
         ply:SetRelay("stamina", st)
 
