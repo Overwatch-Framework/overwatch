@@ -28,6 +28,9 @@ function INV:GetData()
 end
 
 function INV:GetMaxWeight()
+    local override = hook.Run("GetInventoryMaxWeight", self)
+    if ( isnumber(override) ) then return override end
+
     return self.MaxWeight or ow.config:Get("inventory.maxweight", 20)
 end
 
