@@ -4,6 +4,7 @@ function MODULE:PlayerSpawn(ply)
     ow.stamina:Initialize(ply)
 end
 
+local nextStamina = 0
 function MODULE:Think()
     if ( CurTime() >= nextStamina ) then
         local regen = ow.config:Get("stamina.regen", 20) / 10

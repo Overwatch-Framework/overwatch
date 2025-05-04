@@ -33,8 +33,8 @@ enLocalization["config.stamina.regen.help"] = "The rate at which the player's st
 enLocalization["config.stamina.tick"] = "Stamina Tick Rate"
 enLocalization["config.stamina.tick.help"] = "The rate at which the player's stamina is updated."
 
-ow.localization:RegisterLanguage("de", deLocalization)
-ow.localization:RegisterLanguage("en", enLocalization)
+ow.localization:Register("de", deLocalization)
+ow.localization:Register("en", enLocalization)
 
 ow.config:Register("stamina.drain", {
     Name = "config.stamina.drain",
