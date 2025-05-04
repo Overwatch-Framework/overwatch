@@ -74,7 +74,7 @@ function PANEL:Populate()
         image:Dock(LEFT)
         image:DockMargin(0, 0, tinyPadding, 0)
         image:SetSize(button:GetTall() * 1.75, button:GetTall())
-        image:SetImage(v.Image or "gamepadui/chapter14")
+        image:SetImage(v.Image or "gamepadui/hl2/chapter14")
 
         local deleteButton = button:Add("ow.button.small")
         deleteButton:Dock(RIGHT)

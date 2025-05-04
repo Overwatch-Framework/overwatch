@@ -119,7 +119,7 @@ function PANEL:PopulateFactionSelect()
             imageHeight = math.Round(imageHeight)
 
             surface.SetDrawColor(color_white)
-            surface.SetTexture(surface.GetTextureID(v.Image or "gamepadui/chapter14"))
+            surface.SetTexture(surface.GetTextureID(v.Image or "gamepadui/hl2/chapter14"))
             surface.DrawTexturedRect(0, 0, width, imageHeight)
 
             local inertia = factionButton:GetInertia()

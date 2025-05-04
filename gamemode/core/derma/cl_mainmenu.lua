@@ -4,8 +4,6 @@ local gradientRight = ow.util:GetMaterial("vgui/gradient-r")
 local gradientTop = ow.util:GetMaterial("vgui/gradient-u")
 local gradientBottom = ow.util:GetMaterial("vgui/gradient-d")
 
--- TODO: Full on localization support
-
 DEFINE_BASECLASS("EditablePanel")
 
 local PANEL = {}
