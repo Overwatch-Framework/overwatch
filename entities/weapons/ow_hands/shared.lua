@@ -96,7 +96,7 @@ local function VelocityRemove(entity, normalize)
     if ( normalize ) then
         local physicsObject = entity:GetPhysicsObject()
         if ( IsValid(physicsObject) ) then
-            physicsObject:SetVelocity(Vector(0, 0, 0))
+            physicsObject:SetVelocity(vector_origin)
         end
 
         entity:SetVelocity(vector_origin)
@@ -368,7 +368,7 @@ function SWEP:DoPickup(throw)
     end
 end
 
-local down = Vector(0, 0, -1)
+local down = -vector_up
 function SWEP:AllowEntityDrop()
     local ply = self:GetOwner()
     local ent = self.owCarry

@@ -8,7 +8,7 @@
 ---But with a twist:
 ---1) They have gradients of course
 ---2) They can be sliced
----3) They support stencils 
+---3) They support stencils
 ---4) They can have various curviness (squircles/SwiftUI/IOS rounded square )
 ---@class paint.circles
 local circles = {}
@@ -37,7 +37,7 @@ do
 
 	local PRIMITIVE_POLYGON = MATERIAL_POLYGON
 
-	local originVector = Vector(0, 0, 0)
+	local originVector = vector_origin
 
 	local sin, cos = math.sin, math.cos
 
@@ -389,7 +389,7 @@ do
 	---@param endU number
 	---@param outlineWidth number
 	---@param curviness number
-	---@return string id 
+	---@return string id
 	local function getId(color1, color2, vertexCount, startAngle, endAngle, startU, endU, outlineWidth, curviness)
 		return format('%x%x%x%x;%x%x%x%x;%u;%f;%f;%f;%f;%f;%f', color1.r, color1.g, color1.b, color1.a, color2.r, color2.g, color2.b, color2.a, vertexCount, startAngle, endAngle, startU, endU, outlineWidth, curviness)
 	end

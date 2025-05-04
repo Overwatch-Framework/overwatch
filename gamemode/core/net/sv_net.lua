@@ -232,7 +232,7 @@ net.Receive("ow.item.spawn", function(len, ply)
     local uniqueID = net.ReadString()
     if ( !uniqueID or !ow.item.stored[uniqueID] ) then return end
 
-    local pos = ply:GetEyeTrace().HitPos + Vector(0, 0, 10)
+    local pos = ply:GetEyeTrace().HitPos + vector_up
 
     ow.item:Spawn(nil, uniqueID, pos, nil, function(entity)
         if ( IsValid(entity) ) then

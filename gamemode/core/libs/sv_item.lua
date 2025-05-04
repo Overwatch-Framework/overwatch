@@ -328,7 +328,7 @@ concommand.Add("ow_item_spawn", function(ply, cmd, args)
     local uniqueID = args[1]
     if ( !uniqueID ) then return end
 
-    local pos = ply:GetEyeTrace().HitPos + Vector(0, 0, 10)
+    local pos = ply:GetEyeTrace().HitPos + vector_up * 10
 
     ow.item:Spawn(nil, uniqueID, pos, nil, function(ent)
         if ( IsValid(ent) ) then
