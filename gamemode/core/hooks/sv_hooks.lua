@@ -221,8 +221,6 @@ function GM:Think()
                         ow.stamina:Set(ply, math.min(st.current + regen, st.max))
                     end
                 end
-
-                print("Stamina: " .. st.current .. "/" .. st.max)
             end
         end
     end
