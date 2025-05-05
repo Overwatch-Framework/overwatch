@@ -225,3 +225,9 @@ ow.command:Register("CharTakeFlags", {
         target:Notify("You have had the flag(s) \"" .. flagString .. "\" taken from your character!", NOTIFY_HINT)
     end
 })
+
+ow.command:Register("ToggleRaise", {
+    Callback = function(info, ply)
+        ply:ToggleWeaponRaise()
+    end
+})

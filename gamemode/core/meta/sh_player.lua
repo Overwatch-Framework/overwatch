@@ -140,7 +140,7 @@ if ( SERVER ) then
         hook.Run("PlayerWeaponRaised", self, bRaised)
     end
 
-    function PLAYER:ToggleWeaponRaised()
+    function PLAYER:ToggleWeaponRaise()
         local bRaised = self:GetRelay("bWeaponRaised", false)
         self:SetWeaponRaised(!bRaised)
     end

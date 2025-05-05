@@ -110,7 +110,7 @@ function GM:KeyPress(ply, key)
     if ( SERVER and key == IN_RELOAD ) then
         timer.Create("ow.wepRaise." .. ply:SteamID64(), ow.config:Get("wepraise.time", 1), 1, function()
             if ( IsValid(ply) ) then
-                ply:ToggleWeaponRaised()
+                ply:ToggleWeaponRaise()
             end
         end)
     end
