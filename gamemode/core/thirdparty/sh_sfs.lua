@@ -1189,7 +1189,7 @@ local encode_to_hex, decode_from_hex; do
     end
 end
 
-return {
+sfs = sfs or {
     TYPES = TYPES,
 
     Encoder = Encoder, -- to allow usage of internal functions
