@@ -50,10 +50,14 @@ function PLAYER:ChatText(...)
     local args = {...}
 
     if ( SERVER ) then
-        local compressed = util.Compress(util.TableToJSON(args))
+        local encoded, err = sfs.encode(args)
+        if ( err ) then
+            ow.util:PrintError("Failed to encode chat text: " .. err)
+            return
+        end
 
         net.Start("ow.chat.text")
-            net.WriteData(compressed, #compressed)
+            net.WriteString(encoded)
         net.Send(self)
     else
         chat.AddText(unpack(args))

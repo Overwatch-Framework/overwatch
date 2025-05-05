@@ -39,13 +39,17 @@ function ow.item:Add(characterID, inventoryID, uniqueID, data, callback)
 
         local receiver = ow.character:GetPlayerByCharacter(characterID)
         if ( IsValid(receiver) ) then
-            local compressed = util.Compress(util.TableToJSON(data))
+            local encoded, err = sfs.encode(data)
+            if ( err ) then
+                ow.util:PrintError("Failed to encode item data: " .. err)
+                return
+            end
 
             net.Start("ow.item.add")
                 net.WriteUInt(itemID, 32)
                 net.WriteUInt(inventoryID, 32)
                 net.WriteString(uniqueID)
-                net.WriteData(compressed, #compressed)
+                net.WriteString(encoded)
             net.Send(receiver)
         end
 

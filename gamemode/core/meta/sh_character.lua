@@ -94,7 +94,7 @@ if ( SERVER ) then
         if ( hasFlag ) then return end
 
         local flags = self:GetFlags()
-        if ( !flags or flags == "" ) then
+        if ( !isstring(flags) or flags == "" ) then
             flags = flag
         else
             flags = flags .. flag

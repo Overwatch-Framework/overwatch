@@ -19,8 +19,6 @@ end
 
 -- internal: pack and send a payload
 local function sendPacked(msg, key, value, recipient)
-    local blob = ow.crypto:Pack(value)
-
     local encoded, err = sfs.encode(value)
     if ( err ) then
         ow.util:Print("Failed to encode value for relay:", key, err)
@@ -54,11 +52,9 @@ end
 if ( CLIENT ) then
     net.Receive("ow.relay.shared", function()
         local key = net.ReadString()
-        local len = net.ReadUInt(32)
-        local payload = net.ReadData(len)
-        if ( !payload ) then return end
+        local value = sfs.decode(net.ReadString())
+        if ( value == nil ) then return end
 
-        local value = ow.crypto:Unpack(payload)
         ow.relay.shared[key] = value
     end)
 end
@@ -101,12 +97,16 @@ function entityMeta:SetRelay(key, value, recipient)
         ow.relay.entity[self] = ow.relay.entity[self] or {}
         ow.relay.entity[self][key] = value
 
-        local blob = ow.crypto:Pack(value)
+        local encoded, err = sfs.encode(value)
+        if ( err ) then
+            ow.util:Print("Failed to encode value for relay:", key, err)
+            return
+        end
+
         net.Start("ow.relay.entity")
             net.WriteUInt(self:EntIndex(), 16)
             net.WriteString(key)
-            net.WriteUInt(#blob, 32)
-            net.WriteData(blob, #blob)
+            net.WriteString(encoded)
         if ( recipient ) then
             net.Send(recipient)
         else
@@ -117,18 +117,16 @@ end
 
 function entityMeta:GetRelay(key, default)
     local t = ow.relay.entity[self]
-    return t != nil and t[key] or default
+    return t[key] == nil and default or t[key]
 end
 
 if ( CLIENT ) then
     net.Receive("ow.relay.entity", function()
         local entIndex = net.ReadUInt(16)
         local key = net.ReadString()
-        local len = net.ReadUInt(32)
-        local payload = net.ReadData(len)
-        if ( !payload ) then return end
+        local value = sfs.decode(net.ReadString())
+        if ( value == nil ) then return end
 
-        local value = ow.crypto:Unpack(payload)
         local ent = Entity(entIndex)
         if ( IsValid(ent) ) then
             ow.relay.entity[ent] = ow.relay.entity[ent] or {}

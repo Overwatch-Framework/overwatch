@@ -14,10 +14,14 @@ function ow.option:SetDefault(key, default)
     stored.Default = default
 
     if ( SERVER ) then
-        local compressed = util.Compress(util.TableToJSON(self.stored))
+        local encoded, err = sfs.encode(self.stored)
+        if ( err ) then
+            ow.util:PrintError("Failed to encode options: " .. err)
+            return false
+        end
 
         net.Start("ow.option.sync")
-            net.WriteData(compressed, #compressed)
+            net.WriteString(encoded)
         net.SendToServer()
     end
 
@@ -34,10 +38,14 @@ if ( CLIENT ) then
             end
         end
 
-        local compressed = util.Compress(util.TableToJSON(self:GetSaveData()))
+        local encoded, err = sfs.encode(self:GetSaveData())
+        if ( err ) then
+            ow.util:PrintError("Failed to encode options: " .. err)
+            return false
+        end
 
         net.Start("ow.option.sync")
-            net.WriteData(compressed, #compressed)
+            net.WriteString(encoded)
         net.SendToServer()
 
         hook.Run("PostOptionsLoad", self.stored)
@@ -134,9 +142,14 @@ if ( CLIENT ) then
 
         ow.data:Set("options", {}, true, false)
 
-        local compressed = util.Compress("[]")
+        local encoded, err = sfs.encode({})
+        if ( err ) then
+            ow.util:PrintError("Failed to encode options: " .. err)
+            return false
+        end
+
         net.Start("ow.option.sync")
-            net.WriteData(compressed, #compressed)
+            net.WriteString(encoded)
         net.SendToServer()
     end
 end

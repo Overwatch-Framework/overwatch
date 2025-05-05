@@ -53,10 +53,14 @@ function ow.character:Create(ply, query)
 
     self.stored[characterID] = character
 
-    local compressed = util.Compress(util.TableToJSON(character))
+    local encoded, err = sfs.encode(character)
+    if ( err ) then
+        ErrorNoHalt("Failed to encode character: " .. err .. "\n")
+        return false
+    end
 
     net.Start("ow.character.cache")
-        net.WriteData(compressed, #compressed)
+        net.WriteString(encoded)
     net.Send(ply)
 
     ow.inventory:Register({characterID = characterID})
@@ -197,10 +201,14 @@ function ow.character:Cache(ply, characterID)
     plyTable.owCharacters[characterID] = result[1]
     self.stored[characterID] = result[1]
 
-    local compressed = util.Compress(util.TableToJSON(result[1]))
+    local encoded, err = sfs.encode(result[1])
+    if ( err ) then
+        ErrorNoHalt("Failed to encode character: " .. err .. "\n")
+        return false
+    end
 
     net.Start("ow.character.cache")
-        net.WriteData(compressed, #compressed)
+        net.WriteString(encoded)
     net.Send(ply)
 
     return true
@@ -240,10 +248,14 @@ function ow.character:CacheAll(ply)
         end
     end
 
-    local compressed = util.Compress(util.TableToJSON(plyTable.owCharacters))
+    local encoded, err = sfs.encode(plyTable.owCharacters)
+    if ( err ) then
+        ErrorNoHalt("Failed to encode character: " .. err .. "\n")
+        return false
+    end
 
     net.Start("ow.character.cache.all")
-        net.WriteData(compressed, #compressed)
+        net.WriteString(encoded)
     net.Send(ply)
 
     hook.Run("PlayerLoadedAllCharacters", ply, plyTable.owCharacters)

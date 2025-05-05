@@ -26,10 +26,14 @@ function ow.config:Load()
         end
     end
 
-    local compressed = util.Compress(util.TableToJSON(tableToSend))
+    local encoded, err = sfs.encode(tableToSend)
+    if ( err ) then
+        ow.util:PrintError("Failed to encode configuration: " .. err)
+        return false
+    end
 
     net.Start("ow.config.sync")
-        net.WriteData(compressed, #compressed)
+        net.WriteString(encoded)
     net.Broadcast()
 
     ow.util:Print("Configuration loaded.")
@@ -103,10 +107,14 @@ function ow.config:ResetAll()
         end
     end
 
-    local compressed = util.Compress(util.TableToJSON(tableToSend))
+    local encoded, err = sfs.encode(tableToSend)
+    if ( err ) then
+        ow.util:PrintError("Failed to encode configuration: " .. err)
+        return false
+    end
 
     net.Start("ow.config.sync")
-        net.WriteData(compressed, #compressed)
+        net.WriteString(encoded)
     net.Broadcast()
 
     self:Save()
@@ -131,12 +139,17 @@ function ow.config:Synchronize(ply)
         end
     end
 
-    local compressed = util.Compress(util.TableToJSON(tableToSend))
+    local encoded, err = sfs.encode(tableToSend)
+    if ( err ) then
+        ow.util:PrintError("Failed to encode configuration: " .. err)
+        return false
+    end
+
     hook.Run("PreConfigSync", ply, compressed)
 
     net.Start("ow.config.sync")
-        net.WriteData(compressed, #compressed)
-    net.Send(ply)
+        net.WriteString(encoded)
+    net.Broadcast()
 
     hook.Run("PostConfigSync", ply, self.stored, tableToSend)
 

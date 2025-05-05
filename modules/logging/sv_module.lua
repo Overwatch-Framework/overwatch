@@ -18,9 +18,13 @@ function MODULE:SendLog(...)
     end
 
     -- Send to clients who are permitted to see the log
-    local payload = ow.crypto:Pack({...})
+    local encoded, err = sfs.encode({...})
+    if ( err ) then
+        ow.util:PrintError("Failed to encode log message: " .. err)
+        return false
+    end
+
     net.Start("ow.logging.send")
-        net.WriteUInt(#payload, 32)
-        net.WriteData(payload, #payload)
+        net.WriteString(encoded)
     net.Send(receivers)
 end

@@ -140,11 +140,15 @@ end
 -- @param ... any The message to send.
 function ow.util:SendChatText(ply, ...)
     if ( SERVER ) then
-        local compressed = util.Compress(util.TableToJSON({...}))
+
+        local encoded, err = sfs.encode({...})
+        if ( err ) then
+            ow.util:PrintError("Failed to encode chat text: " .. err)
+            return
+        end
 
         net.Start("ow.chat.text")
-        net.WriteData(compressed, #compressed)
-
+            net.WriteString(encoded)
         if ( IsValid(ply) ) then
             net.Send(ply)
         else

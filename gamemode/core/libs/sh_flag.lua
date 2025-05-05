@@ -31,6 +31,27 @@ ow.flag:Register("t", "flag.toolgun", function(char, has)
     if ( has ) then
         ply:Give("gmod_tool")
     else
+        local wep = ply:GetActiveWeapon()
+        if ( IsValid(wep) and wep:GetClass() == "gmod_tool" ) then
+            ply:SelectWeapon("ow_hands")
+        end
+
         ply:StripWeapon("gmod_tool")
+    end
+end)
+
+ow.flag:Register("p", "flag.physgun", function(char, has)
+    local ply = char:GetPlayer()
+    if ( !IsValid(ply) ) then return end
+
+    if ( has ) then
+        ply:Give("weapon_physgun")
+    else
+        local wep = ply:GetActiveWeapon()
+        if ( IsValid(wep) and wep:GetClass() == "weapon_physgun" ) then
+            ply:SelectWeapon("ow_hands")
+        end
+
+        ply:StripWeapon("weapon_physgun")
     end
 end)

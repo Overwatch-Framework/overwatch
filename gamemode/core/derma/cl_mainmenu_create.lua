@@ -229,9 +229,14 @@ function PANEL:PopulateCreateCharacter()
         end
 
         if ( isNextEmpty ) then
-            local compressed = util.Compress(util.TableToJSON(self.currentCreatePayload))
+            local encoded, err = sfs.encode(self.currentCreatePayload)
+            if ( err ) then
+                ow.util:PrintError("Failed to encode character payload: " .. err)
+                return
+            end
+
             net.Start("ow.character.create")
-                net.WriteData(compressed, #compressed)
+                net.WriteString(encoded)
             net.SendToServer()
         else
             self.currentCreatePage = self.currentCreatePage + 1
