@@ -260,11 +260,12 @@ function MODULE:CalcMainActivity(ply, velocity)
 
     local eyeAngles = ply:EyeAngles()
     local aimVector = ply:GetAimVector()
+    local aimVectorAng = aimVector:Angle()
 
     ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - eyeAngles[2]))
 
-    ply:SetPoseParameter("aim_yaw", normalizeAngle(aimVector:Angle().y - eyeAngles[2]))
-    ply:SetPoseParameter("aim_pitch", normalizeAngle(aimVector:Angle().p - eyeAngles[1]))
+    ply:SetPoseParameter("aim_yaw", normalizeAngle(aimVectorAng.y - eyeAngles[2]))
+    ply:SetPoseParameter("aim_pitch", normalizeAngle(aimVectorAng.p - eyeAngles[1]))
 
     self:HandlePlayerLanding(ply, velocity, plyTable.m_bWasOnGround)
 
