@@ -126,11 +126,7 @@ function GM:PlayerSwitchWeapon(ply, hOldWeapon, hNewWeapon)
     if ( SERVER ) then
         timer.Simple(0.1, function()
             if ( IsValid(ply) and IsValid(hNewWeapon) ) then
-                if ( hNewWeapon.bAlwaysRaised ) then
-                    ply:SetWeaponRaised(true)
-                else
-                    ply:SetWeaponRaised(false)
-                end
+                ply:SetWeaponRaised(false)
             end
         end)
     end
