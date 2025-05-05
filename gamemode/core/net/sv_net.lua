@@ -13,15 +13,11 @@ util.AddNetworkString("ow.character.variable.set")
 
 net.Receive("ow.character.load", function(len, ply)
     local characterID = net.ReadUInt(32)
-    if ( !characterID ) then return end
-
     ow.character:Load(ply, characterID)
 end)
 
 net.Receive("ow.character.delete", function(len, ply)
     local characterID = net.ReadUInt(32)
-    if ( !characterID ) then return end
-
     local character = ow.character:Get(characterID)
     if ( !character ) then return end
 
