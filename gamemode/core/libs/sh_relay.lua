@@ -59,9 +59,6 @@ if ( CLIENT ) then
 end
 
 function playerMeta:SetRelay(key, value, recipient)
-    if ( !IsValid(self) ) then return end
-    if ( !self:IsPlayer() ) then return end
-
     if ( SERVER ) then
         ow.relay.user[self] = ow.relay.user[self] or {}
         ow.relay.user[self][key] = value
@@ -70,11 +67,8 @@ function playerMeta:SetRelay(key, value, recipient)
 end
 
 function playerMeta:GetRelay(key, default)
-    if ( !IsValid(self) ) then return end
-    if ( !self:IsPlayer() ) then return end
-
     local t = ow.relay.user[self]
-    return t and t[key] or default
+    return t != nil and t[key] or default
 end
 
 if ( CLIENT ) then
@@ -85,7 +79,7 @@ if ( CLIENT ) then
         if ( !payload ) then return end
 
         local value = ow.crypto:Unpack(payload)
-        local ply = LocalPlayer()
+        local ply = ow.localClient
 
         ow.relay.user[ply] = ow.relay.user[ply] or {}
         ow.relay.user[ply][key] = value
@@ -93,9 +87,6 @@ if ( CLIENT ) then
 end
 
 function entityMeta:SetRelay(key, value, recipient)
-    if ( !IsValid(self) ) then return end
-    if ( self:IsPlayer() ) then return end
-
     if ( SERVER ) then
         ow.relay.entity[self] = ow.relay.entity[self] or {}
         ow.relay.entity[self][key] = value
@@ -115,11 +106,8 @@ function entityMeta:SetRelay(key, value, recipient)
 end
 
 function entityMeta:GetRelay(key, default)
-    if ( !IsValid(self) ) then return end
-    if ( self:IsPlayer() ) then return end
-
     local t = ow.relay.entity[self]
-    return t and t[key] or default
+    return t != nil and t[key] or default
 end
 
 if ( CLIENT ) then

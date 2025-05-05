@@ -125,3 +125,11 @@ function PLAYER:Notify(text, iType, length)
 
     ow.notification:Send(self, text, iType, length)
 end
+
+if ( SERVER ) then
+    function PLAYER:SetWeaponRaised(bRaised)
+        if ( bRaised == nil ) then bRaised = true end
+
+        self:SetRelay("bWeaponRaised", bRaised)
+    end
+end
