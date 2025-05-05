@@ -6,4 +6,7 @@ net.Receive("ow.animations.update", function(len)
     if ( !istable(data) ) then return end
 
     ply.owAnimations = data
+
+    -- ew...
+    ply:SetIK(false)
 end)

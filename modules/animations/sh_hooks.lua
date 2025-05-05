@@ -64,10 +64,6 @@ function MODULE:HandlePlayerNoClipping(ply, velocity, plyTable)
         if ( plyTable.m_bWasNoclipping ) then
             plyTable.m_bWasNoclipping = nil
             ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
-
-            if ( CLIENT ) then
-                ply:SetIK(true)
-            end
         end
 
         return
@@ -75,10 +71,6 @@ function MODULE:HandlePlayerNoClipping(ply, velocity, plyTable)
 
     if ( !plyTable.m_bWasNoclipping ) then
         ply:AnimRestartGesture(GESTURE_SLOT_CUSTOM, ACT_GMOD_NOCLIP_LAYER, false)
-
-        if ( CLIENT ) then
-            ply:SetIK(false)
-        end
     end
 
     return true
@@ -277,7 +269,9 @@ function MODULE:CalcMainActivity(ply, velocity)
         self:HandlePlayerDucking(ply, velocity, plyTable) ) then
 
         local len2d = velocity:Length2DSqr()
-        if ( len2d > 22500 ) then
+        if ( velocity[3] != 0 and len2d <= 16 ^ 2 ) then
+            plyTable.CalcIdeal = ACT_GLIDE
+        elseif ( len2d > 22500 ) then
             plyTable.CalcIdeal = ACT_MP_RUN
         elseif ( len2d > 0.25 ) then
             plyTable.CalcIdeal = ACT_MP_WALK
@@ -323,6 +317,8 @@ function MODULE:TranslateActivity(ply, act)
         if ( animTable ) then
             local preferred = animTable[ply:IsWeaponRaised() and 2 or 1]
             newact = preferred
+        elseif ( ply.m_bJumping ) then
+            newact = ACT_GLIDE
         end
     end
 
