@@ -113,9 +113,9 @@ function GM:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
     if ( !IsValid(ply) ) then return end
 
     if ( IsValid(weapon) and !ply:IsWeaponRaised() ) then
-        LOWERED_LERP.angles = LerpAngle(FrameTime(), LOWERED_LERP.angles, LOWERED_ANGLES)
+        LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, LOWERED_ANGLES)
     else
-        LOWERED_LERP.angles = LerpAngle(FrameTime(), LOWERED_LERP.angles, angle_zero)
+        LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, angle_zero)
     end
 
     ang = ang + LOWERED_LERP.angles
