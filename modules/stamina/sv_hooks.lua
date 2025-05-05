@@ -6,6 +6,8 @@ end
 
 local nextStamina = 0
 function MODULE:Think()
+    if ( !ow.config:Get("stamina", true) ) then return end
+
     if ( CurTime() >= nextStamina ) then
         local regen = ow.config:Get("stamina.regen", 20) / 10
         local drain = ow.config:Get("stamina.drain", 10) / 10
@@ -39,6 +41,8 @@ function MODULE:Think()
 end
 
 function MODULE:OnPlayerHitGround(ply, inWater, onFloater, speed)
+    if ( !ow.config:Get("stamina", true) ) then return end
+
     local st = ply:GetRelay("stamina")
     if ( st and st.current > 0 ) then
         ow.stamina:Consume(ply, speed / 64)

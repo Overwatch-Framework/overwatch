@@ -1,6 +1,8 @@
 local MODULE = MODULE
 
 function MODULE:SetupMove(ply, mv, cmd)
+    if ( !ow.config:Get("stamina", true) ) then return end
+
     local st = ply:GetRelay("stamina")
     if ( st and st.current <= 0 ) then
         -- Prevent sprinting input

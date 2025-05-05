@@ -86,10 +86,10 @@ function MODULE:PostPlayerConfigChanged(ply, key, value, oldValue)
             self:SendLog(ow.color:Get("red"), self:FormatPlayer(ply) .. " disabled logging")
         end
     else
-        self:SendLog(ow.color:Get("yellow"), self:FormatPlayer(ply) .. " changed config " .. key .. " from " .. tostring(oldValue) .. " to " .. tostring(value))
+        self:SendLog(ow.color:Get("yellow"), self:FormatPlayer(ply) .. " changed config \"" .. key .. "\" from \"" .. tostring(oldValue) .. "\" to \"" .. tostring(value) .. "\"")
     end
 end
 
 function MODULE:PostPlayerConfigReset(ply, key)
-    self:SendLog(ow.color:Get("yellow"), self:FormatPlayer(ply) .. " reset config " .. key)
+    self:SendLog(ow.color:Get("yellow"), self:FormatPlayer(ply) .. " reset config \"" .. key .. "\"")
 end

@@ -79,7 +79,7 @@ if ( CLIENT ) then
         if ( !payload ) then return end
 
         local value = ow.crypto:Unpack(payload)
-        local ply = ow.localClient
+        local ply = LocalPlayer()
 
         ow.relay.user[ply] = ow.relay.user[ply] or {}
         ow.relay.user[ply][key] = value

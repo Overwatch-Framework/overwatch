@@ -133,7 +133,7 @@ if ( SERVER ) then
     -- @return number
     function ow.stamina:Get(ply)
         local st = ply:GetRelay("stamina")
-        return st and st.current or 0
+        return istable(st) and st.current or 0
     end
 
     --- Sets current stamina
@@ -141,7 +141,7 @@ if ( SERVER ) then
     -- @param value number
     function ow.stamina:Set(ply, value)
         local st = ply:GetRelay("stamina")
-        if ( !st ) then return end
+        if ( !istable(st) ) then return end
 
         st.current = math.Clamp(value, 0, st.max)
         ply:SetRelay("stamina", st)
@@ -158,7 +158,7 @@ if ( CLIENT ) then
     --- Gets the local player's stamina as a fraction [0–1]
     -- @return number
     function ow.stamina:GetFraction()
-        local max = ow.localClient:GetRelay("stamina").max
+        local max = ow.localClient:GetRelay("stamina").max -- TODO: causes a nil error in main menu since the SetRelay is called after the player has SPAWNED, NOT LOADED into the game.
         return self:GetLocal() / max
     end
 end

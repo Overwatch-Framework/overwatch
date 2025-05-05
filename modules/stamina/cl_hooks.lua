@@ -4,7 +4,7 @@ function MODULE:ShouldDrawStamina()
     if ( IsValid(ow.gui.mainmenu) ) then return false end
     if ( IsValid(ow.gui.tab) ) then return false end
 
-    return true
+    return IsValid(ow.localClient) and ow.config:Get("stamina", true) and ow.localClient:Alive()
 end
 
 local staminaLerp = 0

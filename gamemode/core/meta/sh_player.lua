@@ -131,5 +131,17 @@ if ( SERVER ) then
         if ( bRaised == nil ) then bRaised = true end
 
         self:SetRelay("bWeaponRaised", bRaised)
+        self:SetRelay("bCanShoot", bRaised)
+
+        hook.Run("PlayerWeaponRaised", self, bRaised)
     end
+
+    function PLAYER:ToggleWeaponRaised()
+        local bRaised = self:GetRelay("bWeaponRaised", false)
+        self:SetWeaponRaised(!bRaised)
+    end
+end
+
+function PLAYER:IsWeaponRaised()
+    return self:GetRelay("bWeaponRaised", false)
 end
