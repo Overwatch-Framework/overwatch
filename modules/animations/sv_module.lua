@@ -1,1 +1,1 @@
-util.AddNetworkString("ow.animations.set.model")
+util.AddNetworkString("ow.animations.update")

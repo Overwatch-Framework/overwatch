@@ -69,6 +69,7 @@ function MODULE:HandlePlayerNoClipping(ply, velocity, plyTable)
                 ply:SetIK(true)
             end
         end
+
         return
     end
 
@@ -251,10 +252,13 @@ function MODULE:MouthMoveAnimation(ply)
     end
 end
 
+local vectorAngle = FindMetaTable("Vector").Angle
+local normalizeAngle = math.NormalizeAngle
 function MODULE:CalcMainActivity(ply, velocity)
     local plyTable = ply:GetTable()
     plyTable.CalcIdeal = ACT_MP_STAND_IDLE
-    plyTable.CalcSeqOverride = -1
+
+    ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - ply:EyeAngles()[2]))
 
     self:HandlePlayerLanding(ply, velocity, plyTable.m_bWasOnGround)
 
@@ -273,10 +277,15 @@ function MODULE:CalcMainActivity(ply, velocity)
         end
     end
 
+    hook.Run("TranslateActivity", ply, plyTable.CalcIdeal)
+
+    local seqOverride = plyTable.CalcSeqOverride
+    plyTable.CalcSeqOverride = -1
+
     plyTable.m_bWasOnGround = ply:IsOnGround()
     plyTable.m_bWasNoclipping = (ply:GetMoveType() == MOVETYPE_NOCLIP and !ply:InVehicle())
 
-    return plyTable.CalcIdeal, plyTable.CalcSeqOverride
+    return plyTable.CalcIdeal, seqOverride or plyTable.CalcSeqOverride
 end
 
 local IdleActivity = ACT_HL2MP_IDLE
@@ -298,6 +307,16 @@ function MODULE:TranslateActivity(ply, act)
     local newact = ply:TranslateWeaponActivity(act)
     if ( act == newact ) then
         return IdleActivityTranslate[act]
+    end
+
+    local plyTable = ply:GetTable()
+    local owAnimations = plyTable.owAnimations
+    if ( owAnimations ) then
+        local animTable = owAnimations[act]
+        if ( animTable ) then
+            local preferred = animTable[2] -- We dont have wep raising yet so we use the second one
+            newact = preferred
+        end
     end
 
     return newact
