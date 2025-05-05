@@ -160,7 +160,7 @@ function MODULE:HandlePlayerDriving(ply, plyTable)
         end
     end
 
-    local use_anims = (plyTable.CalcSeqOverride == ply:LookupSequence("sit_rollercoaster") or plyTable.CalcSeqOverride == ply:LookupSequence("sit"))
+    local use_anims = ( plyTable.CalcSeqOverride == ply:LookupSequence("sit_rollercoaster") or plyTable.CalcSeqOverride == ply:LookupSequence("sit") )
     if ( use_anims and ply:GetAllowWeaponsInVehicle() and IsValid(ply:GetActiveWeapon()) ) then
         local holdtype = ply:GetActiveWeapon():GetHoldType()
         if ( holdtype == "smg" ) then
@@ -258,7 +258,13 @@ function MODULE:CalcMainActivity(ply, velocity)
     local plyTable = ply:GetTable()
     plyTable.CalcIdeal = ACT_MP_STAND_IDLE
 
-    ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - ply:EyeAngles()[2]))
+    local eyeAngles = ply:EyeAngles()
+    local aimVector = ply:GetAimVector()
+
+    ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - eyeAngles[2]))
+
+    ply:SetPoseParameter("aim_yaw", normalizeAngle(aimVector:Angle().y - eyeAngles[2]))
+    ply:SetPoseParameter("aim_pitch", normalizeAngle(aimVector:Angle().p - eyeAngles[1]))
 
     self:HandlePlayerLanding(ply, velocity, plyTable.m_bWasOnGround)
 
