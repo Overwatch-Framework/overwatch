@@ -29,7 +29,7 @@ local function sendPacked(msg, key, value, recipient)
         net.WriteString(key)
         net.WriteString(encoded)
     if ( SERVER ) then
-        if ( recipient ) then
+        if ( IsValid(recipient) ) then
             net.Send(recipient)
         else
             net.Broadcast()
@@ -38,8 +38,9 @@ local function sendPacked(msg, key, value, recipient)
 end
 
 function ow.relay:SetRelay(key, value, recipient)
+    self.shared[key] = value
+
     if ( SERVER ) then
-        self.shared[key] = value
         sendPacked("ow.relay.shared", key, value, recipient)
     end
 end
@@ -63,6 +64,7 @@ function playerMeta:SetRelay(key, value, recipient)
     if ( SERVER ) then
         ow.relay.user[self] = ow.relay.user[self] or {}
         ow.relay.user[self][key] = value
+
         sendPacked("ow.relay.user", key, value, recipient or self)
     end
 end
@@ -79,10 +81,9 @@ end
 if ( CLIENT ) then
     net.Receive("ow.relay.user", function()
         local key = net.ReadString()
-        local value, err = sfs.decode(net.ReadString())
+        local value = sfs.decode(net.ReadString())
         if ( err ) then
-            print(debug.traceback())
-            ow.util:Print("Failed to decode value for relay: ", key, err)
+            ow.util:Print("Failed to decode value for relay: ", key, " - ", err)
             return
         end
 
