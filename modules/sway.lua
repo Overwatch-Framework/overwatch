@@ -155,6 +155,7 @@ end
 DEFINE_BASECLASS("sway")
 function MODULE:CalcViewModelView(wep, vm, oldPos, oldAng, pos, ang)
     if ( !IsValid(wep) or !IsValid(vm) ) then return end
+    if ( ow.localClient:InObserver() ) then return end
 
     pos, ang = GAMEMODE.BaseClass:CalcViewModelView(wep, vm, oldPos, oldAng, pos, ang)
     pos, ang = GetViewModelBob(pos, ang)

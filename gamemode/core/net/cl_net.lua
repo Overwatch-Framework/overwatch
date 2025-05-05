@@ -331,7 +331,7 @@ end)
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.database.save", function(len)
-    local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
+    local compressedTable = sfs.decode(net.ReadString())
     ow.localClient:GetTable().owDatabase = compressedTable
 end)
 
