@@ -21,10 +21,15 @@ end
 local function sendPacked(msg, key, value, recipient)
     local blob = ow.crypto:Pack(value)
 
+    local encoded, err = sfs.encode(value)
+    if ( err ) then
+        ow.util:Print("Failed to encode value for relay:", key, err)
+        return
+    end
+
     net.Start(msg)
         net.WriteString(key)
-        net.WriteUInt(#blob, 32)
-        net.WriteData(blob, #blob)
+        net.WriteString(encoded)
     if ( SERVER ) then
         if ( recipient ) then
             net.Send(recipient)
@@ -68,17 +73,22 @@ end
 
 function playerMeta:GetRelay(key, default)
     local t = ow.relay.user[self]
-    return t != nil and t[key] or default
+    if ( t == nil ) then
+        return default
+    end
+
+    return t[key] == nil and default or t[key]
 end
 
 if ( CLIENT ) then
     net.Receive("ow.relay.user", function()
         local key = net.ReadString()
-        local len = net.ReadUInt(32)
-        local payload = net.ReadData(len)
-        if ( !payload ) then return end
+        local value, err = sfs.decode(net.ReadString())
+        if ( err ) then
+            ow.util:Print("Failed to decode value for relay:", key, err)
+            return
+        end
 
-        local value = ow.crypto:Unpack(payload)
         local ply = LocalPlayer()
 
         ow.relay.user[ply] = ow.relay.user[ply] or {}

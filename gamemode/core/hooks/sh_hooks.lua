@@ -98,3 +98,10 @@ end
 
 function GM:SetupMove(ply, mv, cmd)
 end
+
+local KEY_SHOOT = IN_ATTACK + IN_ATTACK2
+function GM:StartCommand(ply, cmd)
+    if ( !ply:GetRelay("bCanShoot", true) ) then
+        cmd:RemoveKey(KEY_SHOOT)
+    end
+end
