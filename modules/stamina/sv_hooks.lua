@@ -1,6 +1,6 @@
 local MODULE = MODULE
 
-function MODULE:PlayerSpawn(ply)
+function MODULE:PlayerInitialSpawn(ply)
     ow.stamina:Initialize(ply)
 end
 
@@ -47,4 +47,10 @@ function MODULE:OnPlayerHitGround(ply, inWater, onFloater, speed)
     if ( st and st.current > 0 ) then
         ow.stamina:Consume(ply, speed / 64)
     end
+end
+
+function MODULE:PlayerDeath(ply)
+    if ( !ow.config:Get("stamina", true) ) then return end
+
+    ow.stamina:Initialize(ply)
 end
