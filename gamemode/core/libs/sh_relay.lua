@@ -116,6 +116,10 @@ end
 
 function entityMeta:GetRelay(key, default)
     local t = ow.relay.entity[self]
+    if ( t == nil ) then
+        return default
+    end
+
     return t[key] == nil and default or t[key]
 end
 
