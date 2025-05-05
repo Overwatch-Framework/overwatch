@@ -68,6 +68,8 @@ function PANEL:Init()
     self.buttons.pos = {self.buttons:GetX(), self.buttons:GetY()}
     self.buttons.posTarget = {paddingTiny, paddingSmall}
 
+    local buttonSizeable = self.buttons:Add("EditablePanel")
+
     -- eon did not like the close button :(
     /*
     local closeButton = self.buttons:Add("ow.button")
@@ -110,9 +112,9 @@ function PANEL:Init()
     local buttons = {}
     hook.Run("PopulateTabButtons", buttons)
     for k, v in SortedPairs(buttons) do
-        local button = self.buttons:Add("ow.button")
+        local button = buttonSizeable:Add("ow.button")
         button:Dock(TOP)
-        button:DockMargin(0, 0, 0, 16)
+        button:DockMargin(0, 8, 0, 8)
         button:SetText(k)
 
         button.DoClick = function()
@@ -120,6 +122,18 @@ function PANEL:Init()
 
             self:Populate(v)
         end
+    end
+
+    buttonSizeable.Think = function(this)
+        local totalHeight = 0
+        for _, v in ipairs(this:GetChildren()) do
+            if ( IsValid(v) and v:IsVisible() ) then
+                totalHeight = totalHeight + v:GetTall() + 16
+            end
+        end
+
+        this:SetSize(self.buttons:GetWide(), totalHeight)
+        this:CenterVertical()
     end
 
     if ( ow.gui.tabLast and buttons[ow.gui.tabLast] ) then

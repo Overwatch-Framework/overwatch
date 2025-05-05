@@ -6,6 +6,7 @@ local PANEL = {}
 
 function PANEL:Init()
     self:Dock(FILL)
+    self:InvalidateParent(true)
 
     local title = self:Add("ow.text")
     title:Dock(TOP)
@@ -21,9 +22,9 @@ function PANEL:Init()
     self.buttons.btnLeft:SetAlpha(0)
     self.buttons.btnRight:SetAlpha(0)
 
-    self.container = self:Add("DScrollPanel")
+    self.container = self:Add("EditablePanel")
     self.container:Dock(FILL)
-    self.container:GetVBar():SetWide(0)
+    self.container:InvalidateParent(true)
     self.container.Paint = nil
 
     local categories = {}

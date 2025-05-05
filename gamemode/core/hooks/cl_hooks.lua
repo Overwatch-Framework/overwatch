@@ -583,20 +583,20 @@ function GM:PopulateTabButtons(buttons)
     }
 end
 
-local developers = {
-    {"Riggs", "76561197963057641", "Co-founder, lead UI designer, backend engineer, back and frontend engineer."},
-    {"bloodycop", "76561198373309941", "Co-founder, backend engineer, quality-of-life systems designer."}
-}
-
 function GM:PopulateHelpCategories(categories)
     categories["flags"] = function(container)
+        local scroller = container:Add("DScrollPanel")
+        scroller:Dock(FILL)
+        scroller:GetVBar():SetWide(0)
+        scroller.Paint = nil
+
         for k, v in SortedPairs(ow.flag.stored) do
             local char = ow.localClient:GetCharacter()
             if ( !char ) then return end
 
             local hasFlag = char:HasFlag(k)
 
-            local button = container:Add("ow.button.small")
+            local button = scroller:Add("ow.button.small")
             button:Dock(TOP)
             button:SetText("")
             button:SetBackgroundAlphaHovered(1)
@@ -630,39 +630,12 @@ function GM:PopulateHelpCategories(categories)
     end
 
     categories["credits"] = function(container)
-        for _, devData in ipairs(developers) do
-            -- TODO: Overwatch Delieved to you by:
-            local creditPanel = container:Add("EditablePanel")
-            creditPanel:Dock(TOP)
-            creditPanel:DockMargin(0, 4, 0, 0)
-            creditPanel:SetTall(70)
+        local scroller = container:Add("DScrollPanel")
+        scroller:Dock(FILL)
+        scroller:GetVBar():SetWide(0)
+        scroller.Paint = nil
 
-            local avatarImage = creditPanel:Add("AvatarImage")
-            avatarImage:Dock(LEFT)
-            avatarImage:SetTall(creditPanel:GetTall())
-            avatarImage:SetSteamID(devData[2])
-            avatarImage:SetMouseInputEnabled(true)
-
-            local nameLabel = creditPanel:Add("DLabel")
-            nameLabel:Dock(LEFT)
-            nameLabel:DockMargin(4, 0, 0, 0)
-            nameLabel:SetFont("ow.fonts.button")
-            nameLabel:SetTextColor(color_white)
-            nameLabel:SetText(devData[1])
-            nameLabel:SetContentAlignment(4)
-            nameLabel:SetWide(ow.util:GetTextWidth("ow.fonts.button", devData[1]))
-            nameLabel:SetTall(ow.util:GetTextHeight("ow.fonts.button", devData[1]))
-
-            local descriptionLabel = creditPanel:Add("DLabel")
-            descriptionLabel:Dock(LEFT)
-            descriptionLabel:DockMargin(4, 0, 0, 0)
-            descriptionLabel:SetFont("ow.fonts.button.small")
-            descriptionLabel:SetTextColor(color_white)
-            descriptionLabel:SetText(devData[3])
-            descriptionLabel:SetContentAlignment(4)
-            descriptionLabel:SetWide(ow.util:GetTextWidth("ow.fonts.button.small", devData[3]))
-            descriptionLabel:SetTall(ow.util:GetTextHeight("ow.fonts.button.small", devData[3]))
-        end
+        vgui.Create("ow.credits", scroller)
     end
 end
 
