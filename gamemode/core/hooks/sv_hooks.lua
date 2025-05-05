@@ -107,12 +107,11 @@ end
 
 function GM:PlayerSay(ply, text, teamChat)
     if ( string.sub(text, 1, 1) == "/" ) then
-        -- TODO: Arguments such as "bloody cop" "bloody" cop, don't work correctly
         local arguments = string.Explode(" ", string.sub(text, 2))
         local command = arguments[1]
         table.remove(arguments, 1)
 
-        ow.command:Run(ply, command, arguments)
+        ow.command:Run(ply, command, table.concat(arguments, " "))
     else
         ow.chat:SendSpeaker(ply, "ic", text)
     end

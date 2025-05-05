@@ -162,14 +162,17 @@ ow.command:Register("CharGiveFlags", {
 ow.command:Register("CharTakeFlags", {
     Description = "Take a flag from a character.",
     AdminOnly = true,
-    Callback = function(info, ply, arguments)
-        local target = ow.util:FindPlayer(arguments[1])
+    Arguments = {
+        ow.type.player,
+        ow.type.string,
+        bit.bor(ow.type.number, ow.type.optional) -- TODO: Doesn't work
+    },
+    Callback = function(info, ply, target, flags, number)
         if ( !IsValid(target) ) then
             ply:Notify("You must provide a valid player to take a flag from!")
             return
         end
 
-        local flags = arguments[2]
         if ( !isstring(flags) or #flags == 0 ) then
             ply:Notify("You must provide either single flag or a set of flags!")
             return

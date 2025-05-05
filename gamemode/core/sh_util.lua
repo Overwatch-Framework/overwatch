@@ -84,6 +84,16 @@ function ow.util:SanitizeType(type, input)
         return isangle(input) and input or angle_zero
     elseif ( type == ow.type.array ) then
         return input
+    elseif ( type == ow.type.player ) then
+        if ( isstring(input) ) then
+            return ow.util:FindPlayer(input)
+        elseif ( isnumber(input) ) then
+            return Player(input)
+        elseif ( IsValid(input) and input:IsPlayer() ) then
+            return input
+        end
+
+        return nil
     else
         error("attempted to sanitize " .. ( ow.type[type] and ( "invalid type " .. ow.type[type] ) or "unknown type " .. type ))
     end

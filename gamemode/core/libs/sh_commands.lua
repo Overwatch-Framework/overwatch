@@ -96,3 +96,59 @@ function ow.command:Get(identifier)
     ow.util:PrintError("Attempted to get a command with invalid identifier!")
     return false
 end
+
+function ow.command:ParseArguments(arguments)
+    local args = {}
+    local bQuoted = false
+    local buffer = ""
+
+    for i = 1, #arguments do
+        local char = arguments[i]
+
+        if ( char == "\"" ) then
+            bQuoted = !bQuoted
+        elseif ( char == " " and !bQuoted ) then
+            if ( buffer != "" ) then
+                table.insert(args, buffer)
+                buffer = ""
+            end
+        else
+            buffer = buffer .. char
+        end
+    end
+
+    if ( buffer != "" ) then
+        table.insert(args, buffer)
+    end
+
+    for i, v in ipairs(args) do
+        if ( string.sub(v, 1, 1) == "\"" and string.sub(v, -1) == "\"" ) then
+            args[i] = string.sub(v, 2, -2)
+        end
+    end
+
+    return args
+end
+
+function ow.command:SanitiseArguments(command, arguments)
+    local commandInfo = self:Get(command)
+    if ( !istable(commandInfo) ) then return false end
+
+    local commandArgs = commandInfo.Arguments
+
+    local sanitised = {}
+    for k, v in ipairs(commandArgs) do
+        if ( bit.band(v, ow.type.optional) == ow.type.optional ) then
+            if ( arguments[k] == nil ) then
+                sanitised[k] = nil
+                continue
+            end
+
+            v = bit.band(v, bit.bnot(ow.type.optional))
+        end
+
+        sanitised[k] = ow.util:SanitizeType(v, arguments[k])
+    end
+
+    return sanitised
+end

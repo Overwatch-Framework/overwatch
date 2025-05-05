@@ -39,7 +39,15 @@ function ow.command:Run(ply, command, arguments)
         end
     end
 
-    info:Callback(ply, arguments)
+    local argumentTable = self:ParseArguments(arguments)
+    if ( #argumentTable != #info.Arguments ) then
+        ply:Notify("You must provide " .. #info.Arguments .. " arguments!")
+        return false
+    end
+
+    local argumentVarArgs = self:SanitiseArguments(command, argumentTable)
+
+    info:Callback(ply, unpack(argumentVarArgs))
     hook.Run("OnCommandRan", ply, command, arguments)
     return true, arguments
 end
