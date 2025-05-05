@@ -106,6 +106,23 @@ function GM:CalcView(ply, pos, angles, fov)
     end
 end
 
+local LOWERED_ANGLES = Angle(10, 10, 0)
+local LOWERED_LERP = {angles = LOWERED_ANGLES}
+function GM:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
+    local ply = ow.localClient
+    if ( !IsValid(ply) ) then return end
+
+    if ( IsValid(weapon) and !ply:IsWeaponRaised() ) then
+        LOWERED_LERP.angles = LerpAngle(FrameTime(), LOWERED_LERP.angles, LOWERED_ANGLES)
+    else
+        LOWERED_LERP.angles = LerpAngle(FrameTime(), LOWERED_LERP.angles, angle_zero)
+    end
+
+    ang = ang + LOWERED_LERP.angles
+
+    return self.BaseClass:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
+end
+
 local vignette = ow.util:GetMaterial("overwatch/overlay_vignette.png", "noclamp smooth")
 local vignetteColor = Color(0, 0, 0, 255)
 function GM:HUDPaintBackground()
