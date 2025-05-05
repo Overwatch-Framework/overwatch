@@ -200,7 +200,7 @@ function PANEL:Init()
     self:SetTextColorProperty(color_white)
     self:SetContentAlignment(5)
     self:SetTall(ScreenScale(12))
-    self:SetTextInset(ScreenScale(2), 0)
+    self:SetTextInset(0, 0)
 
     self:SetWide(ScreenScale(64))
 
