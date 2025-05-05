@@ -117,7 +117,7 @@ function GM:KeyPress(ply, key)
 end
 
 function GM:KeyRelease(ply, key)
-    if ( SERVER and key == KEY_R ) then
+    if ( SERVER and key == IN_RELOAD ) then
         timer.Remove("ow.wepRaise." .. ply:SteamID64())
     end
 end

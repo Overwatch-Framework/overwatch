@@ -31,6 +31,9 @@ function MODULE:Think()
                         ow.stamina:Set(ply, math.min(st.current + regen, st.max))
                     end
                 end
+            else
+                -- Initialize stamina if it doesn't exist
+                ow.stamina:Initialize(ply)
             end
         end
     end
@@ -43,10 +46,4 @@ function MODULE:OnPlayerHitGround(ply, inWater, onFloater, speed)
     if ( st and st.current > 0 ) then
         ow.stamina:Consume(ply, speed / 64)
     end
-end
-
-function MODULE:PlayerLoadout(ply)
-    if ( !ow.config:Get("stamina", true) ) then return end
-
-    ow.stamina:Initialize(ply)
 end

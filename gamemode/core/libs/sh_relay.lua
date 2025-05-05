@@ -82,10 +82,7 @@ if ( CLIENT ) then
     net.Receive("ow.relay.user", function()
         local key = net.ReadString()
         local value = sfs.decode(net.ReadString())
-        if ( err ) then
-            ow.util:Print("Failed to decode value for relay: ", key, " - ", err)
-            return
-        end
+        if ( value == nil ) then return end
 
         local ply = LocalPlayer()
 
