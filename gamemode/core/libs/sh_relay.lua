@@ -29,7 +29,7 @@ local function sendPacked(msg, key, value, recipient)
         net.WriteString(key)
         net.WriteString(encoded)
     if ( SERVER ) then
-        if ( recipient ) then
+        if ( IsValid(recipient) ) then
             net.Send(recipient)
         else
             net.Broadcast()
@@ -38,8 +38,9 @@ local function sendPacked(msg, key, value, recipient)
 end
 
 function ow.relay:SetRelay(key, value, recipient)
+    self.shared[key] = value
+
     if ( SERVER ) then
-        self.shared[key] = value
         sendPacked("ow.relay.shared", key, value, recipient)
     end
 end

@@ -1,9 +1,5 @@
 local MODULE = MODULE
 
-function MODULE:PlayerInitialSpawn(ply)
-    ow.stamina:Initialize(ply)
-end
-
 local nextStamina = 0
 function MODULE:Think()
     if ( !ow.config:Get("stamina", true) ) then return end
@@ -49,7 +45,7 @@ function MODULE:OnPlayerHitGround(ply, inWater, onFloater, speed)
     end
 end
 
-function MODULE:PlayerDeath(ply)
+function MODULE:PlayerLoadout(ply)
     if ( !ow.config:Get("stamina", true) ) then return end
 
     ow.stamina:Initialize(ply)
