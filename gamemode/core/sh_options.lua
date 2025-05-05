@@ -142,3 +142,24 @@ ow.option:Register("performance.animations", {
     Default = true,
     bNoNetworking = true
 })
+
+ow.option:Register("chat.size.font", {
+    Name = "options.chat.size.font",
+    Description = "options.chat.size.font.help",
+    Category = "category.chat",
+    Type = ow.type.number,
+    Default = 1,
+    bNoNetworking = true,
+    Min = 0,
+    Max = 2,
+    Decimals = 2,
+    OnChange = function(self, value)
+        hook.Run("LoadFonts")
+
+        for _, v in ipairs(ow.chat.messages) do
+            if ( !IsValid(v) ) then continue end
+
+            v:SizeToContents()
+        end
+    end
+})

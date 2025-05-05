@@ -14,7 +14,7 @@ function chat.AddText(...)
 
     local args = {...}
     local currentColor = color_white
-    local font = "ow.fonts.small"
+    local font = "ow.fonts.chat"
     local maxWidth = ow.gui.chatbox:GetWide() - 20
 
     local markupStr = ""
@@ -43,6 +43,11 @@ function chat.AddText(...)
 
     panel.alpha = 1
     panel.created = CurTime()
+
+    function panel:SizeToContents()
+        rich = markup.Parse("<font=" .. font .. ">" .. markupStr .. "</font>", maxWidth)
+        self:SetTall(rich:GetHeight())
+    end
 
     function panel:Paint(w, h)
         surface.SetAlphaMultiplier(self.alpha)

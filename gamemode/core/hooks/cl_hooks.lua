@@ -487,6 +487,13 @@ function GM:LoadFonts()
         antialias = true
     })
 
+    surface.CreateFont("ow.fonts.chat", {
+        font = "GorDIN Regular",
+        size = ScreenScale(8) * ow.option:Get("chat.size.font", 1),
+        weight = 500,
+        antialias = true
+    })
+
     hook.Run("PostLoadFonts")
 end
 
