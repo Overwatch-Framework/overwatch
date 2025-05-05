@@ -314,7 +314,7 @@ function MODULE:TranslateActivity(ply, act)
     if ( owAnimations ) then
         local animTable = owAnimations[act]
         if ( animTable ) then
-            local preferred = animTable[2] -- We dont have wep raising yet so we use the second one
+            local preferred = animTable[ply:IsWeaponRaised() and 2 or 1]
             newact = preferred
         end
     end
