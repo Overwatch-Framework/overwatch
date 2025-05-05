@@ -146,6 +146,16 @@ if ( SERVER ) then
     end
 end
 
+ow.alwaysRaised = ow.alwaysRaised or {}
+ow.alwaysRaised["gmod_tool"] = true
+ow.alwaysRaised["gmod_camera"] = true
+ow.alwaysRaised["weapon_physgun"] = true
+
 function PLAYER:IsWeaponRaised()
+    if ( ow.config:Get("wepraise.alwaysraised", false) ) then return true end
+
+    local weapon = self:GetActiveWeapon()
+    if ( IsValid(weapon) and ow.alwaysRaised[weapon:GetClass()] ) then return true end
+
     return self:GetRelay("bWeaponRaised", false)
 end

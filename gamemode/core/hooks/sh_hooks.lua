@@ -101,7 +101,7 @@ end
 
 local KEY_SHOOT = IN_ATTACK + IN_ATTACK2
 function GM:StartCommand(ply, cmd)
-    if ( !ply:GetRelay("bCanShoot", true) ) then
+    if ( !ply:IsWeaponRaised() ) then
         cmd:RemoveKey(KEY_SHOOT)
     end
 end
@@ -119,5 +119,19 @@ end
 function GM:KeyRelease(ply, key)
     if ( SERVER and key == KEY_R ) then
         timer.Remove("ow.wepRaise." .. ply:SteamID64())
+    end
+end
+
+function GM:PlayerSwitchWeapon(ply, hOldWeapon, hNewWeapon)
+    if ( SERVER ) then
+        timer.Simple(0.1, function()
+            if ( IsValid(ply) and IsValid(hNewWeapon) ) then
+                if ( hNewWeapon.bAlwaysRaised ) then
+                    ply:SetWeaponRaised(true)
+                else
+                    ply:SetWeaponRaised(false)
+                end
+            end
+        end)
     end
 end

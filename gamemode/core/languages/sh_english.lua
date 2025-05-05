@@ -126,5 +126,8 @@ localization["tab.settings"] = "Settings"
 
 localization["config.wepraise.time"] = "Weapon Raise Time"
 localization["config.wepraise.time.help"] = "The time it takes to raise a weapon."
+localization["config.wepraise.alwaysraised"] = "Always Raised"
+localization["config.wepraise.alwaysraised.help"] = "Whether the weapon is always raised."
+localization["config.wepraise"] = "Weapon Raise"
 
 ow.localization:Register("en", localization)

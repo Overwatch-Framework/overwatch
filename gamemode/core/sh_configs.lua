@@ -310,10 +310,18 @@ ow.config:Register("hands.range", {
 ow.config:Register("wepraise.time", {
     Name = "config.wepraise.time",
     Description = "config.wepraise.time.help",
-    Category = "config.wepraise",
     Type = ow.type.number,
+    SubCategory = "config.wepraise",
     Default = 1,
     Min = 0,
     Max = 5,
     Decimals = 1
+})
+
+ow.config:Register("wepraise.alwaysraised", {
+    Name = "config.wepraise.alwaysraised",
+    Description = "config.wepraise.alwaysraised.help",
+    SubCategory = "config.wepraise",
+    Type = ow.type.bool,
+    Default = false
 })
