@@ -1,5 +1,5 @@
 function MODULE:HandlePlayerJumping(ply, velocity, plyTable)
-    if ( !plyTable ) then
+    if ( !istable(plyTable) ) then
         plyTable = ply:GetTable()
     end
 
@@ -56,7 +56,7 @@ function MODULE:HandlePlayerDucking(ply, velocity, plyTable)
 end
 
 function MODULE:HandlePlayerNoClipping(ply, velocity, plyTable)
-    if ( !plyTable ) then
+    if ( !istable(plyTable) ) then
         plyTable = ply:GetTable()
     end
 
@@ -85,7 +85,7 @@ function MODULE:HandlePlayerNoClipping(ply, velocity, plyTable)
 end
 
 function MODULE:HandlePlayerVaulting(ply, velocity, plyTable)
-    if ( !plyTable ) then
+    if ( !istable(plyTable) ) then
         plyTable = ply:GetTable()
     end
 
@@ -98,7 +98,7 @@ function MODULE:HandlePlayerVaulting(ply, velocity, plyTable)
 end
 
 function MODULE:HandlePlayerSwimming(ply, velocity, plyTable)
-    if ( !plyTable ) then
+    if ( !istable(plyTable) ) then
         plyTable = ply:GetTable()
     end
 
@@ -121,7 +121,7 @@ function MODULE:HandlePlayerLanding(ply, velocity, WasOnGround)
 end
 
 function MODULE:HandlePlayerDriving(ply, plyTable)
-    if ( !plyTable ) then
+    if ( !istable(plyTable) ) then
         plyTable = ply:GetTable()
     end
 
@@ -215,7 +215,7 @@ function MODULE:UpdateAnimation(ply, velocity, maxseqgroundspeed)
 end
 
 function MODULE:GrabEarAnimation(ply, plyTable)
-    if ( !plyTable ) then
+    if ( !istable(plyTable) ) then
         plyTable = ply:GetTable()
     end
 
@@ -323,6 +323,7 @@ function MODULE:TranslateActivity(ply, act)
 end
 
 function MODULE:DoAnimationEvent(ply, event, data)
+    local plyTable = ply:GetTable()
     if ( event == PLAYERANIMEVENT_ATTACK_PRIMARY ) then
         if ( ply:IsFlagSet(FL_ANIMDUCKING) ) then
             ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
@@ -342,9 +343,9 @@ function MODULE:DoAnimationEvent(ply, event, data)
 
         return ACT_INVALID
     elseif ( event == PLAYERANIMEVENT_JUMP ) then
-        ply.m_bJumping = true
-        ply.m_bFirstJumpFrame = true
-        ply.m_flJumpStartTime = CurTime()
+        plyTable.m_bJumping = true
+        plyTable.m_bFirstJumpFrame = true
+        plyTable.m_flJumpStartTime = CurTime()
 
         ply:AnimRestartMainSequence()
 
