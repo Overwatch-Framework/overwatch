@@ -1,5 +1,5 @@
 --- Relay
--- A secure value distribution system using ow.crypto for packing and syncing values.
+-- A secure value distribution system using SFS for packing and syncing values.
 -- Provides shared (global), user (per-player), and entity (per-entity) scopes.
 -- @module ow.relay
 
