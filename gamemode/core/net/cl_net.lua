@@ -154,7 +154,8 @@ end)
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.config.sync", function(len)
-    local compressedTable = util.JSONToTable(util.Decompress(net.ReadData(len / 8)))
+    local compressedTable = sfs.decode(net.ReadString())
+    if ( !istable(compressedTable) ) then return end
 
     ow.config.stored = compressedTable
 end)

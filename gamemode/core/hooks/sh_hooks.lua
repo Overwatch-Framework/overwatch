@@ -105,3 +105,19 @@ function GM:StartCommand(ply, cmd)
         cmd:RemoveKey(KEY_SHOOT)
     end
 end
+
+function GM:KeyPress(ply, key)
+    if ( SERVER and key == IN_RELOAD ) then
+        timer.Create("ow.wepRaise." .. ply:SteamID64(), ow.config:Get("wepraise.time", 1), 1, function()
+            if ( IsValid(ply) ) then
+                ply:ToggleWeaponRaised()
+            end
+        end)
+    end
+end
+
+function GM:KeyRelease(ply, key)
+    if ( SERVER and key == KEY_R ) then
+        timer.Remove("ow.wepRaise." .. ply:SteamID64())
+    end
+end

@@ -81,7 +81,8 @@ if ( CLIENT ) then
         local key = net.ReadString()
         local value, err = sfs.decode(net.ReadString())
         if ( err ) then
-            ow.util:Print("Failed to decode value for relay:", key, err)
+            print(debug.traceback())
+            ow.util:Print("Failed to decode value for relay: ", key, err)
             return
         end
 

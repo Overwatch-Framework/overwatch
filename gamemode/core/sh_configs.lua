@@ -306,3 +306,14 @@ ow.config:Register("hands.range", {
     Max = 256,
     Decimals = 0
 })
+
+ow.config:Register("wepraise.time", {
+    Name = "config.wepraise.time",
+    Description = "config.wepraise.time.help",
+    Category = "config.wepraise",
+    Type = ow.type.number,
+    Default = 1,
+    Min = 0,
+    Max = 5,
+    Decimals = 1
+})

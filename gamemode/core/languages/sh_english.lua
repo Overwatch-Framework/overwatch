@@ -124,4 +124,7 @@ localization["tab.mainmenu"] = "Main Menu"
 localization["tab.scoreboard"] = "Scoreboard"
 localization["tab.settings"] = "Settings"
 
+localization["config.wepraise.time"] = "Weapon Raise Time"
+localization["config.wepraise.time.help"] = "The time it takes to raise a weapon."
+
 ow.localization:Register("en", localization)
