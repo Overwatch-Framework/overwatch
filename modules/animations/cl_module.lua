@@ -1,9 +1,9 @@
 net.Receive("ow.animations.update", function(len)
-    local plyIndex = net.ReadUInt(16)
-    local ply = Entity(plyIndex)
-    local data = net.ReadTable()
+    local ply = net.ReadPlayer()
     if ( !IsValid(ply) ) then return end
-    if ( !data ) then return end
+
+    local data = net.ReadTable()
+    if ( !istable(data) ) then return end
 
     ply.owAnimations = data
 end)

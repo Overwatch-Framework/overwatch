@@ -11,7 +11,7 @@ function MODULE:PostEntitySetModel(ent, model)
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
         net.Start("ow.animations.update")
-            net.WriteUInt(ply:EntIndex(), 16)
+            net.WritePlayer(ply)
             net.WriteTable({})
         net.Broadcast()
     end
@@ -32,7 +32,7 @@ function MODULE:PostEntitySetModel(ent, model)
     end
 
     net.Start("ow.animations.update")
-        net.WriteUInt(ply:EntIndex(), 16)
+        net.WritePlayer(ply)
         net.WriteTable(ply.owAnimations)
     net.Broadcast()
 end
@@ -46,7 +46,7 @@ function MODULE:PlayerSpawn(ply)
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
         net.Start("ow.animations.update")
-            net.WriteUInt(ply:EntIndex(), 16)
+            net.WritePlayer(ply)
             net.WriteTable({})
         net.Broadcast()
     end
@@ -67,7 +67,7 @@ function MODULE:PlayerSpawn(ply)
     end
 
     net.Start("ow.animations.update")
-        net.WriteUInt(ply:EntIndex(), 16)
+        net.WritePlayer(ply)
         net.WriteTable(ply.owAnimations)
     net.Broadcast()
 end
@@ -82,7 +82,7 @@ function MODULE:PlayerSwitchWeapon(ply, oldWeapon, newWeapon)
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
         net.Start("ow.animations.update")
-            net.WriteUInt(ply:EntIndex(), 16)
+            net.WritePlayer(ply)
             net.WriteTable({})
         net.Broadcast()
     end
@@ -100,7 +100,7 @@ function MODULE:PlayerSwitchWeapon(ply, oldWeapon, newWeapon)
     end
 
     net.Start("ow.animations.update")
-        net.WriteUInt(ply:EntIndex(), 16)
+        net.WritePlayer(ply)
         net.WriteTable(ply.owAnimations)
     net.Broadcast()
 end
