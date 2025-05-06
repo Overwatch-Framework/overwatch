@@ -1,78 +1,107 @@
---- ow.net
--- Compact, efficient NetStream-like networking using sfs serialization.
+-- ow.net
+-- Streaming data layer using sfs. NetStream-style API.
+-- @realm shared
 
 ow.net = ow.net or {}
-ow.net.handlers = {}
-
-local net = net
-local sfs = sfs
+ow.net.stored = ow.net.stored or {}
 
 if ( SERVER ) then
     util.AddNetworkString("ow.net.msg")
 end
 
---- Registers a network message handler.
--- @string id Identifier for the message.
--- @func callback Function called with (client, payload) on server or (nil, payload) on client.
-function ow.net:Receive(id, callback)
-    self.handlers[id] = callback
+--- Hooks a network message.
+-- @string name Unique identifier.
+-- @func callback Callback with player, unpacked args.
+function ow.net:Hook(name, callback)
+    self.stored[name] = callback
 end
 
---- Internal receive hook.
-net.Receive("ow.net.msg", function(len, ply)
-    local idLen = net.ReadUInt(8)
-    local id = net.ReadString(idLen)
-    local payloadLen = net.ReadUInt(16)
-    local payloadData = net.ReadData(payloadLen)
+--- Starts a stream.
+-- @param target Player, table, vector or nil (nil = broadcast or to server).
+-- @string name Hook name.
+-- @vararg Arguments to send.
+function ow.net:Start(target, name, ...)
+    local args = {...}
+    local encoded = sfs.encode(args)
+    if ( !encoded or #encoded < 1 ) then return end
 
-    local payload, err = sfs.decode(payloadData)
-    if ( !payload ) then
-        ErrorNoHalt("[ow.net] Failed to decode message: " .. tostring(err) .. "\n")
+    if ( CLIENT and isstring(target) and name == nil ) then
+        ErrorNoHaltWithStack("[ow.net] WARNING: You likely forgot to include a nil target. Use :Start(nil, \"hook\", ...)\n")
+    end
+
+    if ( CLIENT ) then
+        net.Start("ow.net.msg")
+            net.WriteString(name)
+            net.WriteUInt(#encoded, 16)
+            net.WriteData(encoded, #encoded)
+        net.SendToServer()
+
         return
     end
 
-    local handler = ow.net.handlers[id]
-    if ( handler ) then
-        handler(ply or nil, payload)
-    end
-end)
+    local recipients = {}
+    local sendPVS = false
 
---- Sends a network message.
--- @string id Identifier string.
--- @table data Table to send.
--- @param[opt=nil] target Player, table of players, or nil to broadcast.
-function ow.net:Send(id, data, target)
-    local encoded = sfs.encode(data)
-    if ( !encoded ) then return end
+    if ( type(target) == "Vector" ) then
+        sendPVS = true
+    elseif ( istable(target) ) then
+        for _, v in ipairs(target) do
+            if ( IsValid(v) and v:IsPlayer() ) then
+                recipients[#recipients + 1] = v
+            end
+        end
+    elseif ( IsValid(target) and target:IsPlayer() ) then
+        recipients[1] = target
+    else
+        recipients = player.GetAll()
+    end
 
     net.Start("ow.net.msg")
-    net.WriteUInt(#id, 8)
-    net.WriteString(id)
-    net.WriteUInt(#encoded, 16)
-    net.WriteData(encoded, #encoded)
+        net.WriteString(name)
+        net.WriteUInt(#encoded, 16)
+        net.WriteData(encoded, #encoded)
 
-    if ( SERVER ) then
-        if ( istable(target) or IsValid(target) ) then
-            net.Send(target)
-        else
-            net.Broadcast()
-        end
+    if ( sendPVS ) then
+        net.SendPVS(target)
     else
-        net.SendToServer()
+        net.Send(recipients)
     end
 end
 
-/*
---- Example usage:
--- Server
-ow.net:Receive("Ping", function(ply, payload)
-	print(ply:Nick() .. " pinged with:", payload.time)
-	ow.net:Send("Pong", { ack = true }, ply)
+net.Receive("ow.net.msg", function(_, ply)
+    local name = net.ReadString()
+    local length = net.ReadUInt(16)
+    local raw = net.ReadData(length)
+
+    local ok, decoded = pcall(sfs.decode, raw)
+    if ( !ok or type(decoded) != "table" ) then
+        ErrorNoHalt("[ow.net] Decode failed for '" .. name .. "'\n")
+        return
+    end
+
+    local callback = ow.net.stored[name]
+    if ( !callback ) then
+        ErrorNoHalt("[ow.net] No handler for '" .. name .. "'\n")
+        return
+    end
+
+    if ( SERVER ) then
+        callback(ply, unpack(decoded))
+    else
+        callback(unpack(decoded))
+    end
 end)
 
--- Client
-ow.net:Send("Ping", { time = CurTime() })
-ow.net:Receive("Pong", function(_, payload)
-	print("Pong received:", payload.ack)
-end)
+/*
+--- Example usage:
+if ( SERVER ) then
+    ow.net:Hook("test", function(client, val, val2)
+        print(client, "sent:", val, val2)
+    end)
+end
+
+if ( CLIENT ) then
+    ow.net:Start(nil, "test", {89})
+    ow.net:Start(nil, "test", "hello", "world")
+end
 */
