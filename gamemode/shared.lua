@@ -66,6 +66,7 @@ ow.util:LoadFile("core/sh_colors.lua")
 ow.util:LoadFile("core/sh_commands.lua")
 ow.util:LoadFile("core/sh_configs.lua")
 ow.util:LoadFile("core/sh_options.lua")
+ow.util:LoadFile("core/cl_debug.lua")
 
 concommand.Remove("gm_save")
 concommand.Add("gm_save", function(client, command, arguments)

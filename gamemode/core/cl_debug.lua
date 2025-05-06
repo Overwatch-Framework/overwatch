@@ -17,10 +17,13 @@ concommand.Add("ow_debug_pos", function(ply, cmd, args)
         end
     end
 
-    return value
+    print("Position: " .. tostring(value))
+    SetClipboardText(Format("Vector(%s, %s, %s)", value.x, value.y, value.z))
 end, function(cmd, argStr, args)
     return {cmd .. "[trace|eye|entity]"}
 end)
+
+print("Debug Position: " .. tostring(LocalPlayer():GetPos()))
 
 concommand.Add("ow_debug_ang", function(ply, cmd, args)
     if ( !ply:IsAdmin() ) then return end
@@ -41,7 +44,8 @@ concommand.Add("ow_debug_ang", function(ply, cmd, args)
         end
     end
 
-    return value
+    print("Angles: " .. tostring(value))
+    SetClipboardText(Format("Angle(%s, %s, %s)", value.p, value.y, value.r))
 end, function(cmd, argStr, args)
     return {cmd .. "[trace|eye|entity]"}
 end)

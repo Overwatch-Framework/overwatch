@@ -419,6 +419,14 @@ function SWEP:DoPunch()
     if ( SERVER and trace.Hit ) then
         local entity = trace.Entity
         if ( IsValid(entity) ) then
+            local dmgInfo = DamageInfo()
+            dmgInfo:SetAttacker(owner)
+            dmgInfo:SetInflictor(self)
+            dmgInfo:SetDamage(5)
+            dmgInfo:SetDamageType(DMG_CLUB)
+            dmgInfo:SetDamagePosition(trace.HitPos)
+            dmgInfo:SetDamageForce(owner:GetAimVector() * 1000)
+
             owner:EmitSound(Sound("Flesh.ImpactHard"))
 
             if ( entity:IsPlayer() ) then
@@ -436,13 +444,13 @@ function SWEP:DoPunch()
                     if ( math.random(1, 10) == 1 ) then
                         entity:SetRelay("state", STATE_KNOCKOUT)
                     else
-                        entity:TakeDamage(5, owner, self)
+                        entity:DispatchTraceAttack(dmgInfo, trace, trace.HitNormal)
                     end
                 else
-                    entity:TakeDamage(5, owner, self)
+                    entity:DispatchTraceAttack(dmgInfo, trace, trace.HitNormal)
                 end
             else
-                entity:TakeDamage(5, owner, self)
+                entity:DispatchTraceAttack(dmgInfo, trace, trace.HitNormal)
 
                 if ( math.random(1, 2) == 1 ) then
                     entity:EmitSound("physics/plastic/plastic_box_impact_hard" .. math.random(1, 4) .. ".wav", 80)
