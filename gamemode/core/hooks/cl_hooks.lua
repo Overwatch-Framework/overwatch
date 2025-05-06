@@ -47,10 +47,6 @@ function GM:OnCloseCaptionEmit()
     return true
 end
 
-function GM:PostSchemaLoad()
-    -- TODO: Empty hook, MAYBE implement somthing in the future
-end
-
 local eyeTraceHullMin = Vector(-2, -2, -2)
 local eyeTraceHullMax = Vector(2, 2, 2)
 function GM:CalcView(client, pos, angles, fov)
