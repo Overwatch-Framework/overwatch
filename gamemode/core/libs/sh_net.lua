@@ -32,7 +32,6 @@ function ow.net:Start(target, name, ...)
     if ( CLIENT ) then
         net.Start("ow.net.msg")
             net.WriteString(name)
-            net.WriteUInt(#encoded, 16)
             net.WriteData(encoded, #encoded)
         net.SendToServer()
 
@@ -53,12 +52,11 @@ function ow.net:Start(target, name, ...)
     elseif ( IsValid(target) and target:IsPlayer() ) then
         recipients[1] = target
     else
-        recipients = player.GetAll()
+        recipients = select(2, player.Iterator())
     end
 
     net.Start("ow.net.msg")
         net.WriteString(name)
-        net.WriteUInt(#encoded, 16)
         net.WriteData(encoded, #encoded)
 
     if ( sendPVS ) then
@@ -70,10 +68,9 @@ function ow.net:Start(target, name, ...)
     ow.util:Print("[ow.net] Sent '" .. name .. "' to " .. (SERVER and #recipients .. " players" or "server"))
 end
 
-net.Receive("ow.net.msg", function(_, ply)
+net.Receive("ow.net.msg", function(len, ply)
     local name = net.ReadString()
-    local length = net.ReadUInt(16)
-    local raw = net.ReadData(length)
+    local raw = net.ReadData(len / 8)
 
     local ok, decoded = pcall(sfs.decode, raw)
     if ( !ok or type(decoded) != "table" ) then

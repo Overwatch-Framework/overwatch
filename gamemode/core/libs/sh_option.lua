@@ -30,7 +30,7 @@ if ( CLIENT ) then
             end
         end
 
-        ow.net:Start(nil, "ow.option.sync", self.stored)
+        ow.net:Start(nil, "option.sync", self.stored)
 
         hook.Run("PostOptionsLoad", self.stored)
     end
@@ -122,7 +122,7 @@ if ( CLIENT ) then
         end
 
         ow.data:Set("options", {}, true, false)
-        ow.net:Start(nil, "ow.option.sync", {})
+        ow.net:Start(nil, "option.sync", {})
     end
 end
 
