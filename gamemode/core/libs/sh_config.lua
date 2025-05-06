@@ -151,11 +151,11 @@ function ow.config:Register(key, data)
         end
     end
 
-    if ( data.Category == nil ) then
+    if ( !isstring(data.Category) ) then
         data.Category = "misc"
     end
 
-    if ( data.SubCategory == nil ) then
+    if ( isstring(data.SubCategory) ) then
         data.SubCategory = "other"
     end
 
