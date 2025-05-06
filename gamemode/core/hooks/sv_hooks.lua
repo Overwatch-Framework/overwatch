@@ -232,7 +232,34 @@ function GM:PlayerHurt(ply, attacker, healthRemaining, damageTaken)
     end
 end
 
-function GM:PlayerDeath(ply, inflictor, attacker) -- Test
+local painSounds = {
+    Sound("vo/npc/male01/pain01.wav"),
+    Sound("vo/npc/male01/pain02.wav"),
+    Sound("vo/npc/male01/pain03.wav"),
+    Sound("vo/npc/male01/pain04.wav"),
+    Sound("vo/npc/male01/pain05.wav"),
+    Sound("vo/npc/male01/pain06.wav")
+}
+
+local drownSounds = {
+    Sound("player/pl_drown1.wav"),
+    Sound("player/pl_drown2.wav"),
+    Sound("player/pl_drown3.wav"),
+}
+
+function GM:GetPlayerPainSound(ply, attacker, healthRemaining, damageTaken)
+    if ( ply:Health() <= 0 ) then return end
+
+    if ( ply:WaterLevel() >= 3 ) then
+        return drownSounds[math.random(#drownSounds)]
+    end
+
+    if ( damageTaken > 0 ) then
+        return painSounds[math.random(#painSounds)]
+    end
+end
+
+function GM:PlayerDeath(ply, inflictor, attacker)
     local deathSound = hook.Run("GetPlayerDeathSound", ply, inflictor, attacker)
     if ( deathSound and deathSound != "" and !ply:InObserver() ) then
         if ( !file.Exists("sound/" .. deathSound, "GAME") ) then
@@ -242,6 +269,16 @@ function GM:PlayerDeath(ply, inflictor, attacker) -- Test
 
         ply:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
     end
+end
+
+local deathSounds = {
+    Sound("vo/npc/male01/pain07.wav"),
+    Sound("vo/npc/male01/pain08.wav"),
+    Sound("vo/npc/male01/pain09.wav")
+}
+
+function GM:GetPlayerDeathSound(ply, inflictor, attacker)
+    return deathSounds[math.random(#deathSounds)]
 end
 
 function GM:PostPlayerDropItem(ply, item, entity)

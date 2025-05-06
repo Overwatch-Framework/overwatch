@@ -24,7 +24,7 @@ SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = ""
 SWEP.Primary.Damage = 5
-SWEP.Primary.Delay = 0.25
+SWEP.Primary.Delay = 0.5
 
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = 0
@@ -34,10 +34,11 @@ SWEP.Secondary.Delay = 0.5
 
 SWEP.HoldType = "normal"
 SWEP.FireWhenLowered = true
+SWEP.LoweredAngles = Angle(0, 0, 0)
 
 function SWEP:Precache()
-    util.PrecacheModel(SWEP.ViewModel)
-    util.PrecacheModel(SWEP.WorldModel)
+    util.PrecacheModel(self.ViewModel)
+    util.PrecacheModel(self.WorldModel)
 
     util.PrecacheSound("npc/vort/claw_swing1.wav")
     util.PrecacheSound("npc/vort/claw_swing2.wav")
@@ -126,9 +127,9 @@ local function VelocityRemove(entity, normalize)
     end
 end
 
-local function VelocityThrow(entity, ply, power)
+local function VelocityThrow(entity, owner, power)
     local physicsObject = entity:GetPhysicsObject()
-    local vel = ply:GetAimVector()
+    local vel = owner:GetAimVector()
     vel = vel * power
 
     SetSubPhysMotionEnabled(entity, false)
@@ -249,44 +250,52 @@ end
 function SWEP:PrimaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
 
+    local owner = self:GetOwner()
+    if ( !IsValid(owner) ) then return end
+
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
     if ( IsValid(self.owHoldingEntity) ) then
         if ( SERVER ) then
-            self:GetOwner():EmitSound("npc/vort/claw_swing" .. math.random(1, 2) .. ".wav", 60)
+            owner:EmitSound("npc/vort/claw_swing" .. math.random(1, 2) .. ".wav", 60)
         end
 
-        self:GetOwner():SetAnimation(PLAYER_ATTACK1)
-        self:GetOwner():ViewPunch(Angle(2, 5, 0.125))
+        owner:SetAnimation(PLAYER_ATTACK1)
+        owner:ViewPunch(Angle(2, 5, 0.125))
 
         self:DoPickup(true)
+    elseif ( owner:IsWeaponRaised() ) then
+        self:DoPunch()
     end
 end
 
 function SWEP:SecondaryAttack()
     if ( !IsFirstTimePredicted() ) then return end
 
+    local owner = self:GetOwner()
+    if ( !IsValid(owner) ) then return end
+
     local data = {}
-    data.start = self:GetOwner():GetShootPos()
-    data.endpos = data.start + self:GetOwner():GetAimVector() * ow.config:Get("hands.range", 96)
+    data.start = owner:GetShootPos()
+    data.endpos = data.start + owner:GetAimVector() * ow.config:Get("hands.range", 96)
     data.mask = MASK_SHOT
-    data.filter = {self, self:GetOwner()}
+    data.filter = {self, owner}
     local traceData = util.TraceLine(data)
 
     local entity = traceData.Entity
     if ( SERVER and IsValid(entity) ) then
         if ( entity:IsDoor() ) then
-            if ( entity:GetPos():DistToSqr(self:GetOwner():GetPos()) > 6000 ) then
+            if ( entity:GetPos():DistToSqr(owner:GetPos()) > 6000 ) then
                 return
             end
 
-            if ( hook.Run("PlayerCanKnock", self:GetOwner(), entity) == false ) then
+            if ( hook.Run("PlayerCanKnock", owner, entity) == false ) then
                 return
             end
 
-            self:GetOwner():ViewPunch(Angle(-1.3, 1.8, 0))
-            self:GetOwner():EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(2, 3) .. ".wav", 60)
-            self:GetOwner():SetAnimation(PLAYER_ATTACK1)
+            owner:ViewPunch(Angle(-1.3, 1.8, 0))
+            owner:EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(2, 3) .. ".wav", 60)
+            owner:SetAnimation(PLAYER_ATTACK1)
 
             self:SetNextSecondaryFire(CurTime() + 0.4)
             self:SetNextPrimaryFire(CurTime() + 1)
@@ -294,10 +303,10 @@ function SWEP:SecondaryAttack()
             self:DoPickup()
         elseif entity:IsPlayer() and entity:Alive() then
             if ( ( self.owNextPush or 0 ) > CurTime() ) then return end
-            if ( entity:GetPos():DistToSqr(self:GetOwner():GetPos()) > 2000 ) then return end
+            if ( entity:GetPos():DistToSqr(owner:GetPos()) > 2000 ) then return end
 
             timer.Simple (0.25, function()
-                local vDirection = self:GetOwner():GetAimVector() * ( 350 + ( 3 * 3 ) )
+                local vDirection = owner:GetAimVector() * ( 350 + ( 3 * 3 ) )
                 vDirection.z = 0
                 entity:SetVelocity(vDirection)
 
@@ -331,9 +340,9 @@ end
 
 function SWEP:AllowPickup(target)
     local physicsObject = target:GetPhysicsObject()
-    local ply = self:GetOwner()
+    local owner = self:GetOwner()
 
-    return ( IsValid(physicsObject) and IsValid(ply) and !physicsObject:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP) and physicsObject:GetMass() < ow.config:Get("hands.max.carry", 160) and !self:IsEntityStoodOn(target) and target.CanPickup != false )
+    return ( IsValid(physicsObject) and IsValid(owner) and !physicsObject:HasGameFlag(FVPHYSICS_NO_PLAYER_PICKUP) and physicsObject:GetMass() < ow.config:Get("hands.max.carry", 160) and !self:IsEntityStoodOn(target) and target.CanPickup != false )
 end
 
 function SWEP:DoPickup(throw)
@@ -346,8 +355,8 @@ function SWEP:DoPickup(throw)
         return
     end
 
-    local ply = self:GetOwner()
-    local traceData = ply:GetEyeTrace(MASK_SHOT)
+    local owner = self:GetOwner()
+    local traceData = owner:GetEyeTrace(MASK_SHOT)
     if ( IsValid(traceData.Entity) ) then
         local entity = traceData.Entity
         local physicsObject = traceData.Entity:GetPhysicsObject()
@@ -356,7 +365,7 @@ function SWEP:DoPickup(throw)
             return
         end
 
-        if ( SERVER and (ply:EyePos() - traceData.HitPos):Length() < self:GetRange(entity) and self:AllowPickup(entity) ) then
+        if ( SERVER and (owner:EyePos() - traceData.HitPos):Length() < self:GetRange(entity) and self:AllowPickup(entity) ) then
             self:Pickup()
             self:SendWeaponAnim(ACT_VM_HITCENTER)
 
@@ -369,16 +378,114 @@ function SWEP:DoPickup(throw)
     end
 end
 
+function SWEP:DoPunch()
+    local owner = self:GetOwner()
+    if ( !IsValid(owner) ) then return end
+
+    if ( ow.stamina ) then
+        local stamina = ow.stamina:Get(owner)
+        if ( stamina < 5 ) then
+            if ( CLIENT ) then
+                owner:ChatText("You are too tired to punch.")
+            end
+
+            return
+        end
+    end
+
+    owner:LagCompensation(true)
+
+    local data = {}
+    data.start = owner:GetShootPos()
+    data.endpos = data.start + owner:GetAimVector() * 96
+    data.filter = owner
+
+    local trace = util.TraceLine(data)
+    local canPunch = hook.Run("PrePlayerPunch", owner, trace)
+    if ( canPunch == false ) then
+        owner:LagCompensation(false)
+        return
+    end
+
+    owner:SetAnimation(PLAYER_ATTACK1)
+    self:EmitSound(Sound("WeaponFrag.Throw"))
+
+    local random = math.random(1, 2)
+    owner:ViewPunch(random == 1 and Angle(-1.3, -1.8, 0) or Angle(-1.3, 1.8, 0))
+
+    local vm = owner:GetViewModel()
+    vm:SendViewModelMatchingSequence(vm:LookupSequence(random == 1 and "fists_left" or "fists_right"))
+
+    if ( SERVER and trace.Hit ) then
+        local entity = trace.Entity
+        if ( IsValid(entity) ) then
+            owner:EmitSound(Sound("Flesh.ImpactHard"))
+
+            if ( entity:IsPlayer() ) then
+                if ( owner.bFistDamage and !entity.bFistDamage or !owner.bFistDamage ) then
+                    owner:LagCompensation(false)
+                    return
+                end
+
+                if ( entity:GetRelay("state") == STATE_KNOCKOUT ) then
+                    owner:LagCompensation(false)
+                    return
+                end
+
+                if ( entity:Health() <= 50 ) then
+                    if ( math.random(1, 10) == 1 ) then
+                        entity:SetRelay("state", STATE_KNOCKOUT)
+                    else
+                        entity:TakeDamage(5, owner, self)
+                    end
+                else
+                    entity:TakeDamage(5, owner, self)
+                end
+            else
+                entity:TakeDamage(5, owner, self)
+
+                if ( math.random(1, 2) == 1 ) then
+                    entity:EmitSound("physics/plastic/plastic_box_impact_hard" .. math.random(1, 4) .. ".wav", 80)
+                else
+                    entity:EmitSound("physics/wood/wood_crate_impact_hard" .. math.random(2, 3) .. ".wav", 80)
+                end
+
+                local physicsObject = entity:GetPhysicsObject()
+                if ( IsValid(physicsObject) and physicsObject:IsMoveable() and !physicsObject:HasGameFlag(FVPHYSICS_PLAYER_HELD) ) then
+                    physicsObject:ApplyForceOffset(owner:GetAimVector() * math.random(64, 256) * physicsObject:GetMass(), trace.HitPos)
+
+                    local mass = physicsObject:GetMass()
+                    random = math.random(0, mass / 10)
+                    if ( random > mass / 11 ) then
+                        owner:TakeDamage(5, owner, self)
+                        owner:ViewPunch(Angle(8, 0, 0))
+                    end
+                end
+            end
+
+            if ( ow.stamina ) then
+                ow.stamina:Consume(owner, 5)
+            end
+        elseif ( trace.HitWorld ) then
+            owner:EmitSound(Sound("Flesh.ImpactHard"))
+        end
+    end
+
+    hook.Run("PostPlayerPunch", owner, trace)
+
+    owner:LagCompensation(false)
+end
+
 local down = -vector_up
 function SWEP:AllowEntityDrop()
-    local ply = self:GetOwner()
+    local owner = self:GetOwner()
     local ent = self.owCarry
-    if ( !IsValid(ply) or !IsValid(ent) ) then return false end
+    if ( !IsValid(owner) or !IsValid(ent) ) then return false end
 
-    local ground = ply:GetGroundEntity()
+    local ground = owner:GetGroundEntity()
     if ( ground and ( ground:IsWorld() or IsValid(ground) ) ) then return true end
 
-    local diff = (ent:GetPos() - ply:GetShootPos()):GetNormalized()
+    local diff = (ent:GetPos() - owner:GetShootPos()):GetNormalized()
 
     return down:Dot(diff) <= 0.75
 end

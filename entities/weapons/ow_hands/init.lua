@@ -17,6 +17,20 @@ net.Receive("ow.hands.reset", function(_, ply)
     end
 end)
 
+function SWEP:SetWeaponRaised(bRaised)
+    if ( bRaised ) then
+        self:SetHoldType("fist")
+
+        local vm = self:GetOwner():GetViewModel()
+        vm:SendViewModelMatchingSequence(vm:LookupSequence("fists_draw"))
+    else
+        self:SetHoldType("normal")
+
+        local vm = self:GetOwner():GetViewModel()
+        vm:SendViewModelMatchingSequence(vm:LookupSequence("fists_holster"))
+    end
+end
+
 function SWEP:CalcLerpSpeed(eHoldingEntity)
     if ( eHoldingEntity:IsRagdoll() ) then
         return 4

@@ -1,9 +1,5 @@
 include("shared.lua")
 
-function SWEP:ShouldDrawViewModel()
-    return false
-end
-
 function SWEP:CheckYaw()
     local playerPitch = self:GetOwner():EyeAngles().p
     if ( playerPitch < -20 ) then
