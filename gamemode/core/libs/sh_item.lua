@@ -7,10 +7,6 @@ ow.item.meta = ow.item.meta or {}
 ow.item.stored = ow.item.stored or {}
 ow.item.instances = ow.item.instances or {}
 
-function ow.item:Register(itemData)
-    ow.util:PrintWarning("ow.item:Register is deprecated.")
-end
-
 function ow.item:LoadFolder(path)
     if ( !path or !isstring(path) ) then return end
 
