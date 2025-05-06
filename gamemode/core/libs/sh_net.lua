@@ -24,20 +24,7 @@ if ( SERVER ) then
     function ow.net:Start(target, name, ...)
         local args = {...}
         local encoded = sfs.encode(args)
-        if ( !encoded or #encoded < 1 ) then return end
-
-        if ( CLIENT and isstring(target) and name == nil ) then
-            ErrorNoHaltWithStack("[ow.net] WARNING: You likely forgot to include a nil target. Use :Start(nil, \"hook\", ...)\n")
-        end
-
-        if ( CLIENT ) then
-            net.Start("ow.net.msg")
-                net.WriteString(name)
-                net.WriteData(encoded, #encoded)
-            net.SendToServer()
-
-            return
-        end
+        if ( !isstring(encoded) or #encoded < 1 ) then return end
 
         local recipients = {}
         local sendPVS = false
@@ -72,7 +59,7 @@ else
     function ow.net:Start(name, ...)
         local args = {...}
         local encoded = sfs.encode(args)
-        if ( !encoded or #encoded < 1 ) then return end
+        if ( !isstring(encoded) or #encoded < 1 ) then return end
 
         net.Start("ow.net.msg")
             net.WriteString(name)
