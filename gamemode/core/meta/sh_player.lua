@@ -139,6 +139,11 @@ if ( SERVER ) then
         self:SetRelay("bWeaponRaised", bRaised)
         self:SetRelay("bCanShoot", bRaised)
 
+        local weapon = self:GetActiveWeapon()
+        if ( IsValid(weapon) and weapon:IsWeapon() and weapon.SetWeaponRaised ) then
+            weapon:SetWeaponRaised(bRaised)
+        end
+
         hook.Run("PlayerWeaponRaised", self, bRaised)
     end
 

@@ -113,8 +113,13 @@ function GM:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
     local ply = ow.localClient
     if ( !IsValid(ply) ) then return end
 
+    local targetAngles = LOWERED_ANGLES
+    if ( IsValid(weapon) and weapon:IsWeapon() and weapon.LoweredAngles ) then
+        targetAngles = weapon.LoweredAngles
+    end
+
     if ( IsValid(weapon) and !ply:IsWeaponRaised() ) then
-        LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, LOWERED_ANGLES)
+        LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, targetAngles)
     else
         LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, angle_zero)
     end
