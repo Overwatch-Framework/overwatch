@@ -12,7 +12,7 @@ net.Receive("ow.hands.reset", function(_, ply)
     local weapon = ply:GetActiveWeapon()
     if ( !IsValid(weapon) ) then return end
 
-    if ( weapon:GetClass() == "ow_hands_new" ) then
+    if ( weapon:GetClass() == "ow_hands" ) then
         weapon:Reset()
     end
 end)
