@@ -144,7 +144,12 @@ end)
 ow.net:Hook("config.sync", function(data)
     if ( !istable(data) ) then return end
 
-    ow.config.stored = data
+    for k, v in pairs(data) do
+        local stored = ow.config.stored[k]
+        if ( !istable(stored) ) then continue end
+
+        stored.Value = v
+    end
 end)
 
 ow.net:Hook("config.set", function(key, value)

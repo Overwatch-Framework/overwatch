@@ -116,9 +116,10 @@ end
 function ow.config:Synchronize(client)
     if ( !IsValid(client) ) then return false end
 
-    local tableToSend =  self.stored
+    local tableToSend =  self:GetSaveData()
     for k, v in pairs(tableToSend) do
-        if ( v.NoNetworking ) then
+        local storedData = self.stored[k]
+        if ( istable(storedData) and storedData.NoNetworking ) then
             tableToSend[k] = nil
         end
     end
