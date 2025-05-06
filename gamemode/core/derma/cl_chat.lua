@@ -12,11 +12,15 @@ function PANEL:Init()
     self:SetSize(hook.Run("GetChatboxSize"))
     self:SetPos(hook.Run("GetChatboxPos"))
 
-    local title = self:Add("ow.button.small")
-    title:Dock(TOP)
-    title:SetText("chat", true, true)
-    title:SetFont("ow.fonts.button.tiny")
-    title:SetContentAlignment(4)
+    local label = self:Add("ow.text")
+    label:Dock(TOP)
+    label:SetTextInset(8, -2)
+    label:SetFont("ow.fonts.small")
+    label:SetText(GetHostName(), true)
+    label.Paint = function(this, width, height)
+        surface.SetDrawColor(ow.color:Get("background.transparent"))
+        surface.DrawRect(0, 0, width, height)
+    end
 
     self.entry = self:Add("ow.text.entry")
     self.entry:Dock(BOTTOM)
@@ -35,8 +39,8 @@ function PANEL:Init()
     end
 
     self.history = self:Add("DScrollPanel")
-    self.history:SetPos(8, title:GetTall() + 8)
-    self.history:SetSize(self:GetWide() - 16, self:GetTall() - 16 - title:GetTall() - self.entry:GetTall())
+    self.history:SetPos(8, label:GetTall() + 8)
+    self.history:SetSize(self:GetWide() - 16, self:GetTall() - 16 - label:GetTall() - self.entry:GetTall())
     self.history:GetVBar():SetWide(0)
 
     self:SetVisible(false)
