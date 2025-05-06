@@ -18,6 +18,7 @@ function ENT:Use(client)
     local amount = self:GetAmount()
     if ( amount <= 0 ) then
         SafeRemoveEntity(self)
+        client:Notify("0")
         return
     end
 
@@ -30,7 +31,6 @@ function ENT:Use(client)
     character:GiveMoney(amount)
 
     ow.net:Start(client, "currency.give", self, amount)
-
     hook.Run("PostPlayerTakeMoney", client, self, amount)
 
     SafeRemoveEntity(self)
