@@ -47,7 +47,7 @@ end
 PLAYER.Nick = PLAYER.Name
 
 function PLAYER:ChatText(...)
-    local args = {...}
+    local args = {ow.color:Get("text"), ...}
 
     if ( SERVER ) then
         local encoded, err = sfs.encode(args)
@@ -63,6 +63,8 @@ function PLAYER:ChatText(...)
         chat.AddText(unpack(args))
     end
 end
+
+PLAYER.ChatPrint = PLAYER.ChatText
 
 --- Plays a gesture animation on the player.
 -- @realm shared
