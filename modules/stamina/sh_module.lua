@@ -141,7 +141,7 @@ if ( SERVER ) then
     -- @param value number
     function ow.stamina:Set(client, value)
         local st = client:GetRelay("stamina")
-        if ( !istable(st) ) then return end
+        if ( !istable(st) or st.current == value ) then return end
 
         st.current = math.Clamp(value, 0, st.max)
         client:SetRelay("stamina", st)
