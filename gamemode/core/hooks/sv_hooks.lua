@@ -1,5 +1,4 @@
 local time
-local loadQueue = {}
 function GM:PlayerInitialSpawn(client)
     if ( client:IsBot() ) then return end
 
@@ -14,23 +13,17 @@ function GM:PlayerInitialSpawn(client)
     client:SetMoveType(MOVETYPE_NONE)
 
     client:KillSilent()
-
-    loadQueue[client] = true
 end
 
-function GM:StartCommand(client, cmd)
-    if ( loadQueue[client] and !cmd:IsForced() ) then
-        loadQueue[client] = nil
-        ow.character:CacheAll(client)
-        ow.util:SendChatText(nil, Color(25, 75, 150), client:SteamName() .. " has joined the server.")
+function GM:PlayerReady(client)
+    ow.character:CacheAll(client)
+    ow.util:SendChatText(nil, Color(25, 75, 150), client:SteamName() .. " has joined the server.")
+    ow.net:Start(client, "mainmenu")
 
-        ow.net:Start(client, "mainmenu")
+    hook.Run("PostPlayerInitialSpawn", client)
 
-        hook.Run("PostPlayerInitialSpawn", client)
-
-        ow.util:Print("Finished loading player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
-        time = CurTime()
-    end
+    ow.util:Print("Finished loading player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
+    time = CurTime()
 end
 
 function GM:PostPlayerInitialSpawn(client)
@@ -49,7 +42,6 @@ function GM:PostPlayerInitialSpawn(client)
         ow.util:Print("Loaded player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
         time = CurTime()
 
-        ow.net:Start(client, "database.save", clientTable.owDatabase or {})
         ow.config:Synchronize(client)
     end)
 end

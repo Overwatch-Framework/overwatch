@@ -202,3 +202,9 @@ ow.net:Hook("luarun.server.test", function(client)
 
     ow.util:PrintWarning("Player " .. client:Name() .. " (" .. client:SteamID() .. ") has been banned for using the \"ow.luarun.server.test\" network message!")
 end)
+
+ow.net:Hook("client.ready", function(client)
+    if ( !IsValid(client) ) then return end
+
+    hook.Run("PlayerReady", client)
+end)

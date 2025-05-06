@@ -41,6 +41,8 @@ function GM:InitPostEntity()
     if ( !IsValid(ow.gui.chatbox) ) then
         vgui.Create("ow.chatbox")
     end
+
+    ow.net:Start(nil, "client.ready")
 end
 
 function GM:OnCloseCaptionEmit()
