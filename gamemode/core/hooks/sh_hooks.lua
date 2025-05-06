@@ -101,7 +101,10 @@ end
 
 local KEY_SHOOT = IN_ATTACK + IN_ATTACK2
 function GM:StartCommand(ply, cmd)
-    if ( !ply:IsWeaponRaised() ) then
+    local weapon = ply:GetActiveWeapon()
+    if ( !IsValid(weapon) or !weapon:IsWeapon() ) then return end
+
+    if ( !weapon.FireWhenLowered and !ply:IsWeaponRaised() ) then
         cmd:RemoveKey(KEY_SHOOT)
     end
 end

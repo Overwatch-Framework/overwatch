@@ -157,7 +157,7 @@ function PLAYER:IsWeaponRaised()
     if ( ow.config:Get("wepraise.alwaysraised", false) ) then return true end
 
     local weapon = self:GetActiveWeapon()
-    if ( IsValid(weapon) and ( ow.alwaysRaised[weapon:GetClass()] or weapon.bAlwaysRaised ) ) then return true end
+    if ( IsValid(weapon) and ( ow.alwaysRaised[weapon:GetClass()] or weapon.AlwaysRaised ) ) then return true end
 
     return self:GetRelay("bWeaponRaised", false)
 end

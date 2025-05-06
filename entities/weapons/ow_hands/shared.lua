@@ -33,7 +33,7 @@ SWEP.Secondary.Ammo = ""
 SWEP.Secondary.Delay = 0.5
 
 SWEP.HoldType = "normal"
-SWEP.bAlwaysRaised = true
+SWEP.FireWhenLowered = true
 
 function SWEP:Precache()
     util.PrecacheModel(SWEP.ViewModel)
