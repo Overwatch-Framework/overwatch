@@ -6,36 +6,16 @@ function GM:PlayerInitialSpawn(client)
     time = CurTime()
     ow.util:Print("Starting to load player " .. client:SteamName() .. " (" .. client:SteamID64() .. ")")
 
-    ow.sqlite:LoadRow("ow_players", "steamid", client:SteamID64(), function(data)
-        if ( !IsValid(client) ) then return end
+    client:SetTeam(0)
+    client:SetModel("models/player/kleiner.mdl")
 
-        local clientTable = client:GetTable()
-        clientTable.owDatabase = data or {}
+    client:SetNoDraw(true)
+    client:SetNotSolid(true)
+    client:SetMoveType(MOVETYPE_NONE)
 
-        client:SetDBVar("name", client:SteamName())
-        client:SetDBVar("ip", client:IPAddress())
-        client:SetDBVar("last_played", os.time())
-        client:SetDBVar("data", data != nil and data.data or "[]")
+    client:KillSilent()
 
-        client:SetTeam(0)
-        client:SetModel("models/player/kleiner.mdl")
-
-        loadQueue[client] = true
-
-        -- Do not render the player, as we are in the main menu
-        -- and we do not have a character loaded yet
-        client:SetNoDraw(true)
-        client:SetNotSolid(true)
-        client:SetMoveType(MOVETYPE_NONE)
-
-        client:KillSilent()
-
-        ow.util:Print("Loaded player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
-        time = CurTime()
-
-        ow.net:Start(client, "database.save", clientTable.owDatabase or {})
-        ow.config:Synchronize(client)
-    end)
+    loadQueue[client] = true
 end
 
 function GM:StartCommand(client, cmd)
@@ -46,8 +26,6 @@ function GM:StartCommand(client, cmd)
 
         ow.net:Start(client, "mainmenu")
 
-        client:SaveDB()
-
         hook.Run("PostPlayerInitialSpawn", client)
 
         ow.util:Print("Finished loading player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
@@ -56,7 +34,24 @@ function GM:StartCommand(client, cmd)
 end
 
 function GM:PostPlayerInitialSpawn(client)
-    -- Do something here
+    ow.sqlite:LoadRow("ow_players", "steamid", client:SteamID64(), function(data)
+        if ( !IsValid(client) ) then return end
+
+        local clientTable = client:GetTable()
+        clientTable.owDatabase = data or {}
+
+        client:SetDBVar("name", client:SteamName())
+        client:SetDBVar("ip", client:IPAddress())
+        client:SetDBVar("last_played", os.time())
+        client:SetDBVar("data", data != nil and data.data or "[]")
+        client:SaveDB()
+
+        ow.util:Print("Loaded player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
+        time = CurTime()
+
+        ow.net:Start(client, "database.save", clientTable.owDatabase or {})
+        ow.config:Synchronize(client)
+    end)
 end
 
 function GM:PlayerDisconnected(client)
