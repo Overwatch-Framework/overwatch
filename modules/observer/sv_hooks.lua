@@ -32,6 +32,6 @@ end
 function MODULE:OnPlayerObserver(ply, state)
     local logging = ow.module:Get("logging")
     if ( logging ) then
-        logging:SendLog(ply:Nick() .. " is now " .. (state and "observing" or "no longer observing") .. ".")
+        logging:Send(ply:Nick() .. " is now " .. (state and "observing" or "no longer observing") .. ".")
     end
 end

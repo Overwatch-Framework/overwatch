@@ -32,7 +32,7 @@ ow.option:Register("thirdperson", {
     Type = ow.type.bool,
     Default = false,
     Description = "option.thirdperson.enable.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 
@@ -41,7 +41,7 @@ ow.option:Register("thirdperson.follow.head", {
     Type = ow.type.bool,
     Default = false,
     Description = "options.thirdperson.follow.head.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 
@@ -50,7 +50,7 @@ ow.option:Register("thirdperson.follow.hit.angles", {
     Type = ow.type.bool,
     Default = true,
     Description = "options.thirdperson.follow.hit.angles.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 
@@ -59,7 +59,7 @@ ow.option:Register("thirdperson.follow.hit.fov", {
     Type = ow.type.bool,
     Default = true,
     Description = "options.thirdperson.follow.hit.fov.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 
@@ -71,7 +71,7 @@ ow.option:Register("thirdperson.position.x", {
     Max = 100,
     Decimals = 0,
     Description = "options.thirdperson.position.x.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 
@@ -83,7 +83,7 @@ ow.option:Register("thirdperson.position.y", {
     Max = 100,
     Decimals = 0,
     Description = "options.thirdperson.position.y.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 
@@ -95,7 +95,7 @@ ow.option:Register("thirdperson.position.z", {
     Max = 100,
     Decimals = 0,
     Description = "options.thirdperson.position.z.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.thirdperson"
 })
 

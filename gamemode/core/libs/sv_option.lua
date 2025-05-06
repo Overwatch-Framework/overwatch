@@ -38,7 +38,7 @@ function ow.option:Set(ply, key, value)
         stored:OnChange(value, ply)
     end
 
-    if ( !stored.bNoNetworking ) then
+    if ( !stored.NoNetworking ) then
         if ( ow.option.clients[ply] == nil ) then
             ow.option.clients[ply] = {}
         end
@@ -58,7 +58,7 @@ function ow.option:Get(ply, key, default)
         return default
     end
 
-    if ( stored.bNoNetworking ) then
+    if ( stored.NoNetworking ) then
         ow.util:PrintWarning("Option \"" .. key .. "\" is not networked!")
         return nil
     end

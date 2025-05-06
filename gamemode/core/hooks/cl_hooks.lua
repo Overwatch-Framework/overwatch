@@ -128,34 +128,32 @@ local vignette = ow.util:GetMaterial("overwatch/overlay_vignette.png", "noclamp 
 local vignetteColor = Color(0, 0, 0, 255)
 function GM:HUDPaintBackground()
     if ( tobool(hook.Run("ShouldDrawVignette")) ) then
-        hook.Run("DrawVignette")
+        local ply = ow.localClient
+        if ( !IsValid(ply) ) then return end
+
+        local scrW, scrH = ScrW(), ScrH()
+        local trace = util.TraceLine({
+            start = ply:GetShootPos(),
+            endpos = ply:GetShootPos() + ply:GetAimVector() * 96,
+            filter = ply,
+            mask = MASK_SHOT
+        })
+
+        if ( trace.Hit and trace.HitPos:DistToSqr(ply:GetShootPos()) < 96 ^ 2 ) then
+            vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 255)
+        else
+            vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 100)
+        end
+
+        if ( hook.Run("ShouldDrawDefaultVignette") != false ) then
+            paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
+        end
+
+        hook.Run("DrawVignette", 1 - (vignetteColor.a / 255))
     end
 end
 
-function GM:DrawVignette()
-    local ply = ow.localClient
-    if ( !IsValid(ply) ) then return end
-
-    local scrW, scrH = ScrW(), ScrH()
-    local trace = util.TraceLine({
-        start = ply:GetShootPos(),
-        endpos = ply:GetShootPos() + ply:GetAimVector() * 96,
-        filter = ply,
-        mask = MASK_SHOT
-    })
-
-    if ( trace.Hit and trace.HitPos:DistToSqr(ply:GetShootPos()) < 96 ^ 2 ) then
-        vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 255)
-    else
-        vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 100)
-    end
-
-    local result = hook.Run("GetVignetteColor")
-    if ( IsColor(result) ) then
-        vignetteColor = result
-    end
-
-    paint.rects.drawRect(0, 0, scrW, scrH, vignetteColor, vignette)
+function GM:DrawVignette(fraction)
 end
 
 local padding = 16

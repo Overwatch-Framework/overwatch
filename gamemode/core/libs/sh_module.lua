@@ -174,6 +174,7 @@ function ow.module:LoadFolder(path)
             MODULE = { UniqueID = v }
                 hook.Run("PreModuleLoad", v, MODULE)
                 ow.util:LoadFile(path .. "/" .. v .. "/sh_module.lua", "shared")
+                ow.util:LoadFolder(path .. "/" .. v .. "/derma", true)
                 self:LoadEntities(path .. "/" .. v .. "/entities")
                 self.stored[v] = MODULE
             MODULE = nil

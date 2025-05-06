@@ -16,7 +16,7 @@ function ow.config:Load()
 
     local tableToSend =  self.stored
     for k, v in pairs(tableToSend) do
-        if ( v.bNoNetworking ) then
+        if ( v.NoNetworking ) then
             tableToSend[k] = nil
             continue
         end
@@ -97,7 +97,7 @@ function ow.config:ResetAll()
 
     local tableToSend =  self.stored
     for k, v in pairs(tableToSend) do
-        if ( v.bNoNetworking ) then
+        if ( v.NoNetworking ) then
             tableToSend[k] = nil
             continue
         end
@@ -134,7 +134,7 @@ function ow.config:Synchronize(ply)
 
     local tableToSend =  self.stored
     for k, v in pairs(tableToSend) do
-        if ( v.bNoNetworking ) then
+        if ( v.NoNetworking ) then
             tableToSend[k] = nil
         end
     end

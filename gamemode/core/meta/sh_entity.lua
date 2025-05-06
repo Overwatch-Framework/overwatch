@@ -129,13 +129,13 @@ function ENTITY:GetDataVariable(key, defaultValue)
 end
 
 if ( SERVER ) then
-    function ENTITY:SetDataVariable(key, value, recipients, bNoNetworking)
+    function ENTITY:SetDataVariable(key, value, recipients, NoNetworking)
         local selfTable = self:GetTable()
         key = "ow." .. key
 
         selfTable[key] = value
 
-        if ( !bNoNetworking ) then
+        if ( !NoNetworking ) then
             local recpFilter = RecipientFilter()
             if ( recipients == nil ) then
                 recpFilter:AddAllPlayers()

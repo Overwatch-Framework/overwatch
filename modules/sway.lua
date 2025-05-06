@@ -19,7 +19,7 @@ ow.option:Register("sway", {
     Type = ow.type.bool,
     Default = true,
     Description = "option.sway.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.sway"
 })
 
@@ -31,7 +31,7 @@ ow.option:Register("sway.multiplier", {
     Max = 10,
     Decimals = 1,
     Description = "option.sway.multiplier.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.sway"
 })
 
@@ -43,7 +43,7 @@ ow.option:Register("sway.multiplier.sprint", {
     Max = 10,
     Decimals = 1,
     Description = "option.sway.multiplier.sprint.help",
-    bNoNetworking = true,
+    NoNetworking = true,
     Category = "category.sway"
 })
 

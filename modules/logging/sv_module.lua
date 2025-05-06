@@ -2,7 +2,7 @@ local MODULE = MODULE
 
 util.AddNetworkString("ow.logging.send")
 
-function MODULE:SendLog(...)
+function MODULE:Send(...)
     if ( !ow.config:Get("logging", true) ) then return end
 
     local receivers = {}

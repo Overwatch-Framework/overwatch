@@ -55,7 +55,7 @@ ow.option:Register("inventory.sort", {
     Description = "options.inventory.sort.help",
     Type = ow.type.array,
     Default = "name",
-    bNoNetworking = true,
+    NoNetworking = true,
     Populate = function()
         return {
             ["name"] = "Name",
@@ -70,14 +70,14 @@ ow.option:Register("vignette", {
     Description = "options.vignette.help",
     Type = ow.type.bool,
     Default = true,
-    bNoNetworking = true
+    NoNetworking = true
 })
 
 ow.option:Register("tab.fade.time", {
     Name = "options.tab.fade.time",
     Description = "options.tab.fade.time.help",
     Type = ow.type.number,
-    bNoNetworking = true,
+    NoNetworking = true,
     Default = 0.4,
     Min = 0,
     Max = 1,
@@ -89,7 +89,7 @@ ow.option:Register("tab.anchor.time", {
     Description = "options.tab.anchor.time.help",
     Type = ow.type.number,
     Default = 0.4,
-    bNoNetworking = true,
+    NoNetworking = true,
     Min = 0,
     Max = 1,
     Decimals = 2
@@ -101,7 +101,7 @@ ow.option:Register("mainmenu.music", {
     SubCategory = "category.mainmenu",
     Type = ow.type.bool,
     Default = true,
-    bNoNetworking = true
+    NoNetworking = true
 })
 
 ow.option:Register("mainmenu.music.volume", {
@@ -110,7 +110,7 @@ ow.option:Register("mainmenu.music.volume", {
     SubCategory = "category.mainmenu",
     Type = ow.type.number,
     Default = 50,
-    bNoNetworking = true,
+    NoNetworking = true,
     Min = 0,
     Max = 100,
     Decimals = 0
@@ -122,7 +122,7 @@ ow.option:Register("mainmenu.music.loop", {
     SubCategory = "category.mainmenu",
     Type = ow.type.bool,
     Default = true,
-    bNoNetworking = true
+    NoNetworking = true
 })
 
 ow.option:Register("performance.blur", {
@@ -131,7 +131,7 @@ ow.option:Register("performance.blur", {
     Category = "category.performance",
     Type = ow.type.bool,
     Default = true,
-    bNoNetworking = true
+    NoNetworking = true
 })
 
 ow.option:Register("performance.animations", {
@@ -140,7 +140,7 @@ ow.option:Register("performance.animations", {
     Category = "category.performance",
     Type = ow.type.bool,
     Default = true,
-    bNoNetworking = true
+    NoNetworking = true
 })
 
 ow.option:Register("chat.size.font", {
@@ -149,7 +149,7 @@ ow.option:Register("chat.size.font", {
     Category = "category.chat",
     Type = ow.type.number,
     Default = 1,
-    bNoNetworking = true,
+    NoNetworking = true,
     Min = 0,
     Max = 2,
     Decimals = 2,

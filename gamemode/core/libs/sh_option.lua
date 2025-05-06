@@ -80,7 +80,7 @@ if ( CLIENT ) then
 
         stored.Value = value
 
-        if ( stored.bNoNetworking != true ) then
+        if ( stored.NoNetworking != true ) then
             net.Start("ow.option.set")
                 net.WriteString(key)
                 net.WriteType(value)

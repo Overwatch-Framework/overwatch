@@ -38,3 +38,5 @@ ow.util:LoadFile("cl_module.lua")
 ow.util:LoadFile("sv_module.lua")
 
 ow.util:LoadFile("sv_hooks.lua")
+
+ow.log = MODULE
