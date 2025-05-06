@@ -65,7 +65,7 @@ if ( CLIENT ) then
         stored.Value = value
 
         if ( stored.NoNetworking != true ) then
-            ow.net:Start(nil, "ow.option.set", key, value)
+            ow.net:Start(nil, "option.set", key, value)
         end
 
         if ( isfunction(stored.OnChange) ) then

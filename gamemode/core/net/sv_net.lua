@@ -123,6 +123,8 @@ ow.net:Hook("option.sync", function(client, data)
             return
         end
 
+        if ( stored.NoNetworking ) then continue end
+
         if ( data[k] != nil ) then
             if ( ow.util:GetTypeFromValue(data[k]) != stored.Type ) then
                 ow.util:PrintError("Option \"" .. k .. "\" is not of type \"" .. stored.Type .. "\"!")

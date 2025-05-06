@@ -9,12 +9,13 @@ function GM:PlayerInitialSpawn(client)
     ow.sqlite:LoadRow("ow_players", "steamid", client:SteamID64(), function(data)
         if ( !IsValid(client) ) then return end
 
-        client:GetTable().owDatabase = data or {}
+        local clientTable = client:GetTable()
+        clientTable.owDatabase = data or {}
 
         client:SetDBVar("name", client:SteamName())
         client:SetDBVar("ip", client:IPAddress())
         client:SetDBVar("last_played", os.time())
-        client:SetDBVar("data", IsValid(data) and data.data or "[]")
+        client:SetDBVar("data", data != nil and data.data or "[]")
 
         client:SetTeam(0)
         client:SetModel("models/player/kleiner.mdl")
@@ -32,6 +33,7 @@ function GM:PlayerInitialSpawn(client)
         ow.util:Print("Loaded player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
         time = CurTime()
 
+        ow.net:Start(client, "database.save", clientTable.owDatabase or {})
         ow.config:Synchronize(client)
     end)
 end

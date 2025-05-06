@@ -94,10 +94,8 @@ end
 function PLAYER:SetWhitelisted(factionID, bWhitelisted)
     local key = "whitelists_" .. SCHEMA.Folder
     local whitelists = self:GetData(key, {}) or {}
-    local whitelist = whitelists[factionID]
 
     if ( bWhitelisted == nil ) then bWhitelisted = true end
-    if ( whitelist == bWhitelisted ) then return end
 
     whitelists[factionID] = bWhitelisted
     self:SetData(key, whitelists)
