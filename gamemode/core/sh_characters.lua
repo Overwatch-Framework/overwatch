@@ -13,7 +13,33 @@ ow.character:RegisterVariable("schema", {
 ow.character:RegisterVariable("data", {
     Type = ow.type.string,
     Field = "data",
-    Default = "[]"
+    Default = "[]",
+
+    OnGet = function(self, character, value)
+        if ( !value or value == "" ) then
+            return "[]"
+        end
+
+        local data = util.JSONToTable(value)
+        if ( !data ) then
+            data = {}
+        end
+
+        return data
+    end,
+
+    OnSet = function(self, character, value)
+        if ( !value ) then
+            value = {}
+        end
+
+        local data = util.TableToJSON(value)
+        if ( !data ) then
+            data = "[]"
+        end
+
+        character:SetData(data)
+    end
 })
 
 ow.character:RegisterVariable("name", {
