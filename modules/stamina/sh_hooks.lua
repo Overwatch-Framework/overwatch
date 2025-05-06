@@ -4,7 +4,7 @@ function MODULE:SetupMove(ply, mv, cmd)
     if ( !ow.config:Get("stamina", true) ) then return end
 
     local st = ply:GetRelay("stamina")
-    if ( st and st.current <= 0 ) then
+    if ( istable(st) and st.current <= 0 ) then
         -- Prevent sprinting input
         if ( mv:KeyDown(IN_SPEED) ) then
             mv:SetButtons(mv:GetButtons() - IN_SPEED)

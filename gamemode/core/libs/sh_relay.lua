@@ -27,7 +27,7 @@ local function sendPacked(msg, key, value, recipient)
 
     net.Start(msg)
         net.WriteString(key)
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     if ( SERVER ) then
         if ( IsValid(recipient) ) then
             net.Send(recipient)
@@ -79,9 +79,9 @@ function playerMeta:GetRelay(key, default)
 end
 
 if ( CLIENT ) then
-    net.Receive("ow.relay.user", function()
+    net.Receive("ow.relay.user", function(len)
         local key = net.ReadString()
-        local value = sfs.decode(net.ReadString())
+        local value = sfs.decode(net.ReadData(len / 8))
         if ( value == nil ) then return end
 
         local ply = LocalPlayer()
@@ -105,7 +105,7 @@ function entityMeta:SetRelay(key, value, recipient)
         net.Start("ow.relay.entity")
             net.WriteUInt(self:EntIndex(), 16)
             net.WriteString(key)
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         if ( recipient ) then
             net.Send(recipient)
         else
@@ -124,10 +124,10 @@ function entityMeta:GetRelay(key, default)
 end
 
 if ( CLIENT ) then
-    net.Receive("ow.relay.entity", function()
+    net.Receive("ow.relay.entity", function(len)
         local entIndex = net.ReadUInt(16)
         local key = net.ReadString()
-        local value = sfs.decode(net.ReadString())
+        local value = sfs.decode(net.ReadData(len / 8))
         if ( value == nil ) then return end
 
         local ent = Entity(entIndex)

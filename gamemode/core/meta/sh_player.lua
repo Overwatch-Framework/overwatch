@@ -57,7 +57,7 @@ function PLAYER:ChatText(...)
         end
 
         net.Start("ow.chat.text")
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         net.Send(self)
     else
         chat.AddText(unpack(args))

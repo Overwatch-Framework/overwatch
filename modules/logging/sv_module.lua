@@ -25,6 +25,6 @@ function MODULE:SendLog(...)
     end
 
     net.Start("ow.logging.send")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Send(receivers)
 end

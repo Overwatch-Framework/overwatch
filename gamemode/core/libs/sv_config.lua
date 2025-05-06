@@ -33,7 +33,7 @@ function ow.config:Load()
     end
 
     net.Start("ow.config.sync")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Broadcast()
 
     ow.util:Print("Configuration loaded.")
@@ -114,7 +114,7 @@ function ow.config:ResetAll()
     end
 
     net.Start("ow.config.sync")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Broadcast()
 
     self:Save()
@@ -148,7 +148,7 @@ function ow.config:Synchronize(ply)
     hook.Run("PreConfigSync", ply, compressed)
 
     net.Start("ow.config.sync")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Broadcast()
 
     hook.Run("PostConfigSync", ply, self.stored, tableToSend)

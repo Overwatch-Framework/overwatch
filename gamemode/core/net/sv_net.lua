@@ -31,7 +31,7 @@ end)
 
 net.Receive("ow.character.create", function(len, ply)
     -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
-    local payload = sfs.decode(net.ReadString())
+    local payload = sfs.decode(net.ReadData(len / 8))
     if ( !istable(payload) ) then return end
 
     local bResult = hook.Run("PreCharacterCreate", ply, payload)
@@ -146,7 +146,7 @@ end)
 net.Receive("ow.option.sync", function(len, ply)
     if ( !IsValid(ply) ) then return end
 
-    local data = sfs.decode(net.ReadString())
+    local data = sfs.decode(net.ReadData(len / 8))
     if ( !istable(data) ) then return end
 
     for k, v in pairs(ow.option.stored) do

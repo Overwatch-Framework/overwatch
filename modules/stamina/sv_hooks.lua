@@ -14,7 +14,7 @@ function MODULE:Think()
             if ( ply:Team() == 0 ) then continue end
 
             local st = ply:GetRelay("stamina")
-            if ( st ) then
+            if ( istable(st) ) then
                 local isSprinting = ply:KeyDown(IN_SPEED) and ply:KeyDown(IN_FORWARD) and ply:OnGround()
                 if ( isSprinting and ply:GetVelocity():Length2DSqr() > 1 ) then
                     if ( ow.stamina:Consume(ply, drain) ) then

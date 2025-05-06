@@ -21,7 +21,7 @@ function ow.option:SetDefault(key, default)
         end
 
         net.Start("ow.option.sync")
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         net.SendToServer()
     end
 
@@ -45,7 +45,7 @@ if ( CLIENT ) then
         end
 
         net.Start("ow.option.sync")
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         net.SendToServer()
 
         hook.Run("PostOptionsLoad", self.stored)
@@ -149,7 +149,7 @@ if ( CLIENT ) then
         end
 
         net.Start("ow.option.sync")
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         net.SendToServer()
     end
 end

@@ -60,7 +60,7 @@ function ow.character:Create(ply, query)
     end
 
     net.Start("ow.character.cache")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Send(ply)
 
     ow.inventory:Register({characterID = characterID})
@@ -208,7 +208,7 @@ function ow.character:Cache(ply, characterID)
     end
 
     net.Start("ow.character.cache")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Send(ply)
 
     return true
@@ -255,7 +255,7 @@ function ow.character:CacheAll(ply)
     end
 
     net.Start("ow.character.cache.all")
-        net.WriteString(encoded)
+        net.WriteData(encoded, #encoded)
     net.Send(ply)
 
     hook.Run("PlayerLoadedAllCharacters", ply, plyTable.owCharacters)

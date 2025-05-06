@@ -44,7 +44,7 @@ function PLAYER:SaveDB()
         end
 
         net.Start("ow.database.save")
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         net.Send(self)
     end
 end

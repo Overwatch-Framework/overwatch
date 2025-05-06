@@ -236,7 +236,7 @@ function PANEL:PopulateCreateCharacter()
             end
 
             net.Start("ow.character.create")
-                net.WriteString(encoded)
+                net.WriteData(encoded, #encoded)
             net.SendToServer()
         else
             self.currentCreatePage = self.currentCreatePage + 1

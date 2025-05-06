@@ -49,7 +49,7 @@ function ow.item:Add(characterID, inventoryID, uniqueID, data, callback)
                 net.WriteUInt(itemID, 32)
                 net.WriteUInt(inventoryID, 32)
                 net.WriteString(uniqueID)
-                net.WriteString(encoded)
+                net.WriteData(encoded, #encoded)
             net.Send(receiver)
         end
 

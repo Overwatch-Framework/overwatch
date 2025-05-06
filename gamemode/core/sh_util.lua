@@ -158,7 +158,7 @@ function ow.util:SendChatText(ply, ...)
         end
 
         net.Start("ow.chat.text")
-            net.WriteString(encoded)
+            net.WriteData(encoded, #encoded)
         if ( IsValid(ply) ) then
             net.Send(ply)
         else

@@ -3,7 +3,7 @@
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.character.cache.all", function(len)
-    local data = sfs.decode(net.ReadString())
+    local data = sfs.decode(net.ReadData(len / 8))
     if ( !istable(data) ) then return end
 
     local ply = ow.localClient
@@ -24,7 +24,7 @@ net.Receive("ow.character.cache.all", function(len)
 end)
 
 net.Receive("ow.character.cache", function(len)
-    local data = sfs.decode(net.ReadString())
+    local data = sfs.decode(net.ReadData(len / 8))
     if ( !istable(data) ) then return end
 
     local ply = ow.localClient
@@ -143,7 +143,7 @@ net.Receive("ow.chat.send", function(len)
 end)
 
 net.Receive("ow.chat.text", function(len)
-    local receivedTable = sfs.decode(net.ReadString())
+    local receivedTable = sfs.decode(net.ReadData(len / 8))
     if ( !istable(receivedTable) ) then return end
 
     chat.AddText(unpack(receivedTable))
@@ -154,7 +154,7 @@ end)
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.config.sync", function(len)
-    local compressedTable = sfs.decode(net.ReadString())
+    local compressedTable = sfs.decode(net.ReadData(len / 8))
     if ( !istable(compressedTable) ) then return end
 
     ow.config.stored = compressedTable
@@ -264,11 +264,11 @@ end)
     Item Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.item.add", function()
+net.Receive("ow.item.add", function(len)
     local itemID = net.ReadUInt(32)
     local inventoryID = net.ReadUInt(32)
     local uniqueID = net.ReadString()
-    local data = sfs.decode(net.ReadString())
+    local data = sfs.decode(net.ReadData(len / 8))
 
     ow.item:Add(itemID, inventoryID, uniqueID, data)
 end)
@@ -331,7 +331,7 @@ end)
 -----------------------------------------------------------------------------]]--
 
 net.Receive("ow.database.save", function(len)
-    local compressedTable = sfs.decode(net.ReadString())
+    local compressedTable = sfs.decode(net.ReadData(len / 8))
     ow.localClient:GetTable().owDatabase = compressedTable
 end)
 
