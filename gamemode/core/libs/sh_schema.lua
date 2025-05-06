@@ -44,7 +44,7 @@ function ow.schema:Initialize()
 
     ow.hooks:Register("SCHEMA")
     ow.util:LoadFolder(folder .. "/schema/factions", true)
-    ow.item:LoadFolder(folder .. "/schema/items", true)
+    ow.item:LoadFolder(folder .. "/schema/items")
     ow.util:LoadFolder(folder .. "/schema/config", true)
 
     -- Load the current map config if it exists

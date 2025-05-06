@@ -28,6 +28,7 @@ end
 
 function GM:Initialize()
     ow.module:LoadFolder("overwatch/modules")
+    ow.item:LoadFolder("overwatch/gamemode/items")
     ow.schema:Initialize()
 
     hook.Run("LoadFonts")

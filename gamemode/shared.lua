@@ -36,6 +36,7 @@ function GM:OnReloaded()
     ow.reloaded = true
 
     ow.module:LoadFolder("overwatch/modules")
+    ow.item:LoadFolder("overwatch/gamemode/items")
     ow.schema:Initialize()
 
     if ( CLIENT ) then
