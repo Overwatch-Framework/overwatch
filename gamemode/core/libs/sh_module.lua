@@ -166,17 +166,20 @@ function ow.module:LoadFolder(path)
         return false
     end
 
+    hook.Run("PreInitializeModules")
+
     ow.util:Print("Loading modules from \"" .. path .. "\"...")
 
     local files, folders = file.Find(path .. "/*", "LUA")
     for k, v in ipairs(folders) do
         if ( file.Exists(path .. "/" .. v .. "/sh_module.lua", "LUA") ) then
             MODULE = { UniqueID = v }
-                hook.Run("PreModuleLoad", v, MODULE)
+                hook.Run("PreInitializeModule", MODULE)
                 ow.util:LoadFile(path .. "/" .. v .. "/sh_module.lua", "shared")
                 ow.util:LoadFolder(path .. "/" .. v .. "/derma", true)
                 self:LoadEntities(path .. "/" .. v .. "/entities")
                 self.stored[v] = MODULE
+                hook.Run("PostInitializeModule", MODULE)
             MODULE = nil
         else
             ow.util:PrintError("Module " .. v .. " is missing a shared module file.")
@@ -197,14 +200,14 @@ function ow.module:LoadFolder(path)
         end
 
         MODULE = { UniqueID = ModuleUniqueID }
-            hook.Run("PreModuleLoad", ModuleUniqueID, MODULE)
+            hook.Run("PreInitializeModule", MODULE)
             ow.util:LoadFile(path .. "/" .. v, realm)
             self.stored[ModuleUniqueID] = MODULE
-            hook.Run("PostModuleLoad", ModuleUniqueID, MODULE)
+            hook.Run("PostInitializeModule", MODULE)
         MODULE = nil
     end
 
     ow.util:Print("Loaded " .. #files .. " files and " .. #folders .. " folders from \"" .. path .. "\", total " .. (#files + #folders) .. " modules.")
 
-    hook.Run("ModulesInitialized")
+    hook.Run("PostInitializeModules")
 end

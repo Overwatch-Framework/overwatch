@@ -120,7 +120,7 @@ function ow.class:CanSwitchTo(client, classID)
     local class = self:Get(classID)
     if ( !class ) then return false end
 
-    local hookRun = hook.Run("PreClassBecome", client, classID)
+    local hookRun = hook.Run("CanPlayerJoinClass", client, class)
     if ( hookRun == false ) then return false end
 
     if ( isfunction(class.CanSwitchTo) and !class:CanSwitchTo(client) ) then

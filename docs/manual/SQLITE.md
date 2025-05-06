@@ -75,7 +75,7 @@ You can pass additional schema fields if necessary.
 MODULE.name = "XP System"
 MODULE.author = "Riggs"
 
-function MODULE:ModulesInitialized()
+function MODULE:PostInitializeModules()
     ow.sqlite:RegisterVar("characters", "xp", 0)
 end
 ```

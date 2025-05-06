@@ -752,10 +752,10 @@ end
 
 --- Called after all the modules have been initialized.
 -- @realm shared
--- @usage function MODULE:ModulesInitialized()
+-- @usage function MODULE:PostInitializeModules()
 --     print("All modules have been initialized!")
 -- end
-function ModulesInitialized()
+function PostInitializeModules()
 end
 
 --- Called after the schema has been initialized.
