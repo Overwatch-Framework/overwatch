@@ -20,52 +20,65 @@ end
 -- @param target Player, table, vector or nil (nil = broadcast or to server).
 -- @string name Hook name.
 -- @vararg Arguments to send.
-function ow.net:Start(target, name, ...)
-    local args = {...}
-    local encoded = sfs.encode(args)
-    if ( !encoded or #encoded < 1 ) then return end
+if ( SERVER ) then
+    function ow.net:Start(target, name, ...)
+        local args = {...}
+        local encoded = sfs.encode(args)
+        if ( !encoded or #encoded < 1 ) then return end
 
-    if ( CLIENT and isstring(target) and name == nil ) then
-        ErrorNoHaltWithStack("[ow.net] WARNING: You likely forgot to include a nil target. Use :Start(nil, \"hook\", ...)\n")
+        if ( CLIENT and isstring(target) and name == nil ) then
+            ErrorNoHaltWithStack("[ow.net] WARNING: You likely forgot to include a nil target. Use :Start(nil, \"hook\", ...)\n")
+        end
+
+        if ( CLIENT ) then
+            net.Start("ow.net.msg")
+                net.WriteString(name)
+                net.WriteData(encoded, #encoded)
+            net.SendToServer()
+
+            return
+        end
+
+        local recipients = {}
+        local sendPVS = false
+
+        if ( type(target) == "Vector" ) then
+            sendPVS = true
+        elseif ( istable(target) ) then
+            for _, v in ipairs(target) do
+                if ( IsValid(v) and v:IsPlayer() ) then
+                    recipients[#recipients + 1] = v
+                end
+            end
+        elseif ( IsValid(target) and target:IsPlayer() ) then
+            recipients[1] = target
+        else
+            recipients = select(2, player.Iterator())
+        end
+
+        net.Start("ow.net.msg")
+            net.WriteString(name)
+            net.WriteData(encoded, #encoded)
+
+        if ( sendPVS ) then
+            net.SendPVS(target)
+        else
+            net.Send(recipients)
+        end
+
+        ow.util:Print("[ow.net] Sent '" .. name .. "' to " .. (SERVER and #recipients .. " players" or "server"))
     end
+else
+    function ow.net:Start(name, ...)
+        local args = {...}
+        local encoded = sfs.encode(args)
+        if ( !encoded or #encoded < 1 ) then return end
 
-    if ( CLIENT ) then
         net.Start("ow.net.msg")
             net.WriteString(name)
             net.WriteData(encoded, #encoded)
         net.SendToServer()
-
-        return
     end
-
-    local recipients = {}
-    local sendPVS = false
-
-    if ( type(target) == "Vector" ) then
-        sendPVS = true
-    elseif ( istable(target) ) then
-        for _, v in ipairs(target) do
-            if ( IsValid(v) and v:IsPlayer() ) then
-                recipients[#recipients + 1] = v
-            end
-        end
-    elseif ( IsValid(target) and target:IsPlayer() ) then
-        recipients[1] = target
-    else
-        recipients = select(2, player.Iterator())
-    end
-
-    net.Start("ow.net.msg")
-        net.WriteString(name)
-        net.WriteData(encoded, #encoded)
-
-    if ( sendPVS ) then
-        net.SendPVS(target)
-    else
-        net.Send(recipients)
-    end
-
-    ow.util:Print("[ow.net] Sent '" .. name .. "' to " .. (SERVER and #recipients .. " players" or "server"))
 end
 
 net.Receive("ow.net.msg", function(len, ply)

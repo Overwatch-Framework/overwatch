@@ -65,7 +65,7 @@ function PANEL:Populate()
         button:SetTall(characterList:GetWide() / 8)
 
         button.DoClick = function()
-            ow.net:Start(nil, "character.load", v:GetID())
+            ow.net:Start("character.load", v:GetID())
         end
 
         local image = button:Add("DImage")
@@ -141,7 +141,7 @@ function PANEL:PopulateDelete(characterID)
     okButton:Dock(RIGHT)
     okButton:SetText("OK")
     okButton.DoClick = function()
-        ow.net:Start(nil, "character.delete", v:GetID())
+        ow.net:Start("character.delete", v:GetID())
     end
 end
 

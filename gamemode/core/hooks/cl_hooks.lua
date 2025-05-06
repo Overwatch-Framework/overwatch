@@ -42,7 +42,7 @@ function GM:InitPostEntity()
         vgui.Create("ow.chatbox")
     end
 
-    ow.net:Start(nil, "client.ready")
+    ow.net:Start("client.ready")
 end
 
 function GM:OnCloseCaptionEmit()

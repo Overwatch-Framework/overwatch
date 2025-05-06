@@ -30,7 +30,7 @@ if ( CLIENT ) then
             end
         end
 
-        ow.net:Start(nil, "option.sync", self.stored)
+        ow.net:Start("option.sync", self.stored)
 
         hook.Run("PostOptionsLoad", self.stored)
     end
@@ -65,7 +65,7 @@ if ( CLIENT ) then
         stored.Value = value
 
         if ( stored.NoNetworking != true ) then
-            ow.net:Start(nil, "option.set", key, value)
+            ow.net:Start("option.set", key, value)
         end
 
         if ( isfunction(stored.OnChange) ) then
@@ -122,7 +122,7 @@ if ( CLIENT ) then
         end
 
         ow.data:Set("options", {}, true, false)
-        ow.net:Start(nil, "option.sync", {})
+        ow.net:Start("option.sync", {})
     end
 end
 

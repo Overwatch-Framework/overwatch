@@ -229,7 +229,7 @@ function PANEL:PopulateCreateCharacter()
         end
 
         if ( isNextEmpty ) then
-            ow.net:Start(nil, "character.create", self.currentCreatePayload)
+            ow.net:Start("character.create", self.currentCreatePayload)
         else
             self.currentCreatePage = self.currentCreatePage + 1
             self:PopulateCreateCharacterForm()

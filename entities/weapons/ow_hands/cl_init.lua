@@ -6,7 +6,7 @@ function SWEP:CheckYaw()
         if ( self.owHandsReset and self.owHandsReset > CurTime() ) then return end
         self.owHandsReset = CurTime() + 0.5
 
-        ow.net:Start(nil, "hands.reset")
+        ow.net:Start("hands.reset")
     end
 end
 
