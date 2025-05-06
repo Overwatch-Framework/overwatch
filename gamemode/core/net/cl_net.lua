@@ -292,9 +292,7 @@ end)
 ow.net:Hook("entity.setDataVariable", function(entity, key, value)
     if ( !IsValid(entity) ) then return end
 
-    local entityTable = entity:GetTable()
-
-    entityTable[key] = value
+    entity:GetTable()[key] = value
 end)
 
 ow.net:Hook("gesture.play", function(client, name)
