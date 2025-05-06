@@ -47,3 +47,10 @@ function MODULE:OnPlayerHitGround(ply, inWater, onFloater, speed)
         ow.stamina:Consume(ply, speed / 64)
     end
 end
+
+function MODULE:PlayerSpawn(ply)
+    if ( !ow.config:Get("stamina", true) ) then return end
+
+    -- Initialize stamina when player spawns
+    ow.stamina:Initialize(ply)
+end
