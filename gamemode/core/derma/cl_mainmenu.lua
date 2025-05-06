@@ -155,8 +155,11 @@ function PANEL:Populate()
 
         if ( availableFactions > 1 ) then
             self.createPanel:PopulateFactionSelect()
-        else
+        elseif ( availableFactions == 1 ) then
             self.createPanel:PopulateCreateCharacter()
+        else
+            ow.localClient:Notify("You do not have any factions available to create a character for.", NOTIFY_ERROR)
+            return
         end
     end
 

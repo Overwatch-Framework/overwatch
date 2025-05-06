@@ -61,6 +61,5 @@ function PLAYER:SetData(key, value)
     end
 
     data[key] = value
-
     clientTable.owDatabase.data = util.TableToJSON(data)
 end
