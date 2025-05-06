@@ -21,12 +21,12 @@ net.Receive("ow.character.delete", function(len, client)
     local character = ow.character:Get(characterID)
     if ( !character ) then return end
 
-    local bResult = hook.Run("PreCharacterDelete", client, character)
+    local bResult = hook.Run("PrePlayerDeletedCharacter", client, characterID)
     if ( bResult == false ) then return end
 
     ow.character:Delete(characterID)
 
-    hook.Run("PostCharacterDelete", client, character)
+    hook.Run("PostPlayerDeletedCharacter", client, characterID)
 end)
 
 net.Receive("ow.character.create", function(len, client)

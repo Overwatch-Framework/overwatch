@@ -149,16 +149,15 @@ function GM:GetFallDamage(client, speed)
     return speed / 8
 end
 
-function GM:PlayerDeletedCharacter(client, characterID)
-    -- TODO: Empty hook, implement this in the future
-end
+function GM:PostPlayerLoadedCharacter(client, character, previousCharacter)
+    -- Restore the bodygroups of the character
+    local groups = character:GetData("groups", {})
+    for name, value in pairs(groups) do
+        local id = client:FindBodygroupByName(name)
+        if ( id == -1 ) then continue end
 
-function GM:PlayerLoadedCharacter(client, character, previousCharacter)
-    -- TODO: Empty hook, implement this in the future
-end
-
-function GM:PlayerCreatedCharacter(client, character)
-    -- TODO: Empty hook, implement this in the future
+        client:SetBodygroup(id, value)
+    end
 end
 
 local nextThink = 0

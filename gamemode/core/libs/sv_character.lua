@@ -4,12 +4,12 @@
 function ow.character:Create(client, query)
     if ( !IsValid(client) or !client:IsPlayer() ) then
         ErrorNoHalt("Attempted to create character for invalid player (" .. tostring(client) .. ")")
-        return false
+        return false, "Invalid player!"
     end
 
     if ( !istable(query) ) then
         ErrorNoHalt("Attempted to create character with invalid query (" .. tostring(query) .. ")")
-        return false
+        return false, "Invalid query!"
     end
 
     local insertQuery = {}
@@ -30,7 +30,7 @@ function ow.character:Create(client, query)
     ow.sqlite:Insert("ow_characters", insertQuery, function(result)
         if ( !result ) then
             ErrorNoHalt("Failed to insert character into database for player " .. tostring(client) .. "\n")
-            return false
+            return false, "Failed to insert character into database!"
         end
 
         characterID = tonumber(result)
@@ -38,13 +38,19 @@ function ow.character:Create(client, query)
 
     if ( !characterID ) then
         ErrorNoHalt("Failed to create character: " .. query.name .. "\n")
-        return false
+        return false, "Failed to create character!"
     end
 
     local character = self:CreateObject(characterID, insertQuery, client)
     if ( !character ) then
         ErrorNoHalt("Failed to create character object for ID " .. characterID .. " for player " .. tostring(client) .. "\n")
-        return false
+        return false, "Failed to create character object!"
+    end
+
+    local canCreate, reason = hook.Run("PrePlayerCreatedCharacter", client, character, query)
+    if ( canCreate == false ) then
+        self:Delete(characterID)
+        return false, reason or "Failed to create character!"
     end
 
     local clientTable = client:GetTable()
@@ -54,18 +60,17 @@ function ow.character:Create(client, query)
     self.stored[characterID] = character
 
     local encoded, err = sfs.encode(character)
-    if ( err ) then
+    if ( !err ) then
+        net.Start("ow.character.cache")
+            net.WriteData(encoded, #encoded)
+        net.Send(client)
+    else
         ErrorNoHalt("Failed to encode character: " .. err .. "\n")
-        return false
     end
-
-    net.Start("ow.character.cache")
-        net.WriteData(encoded, #encoded)
-    net.Send(client)
 
     ow.inventory:Register({characterID = characterID})
 
-    hook.Run("PlayerCreatedCharacter", client, character, query)
+    hook.Run("PostPlayerCreatedCharacter", client, character, query)
 
     return character
 end
@@ -124,7 +129,7 @@ function ow.character:Load(client, characterID)
         ow.inventory:CacheAll(characterID)
         ow.item:Cache(characterID)
 
-        hook.Run("PlayerLoadedCharacter", client, character, currentCharacter)
+        hook.Run("PostPlayerLoadedCharacter", client, character, currentCharacter)
 
         return character
     else

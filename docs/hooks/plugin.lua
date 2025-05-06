@@ -1031,10 +1031,10 @@ end
 -- @player client Player that has loaded a character
 -- @char character Character that was loaded
 -- @char currentChar Character that player was using
--- @usage function MODULE:PlayerLoadedCharacter(client, character, currentChar)
+-- @usage function MODULE:PostPlayerLoadedCharacter(client, character, currentChar)
 --     client:Notify("Welcome back, "..character:GetName().."!")
 -- end
-function PlayerLoadedCharacter(client, character, currentChar)
+function PostPlayerLoadedCharacter(client, character, currentChar)
 end
 
 --- Called when a player has locked a door.
