@@ -2,8 +2,7 @@ AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
 
-util.AddNetworkString("ow.hands.reset")
-net.Receive("ow.hands.reset", function(_, client)
+ow.net:Hook("hands.reset", function(client)
     if ( client.owHandsReset and client.owHandsReset > CurTime() ) then return end
     client.owHandsReset = CurTime() + 0.5
 

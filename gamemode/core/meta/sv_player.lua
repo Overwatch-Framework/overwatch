@@ -33,19 +33,8 @@ function PLAYER:SaveDB()
     if ( clientTable.owDatabase ) then
         ow.sqlite:SaveRow("ow_players", clientTable.owDatabase, "steamid")
 
-        -- Network it to the client so they can update their local copy of the database
-        -- This is useful for when the player is in the main menu and we want to retrieve something from the database
-        -- via the client
-
-        local encoded, err = sfs.encode(clientTable.owDatabase or {})
-        if ( err ) then
-            ow.util:PrintError("Failed to encode database: " .. err)
-            return
-        end
-
-        net.Start("ow.database.save")
-            net.WriteData(encoded, #encoded)
-        net.Send(self)
+        -- Network the data to the client
+        ow.net:Start(self, "database.save", clientTable.owDatabase or {})
     end
 end
 

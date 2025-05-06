@@ -42,8 +42,7 @@ function GM:StartCommand(client, cmd)
         ow.character:CacheAll(client)
         ow.util:SendChatText(nil, Color(25, 75, 150), client:SteamName() .. " has joined the server.")
 
-        net.Start("ow.mainmenu")
-        net.Send(client)
+        ow.net:Start(client, "mainmenu")
 
         client:SaveDB()
 

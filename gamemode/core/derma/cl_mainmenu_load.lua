@@ -65,9 +65,7 @@ function PANEL:Populate()
         button:SetTall(characterList:GetWide() / 8)
 
         button.DoClick = function()
-            net.Start("ow.character.load")
-                net.WriteUInt(v:GetID(), 32)
-            net.SendToServer()
+            ow.net:Start(nil, "character.load", v:GetID())
         end
 
         local image = button:Add("DImage")
@@ -143,9 +141,7 @@ function PANEL:PopulateDelete(characterID)
     okButton:Dock(RIGHT)
     okButton:SetText("OK")
     okButton.DoClick = function()
-        net.Start("ow.character.delete")
-            net.WriteUInt(characterID, 32)
-        net.SendToServer()
+        ow.net:Start(nil, "character.delete", v:GetID())
     end
 end
 

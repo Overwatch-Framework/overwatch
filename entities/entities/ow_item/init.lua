@@ -58,10 +58,7 @@ function ENT:SetItem(itemID, uniqueID)
                 self:SetData(item:GetData() or {})
 
                 -- Notify clients
-                net.Start("ow.item.entity")
-                    net.WriteUInt(newID, 32)
-                    net.WriteEntity(self)
-                net.Broadcast()
+                ow.net:Start(nil, "item.entity", self, newID)
             end
         end)
     else
@@ -72,10 +69,7 @@ function ENT:SetItem(itemID, uniqueID)
             self:SetData(item:GetData() or {})
         end
 
-        net.Start("ow.item.entity")
-            net.WriteUInt(itemID, 32)
-            net.WriteEntity(self)
-        net.Broadcast()
+        ow.net:Start(nil, "item.entity", self, newID)
     end
 
     local item = ow.item:Get(itemID)
@@ -86,10 +80,7 @@ function ENT:SetItem(itemID, uniqueID)
         self:SetData({})
     end
 
-    net.Start("ow.item.entity")
-        net.WriteUInt(itemID or 0, 32)
-        net.WriteEntity(self)
-    net.Broadcast()
+    ow.net:Start(nil, "item.entity", self, newID)
 end
 
 function ENT:GetData()

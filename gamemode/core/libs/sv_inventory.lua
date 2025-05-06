@@ -69,17 +69,15 @@ function ow.inventory:Broadcast(inventory)
     local receivers = inventory:GetReceivers()
     if ( !istable(receivers) ) then return end
 
-    net.Start("ow.inventory.register")
-        net.WriteTable({
-            ID = inventory:GetID(),
-            CharacterID = inventory:GetOwner(),
-            Name = inventory:GetName(),
-            MaxWeight = inventory:GetMaxWeight(),
-            Items = inventory:GetItems(),
-            Data = inventory:GetData(),
-            Receivers = inventory.Receivers
-        })
-    net.Send(receivers)
+    ow.net:Start(receivers, "inventory.register", {
+        ID = inventory:GetID(),
+        CharacterID = inventory:GetOwner(),
+        Name = inventory:GetName(),
+        MaxWeight = inventory:GetMaxWeight(),
+        Items = inventory:GetItems(),
+        Data = inventory:GetData(),
+        Receivers = inventory.Receivers
+    })
 end
 
 function ow.inventory:Cache(client, inventoryID)
@@ -104,17 +102,15 @@ function ow.inventory:Cache(client, inventoryID)
 
     inventory.Items = itemIDs
 
-    net.Start("ow.inventory.cache")
-        net.WriteTable({
-            ID = inventory:GetID(),
-            CharacterID = inventory:GetOwner(),
-            Name = inventory:GetName(),
-            MaxWeight = inventory:GetMaxWeight(),
-            Items = inventory:GetItems(),
-            Data = inventory:GetData(),
-            Receivers = inventory.Receivers
-        })
-    net.Send(client)
+    ow.net:Start(client, "inventory.cache", {
+        ID = inventory:GetID(),
+        CharacterID = inventory:GetOwner(),
+        Name = inventory:GetName(),
+        MaxWeight = inventory:GetMaxWeight(),
+        Items = inventory:GetItems(),
+        Data = inventory:GetData(),
+        Receivers = inventory.Receivers
+    })
 
     return true
 end

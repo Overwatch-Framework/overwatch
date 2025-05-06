@@ -122,10 +122,7 @@ function PANEL:AddConfig(configData)
         end
 
         panel.DoClick = function()
-            net.Start("ow.config.set")
-                net.WriteString(configData.UniqueID)
-                net.WriteType(!value)
-            net.SendToServer()
+            ow.net:Start("config.set", configData.UniqueID, !value)
 
             value = !value
 
@@ -135,9 +132,7 @@ function PANEL:AddConfig(configData)
         panel.DoRightClick = function()
             local menu = DermaMenu()
             menu:AddOption(ow.localization:GetPhrase("reset"), function()
-                net.Start("ow.config.reset")
-                    net.WriteString(configData.UniqueID)
-                net.SendToServer()
+                ow.net:Start("config.reset", configData.UniqueID)
 
                 value = ow.config:GetDefault(configData.UniqueID)
                 label:SetText(value and enabled or disabled, true)
@@ -192,18 +187,13 @@ function PANEL:AddConfig(configData)
         end
 
         slider.OnValueChanged = function(this, _)
-            net.Start("ow.config.set")
-                net.WriteString(configData.UniqueID)
-                net.WriteType(this:GetValue())
-            net.SendToServer()
+            ow.net:Start("config.set", configData.UniqueID, this:GetValue())
             ow.localClient:EmitSound("ui/buttonrollover.wav", 100, 100, 1, CHAN_STATIC)
         end
 
         panel.DoClick = function(this)
             if ( !slider.bCursorInside ) then
-                net.Start("ow.config.reset")
-                    net.WriteString(configData.UniqueID)
-                net.SendToServer()
+                ow.net:Start("config.reset", configData.UniqueID)
 
                 value = ow.config:GetDefault(configData.UniqueID)
                 slider:SetValue(value)
@@ -220,9 +210,7 @@ function PANEL:AddConfig(configData)
         panel.DoRightClick = function(this)
             local menu = DermaMenu()
             menu:AddOption(ow.localization:GetPhrase("reset"), function()
-                net.Start("ow.config.reset")
-                    net.WriteString(configData.UniqueID)
-                net.SendToServer()
+                ow.net:Start("config.reset", configData.UniqueID)
 
                 value = ow.config:GetDefault(configData.UniqueID)
                 slider:SetValue(value)
@@ -266,10 +254,7 @@ function PANEL:AddConfig(configData)
             nextKey = nextKey or keys[1]
             nextKey = tostring(nextKey)
 
-            net.Start("ow.config.set")
-                net.WriteString(configData.UniqueID)
-                net.WriteType(nextKey)
-            net.SendToServer()
+            ow.net:Start("config.set", configData.UniqueID, nextKey)
 
             value = nextKey
 
@@ -279,9 +264,7 @@ function PANEL:AddConfig(configData)
         panel.DoRightClick = function()
             local menu = DermaMenu()
             menu:AddOption(ow.localization:GetPhrase("reset"), function()
-                net.Start("ow.config.reset")
-                    net.WriteString(configData.UniqueID)
-                net.SendToServer()
+                ow.net:Start("config.reset", configData.UniqueID)
 
                 value = ow.config:GetDefault(configData.UniqueID)
                 label:SetText(configs and configs[value] or unknown, true)
@@ -289,10 +272,7 @@ function PANEL:AddConfig(configData)
             menu:AddSpacer()
             for k2, v2 in SortedPairs(configs) do
                 menu:AddOption(v2, function()
-                    net.Start("ow.config.set")
-                        net.WriteString(configData.UniqueID)
-                        net.WriteType(k2)
-                    net.SendToServer()
+                    ow.net:Start("config.set", configData.UniqueID, k2)
 
                     value = k2
 
@@ -336,10 +316,7 @@ function PANEL:AddConfig(configData)
                 end
             end
             blocker.OnRemove = function(this)
-                net.Start("ow.config.set")
-                    net.WriteString(configData.UniqueID)
-                    net.WriteType(value)
-                net.SendToServer()
+                ow.net:Start("config.set", configData.UniqueID, value)
             end
 
             local frame = blocker:Add("EditablePanel")
@@ -362,9 +339,7 @@ function PANEL:AddConfig(configData)
         panel.DoRightClick = function()
             local menu = DermaMenu()
             menu:AddOption(ow.localization:GetPhrase("reset"), function()
-                net.Start("ow.config.reset")
-                    net.WriteString(configData.UniqueID)
-                net.SendToServer()
+                ow.net:Start("config.reset", configData.UniqueID)
 
                 value = ow.config:GetDefault(configData.UniqueID)
                 color.color = value
@@ -382,10 +357,7 @@ function PANEL:AddConfig(configData)
             local newValue = this:GetText()
             if ( newValue == value ) then return end
 
-            net.Start("ow.config.set")
-                net.WriteString(configData.UniqueID)
-                net.WriteType(newValue)
-            net.SendToServer()
+            ow.net:Start("config.set", configData.UniqueID, newValue)
 
             value = newValue
 
@@ -395,9 +367,7 @@ function PANEL:AddConfig(configData)
         panel.DoClick = function()
             local menu = DermaMenu()
             menu:AddOption(ow.localization:GetPhrase("reset"), function()
-                net.Start("ow.config.reset")
-                    net.WriteString(configData.UniqueID)
-                net.SendToServer()
+                ow.net:Start("config.reset", configData.UniqueID)
 
                 value = ow.config:GetDefault(configData.UniqueID)
                 text:SetText(value)

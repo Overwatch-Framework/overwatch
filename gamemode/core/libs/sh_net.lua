@@ -66,6 +66,8 @@ function ow.net:Start(target, name, ...)
     else
         net.Send(recipients)
     end
+
+    ow.util:Print("[ow.net] Sent '" .. name .. "' to " .. (SERVER and #recipients .. " players" or "server"))
 end
 
 net.Receive("ow.net.msg", function(_, ply)
@@ -90,6 +92,8 @@ net.Receive("ow.net.msg", function(_, ply)
     else
         callback(unpack(decoded))
     end
+
+    ow.util:Print("[ow.net] Received '" .. name .. "' from " .. (SERVER and ply:Nick() or "server"))
 end)
 
 /*

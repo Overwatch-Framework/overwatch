@@ -150,20 +150,7 @@ end
 -- @param ... any The message to send.
 function ow.util:SendChatText(client, ...)
     if ( SERVER ) then
-
-        local encoded, err = sfs.encode({...})
-        if ( err ) then
-            ow.util:PrintError("Failed to encode chat text: " .. err)
-            return
-        end
-
-        net.Start("ow.chat.text")
-            net.WriteData(encoded, #encoded)
-        if ( IsValid(client) ) then
-            net.Send(client)
-        else
-            net.Broadcast()
-        end
+        ow.net:Start(client, "chat.text", {...})
     else
         chat.AddText(...)
     end

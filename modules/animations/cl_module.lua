@@ -1,9 +1,5 @@
-net.Receive("ow.animations.update", function(len)
-    local client = net.ReadPlayer()
-    if ( !IsValid(client) ) then return end
-
-    local data = net.ReadTable()
-    if ( !istable(data) ) then return end
+ow.net:Hook("animations.update", function(client, data)
+    if ( !IsValid(client) or !istable(data) ) then return end
 
     client.owAnimations = data
 

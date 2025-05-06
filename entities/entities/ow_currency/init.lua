@@ -28,10 +28,8 @@ function ENT:Use(client)
     if ( prevent == false ) then return end
 
     character:GiveMoney(amount)
-    net.Start("ow.currency.give")
-        net.WriteFloat(amount, 32)
-        net.WriteEntity(self)
-    net.Send(client)
+
+    ow.net:Start(client, "currency.give", self, amount)
 
     hook.Run("PostPlayerTakeMoney", client, self, amount)
 

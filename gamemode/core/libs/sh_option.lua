@@ -14,15 +14,7 @@ function ow.option:SetDefault(key, default)
     stored.Default = default
 
     if ( SERVER ) then
-        local encoded, err = sfs.encode(self.stored)
-        if ( err ) then
-            ow.util:PrintError("Failed to encode options: " .. err)
-            return false
-        end
-
-        net.Start("ow.option.sync")
-            net.WriteData(encoded, #encoded)
-        net.SendToServer()
+        ow.net:Start(nil, "option.sync", self.stored)
     end
 
     return true
@@ -38,15 +30,7 @@ if ( CLIENT ) then
             end
         end
 
-        local encoded, err = sfs.encode(self:GetSaveData())
-        if ( err ) then
-            ow.util:PrintError("Failed to encode options: " .. err)
-            return false
-        end
-
-        net.Start("ow.option.sync")
-            net.WriteData(encoded, #encoded)
-        net.SendToServer()
+        ow.net:Start(nil, "ow.option.sync", self.stored)
 
         hook.Run("PostOptionsLoad", self.stored)
     end
@@ -81,10 +65,7 @@ if ( CLIENT ) then
         stored.Value = value
 
         if ( stored.NoNetworking != true ) then
-            net.Start("ow.option.set")
-                net.WriteString(key)
-                net.WriteType(value)
-            net.SendToServer()
+            ow.net:Start(nil, "ow.option.set", key, value)
         end
 
         if ( isfunction(stored.OnChange) ) then
@@ -141,16 +122,7 @@ if ( CLIENT ) then
         end
 
         ow.data:Set("options", {}, true, false)
-
-        local encoded, err = sfs.encode({})
-        if ( err ) then
-            ow.util:PrintError("Failed to encode options: " .. err)
-            return false
-        end
-
-        net.Start("ow.option.sync")
-            net.WriteData(encoded, #encoded)
-        net.SendToServer()
+        ow.net:Start(nil, "ow.option.sync", {})
     end
 end
 

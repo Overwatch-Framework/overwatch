@@ -10,10 +10,7 @@ function MODULE:PostEntitySetModel(ent, model)
 
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
-        net.Start("ow.animations.update")
-            net.WritePlayer(client)
-            net.WriteTable({})
-        net.Broadcast()
+        ow.net:Start(nil, "animations.update", client, {})
     end
 
     local weapon = client:GetActiveWeapon()
@@ -31,10 +28,7 @@ function MODULE:PostEntitySetModel(ent, model)
         client.owAnimations = {}
     end
 
-    net.Start("ow.animations.update")
-        net.WritePlayer(client)
-        net.WriteTable(client.owAnimations)
-    net.Broadcast()
+    ow.net:Start(nil, "animations.update", client, client.owAnimations)
 end
 
 function MODULE:PlayerSpawn(client)
@@ -45,10 +39,7 @@ function MODULE:PlayerSpawn(client)
 
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
-        net.Start("ow.animations.update")
-            net.WritePlayer(client)
-            net.WriteTable({})
-        net.Broadcast()
+        ow.net:Start(nil, "animations.update", client, {})
     end
 
     local weapon = client:GetActiveWeapon()
@@ -66,10 +57,7 @@ function MODULE:PlayerSpawn(client)
         client.owAnimations = {}
     end
 
-    net.Start("ow.animations.update")
-        net.WritePlayer(client)
-        net.WriteTable(client.owAnimations)
-    net.Broadcast()
+    ow.net:Start(nil, "animations.update", client, client.owAnimations)
 end
 
 function MODULE:PlayerSwitchWeapon(client, oldWeapon, newWeapon)
@@ -81,10 +69,7 @@ function MODULE:PlayerSwitchWeapon(client, oldWeapon, newWeapon)
 
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
-        net.Start("ow.animations.update")
-            net.WritePlayer(client)
-            net.WriteTable({})
-        net.Broadcast()
+        ow.net:Start(nil, "animations.update", client, {})
     end
 
     local holdType = newWeapon:GetHoldType()
@@ -99,8 +84,5 @@ function MODULE:PlayerSwitchWeapon(client, oldWeapon, newWeapon)
         client.owAnimations = {}
     end
 
-    net.Start("ow.animations.update")
-        net.WritePlayer(client)
-        net.WriteTable(client.owAnimations)
-    net.Broadcast()
+    ow.net:Start(nil, "animations.update", client, client.owAnimations)
 end

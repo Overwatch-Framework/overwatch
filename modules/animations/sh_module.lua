@@ -327,7 +327,6 @@ ow.animations:SetModelClass("models/vortigaunt_doctor.mdl", "vortigaunt")
 ow.animations:SetModelClass("models/vortigaunt_slave.mdl", "vortigaunt")
 
 ow.util:LoadFile("cl_module.lua")
-ow.util:LoadFile("sv_module.lua")
 
 ow.util:LoadFile("sh_hooks.lua")
 ow.util:LoadFile("sv_hooks.lua")

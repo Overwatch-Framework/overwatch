@@ -66,10 +66,7 @@ function ow.config:Set(key, value)
     stored.Value = value
 
     if ( SERVER and stored.NoNetworking != true ) then
-        net.Start("ow.config.set")
-            net.WriteString(key)
-            net.WriteType(value)
-        net.Broadcast()
+        ow.net:Start(nil, "config.set", key, value)
     end
 
     if ( isfunction(stored.OnChange) ) then

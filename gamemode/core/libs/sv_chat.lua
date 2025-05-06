@@ -11,13 +11,11 @@ function ow.chat:SendSpeaker(speaker, uniqueID, text)
         end
     end
 
-    net.Start("ow.chat.send")
-        net.WriteTable({
-            Speaker = speaker:EntIndex(),
-            UniqueID = uniqueID,
-            Text = text
-        })
-    net.Send(players)
+    ow.net:Start(players, "ow.chat.send", {
+        Speaker = speaker:EntIndex(),
+        UniqueID = uniqueID,
+        Text = text
+    })
 
     hook.Run("OnChatMessageSent", speaker, players, uniqueID, text)
 end
@@ -25,10 +23,8 @@ end
 function ow.chat:SendTo(players, uniqueID, text)
     players = players or select(2, player.Iterator())
 
-    net.Start("ow.chat.send")
-        net.WriteTable({
-            UniqueID = uniqueID,
-            Text = text
-        })
-    net.Send(players)
+    ow.net:Start(players, "ow.chat.send", {
+        UniqueID = uniqueID,
+        Text = text
+    })
 end

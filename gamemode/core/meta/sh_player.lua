@@ -50,15 +50,7 @@ function PLAYER:ChatText(...)
     local args = {ow.color:Get("text"), ...}
 
     if ( SERVER ) then
-        local encoded, err = sfs.encode(args)
-        if ( err ) then
-            ow.util:PrintError("Failed to encode chat text: " .. err)
-            return
-        end
-
-        net.Start("ow.chat.text")
-            net.WriteData(encoded, #encoded)
-        net.Send(self)
+        ow.net:Start(self, "chat.text", args)
     else
         chat.AddText(unpack(args))
     end
@@ -72,10 +64,7 @@ PLAYER.ChatPrint = PLAYER.ChatText
 -- @usage player:GesturePlay("taunt_laugh")
 function PLAYER:GesturePlay(name)
     if ( SERVER ) then
-        net.Start("ow.gesture.play")
-            net.WritePlayer(self)
-            net.WriteString(name)
-        net.Broadcast()
+        ow.net:Start(self, "gesture.play", name)
     else
         self:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, self:LookupSequence(name), 0, true)
     end

@@ -2,9 +2,8 @@
     Character Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.character.cache.all", function(len)
-    local data = sfs.decode(net.ReadData(len / 8))
-    if ( !istable(data) ) then return end
+ow.net:Hook("character.cache.all", function(data)
+    if ( !istable(data) ) then print("Invalid data!") return end
 
     local client = ow.localClient
     local clientTable = client:GetTable()
@@ -23,8 +22,7 @@ net.Receive("ow.character.cache.all", function(len)
     ow.localClient:Notify("All characters cached!")
 end)
 
-net.Receive("ow.character.cache", function(len)
-    local data = sfs.decode(net.ReadData(len / 8))
+ow.net:Hook("character.cache", function(data)
     if ( !istable(data) ) then return end
 
     local client = ow.localClient
@@ -43,19 +41,17 @@ net.Receive("ow.character.cache", function(len)
     ow.localClient:Notify("Character " .. characterID .. " cached!")
 end)
 
-net.Receive("ow.character.create.failed", function(len)
-    local reason = net.ReadString()
+ow.net:Hook("character.create.failed", function(reason)
     if ( !reason ) then return end
 
     ow.localClient:Notify(reason)
 end)
 
-net.Receive("ow.character.create", function(len)
+ow.net:Hook("character.create", function()
     -- Do something here...
 end)
 
-net.Receive("ow.character.delete", function(len)
-    local characterID = net.ReadUInt(32)
+ow.net:Hook("character.delete", function(characterID)
     if ( !isnumber(characterID) ) then return end
 
     local character = ow.character.stored[characterID]
@@ -78,15 +74,13 @@ net.Receive("ow.character.delete", function(len)
     ow.notification:Add("Character " .. characterID .. " deleted!", 5, ow.color:Get("success"))
 end)
 
-net.Receive("ow.character.load.failed", function(len)
-    local reason = net.ReadString()
+ow.net:Hook("character.load.failed", function(reason)
     if ( !reason ) then return end
 
     ow.localClient:Notify(reason)
 end)
 
-net.Receive("ow.character.load", function(len)
-    local characterID = net.ReadUInt(32)
+ow.net:Hook("character.load", function(characterID)
     if ( characterID == 0 ) then return end
 
     if ( IsValid(ow.gui.mainmenu) ) then
@@ -111,11 +105,7 @@ net.Receive("ow.character.load", function(len)
     clientTable.owCharacter = character
 end)
 
-net.Receive("ow.character.variable.set", function(len, client)
-    local characterID = net.ReadUInt(32)
-    local key = net.ReadString()
-    local value = net.ReadType()
-
+ow.net:Hook("character.variable.set", function(characterID, key, value)
     if ( !characterID or !key or !value ) then return end
 
     local character = ow.character:Get(characterID)
@@ -128,8 +118,7 @@ end)
     Chat Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.chat.send", function(len)
-    local data = net.ReadTable()
+ow.net:Hook("chat.send", function(data)
     if ( !istable(data) ) then return end
 
     local speaker = data.Speaker and Entity(data.Speaker) or nil
@@ -142,28 +131,23 @@ net.Receive("ow.chat.send", function(len)
     end
 end)
 
-net.Receive("ow.chat.text", function(len)
-    local receivedTable = sfs.decode(net.ReadData(len / 8))
-    if ( !istable(receivedTable) ) then return end
+ow.net:Hook("chat.text", function(data)
+    if ( !istable(data) ) then return end
 
-    chat.AddText(unpack(receivedTable))
+    chat.AddText(unpack(data))
 end)
 
 --[[-----------------------------------------------------------------------------
     Config Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.config.sync", function(len)
-    local compressedTable = sfs.decode(net.ReadData(len / 8))
-    if ( !istable(compressedTable) ) then return end
+ow.net:Hook("config.sync", function(data)
+    if ( !istable(data) ) then return end
 
-    ow.config.stored = compressedTable
+    ow.config.stored = data
 end)
 
-net.Receive("ow.config.set", function(len)
-    local key = net.ReadString()
-    local value = net.ReadType()
-
+ow.net:Hook("config.set", function(key, value)
     ow.config:Set(key, value)
 end)
 
@@ -171,10 +155,7 @@ end)
     Option Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.option.set", function(len)
-    local key = net.ReadString()
-    local value = net.ReadType()
-
+ow.net:Hook("option.set", function(key, value)
     local stored = ow.option.stored[key]
     if ( !istable(stored) ) then return end
 
@@ -185,11 +166,10 @@ end)
     Inventory Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.inventory.cache", function()
-    local inventoryData = net.ReadTable()
-    if ( !istable(inventoryData) ) then return end
+ow.net:Hook("inventory.cache", function(data)
+    if ( !istable(data) ) then return end
 
-    local inventory = ow.inventory:CreateObject(inventoryData)
+    local inventory = ow.inventory:CreateObject(data)
     if ( inventory ) then
         ow.inventory.stored[inventory:GetID()] = inventory
 
@@ -205,12 +185,7 @@ net.Receive("ow.inventory.cache", function()
     end
 end)
 
-net.Receive("ow.inventory.item.add", function()
-    local inventoryID = net.ReadUInt(32)
-    local itemID = net.ReadUInt(32)
-    local uniqueID = net.ReadString()
-    local data = net.ReadTable()
-
+ow.net:Hook("inventory.item.add", function(inventoryID, itemID, uniqueID, data)
     local item = ow.item:Add(itemID, inventoryID, uniqueID, data)
     if ( !item ) then return end
 
@@ -223,10 +198,7 @@ net.Receive("ow.inventory.item.add", function()
     end
 end)
 
-net.Receive("ow.inventory.item.remove", function()
-    local inventoryID = net.ReadUInt(32)
-    local itemID = net.ReadUInt(32)
-
+ow.net:Hook("inventory.item.remove", function(inventoryID, itemID)
     local inventory = ow.inventory:Get(inventoryID)
     if ( !inventory ) then return end
 
@@ -241,20 +213,17 @@ net.Receive("ow.inventory.item.remove", function()
     end
 end)
 
-net.Receive("ow.inventory.refresh", function()
-    local inventoryID = net.ReadUInt(32)
-
+ow.net:Hook("inventory.refresh", function(inventoryID)
     local panel = ow.gui.inventory
     if ( IsValid(panel) ) then
         panel:SetInventory(inventoryID)
     end
 end)
 
-net.Receive("ow.inventory.register", function()
-    local inventoryData = net.ReadTable()
-    if ( !istable(inventoryData) ) then return end
+ow.net:Hook("inventory.register", function(data)
+    if ( !istable(data) ) then return end
 
-    local inventory = ow.inventory:CreateObject(inventoryData)
+    local inventory = ow.inventory:CreateObject(data)
     if ( inventory ) then
         ow.inventory.stored[inventory.ID] = inventory
     end
@@ -264,20 +233,14 @@ end)
     Item Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.item.add", function(len)
-    local itemID = net.ReadUInt(32)
-    local inventoryID = net.ReadUInt(32)
-    local uniqueID = net.ReadString()
-    local data = sfs.decode(net.ReadData(len / 8))
-
+ow.net:Hook("item.add", function(itemID, inventoryID, uniqueID, data)
     ow.item:Add(itemID, inventoryID, uniqueID, data)
 end)
 
-net.Receive("ow.item.cache", function()
-    local instanceList = net.ReadTable()
-    if ( !istable(instanceList) ) then return end
+ow.net:Hook("item.cache", function(data)
+    if ( !istable(data) ) then return end
 
-    for k, v in pairs(instanceList) do
+    for k, v in pairs(data) do
         local item = ow.item:CreateObject(v)
         if ( item ) then
             ow.item.instances[item.ID] = item
@@ -289,35 +252,27 @@ net.Receive("ow.item.cache", function()
     end
 end)
 
-net.Receive("ow.item.data", function()
-    local itemID = net.ReadUInt(32)
-    local key = net.ReadString()
-    local value = net.ReadType()
-
+ow.net:Hook("item.data", function(itemID, key, value)
     local item = ow.item:Get(itemID)
     if ( !item ) then return end
 
     item:SetData(key, value)
 end)
 
-net.Receive("ow.item.entity", function()
-    local itemID = net.ReadUInt(32)
-    local entity = net.ReadEntity()
+ow.net:Hook("item.entity", function(entity, itemID)
     if ( !IsValid(entity) ) then return end
 
     local item = ow.item:Get(itemID)
-    if ( item ) then
-        item:SetEntity(entity)
-    end
+    if ( !item ) then return end
+
+    item:SetEntity(entity)
 end)
 
 --[[-----------------------------------------------------------------------------
     Currency Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.currency.give", function()
-    local amount = net.ReadFloat(32)
-    local entity = net.ReadEntity()
+ow.net:Hook("currency.give", function(entity, amount)
     if ( !IsValid(entity) ) then return end
 
     local phrase = ow.localization:GetPhrase("currency.pickup")
@@ -330,16 +285,11 @@ end)
     Miscellaneous Networking
 -----------------------------------------------------------------------------]]--
 
-net.Receive("ow.database.save", function(len)
-    local compressedTable = sfs.decode(net.ReadData(len / 8))
-    ow.localClient:GetTable().owDatabase = compressedTable
+ow.net:Hook("database.save", function(data)
+    ow.localClient:GetTable().owDatabase = data
 end)
 
-net.Receive("ow.entity.setDataVariable", function(len)
-    local entity = net.ReadEntity()
-    local key = net.ReadString()
-    local value = net.ReadType()
-
+ow.net:Hook("entity.setDataVariable", function(entity, key, value)
     if ( !IsValid(entity) ) then return end
 
     local entityTable = entity:GetTable()
@@ -347,24 +297,17 @@ net.Receive("ow.entity.setDataVariable", function(len)
     entityTable[key] = value
 end)
 
-net.Receive("ow.gesture.play", function(len)
-    local client = net.ReadPlayer()
-    local name = net.ReadString()
-
+ow.net:Hook("gesture.play", function(client, name)
     if ( !IsValid(client) ) then return end
 
     client:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, client:LookupSequence(name), 0, true)
 end)
 
-net.Receive("ow.mainmenu", function(len)
+ow.net:Hook("mainmenu", function()
     ow.gui.mainmenu = vgui.Create("ow.mainmenu")
 end)
 
-net.Receive("ow.notification.send", function(len)
-    local text = net.ReadString()
-    local type = net.ReadUInt(8)
-    local duration = net.ReadUInt(16)
-
+ow.net:Hook("notification.send", function(text, type, duration)
     if ( !text ) then return end
 
     notification.AddLegacy(text, type, duration)

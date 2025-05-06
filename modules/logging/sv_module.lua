@@ -1,7 +1,5 @@
 local MODULE = MODULE
 
-util.AddNetworkString("ow.logging.send")
-
 function MODULE:Send(...)
     if ( !ow.config:Get("logging", true) ) then return end
 
@@ -17,14 +15,5 @@ function MODULE:Send(...)
         ow.util:Print(ow.color:Get("log.message"), "Logging >> ", color_white, ...)
     end
 
-    -- Send to clients who are permitted to see the log
-    local encoded, err = sfs.encode({...})
-    if ( err ) then
-        ow.util:PrintError("Failed to encode log message: " .. err)
-        return false
-    end
-
-    net.Start("ow.logging.send")
-        net.WriteData(encoded, #encoded)
-    net.Send(receivers)
+    ow.net:Start(receivers, "logging.send", {...})
 end

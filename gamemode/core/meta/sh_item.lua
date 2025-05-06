@@ -104,11 +104,7 @@ if ( SERVER ) then
         local client = ow.character:GetPlayerByCharacter(self:GetOwner())
         if ( !IsValid(client) ) then return end
 
-        net.Start("ow.item.data")
-            net.WriteUInt(self:GetID(), 32)
-            net.WriteString(key)
-            net.WriteType(value)
-        net.Send(client)
+        ow.net:Start(client, "item.data", self:GetID(), key, value)
     end
 end
 

@@ -39,18 +39,7 @@ function ow.item:Add(characterID, inventoryID, uniqueID, data, callback)
 
         local receiver = ow.character:GetPlayerByCharacter(characterID)
         if ( IsValid(receiver) ) then
-            local encoded, err = sfs.encode(data)
-            if ( err ) then
-                ow.util:PrintError("Failed to encode item data: " .. err)
-                return
-            end
-
-            net.Start("ow.item.add")
-                net.WriteUInt(itemID, 32)
-                net.WriteUInt(inventoryID, 32)
-                net.WriteString(uniqueID)
-                net.WriteData(encoded, #encoded)
-            net.Send(receiver)
+            ow.net:Start(receiver, "item.add", itemID, inventoryID, uniqueID, data)
         end
 
         if ( callback ) then
@@ -146,9 +135,7 @@ function ow.item:PerformAction(itemID, actionName, callback)
         end
     end
 
-    net.Start("ow.inventory.refresh")
-        net.WriteUInt(item:GetInventory(), 32)
-    net.Send(client)
+    ow.net:Start(client, "inventory.refresh", item:GetInventory())
 
     hook.Run("PostPlayerItemAction", client, actionName, item)
 
@@ -212,9 +199,7 @@ function ow.item:Cache(characterID)
 
     local client = ow.character:GetPlayerByCharacter(characterID)
     if ( IsValid(client) ) then
-        net.Start("ow.item.cache")
-            net.WriteTable(instanceList)
-        net.Send(client)
+        ow.net:Start(client, "item.cache", instanceList)
     end
 
     return true
@@ -249,12 +234,7 @@ function ow.inventory:AddItem(inventoryID, itemID, uniqueID, data)
             data = util.TableToJSON(data)
         }, "id = " .. itemID)
 
-        net.Start("ow.inventory.item.add")
-            net.WriteUInt(inventoryID, 32)
-            net.WriteUInt(itemID, 32)
-            net.WriteString(uniqueID)
-            net.WriteTable(data)
-        net.Send(receivers or {})
+        ow.net:Start(receivers, "inventory.item.add", inventoryID, itemID, uniqueID, data)
     end
 end
 
@@ -281,10 +261,7 @@ function ow.inventory:RemoveItem(inventoryID, itemID)
 
         local receivers = inventory:GetReceivers()
         if ( istable(receivers) ) then
-            net.Start("ow.inventory.item.remove")
-                net.WriteUInt(inventoryID, 32)
-                net.WriteUInt(itemID, 32)
-            net.Send(receivers)
+            ow.net:Start(receivers, "inventory.item.remove", inventoryID, itemID)
         end
     end
 end

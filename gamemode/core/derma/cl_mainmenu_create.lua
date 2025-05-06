@@ -229,15 +229,7 @@ function PANEL:PopulateCreateCharacter()
         end
 
         if ( isNextEmpty ) then
-            local encoded, err = sfs.encode(self.currentCreatePayload)
-            if ( err ) then
-                ow.util:PrintError("Failed to encode character payload: " .. err)
-                return
-            end
-
-            net.Start("ow.character.create")
-                net.WriteData(encoded, #encoded)
-            net.SendToServer()
+            ow.net:Start(nil, "character.create", self.currentCreatePayload)
         else
             self.currentCreatePage = self.currentCreatePage + 1
             self:PopulateCreateCharacterForm()

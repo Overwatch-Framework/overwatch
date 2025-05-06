@@ -149,11 +149,7 @@ if ( SERVER ) then
                 recpFilter:AddPlayer(recipients)
             end
 
-            net.Start("ow.entity.setDataVariable")
-                net.WriteEntity(self)
-                net.WriteString(key)
-                net.WriteType(value)
-            net.Send(recpFilter)
+            ow.net:Start(recpFilter, "entity.setDataVariable", self, key, value)
         end
     end
 end

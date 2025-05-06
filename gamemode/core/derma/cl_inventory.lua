@@ -264,10 +264,7 @@ function PANEL:DoRightClick()
         if ( isfunction(actionData.OnCanRun) and actionData:OnCanRun(item, ow.localClient) == false ) then continue end
 
         menu:AddOption(actionData.Name or actionName, function()
-            net.Start("ow.item.perform")
-                net.WriteUInt(itemID, 32)
-                net.WriteString(actionName)
-            net.SendToServer()
+            ow.net:Start(nil, "item.perform", itemID, actionName)
         end)
     end
 

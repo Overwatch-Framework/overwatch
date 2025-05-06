@@ -23,8 +23,6 @@ end, function(cmd, argStr, args)
     return {cmd .. "[trace|eye|entity]"}
 end)
 
-print("Debug Position: " .. tostring(LocalPlayer():GetPos()))
-
 concommand.Add("ow_debug_ang", function(ply, cmd, args)
     if ( !ply:IsAdmin() ) then return end
 

@@ -59,14 +59,7 @@ function ow.character:Create(client, query)
 
     self.stored[characterID] = character
 
-    local encoded, err = sfs.encode(character)
-    if ( !err ) then
-        net.Start("ow.character.cache")
-            net.WriteData(encoded, #encoded)
-        net.Send(client)
-    else
-        ErrorNoHalt("Failed to encode character: " .. err .. "\n")
-    end
+    ow.net:Start(client, "character.cache", character)
 
     ow.inventory:Register({characterID = characterID})
 
@@ -113,9 +106,7 @@ function ow.character:Load(client, characterID)
 
         hook.Run("PrePlayerLoadedCharacter", client, character, currentCharacter)
 
-        net.Start("ow.character.load")
-            net.WriteUInt(character:GetID(), 32)
-        net.Send(client)
+        ow.net:Start(client, "character.load", characterID)
 
         local clientTable = client:GetTable()
         clientTable.owCharacters = clientTable.owCharacters or {}
@@ -165,9 +156,7 @@ function ow.character:Delete(characterID)
 
         client:KillSilent()
 
-        net.Start("ow.character.delete")
-            net.WriteUInt(characterID, 32)
-        net.Send(client)
+        ow.net:Start(client, "character.delete", characterID)
     end
 
     ow.sqlite:Delete("ow_characters", string.format("id = %s", sql.SQLStr(characterID)))
@@ -206,15 +195,7 @@ function ow.character:Cache(client, characterID)
     clientTable.owCharacters[characterID] = result[1]
     self.stored[characterID] = result[1]
 
-    local encoded, err = sfs.encode(result[1])
-    if ( err ) then
-        ErrorNoHalt("Failed to encode character: " .. err .. "\n")
-        return false
-    end
-
-    net.Start("ow.character.cache")
-        net.WriteData(encoded, #encoded)
-    net.Send(client)
+    ow.net:Start(client, "character.cache", result[1])
 
     return true
 end
@@ -253,15 +234,7 @@ function ow.character:CacheAll(client)
         end
     end
 
-    local encoded, err = sfs.encode(clientTable.owCharacters)
-    if ( err ) then
-        ErrorNoHalt("Failed to encode character: " .. err .. "\n")
-        return false
-    end
-
-    net.Start("ow.character.cache.all")
-        net.WriteData(encoded, #encoded)
-    net.Send(client)
+    ow.net:Start(client, "character.cache.all", clientTable.owCharacters)
 
     hook.Run("PlayerLoadedAllCharacters", client, clientTable.owCharacters)
 

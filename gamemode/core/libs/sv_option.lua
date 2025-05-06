@@ -29,10 +29,7 @@ function ow.option:Set(client, key, value)
         end
     end
 
-    net.Start("ow.option.set")
-        net.WriteString(key)
-        net.WriteType(value)
-    net.Send(client)
+    ow.net:Start(nil, "option.set", key, value)
 
     if ( isfunction(stored.OnChange) ) then
         stored:OnChange(value, client)

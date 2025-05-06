@@ -1,1 +1,0 @@
-util.AddNetworkString("ow.animations.update")

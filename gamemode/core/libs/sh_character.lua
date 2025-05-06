@@ -81,11 +81,7 @@ function ow.character:SetVariable(id, key, value)
         end
 
         if ( !data.NoNetworking ) then
-            net.Start("ow.character.variable.set")
-                net.WriteUInt(id, 32)
-                net.WriteString(key)
-                net.WriteType(value)
-            net.Broadcast()
+            ow.net:Start(nil, "character.variable.set", id, key, value)
         end
     end
 end

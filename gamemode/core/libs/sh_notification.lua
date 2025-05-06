@@ -20,17 +20,7 @@ function ow.notification:Send(client, text, iType, duration)
     duration = duration or 3
 
     if ( SERVER ) then
-        net.Start("ow.notification.send")
-
-        net.WriteString(text)
-        net.WriteUInt(iType, 8)
-        net.WriteUInt(duration, 16)
-
-        if ( IsValid(client) ) then
-            net.Send(client)
-        else
-            net.Broadcast()
-        end
+        ow.net:Start(client, "notification.send", text, iType, duration)
     else
         notification.AddLegacy(text, iType, duration)
     end

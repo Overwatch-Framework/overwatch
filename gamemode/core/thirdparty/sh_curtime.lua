@@ -35,17 +35,13 @@ elseif SyncType == "net" then
         net solution
     ]]
     if SERVER then
-        util.AddNetworkString("CurTime-Sync")
         timer.Create("CurTime-Sync", SyncDelay, -1, function()
-            net.Start("CurTime-Sync", true) -- Can be unreliable because It is not needed to sync every time.
-                net.WriteFloat(CurTime())
-            net.Broadcast()
+            ow.net:Start(nil, "CurTime-Sync", CurTime()) -- This is to sync the time when the player joins.
         end)
     else
         hook.Add("InitPostEntity", "CurTime-Sync", function()
             local SyncTime = 0
-            net.Receive("CurTime-Sync", function()
-                local ServerCurTime = net.ReadFloat()
+            ow.net:Hook("CurTime-Sync", function(ServerCurTime)
                 if !ServerCurTime then return end
                 SyncTime = OldCurTime() - ServerCurTime
             end)
