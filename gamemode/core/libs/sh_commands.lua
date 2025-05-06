@@ -135,6 +135,7 @@ function ow.command:SanitiseArguments(command, arguments)
     if ( !istable(commandInfo) ) then return false end
 
     local commandArgs = commandInfo.Arguments
+    if ( !istable(commandArgs) ) then return arguments end
 
     local sanitised = {}
     for k, v in ipairs(commandArgs) do

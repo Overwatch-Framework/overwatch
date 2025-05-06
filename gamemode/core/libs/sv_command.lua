@@ -40,7 +40,7 @@ function ow.command:Run(ply, command, arguments)
     end
 
     local argumentTable = self:ParseArguments(arguments)
-    if ( #argumentTable != #info.Arguments ) then
+    if ( info.Arguments and #argumentTable != #info.Arguments ) then
         ply:Notify("You must provide " .. #info.Arguments .. " arguments!")
         return false
     end
