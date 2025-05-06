@@ -311,6 +311,11 @@ function MODULE:TranslateActivity(client, act)
     end
 
     local clientTable = client:GetTable()
+    local class = ow.animations:GetModelClass(model)
+    if ( !class or class == "player" ) then
+        return newact
+    end
+
     local owAnimations = clientTable.owAnimations
     if ( owAnimations ) then
         local animTable = owAnimations[act]
