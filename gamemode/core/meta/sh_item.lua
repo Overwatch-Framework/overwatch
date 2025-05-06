@@ -101,14 +101,14 @@ end
 
 if ( SERVER ) then
     function ITEM:SendData(key, value)
-        local ply = ow.character:GetPlayerByCharacter(self:GetOwner())
-        if ( !IsValid(ply) ) then return end
+        local client = ow.character:GetPlayerByCharacter(self:GetOwner())
+        if ( !IsValid(client) ) then return end
 
         net.Start("ow.item.data")
             net.WriteUInt(self:GetID(), 32)
             net.WriteString(key)
             net.WriteType(value)
-        net.Send(ply)
+        net.Send(client)
     end
 end
 
@@ -132,10 +132,10 @@ function ITEM:SetEntity(entity)
 end
 
 function ITEM:Spawn(position, angles)
-    local ply = ow.character:GetPlayerByCharacter(self:GetOwner())
-    if ( !IsValid(ply) ) then return end
+    local client = ow.character:GetPlayerByCharacter(self:GetOwner())
+    if ( !IsValid(client) ) then return end
 
-    position = position or ply:GetDropPosition()
+    position = position or client:GetDropPosition()
     if ( !position ) then return end
 
     local item = ow.item:Spawn(nil, uniqueID, position, angles, function()

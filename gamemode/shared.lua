@@ -44,8 +44,8 @@ function GM:OnReloaded()
     else
         ow.config:Load()
 
-        for _, ply in player.Iterator() do
-            ow.config:Synchronize(ply)
+        for _, client in player.Iterator() do
+            ow.config:Synchronize(client)
         end
     end
 
@@ -68,11 +68,11 @@ ow.util:LoadFile("core/sh_configs.lua")
 ow.util:LoadFile("core/sh_options.lua")
 
 concommand.Remove("gm_save")
-concommand.Add("gm_save", function(ply, command, arguments)
-    ply:Notify("This command has been disabled!")
+concommand.Add("gm_save", function(client, command, arguments)
+    client:Notify("This command has been disabled!")
 end)
 
 -- concommand.Remove("gm_admin_cleanup")
--- concommand.Add("gm_admin_cleanup", function(ply, command, arguments)
---     ow.util:PrintError("This command has been disabled.", ply)
+-- concommand.Add("gm_admin_cleanup", function(client, command, arguments)
+--     ow.util:PrintError("This command has been disabled.", client)
 -- end)

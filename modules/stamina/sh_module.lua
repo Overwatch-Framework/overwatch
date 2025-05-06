@@ -90,12 +90,12 @@ ow.config:Register("stamina.tick", {
 
 if ( SERVER ) then
     --- Initializes a stamina object for a player
-    -- @param ply Player
+    -- @param client Player
     -- @param max number
-    function ow.stamina:Initialize(ply, max)
+    function ow.stamina:Initialize(client, max)
         max = max or ow.config:Get("stamina.max", 100)
 
-        ply:SetRelay("stamina", {
+        client:SetRelay("stamina", {
             max = max,
             current = max,
             regenRate = 5,
@@ -105,46 +105,46 @@ if ( SERVER ) then
     end
 
     --- Consumes stamina from a player
-    -- @param ply Player
+    -- @param client Player
     -- @param amount number
     -- @return boolean
-    function ow.stamina:Consume(ply, amount)
-        local st = ply:GetRelay("stamina")
+    function ow.stamina:Consume(client, amount)
+        local st = client:GetRelay("stamina")
         if ( !istable(st) ) then return false end
 
         st.current = math.Clamp(st.current - amount, 0, st.max)
         st.lastUsed = CurTime()
 
-        ply:SetRelay("stamina", st)
+        client:SetRelay("stamina", st)
         return true
     end
 
     --- Checks if player has enough stamina
-    -- @param ply Player
+    -- @param client Player
     -- @param amount number
     -- @return boolean
-    function ow.stamina:CanConsume(ply, amount)
-        local st = ply:GetRelay("stamina")
+    function ow.stamina:CanConsume(client, amount)
+        local st = client:GetRelay("stamina")
         return st and st.current >= amount
     end
 
     --- Gets current stamina
-    -- @param ply Player
+    -- @param client Player
     -- @return number
-    function ow.stamina:Get(ply)
-        local st = ply:GetRelay("stamina")
+    function ow.stamina:Get(client)
+        local st = client:GetRelay("stamina")
         return istable(st) and st.current or 0
     end
 
     --- Sets current stamina
-    -- @param ply Player
+    -- @param client Player
     -- @param value number
-    function ow.stamina:Set(ply, value)
-        local st = ply:GetRelay("stamina")
+    function ow.stamina:Set(client, value)
+        local st = client:GetRelay("stamina")
         if ( !istable(st) ) then return end
 
         st.current = math.Clamp(value, 0, st.max)
-        ply:SetRelay("stamina", st)
+        client:SetRelay("stamina", st)
     end
 end
 

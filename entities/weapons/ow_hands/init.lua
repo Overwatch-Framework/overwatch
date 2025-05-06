@@ -3,13 +3,13 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 util.AddNetworkString("ow.hands.reset")
-net.Receive("ow.hands.reset", function(_, ply)
-    if ( ply.owHandsReset and ply.owHandsReset > CurTime() ) then return end
-    ply.owHandsReset = CurTime() + 0.5
+net.Receive("ow.hands.reset", function(_, client)
+    if ( client.owHandsReset and client.owHandsReset > CurTime() ) then return end
+    client.owHandsReset = CurTime() + 0.5
 
-    if ( !IsValid(ply) ) then return end
+    if ( !IsValid(client) ) then return end
 
-    local weapon = ply:GetActiveWeapon()
+    local weapon = client:GetActiveWeapon()
     if ( !IsValid(weapon) ) then return end
 
     if ( weapon:GetClass() == "ow_hands" ) then
@@ -89,8 +89,8 @@ end
 function SWEP:Pickup()
     if ( IsValid(self.owHoldingEntity) ) then return end
 
-    local ply = self:GetOwner()
-    local traceData = ply:GetEyeTrace(MASK_SHOT)
+    local client = self:GetOwner()
+    local traceData = client:GetEyeTrace(MASK_SHOT)
     local ent = traceData.Entity
     local holdingPhysicsObject = ent:GetPhysicsObject()
 
@@ -109,7 +109,7 @@ function SWEP:Pickup()
             pos = traceData.HitPos
 
             self.owCarry:SetPos(pos)
-            self.owCarry.distance = math.min(64, ply:GetShootPos():Distance(pos))
+            self.owCarry.distance = math.min(64, client:GetShootPos():Distance(pos))
 
             self.owCarry:SetModel("models/weapons/w_bugbait.mdl")
 

@@ -86,8 +86,8 @@ ow.config:Register("speed.walk", {
     OnChange = function(_, value)
         if ( CLIENT ) then return end
 
-        for _, ply in player.Iterator() do
-            ply:SetWalkSpeed(value)
+        for _, client in player.Iterator() do
+            client:SetWalkSpeed(value)
         end
     end
 })
@@ -104,8 +104,8 @@ ow.config:Register("speed.run", {
     OnChange = function(_, value)
         if ( CLIENT ) then return end
 
-        for _, ply in player.Iterator() do
-            ply:SetRunSpeed(value)
+        for _, client in player.Iterator() do
+            client:SetRunSpeed(value)
         end
     end
 })
@@ -122,8 +122,8 @@ ow.config:Register("jump.power", {
     OnChange = function(_, value)
         if ( CLIENT ) then return end
 
-        for _, ply in player.Iterator() do
-            ply:SetJumpPower(value)
+        for _, client in player.Iterator() do
+            client:SetJumpPower(value)
         end
     end
 })
@@ -138,8 +138,8 @@ ow.config:Register("inventory.maxweight", {
     Max = 100,
     Decimals = 2,
     OnChange = function(_, value)
-        for _, ply in player.Iterator() do
-            local character = ply:GetCharacter()
+        for _, client in player.Iterator() do
+            local character = client:GetCharacter()
             if ( character ) then
                 local inventories = ow.inventory:GetByCharacterID(character:GetID())
                 for _, inventory in ipairs(inventories) do

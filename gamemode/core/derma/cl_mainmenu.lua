@@ -31,8 +31,8 @@ function PANEL:Init()
 
     ow.gui.mainmenu = self
 
-    local ply = ow.localClient
-    if ( IsValid(ply) and ply:IsTyping() ) then
+    local client = ow.localClient
+    if ( IsValid(client) and client:IsTyping() ) then
         chat.Close()
     end
 
@@ -127,9 +127,9 @@ function PANEL:Populate()
     buttons:Dock(FILL)
     buttons:DockMargin(0, padding / 4, 0, padding)
 
-    local ply = ow.localClient
-    local plyTable = ply:GetTable()
-    if ( plyTable.owCharacter ) then -- ply:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
+    local client = ow.localClient
+    local clientTable = client:GetTable()
+    if ( clientTable.owCharacter ) then -- client:GetCharacter() isn't validated yet, since it this panel is created before the meta tables are loaded
         local playButton = buttons:Add("ow.button")
         playButton:Dock(TOP)
         playButton:DockMargin(0, 0, 0, 16)
@@ -160,7 +160,7 @@ function PANEL:Populate()
         end
     end
 
-    local bHasCharacters = table.Count(plyTable.owCharacters or {}) > 0
+    local bHasCharacters = table.Count(clientTable.owCharacters or {}) > 0
     if ( bHasCharacters ) then
         local selectButton = buttons:Add("ow.button")
         selectButton:Dock(TOP)

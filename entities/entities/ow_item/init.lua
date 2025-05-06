@@ -100,9 +100,9 @@ function ENT:SetData(data)
     self:GetTable().owItemData = data
 end
 
-function ENT:Use(ply)
-    if ( !IsValid(ply) or !ply:IsPlayer() ) then return end
-    if ( hook.Run("CanPlayerTakeItem", ply, self) == false ) then return end
+function ENT:Use(client)
+    if ( !IsValid(client) or !client:IsPlayer() ) then return end
+    if ( hook.Run("CanPlayerTakeItem", client, self) == false ) then return end
 
     local itemDef = ow.item:Get(self:GetUniqueID())
     local itemInst = ow.item:Get(self:GetItemID())
@@ -110,7 +110,7 @@ function ENT:Use(ply)
     if ( !itemDef or !itemInst ) then return end
 
     itemInst:SetEntity(self)
-    itemInst:SetOwner(ply:GetCharacterID())
+    itemInst:SetOwner(client:GetCharacterID())
 
     self.owPickingUp = CurTime() + 1
     ow.item:PerformAction(itemInst:GetID(), "Take")

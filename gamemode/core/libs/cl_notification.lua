@@ -116,7 +116,7 @@ notification.AddLegacy = function(text, type, length)
     ow.notification:Add(text, length or 3, color)
 end
 
-concommand.Add("test_notification", function(ply, cmd, args)
+concommand.Add("test_notification", function(client, cmd, args)
     local text = table.concat(args, " ")
     ow.notification:Add(text, 5)
 end)

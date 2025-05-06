@@ -128,8 +128,8 @@ function ow.faction:Get(identifier)
     return nil
 end
 
-function ow.faction:CanSwitchTo(ply, factionID, oldFactionID)
-    if ( !IsValid(ply) ) then return false end
+function ow.faction:CanSwitchTo(client, factionID, oldFactionID)
+    if ( !IsValid(client) ) then return false end
 
     local faction = self:Get(factionID)
     if ( !faction ) then return false end
@@ -139,20 +139,20 @@ function ow.faction:CanSwitchTo(ply, factionID, oldFactionID)
         if ( oldFaction ) then
             if ( oldFaction.ID == faction.ID ) then return false end
 
-            if ( oldFaction.CanLeave and !oldFaction:CanLeave(ply) ) then
+            if ( oldFaction.CanLeave and !oldFaction:CanLeave(client) ) then
                 return false
             end
         end
     end
 
-    local hookRun = hook.Run("CanPlayerJoinFaction", ply, factionID)
+    local hookRun = hook.Run("CanPlayerJoinFaction", client, factionID)
     if ( hookRun != nil and hookRun == false ) then return false end
 
-    if ( faction.CanSwitchTo and !faction:CanSwitchTo(ply) ) then
+    if ( faction.CanSwitchTo and !faction:CanSwitchTo(client) ) then
         return false
     end
 
-    if ( !faction.IsDefault and !ply:HasWhitelist(faction.UniqueID) ) then
+    if ( !faction.IsDefault and !client:HasWhitelist(faction.UniqueID) ) then
         return false
     end
 

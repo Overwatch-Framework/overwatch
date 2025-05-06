@@ -14,20 +14,20 @@ local fakePos
 local fakeAngles
 local fakeFov
 
-function MODULE:PreRenderThirdpersonView(ply, pos, angles, fov)
+function MODULE:PreRenderThirdpersonView(client, pos, angles, fov)
     if ( IsValid(ow.gui.mainmenu) ) then
         return false
     end
 
-    if ( IsValid(ply:GetVehicle()) ) then
+    if ( IsValid(client:GetVehicle()) ) then
         return false
     end
 
     return true
 end
 
-function MODULE:CalcView(ply, pos, angles, fov)
-    if ( !ow.option:Get("thirdperson", false) or hook.Run("PreRenderThirdpersonView", ply, pos, angles, fov) == false ) then
+function MODULE:CalcView(client, pos, angles, fov)
+    if ( !ow.option:Get("thirdperson", false) or hook.Run("PreRenderThirdpersonView", client, pos, angles, fov) == false ) then
         fakePos = nil
         fakeAngles = nil
         fakeFov = nil
@@ -40,8 +40,8 @@ function MODULE:CalcView(ply, pos, angles, fov)
     if ( ow.option:Get("thirdperson.follow.head", false) ) then
         local head
 
-        for i = 0, ply:GetBoneCount() do
-            local bone = ply:GetBoneName(i)
+        for i = 0, client:GetBoneCount() do
+            local bone = client:GetBoneName(i)
             if ( ow.util:FindString(bone, "head") ) then
                 head = i
                 break
@@ -49,17 +49,17 @@ function MODULE:CalcView(ply, pos, angles, fov)
         end
 
         if ( head ) then
-            local head_pos = select(1, ply:GetBonePosition(head))
+            local head_pos = select(1, client:GetBonePosition(head))
             pos = head_pos
         end
     end
 
-    pos = pos + ply:GetVelocity() / 8
+    pos = pos + client:GetVelocity() / 8
 
     local trace = util.TraceHull({
         start = pos,
         endpos = pos - (angles:Forward() * ow.option:Get("thirdperson.position.x", 0)) + (angles:Right() * ow.option:Get("thirdperson.position.y", 0)) + (angles:Up() * ow.option:Get("thirdperson.position.z", 0)),
-        filter = ply,
+        filter = client,
         mask = MASK_SHOT,
         mins = Vector(-4, -4, -4),
         maxs = Vector(4, 4, 4)
@@ -68,7 +68,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
     local traceData = util.TraceHull({
         start = pos,
         endpos = pos + (angles:Forward() * 32768),
-        filter = ply,
+        filter = client,
         mask = MASK_SHOT,
         mins = Vector(-8, -8, -8),
         maxs = Vector(8, 8, 8)
@@ -99,7 +99,7 @@ function MODULE:CalcView(ply, pos, angles, fov)
     return view
 end
 
-function MODULE:ShouldDrawLocalPlayer(ply)
+function MODULE:ShouldDrawLocalPlayer(client)
     return ow.option:Get("thirdperson", false)
 end
 

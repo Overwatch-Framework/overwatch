@@ -26,7 +26,7 @@ function ow.font:Get(name)
     return self.stored[name]
 end
 
-concommand.Add("ow_list_font", function(ply)
+concommand.Add("ow_list_font", function(client)
     for name, data in pairs(ow.font.stored) do
         ow.util:Print("Font: ", ow.color:Get("cyan"), name)
         PrintTable(data)

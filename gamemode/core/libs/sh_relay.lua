@@ -84,10 +84,10 @@ if ( CLIENT ) then
         local value = sfs.decode(net.ReadData(len / 8))
         if ( value == nil ) then return end
 
-        local ply = LocalPlayer()
+        local client = LocalPlayer()
 
-        ow.relay.user[ply] = ow.relay.user[ply] or {}
-        ow.relay.user[ply][key] = value
+        ow.relay.user[client] = ow.relay.user[client] or {}
+        ow.relay.user[client][key] = value
     end)
 end
 

@@ -11,33 +11,33 @@ See the [Garry's Mod Wiki](https://wiki.garrysmod.com/page/Category:Player) for 
 local PLAYER = FindMetaTable("Player")
 
 function PLAYER:SetDBVar(key, value)
-    local selfTable = self:GetTable()
-    if ( !selfTable.owDatabase ) then
-        selfTable.owDatabase = {}
+    local clientTable = self:GetTable()
+    if ( !clientTable.owDatabase ) then
+        clientTable.owDatabase = {}
     end
 
-    selfTable.owDatabase[key] = value
+    clientTable.owDatabase[key] = value
 end
 
 function PLAYER:GetDBVar(key, default)
-    local selfTable = self:GetTable()
-    if ( selfTable.owDatabase ) then
-        return selfTable.owDatabase[key] or default
+    local clientTable = self:GetTable()
+    if ( clientTable.owDatabase ) then
+        return clientTable.owDatabase[key] or default
     end
 
     return default
 end
 
 function PLAYER:SaveDB()
-    local selfTable = self:GetTable()
-    if ( selfTable.owDatabase ) then
-        ow.sqlite:SaveRow("ow_players", selfTable.owDatabase, "steamid")
+    local clientTable = self:GetTable()
+    if ( clientTable.owDatabase ) then
+        ow.sqlite:SaveRow("ow_players", clientTable.owDatabase, "steamid")
 
         -- Network it to the client so they can update their local copy of the database
         -- This is useful for when the player is in the main menu and we want to retrieve something from the database
         -- via the client
 
-        local encoded, err = sfs.encode(selfTable.owDatabase or {})
+        local encoded, err = sfs.encode(clientTable.owDatabase or {})
         if ( err ) then
             ow.util:PrintError("Failed to encode database: " .. err)
             return
@@ -47,21 +47,6 @@ function PLAYER:SaveDB()
             net.WriteData(encoded, #encoded)
         net.Send(self)
     end
-end
-
-function PLAYER:SetData(key, value)
-    local selfTable = self:GetTable()
-    local data = selfTable.owDatabase.data or {}
-
-    if ( isstring(data) ) then
-        data = util.JSONToTable(data) or {}
-    else
-        data = data or {}
-    end
-
-    data[key] = value
-
-    selfTable.owDatabase.data = util.TableToJSON(data)
 end
 
 function PLAYER:GetData(key, default)
@@ -74,4 +59,19 @@ function PLAYER:GetData(key, default)
     end
 
     return data[key] or default
+end
+
+function PLAYER:SetData(key, value)
+    local clientTable = self:GetTable()
+    local data = clientTable.owDatabase.data or {}
+
+    if ( isstring(data) ) then
+        data = util.JSONToTable(data) or {}
+    else
+        data = data or {}
+    end
+
+    data[key] = value
+
+    clientTable.owDatabase.data = util.TableToJSON(data)
 end

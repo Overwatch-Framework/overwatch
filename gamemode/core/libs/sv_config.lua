@@ -126,11 +126,11 @@ end
 
 --- Synchronizes the configuration with the player.
 -- @realm server
--- @param ply The player to synchronize the configuration with.
+-- @param client The player to synchronize the configuration with.
 -- @return Whether or not the configuration was synchronized with the player.
 -- @usage ow.config:Synchronize(Entity(1)) -- Synchronizes the configuration with the first player.
-function ow.config:Synchronize(ply)
-    if ( !IsValid(ply) ) then return false end
+function ow.config:Synchronize(client)
+    if ( !IsValid(client) ) then return false end
 
     local tableToSend =  self.stored
     for k, v in pairs(tableToSend) do
@@ -145,13 +145,13 @@ function ow.config:Synchronize(ply)
         return false
     end
 
-    hook.Run("PreConfigSync", ply, compressed)
+    hook.Run("PreConfigSync", client, compressed)
 
     net.Start("ow.config.sync")
         net.WriteData(encoded, #encoded)
     net.Broadcast()
 
-    hook.Run("PostConfigSync", ply, self.stored, tableToSend)
+    hook.Run("PostConfigSync", client, self.stored, tableToSend)
 
     return true
 end

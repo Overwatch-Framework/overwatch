@@ -60,30 +60,30 @@ function ow.item:LoadFolder(path)
         ITEM.Actions = ITEM.Actions or {}
         ITEM.Actions.Drop = ITEM.Actions.Drop or {
             Name = "Drop",
-            OnRun = function(this, item, ply)
-                if ( !IsValid(ply) ) then return end
+            OnRun = function(this, item, client)
+                if ( !IsValid(client) ) then return end
 
-                local pos = ply:GetDropPosition()
+                local pos = client:GetDropPosition()
                 if ( !pos ) then return end
 
-                local prevent = hook.Run("PrePlayerDropItem", ply, item, pos)
+                local prevent = hook.Run("PrePlayerDropItem", client, item, pos)
                 if ( prevent == false ) then return end
 
                 ow.item:Spawn(item:GetID(), item:GetUniqueID(), pos, Angle(0, 0, 0), function(entity)
                     ow.inventory:RemoveItem(item:GetInventory(), item:GetID())
 
-                    hook.Run("PostPlayerDropItem", ply, item, entity)
+                    hook.Run("PostPlayerDropItem", client, item, entity)
                 end, item:GetData())
             end,
-            OnCanRun = function(this, item, ply)
+            OnCanRun = function(this, item, client)
                 return !IsValid(item:GetEntity())
             end
         }
 
         ITEM.Actions.Take = ITEM.Actions.Take or {
             Name = "Take",
-            OnRun = function(this, item, ply)
-                if ( !IsValid(ply) ) then return end
+            OnRun = function(this, item, client)
+                if ( !IsValid(client) ) then return end
 
                 local char = ow.character:Get(item:GetOwner())
                 local inventoryMain = char and char:GetInventory()
@@ -94,11 +94,11 @@ function ow.item:LoadFolder(path)
 
                 local weight = item:GetWeight()
                 if ( inventoryMain:GetWeight() + weight > inventoryMain:GetMaxWeight() ) then
-                    ply:Notify("You cannot take this item, it is too heavy!")
+                    client:Notify("You cannot take this item, it is too heavy!")
                     return
                 end
 
-                local prevent = hook.Run("PrePlayerTakeItem", ply, item, entity)
+                local prevent = hook.Run("PrePlayerTakeItem", client, item, entity)
                 if ( prevent == false ) then return end
 
                 ow.item:Transfer(item:GetID(), 0, inventoryMain:GetID(), function(success)
@@ -107,14 +107,14 @@ function ow.item:LoadFolder(path)
                             item:OnTaken(entity)
                         end
 
-                        hook.Run("PostPlayerTakeItem", ply, item, entity)
+                        hook.Run("PostPlayerTakeItem", client, item, entity)
                         SafeRemoveEntity(entity)
                     else
-                        ply:Notify("Failed to transfer item to inventory.")
+                        client:Notify("Failed to transfer item to inventory.")
                     end
                 end)
             end,
-            OnCanRun = function(this, item, ply)
+            OnCanRun = function(this, item, client)
                 return true
             end
         }

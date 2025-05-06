@@ -3,14 +3,14 @@
 
 ow.option.clients = {}
 
-function ow.option:Set(ply, key, value)
+function ow.option:Set(client, key, value)
     local stored = ow.option.stored[key]
     if ( !istable(stored) ) then
         ow.util:PrintError("Option \"" .. key .. "\" does not exist!")
         return false
     end
 
-    if ( !IsValid(ply) ) then return false end
+    if ( !IsValid(client) ) then return false end
 
     if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
         ow.util:PrintError("Attempted to set option \"" .. key .. "\" with invalid type!")
@@ -32,25 +32,25 @@ function ow.option:Set(ply, key, value)
     net.Start("ow.option.set")
         net.WriteString(key)
         net.WriteType(value)
-    net.Send(ply)
+    net.Send(client)
 
     if ( isfunction(stored.OnChange) ) then
-        stored:OnChange(value, ply)
+        stored:OnChange(value, client)
     end
 
     if ( !stored.NoNetworking ) then
-        if ( ow.option.clients[ply] == nil ) then
-            ow.option.clients[ply] = {}
+        if ( ow.option.clients[client] == nil ) then
+            ow.option.clients[client] = {}
         end
 
-        ow.option.clients[ply][key] = value
+        ow.option.clients[client][key] = value
     end
 
     return true
 end
 
-function ow.option:Get(ply, key, default)
-    if ( !IsValid(ply) ) then return default end
+function ow.option:Get(client, key, default)
+    if ( !IsValid(client) ) then return default end
 
     local stored = ow.option.stored[key]
     if ( !istable(stored) ) then
@@ -63,7 +63,7 @@ function ow.option:Get(ply, key, default)
         return nil
     end
 
-    local plyStored = ow.option.clients[ply]
+    local plyStored = ow.option.clients[client]
     if ( !istable(plyStored) ) then
         return stored.Value or default
     end

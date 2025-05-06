@@ -16,10 +16,10 @@ CAMI.RegisterPrivilege({
     MinAccess = "admin"
 })
 
-function MODULE:FormatPlayer(ply)
-    if ( !IsValid(ply) ) then return "Console" end
+function MODULE:FormatPlayer(client)
+    if ( !IsValid(client) ) then return "Console" end
 
-    return ply:SteamName() .. " (" .. ply:Name() .. " / " .. ply:SteamID64() .. ")"
+    return client:SteamName() .. " (" .. client:Name() .. " / " .. client:SteamID64() .. ")"
 end
 
 function MODULE:FormatEntity(ent)

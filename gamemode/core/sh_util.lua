@@ -146,9 +146,9 @@ end
 
 --- Sends a chat message to the player.
 -- @realm shared
--- @param ply Player The player to send the message to.
+-- @param client Player The player to send the message to.
 -- @param ... any The message to send.
-function ow.util:SendChatText(ply, ...)
+function ow.util:SendChatText(client, ...)
     if ( SERVER ) then
 
         local encoded, err = sfs.encode({...})
@@ -159,8 +159,8 @@ function ow.util:SendChatText(ply, ...)
 
         net.Start("ow.chat.text")
             net.WriteData(encoded, #encoded)
-        if ( IsValid(ply) ) then
-            net.Send(ply)
+        if ( IsValid(client) ) then
+            net.Send(client)
         else
             net.Broadcast()
         end

@@ -117,20 +117,20 @@ function ow.item:PerformAction(itemID, actionName, callback)
     local action = base.Actions[actionName]
     if ( !action ) then return false end
 
-    local ply = ow.character:GetPlayerByCharacter(item:GetOwner())
-    if ( !IsValid(ply) ) then return false end
+    local client = ow.character:GetPlayerByCharacter(item:GetOwner())
+    if ( !IsValid(client) ) then return false end
 
-    if ( action.OnCanRun and !action:OnCanRun(item, ply) ) then
+    if ( action.OnCanRun and !action:OnCanRun(item, client) ) then
         return false
     end
 
-    local prevent = hook.Run("PrePlayerItemAction", ply, actionName, item)
+    local prevent = hook.Run("PrePlayerItemAction", client, actionName, item)
     if ( prevent == false ) then
         return false
     end
 
     if ( action.OnRun ) then
-        action:OnRun(item, ply)
+        action:OnRun(item, client)
     end
 
     if ( callback ) then
@@ -141,16 +141,16 @@ function ow.item:PerformAction(itemID, actionName, callback)
     if ( hooks[actionName] ) then
         for _, hookFunc in pairs(hooks[actionName]) do
             if ( hookFunc ) then
-                hookFunc(item, ply)
+                hookFunc(item, client)
             end
         end
     end
 
     net.Start("ow.inventory.refresh")
         net.WriteUInt(item:GetInventory(), 32)
-    net.Send(ply)
+    net.Send(client)
 
-    hook.Run("PostPlayerItemAction", ply, actionName, item)
+    hook.Run("PostPlayerItemAction", client, actionName, item)
 
     return true
 end
@@ -210,11 +210,11 @@ function ow.item:Cache(characterID)
         end
     end
 
-    local ply = ow.character:GetPlayerByCharacter(characterID)
-    if ( IsValid(ply) ) then
+    local client = ow.character:GetPlayerByCharacter(characterID)
+    if ( IsValid(client) ) then
         net.Start("ow.item.cache")
             net.WriteTable(instanceList)
-        net.Send(ply)
+        net.Send(client)
     end
 
     return true
@@ -309,36 +309,36 @@ function ow.item:Spawn(itemID, uniqueID, position, angles, callback, data)
     return entity
 end
 
-concommand.Add("ow_item_add", function(ply, cmd, args)
-    if ( !ply:IsAdmin() ) then return end
+concommand.Add("ow_item_add", function(client, cmd, args)
+    if ( !client:IsAdmin() ) then return end
 
     local uniqueID = args[1]
     if ( !uniqueID or !ow.item.stored[uniqueID] ) then return end
 
-    local characterID = ply:GetCharacterID()
+    local characterID = client:GetCharacterID()
     local inventories = ow.inventory:GetByCharacterID(characterID)
     if ( #inventories == 0 ) then return end
 
     local inventoryID = inventories[1]:GetID()
 
     ow.item:Add(characterID, inventoryID, uniqueID, nil, function(itemID)
-        ply:Notify("Item " .. uniqueID .. " added to inventory " .. inventoryID .. ".")
+        client:Notify("Item " .. uniqueID .. " added to inventory " .. inventoryID .. ".")
     end)
 end)
 
-concommand.Add("ow_item_spawn", function(ply, cmd, args)
-    if ( !ply:IsAdmin() ) then return end
+concommand.Add("ow_item_spawn", function(client, cmd, args)
+    if ( !client:IsAdmin() ) then return end
 
     local uniqueID = args[1]
     if ( !uniqueID ) then return end
 
-    local pos = ply:GetEyeTrace().HitPos + vector_up * 10
+    local pos = client:GetEyeTrace().HitPos + vector_up * 10
 
     ow.item:Spawn(nil, uniqueID, pos, nil, function(ent)
         if ( IsValid(ent) ) then
-            ply:Notify("Item " .. uniqueID .. " spawned.")
+            client:Notify("Item " .. uniqueID .. " spawned.")
         else
-            ply:Notify("Failed to spawn item " .. uniqueID .. ".")
+            client:Notify("Failed to spawn item " .. uniqueID .. ".")
         end
     end)
 end)

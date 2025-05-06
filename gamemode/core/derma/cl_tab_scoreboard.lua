@@ -33,13 +33,13 @@ function PANEL:Populate()
 
     -- Divide the players into teams
     local teams = {}
-    for _, ply in ipairs(self.cache.players) do
-        local teamID = ply:Team()
+    for _, client in ipairs(self.cache.players) do
+        local teamID = client:Team()
         if ( !istable(teams[teamID]) ) then
             teams[teamID] = {}
         end
 
-        table.insert(teams[teamID], ply)
+        table.insert(teams[teamID], client)
     end
 
     -- Sort the teams by their team ID
@@ -62,11 +62,11 @@ function PANEL:Populate()
         teamPanel:SetTeam(teamID)
 
         -- Add each player to the team panel
-        for _, ply in ipairs(players) do
+        for _, client in ipairs(players) do
             local playerPanel = teamPanel.container:Add("ow.tab.scoreboard.player")
-            playerPanel:SetPlayer(ply)
+            playerPanel:SetPlayer(client)
 
-            teamPanel.players[ply:SteamID64()] = playerPanel
+            teamPanel.players[client:SteamID64()] = playerPanel
         end
     end
 end
@@ -152,15 +152,15 @@ function PANEL:Init()
     self:SetMouseInputEnabled(true)
 end
 
-function PANEL:SetPlayer(ply)
-    self.player = ply
+function PANEL:SetPlayer(client)
+    self.player = client
 
     if ( IsValid(self.avatar) ) then
-        self.avatar:SetPlayer(ply, self:GetTall())
+        self.avatar:SetPlayer(client, self:GetTall())
     end
 
     if ( IsValid(self.name) ) then
-        self.name:SetText(ply:SteamName(), true)
+        self.name:SetText(client:SteamName(), true)
         self.name:SetPos(self.avatar:GetWide() + 16, self:GetTall() / 2 - self.name:GetTall() / 2)
     end
 end

@@ -6,18 +6,18 @@ net.Receive("ow.character.cache.all", function(len)
     local data = sfs.decode(net.ReadData(len / 8))
     if ( !istable(data) ) then return end
 
-    local ply = ow.localClient
-    local plyTable = ply:GetTable()
+    local client = ow.localClient
+    local clientTable = client:GetTable()
 
     for k, v in pairs(data) do
-        local character = ow.character:CreateObject(v.ID, v, ply)
+        local character = ow.character:CreateObject(v.ID, v, client)
         local characterID = character:GetID()
 
         ow.character.stored = ow.character.stored or {}
         ow.character.stored[characterID] = character
 
-        plyTable.owCharacters = plyTable.owCharacters or {}
-        plyTable.owCharacters[characterID] = character
+        clientTable.owCharacters = clientTable.owCharacters or {}
+        clientTable.owCharacters[characterID] = character
     end
 
     ow.localClient:Notify("All characters cached!")
@@ -27,18 +27,18 @@ net.Receive("ow.character.cache", function(len)
     local data = sfs.decode(net.ReadData(len / 8))
     if ( !istable(data) ) then return end
 
-    local ply = ow.localClient
-    local plyTable = ply:GetTable()
+    local client = ow.localClient
+    local clientTable = client:GetTable()
 
-    local character = ow.character:CreateObject(data.ID, data, ply)
+    local character = ow.character:CreateObject(data.ID, data, client)
     local characterID = character:GetID()
 
     ow.character.stored = ow.character.stored or {}
     ow.character.stored[characterID] = character
 
-    plyTable.owCharacters = plyTable.owCharacters or {}
-    plyTable.owCharacters[characterID] = character
-    plyTable.owCharacter = character
+    clientTable.owCharacters = clientTable.owCharacters or {}
+    clientTable.owCharacters[characterID] = character
+    clientTable.owCharacter = character
 
     ow.localClient:Notify("Character " .. characterID .. " cached!")
 end)
@@ -63,13 +63,13 @@ net.Receive("ow.character.delete", function(len)
 
     ow.character.stored[characterID] = nil
 
-    local ply = ow.localClient
-    local plyTable = ply:GetTable()
-    if ( plyTable.owCharacters ) then
-        plyTable.owCharacters[characterID] = nil
+    local client = ow.localClient
+    local clientTable = client:GetTable()
+    if ( clientTable.owCharacters ) then
+        clientTable.owCharacters[characterID] = nil
     end
 
-    plyTable.owCharacter = nil
+    clientTable.owCharacter = nil
 
     if ( IsValid(ow.gui.mainmenu) ) then
         ow.gui.mainmenu:Populate()
@@ -93,25 +93,25 @@ net.Receive("ow.character.load", function(len)
         ow.gui.mainmenu:Remove()
     end
 
-    local ply = ow.localClient
+    local client = ow.localClient
 
-    local character, reason = ow.character:CreateObject(characterID, ow.character.stored[characterID], ply)
+    local character, reason = ow.character:CreateObject(characterID, ow.character.stored[characterID], client)
     if ( !character ) then
         ow.util:PrintError("Failed to load character ", characterID, ", ", reason, "!")
         return
     end
 
-    local plyTable = ply:GetTable()
+    local clientTable = client:GetTable()
 
     ow.character.stored = ow.character.stored or {}
     ow.character.stored[characterID] = character
 
-    plyTable.owCharacters = plyTable.owCharacters or {}
-    plyTable.owCharacters[characterID] = character
-    plyTable.owCharacter = character
+    clientTable.owCharacters = clientTable.owCharacters or {}
+    clientTable.owCharacters[characterID] = character
+    clientTable.owCharacter = character
 end)
 
-net.Receive("ow.character.variable.set", function(len, ply)
+net.Receive("ow.character.variable.set", function(len, client)
     local characterID = net.ReadUInt(32)
     local key = net.ReadString()
     local value = net.ReadType()
@@ -348,12 +348,12 @@ net.Receive("ow.entity.setDataVariable", function(len)
 end)
 
 net.Receive("ow.gesture.play", function(len)
-    local ply = net.ReadPlayer()
+    local client = net.ReadPlayer()
     local name = net.ReadString()
 
-    if ( !IsValid(ply) ) then return end
+    if ( !IsValid(client) ) then return end
 
-    ply:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, ply:LookupSequence(name), 0, true)
+    client:AddVCDSequenceToGestureSlot(GESTURE_SLOT_CUSTOM, client:LookupSequence(name), 0, true)
 end)
 
 net.Receive("ow.mainmenu", function(len)

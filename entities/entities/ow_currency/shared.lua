@@ -17,11 +17,11 @@ properties.Add("ow.property.currency.setamount", {
     MenuLabel = "Set Amount",
     Order = 999,
     MenuIcon = "icon16/money.png",
-    Filter = function( self, ent, ply )
+    Filter = function( self, ent, client )
         if ( !IsValid(ent) or ent:GetClass() != "ow_currency" ) then return false end
-        if ( !gamemode.Call( "CanProperty", ply, "ow.property.currency.setamount", ent ) ) then return false end
+        if ( !gamemode.Call( "CanProperty", client, "ow.property.currency.setamount", ent ) ) then return false end
 
-        return ply:IsSuperAdmin()
+        return client:IsSuperAdmin()
     end,
     Action = function( self, ent ) -- The action to perform upon using the property ( Clientside )
         Derma_StringRequest(
@@ -41,17 +41,17 @@ properties.Add("ow.property.currency.setamount", {
             end
         )
     end,
-    Receive = function( self, length, ply ) -- The action to perform upon using the property ( Serverside )
+    Receive = function( self, length, client ) -- The action to perform upon using the property ( Serverside )
         local ent = net.ReadEntity()
 
-        if ( !properties.CanBeTargeted( ent, ply ) ) then return end
-        if ( !self:Filter( ent, ply ) ) then return end
+        if ( !properties.CanBeTargeted( ent, client ) ) then return end
+        if ( !self:Filter( ent, client ) ) then return end
 
         local amount = net.ReadFloat()
         if ( !isnumber(amount) ) then return end
 
         if ( amount < 0 ) then
-            ow.util:PrintWarning(Format("Admin %s (%s) tried to set the amount of currency to a negative value!", ply:SteamName(), ply:SteamID64()))
+            ow.util:PrintWarning(Format("Admin %s (%s) tried to set the amount of currency to a negative value!", client:SteamName(), client:SteamID64()))
             return
         end
 

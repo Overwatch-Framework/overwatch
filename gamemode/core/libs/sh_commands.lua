@@ -16,7 +16,7 @@ ow.command.stored = {}
 -- @field string UniqueID The unique identifier of the command.
 -- @usage ow.command:Register({
 --     Name = "example",
---     Callback = function(ply, args)
+--     Callback = function(client, args)
 --         print("Example command executed!")
 --     end,
 --     Prefixes = {"example", "ex"},

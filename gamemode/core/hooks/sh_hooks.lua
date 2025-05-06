@@ -1,28 +1,28 @@
-function GM:CanDrive(ply, entity)
+function GM:CanDrive(client, entity)
     return false
 end
 
-function GM:CanPlayerJoinFaction(ply, factionID)
+function GM:CanPlayerJoinFaction(client, factionID)
     return true
 end
 
-function GM:PrePlayerHandsPickup(ply, ent)
+function GM:PrePlayerHandsPickup(client, ent)
     return true
 end
 
-function GM:PrePlayerHandsPush(ply, ent)
+function GM:PrePlayerHandsPush(client, ent)
     return true
 end
 
-function GM:GetPlayerHandsPushForce(ply)
+function GM:GetPlayerHandsPushForce(client)
     return 128
 end
 
-function GM:GetPlayerHandsReachDistance(ply)
+function GM:GetPlayerHandsReachDistance(client)
     return 64
 end
 
-function GM:GetPlayerHandsMaxMass(ply)
+function GM:GetPlayerHandsMaxMass(client)
     return 64
 end
 
@@ -38,28 +38,28 @@ function GM:GetMainMenuMusic()
     return ow.config:Get("mainmenu.music", "music/hl2_song20_submix0.mp3")
 end
 
-function GM:PlayerGetToolgun(ply)
-    local character = ply:GetCharacter()
-    return CAMI.PlayerHasAccess(ply, "Overwatch - Toolgun", nil) or character and character:HasFlag("t")
+function GM:PlayerGetToolgun(client)
+    local character = client:GetCharacter()
+    return CAMI.PlayerHasAccess(client, "Overwatch - Toolgun", nil) or character and character:HasFlag("t")
 end
 
-function GM:PlayerGetPhysgun(ply)
-    return CAMI.PlayerHasAccess(ply, "Overwatch - Physgun", nil)
+function GM:PlayerGetPhysgun(client)
+    return CAMI.PlayerHasAccess(client, "Overwatch - Physgun", nil)
 end
 
-function GM:PlayerCanCreateCharacter(ply, character)
+function GM:PlayerCanCreateCharacter(client, character)
     return true
 end
 
-function GM:PlayerCanDeleteCharacter(ply, character)
+function GM:PlayerCanDeleteCharacter(client, character)
     return true
 end
 
-function GM:PlayerCanLoadCharacter(ply, character, currentCharacter)
+function GM:PlayerCanLoadCharacter(client, character, currentCharacter)
     return true
 end
 
-function GM:CanPlayerTakeItem(ply, item)
+function GM:CanPlayerTakeItem(client, item)
     return true
 end
 
@@ -67,69 +67,69 @@ function GM:ItemCanBeDestroyed(item, damageInfo)
     return true
 end
 
-function GM:GetPlayerPainSound(ply)
+function GM:GetPlayerPainSound(client)
 end
 
-function GM:GetPlayerDeathSound(ply)
+function GM:GetPlayerDeathSound(client)
 end
 
-function GM:PreOptionChanged(ply, key, value)
+function GM:PreOptionChanged(client, key, value)
 end
 
-function GM:PostOptionChanged(ply, key, value)
+function GM:PostOptionChanged(client, key, value)
 end
 
-function GM:PlayerCanHearChat(ply, listener, uniqueID, text)
+function GM:PlayerCanHearChat(client, listener, uniqueID, text)
     local canHear = ow.chat:Get(uniqueID).CanHear
     if ( isbool(canHear) ) then
         return canHear
     elseif ( isfunction(canHear) ) then
-        return ow.chat:Get(uniqueID):CanHear(ply, listener, text)
+        return ow.chat:Get(uniqueID):CanHear(client, listener, text)
     end
 
     return true
 end
 
-function GM:PreConfigChanged(key, value, oldValue, ply)
+function GM:PreConfigChanged(key, value, oldValue, client)
 end
 
-function GM:PostConfigChanged(key, value, oldValue, ply)
+function GM:PostConfigChanged(key, value, oldValue, client)
 end
 
-function GM:SetupMove(ply, mv, cmd)
+function GM:SetupMove(client, mv, cmd)
 end
 
 local KEY_SHOOT = IN_ATTACK + IN_ATTACK2
-function GM:StartCommand(ply, cmd)
-    local weapon = ply:GetActiveWeapon()
+function GM:StartCommand(client, cmd)
+    local weapon = client:GetActiveWeapon()
     if ( !IsValid(weapon) or !weapon:IsWeapon() ) then return end
 
-    if ( !weapon.FireWhenLowered and !ply:IsWeaponRaised() ) then
+    if ( !weapon.FireWhenLowered and !client:IsWeaponRaised() ) then
         cmd:RemoveKey(KEY_SHOOT)
     end
 end
 
-function GM:KeyPress(ply, key)
+function GM:KeyPress(client, key)
     if ( SERVER and key == IN_RELOAD ) then
-        timer.Create("ow.wepRaise." .. ply:SteamID64(), ow.config:Get("wepraise.time", 1), 1, function()
-            if ( IsValid(ply) ) then
-                ply:ToggleWeaponRaise()
+        timer.Create("ow.wepRaise." .. client:SteamID64(), ow.config:Get("wepraise.time", 1), 1, function()
+            if ( IsValid(client) ) then
+                client:ToggleWeaponRaise()
             end
         end)
     end
 end
 
-function GM:KeyRelease(ply, key)
+function GM:KeyRelease(client, key)
     if ( SERVER and key == IN_RELOAD ) then
-        timer.Remove("ow.wepRaise." .. ply:SteamID64())
+        timer.Remove("ow.wepRaise." .. client:SteamID64())
     end
 end
 
-function GM:PlayerSwitchWeapon(ply, hOldWeapon, hNewWeapon)
+function GM:PlayerSwitchWeapon(client, hOldWeapon, hNewWeapon)
     if ( SERVER ) then
         timer.Simple(0.1, function()
-            if ( IsValid(ply) and IsValid(hNewWeapon) ) then
-                ply:SetWeaponRaised(false)
+            if ( IsValid(client) and IsValid(hNewWeapon) ) then
+                client:SetWeaponRaised(false)
             end
         end)
     end

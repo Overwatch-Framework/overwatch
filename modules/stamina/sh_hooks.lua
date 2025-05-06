@@ -1,9 +1,9 @@
 local MODULE = MODULE
 
-function MODULE:SetupMove(ply, mv, cmd)
+function MODULE:SetupMove(client, mv, cmd)
     if ( !ow.config:Get("stamina", true) ) then return end
 
-    local st = ply:GetRelay("stamina")
+    local st = client:GetRelay("stamina")
     if ( istable(st) and st.current <= 0 ) then
         -- Prevent sprinting input
         if ( mv:KeyDown(IN_SPEED) ) then

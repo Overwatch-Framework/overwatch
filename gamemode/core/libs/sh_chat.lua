@@ -26,15 +26,15 @@ function ow.chat:Register(uniqueID, chatData)
         ow.command:Register(uniqueID, {
             Description = chatData.Description or "",
             Prefixes = chatData.Prefixes,
-            Callback = function(this, ply, arguments)
+            Callback = function(this, client, arguments)
                 local text = table.concat(arguments, " ")
 
                 if ( !isstring(text) or #text < 1 ) then
-                    ply:Notify("You must provide a message to send!")
+                    client:Notify("You must provide a message to send!")
                     return false
                 end
 
-                self:SendSpeaker(ply, uniqueID, text)
+                self:SendSpeaker(client, uniqueID, text)
             end
         })
     end

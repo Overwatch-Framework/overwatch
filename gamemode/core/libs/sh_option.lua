@@ -73,9 +73,9 @@ if ( CLIENT ) then
             value = stored.Default
         end
 
-        local ply = ow.localClient
+        local client = ow.localClient
         local oldValue = stored.Value != nil and stored.Value or stored.Default
-        local bResult = hook.Run("PreOptionChanged", ply, key, value, oldValue)
+        local bResult = hook.Run("PreOptionChanged", client, key, value, oldValue)
         if ( bResult == false ) then return false end
 
         stored.Value = value
@@ -88,12 +88,12 @@ if ( CLIENT ) then
         end
 
         if ( isfunction(stored.OnChange) ) then
-            stored:OnChange(value, oldValue, ply)
+            stored:OnChange(value, oldValue, client)
         end
 
         ow.data:Set("options", self:GetSaveData(), true, false)
 
-        hook.Run("PostOptionChanged", ply, key, value, oldValue)
+        hook.Run("PostOptionChanged", client, key, value, oldValue)
 
         return true
     end

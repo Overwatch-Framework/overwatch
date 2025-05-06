@@ -73,7 +73,7 @@ function ow.config:Set(key, value)
     end
 
     if ( isfunction(stored.OnChange) ) then
-        stored:OnChange(value, oldValue, ply)
+        stored:OnChange(value, oldValue, client)
     end
 
     if ( SERVER ) then

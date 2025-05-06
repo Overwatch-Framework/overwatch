@@ -53,7 +53,7 @@ function ow.color:Dim(col, frac)
 end
 
 if ( CLIENT ) then
-    concommand.Add("ow_list_colours", function(ply, cmd, args)
+    concommand.Add("ow_list_colours", function(client, cmd, args)
         for k, v in pairs(ow.color.stored) do
             ow.util:Print("Colour: " .. k .. " >> ", ow.color:Get("cyan"), v, " Colour Sample")
         end

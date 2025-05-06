@@ -4,19 +4,19 @@ function MODULE:PostEntitySetModel(ent, model)
     if ( !IsValid(ent) or !ent:IsPlayer() ) then return end
     if ( !model ) then return end
 
-    local ply = ent
-    local plyTable = ply:GetTable()
-    if ( !plyTable ) then return end
+    local client = ent
+    local clientTable = client:GetTable()
+    if ( !clientTable ) then return end
 
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
         net.Start("ow.animations.update")
-            net.WritePlayer(ply)
+            net.WritePlayer(client)
             net.WriteTable({})
         net.Broadcast()
     end
 
-    local weapon = ply:GetActiveWeapon()
+    local weapon = client:GetActiveWeapon()
     if ( !IsValid(weapon) ) then return end
 
     local holdType = weapon:GetHoldType()
@@ -26,32 +26,32 @@ function MODULE:PostEntitySetModel(ent, model)
 
     local animTable = ow.animations.stored[class]
     if ( animTable and animTable[holdType] ) then
-        ply.owAnimations = animTable[holdType]
+        client.owAnimations = animTable[holdType]
     else
-        ply.owAnimations = {}
+        client.owAnimations = {}
     end
 
     net.Start("ow.animations.update")
-        net.WritePlayer(ply)
-        net.WriteTable(ply.owAnimations)
+        net.WritePlayer(client)
+        net.WriteTable(client.owAnimations)
     net.Broadcast()
 end
 
-function MODULE:PlayerSpawn(ply)
-    if ( !IsValid(ply) ) then return end
+function MODULE:PlayerSpawn(client)
+    if ( !IsValid(client) ) then return end
 
-    local model = ply:GetModel()
+    local model = client:GetModel()
     if ( !model ) then return end
 
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
         net.Start("ow.animations.update")
-            net.WritePlayer(ply)
+            net.WritePlayer(client)
             net.WriteTable({})
         net.Broadcast()
     end
 
-    local weapon = ply:GetActiveWeapon()
+    local weapon = client:GetActiveWeapon()
     if ( !IsValid(weapon) ) then return end
 
     local holdType = weapon:GetHoldType()
@@ -61,28 +61,28 @@ function MODULE:PlayerSpawn(ply)
 
     local animTable = ow.animations.stored[class]
     if ( animTable and animTable[holdType] ) then
-        ply.owAnimations = animTable[holdType]
+        client.owAnimations = animTable[holdType]
     else
-        ply.owAnimations = {}
+        client.owAnimations = {}
     end
 
     net.Start("ow.animations.update")
-        net.WritePlayer(ply)
-        net.WriteTable(ply.owAnimations)
+        net.WritePlayer(client)
+        net.WriteTable(client.owAnimations)
     net.Broadcast()
 end
 
-function MODULE:PlayerSwitchWeapon(ply, oldWeapon, newWeapon)
-    if ( !IsValid(ply) ) then return end
+function MODULE:PlayerSwitchWeapon(client, oldWeapon, newWeapon)
+    if ( !IsValid(client) ) then return end
     if ( !IsValid(newWeapon) ) then return end
 
-    local model = ply:GetModel()
+    local model = client:GetModel()
     if ( !model ) then return end
 
     local class = ow.animations:GetModelClass(model)
     if ( !class or class == "player" ) then
         net.Start("ow.animations.update")
-            net.WritePlayer(ply)
+            net.WritePlayer(client)
             net.WriteTable({})
         net.Broadcast()
     end
@@ -94,13 +94,13 @@ function MODULE:PlayerSwitchWeapon(ply, oldWeapon, newWeapon)
 
     local animTable = ow.animations.stored[class]
     if ( animTable and animTable[holdType] ) then
-        ply.owAnimations = animTable[holdType]
+        client.owAnimations = animTable[holdType]
     else
-        ply.owAnimations = {}
+        client.owAnimations = {}
     end
 
     net.Start("ow.animations.update")
-        net.WritePlayer(ply)
-        net.WriteTable(ply.owAnimations)
+        net.WritePlayer(client)
+        net.WriteTable(client.owAnimations)
     net.Broadcast()
 end

@@ -116,14 +116,14 @@ function ow.class:Get(identifier)
     return nil
 end
 
-function ow.class:CanSwitchTo(ply, classID)
+function ow.class:CanSwitchTo(client, classID)
     local class = self:Get(classID)
     if ( !class ) then return false end
 
-    local hookRun = hook.Run("PreClassBecome", ply, classID)
+    local hookRun = hook.Run("PreClassBecome", client, classID)
     if ( hookRun == false ) then return false end
 
-    if ( isfunction(class.CanSwitchTo) and !class:CanSwitchTo(ply) ) then
+    if ( isfunction(class.CanSwitchTo) and !class:CanSwitchTo(client) ) then
         return false
     end
 

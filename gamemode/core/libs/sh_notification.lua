@@ -6,7 +6,7 @@ NOTIFY_HINT = 2
 NOTIFY_UNDO = 3
 NOTIFY_CLEANUP = 4
 
-function ow.notification:Send(ply, text, iType, duration)
+function ow.notification:Send(client, text, iType, duration)
     if ( !text or text == "" ) then return end
 
     if ( !iType and string.EndsWith(text, "!") ) then
@@ -26,8 +26,8 @@ function ow.notification:Send(ply, text, iType, duration)
         net.WriteUInt(iType, 8)
         net.WriteUInt(duration, 16)
 
-        if ( IsValid(ply) ) then
-            net.Send(ply)
+        if ( IsValid(client) ) then
+            net.Send(client)
         else
             net.Broadcast()
         end

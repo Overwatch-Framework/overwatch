@@ -82,8 +82,8 @@ function ow.inventory:Broadcast(inventory)
     net.Send(receivers)
 end
 
-function ow.inventory:Cache(ply, inventoryID)
-    if ( !IsValid(ply) or !inventoryID ) then return false end
+function ow.inventory:Cache(client, inventoryID)
+    if ( !IsValid(client) or !inventoryID ) then return false end
 
     local result = ow.sqlite:Select("ow_inventories", nil, "id = " .. inventoryID)
     if ( !result or !result[1] ) then return false end
@@ -114,7 +114,7 @@ function ow.inventory:Cache(ply, inventoryID)
             Data = inventory:GetData(),
             Receivers = inventory.Receivers
         })
-    net.Send(ply)
+    net.Send(client)
 
     return true
 end
@@ -128,7 +128,7 @@ function ow.inventory:CacheAll(characterID)
     local inventories = util.JSONToTable(result[1].inventories or "[]") or {}
 
     for _, invID in ipairs(inventories) do
-        local ply = ow.character:GetPlayerByCharacter(characterID)
-        self:Cache(ply, invID)
+        local client = ow.character:GetPlayerByCharacter(characterID)
+        self:Cache(client, invID)
     end
 end

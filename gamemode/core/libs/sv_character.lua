@@ -1,9 +1,9 @@
 --- Character library.
 -- @module ow.character
 
-function ow.character:Create(ply, query)
-    if ( !IsValid(ply) or !ply:IsPlayer() ) then
-        ErrorNoHalt("Attempted to create character for invalid player (" .. tostring(ply) .. ")")
+function ow.character:Create(client, query)
+    if ( !IsValid(client) or !client:IsPlayer() ) then
+        ErrorNoHalt("Attempted to create character for invalid player (" .. tostring(client) .. ")")
         return false
     end
 
@@ -21,7 +21,7 @@ function ow.character:Create(ply, query)
         end
     end
 
-    insertQuery.steamid = ply:SteamID64()
+    insertQuery.steamid = client:SteamID64()
     insertQuery.schema = SCHEMA.Folder
     insertQuery.play_time = 0
     insertQuery.last_played = os.time()
@@ -29,7 +29,7 @@ function ow.character:Create(ply, query)
     local characterID
     ow.sqlite:Insert("ow_characters", insertQuery, function(result)
         if ( !result ) then
-            ErrorNoHalt("Failed to insert character into database for player " .. tostring(ply) .. "\n")
+            ErrorNoHalt("Failed to insert character into database for player " .. tostring(client) .. "\n")
             return false
         end
 
@@ -41,15 +41,15 @@ function ow.character:Create(ply, query)
         return false
     end
 
-    local character = self:CreateObject(characterID, insertQuery, ply)
+    local character = self:CreateObject(characterID, insertQuery, client)
     if ( !character ) then
-        ErrorNoHalt("Failed to create character object for ID " .. characterID .. " for player " .. tostring(ply) .. "\n")
+        ErrorNoHalt("Failed to create character object for ID " .. characterID .. " for player " .. tostring(client) .. "\n")
         return false
     end
 
-    local plyTable = ply:GetTable()
-    plyTable.owCharacters = plyTable.owCharacters or {}
-    plyTable.owCharacters[characterID] = character
+    local clientTable = client:GetTable()
+    clientTable.owCharacters = clientTable.owCharacters or {}
+    clientTable.owCharacters[characterID] = character
 
     self.stored[characterID] = character
 
@@ -61,74 +61,74 @@ function ow.character:Create(ply, query)
 
     net.Start("ow.character.cache")
         net.WriteData(encoded, #encoded)
-    net.Send(ply)
+    net.Send(client)
 
     ow.inventory:Register({characterID = characterID})
 
-    hook.Run("PlayerCreatedCharacter", ply, character, query)
+    hook.Run("PlayerCreatedCharacter", client, character, query)
 
     return character
 end
 
-function ow.character:Load(ply, characterID)
-    if ( !IsValid(ply) or !ply:IsPlayer() ) then
-        ErrorNoHalt("Attempted to load character for invalid player (" .. tostring(ply) .. ")\n")
+function ow.character:Load(client, characterID)
+    if ( !IsValid(client) or !client:IsPlayer() ) then
+        ErrorNoHalt("Attempted to load character for invalid player (" .. tostring(client) .. ")\n")
         return false
     end
 
     if ( !characterID ) then
-        ply:Notify("You are attempting to load a character with an invalid ID!")
+        client:Notify("You are attempting to load a character with an invalid ID!")
         return false
     end
 
-    local currentCharacter = ply:GetCharacter()
+    local currentCharacter = client:GetCharacter()
     if ( currentCharacter ) then
         currentCharacter.Player = NULL
         --currentCharacter:Save()
 
         if ( currentCharacter:GetID() == characterID ) then
-            ply:Notify("You are already using this character!")
+            client:Notify("You are already using this character!")
             return false
         end
     end
 
-    local steamID = ply:SteamID64()
+    local steamID = client:SteamID64()
     local condition = string.format("steamid = %s AND id = %s", sql.SQLStr(steamID), sql.SQLStr(characterID))
     local result = ow.sqlite:Select("ow_characters", nil, condition)
 
     if ( result and result[1] ) then
         local row = result[1]
-        local character = self:CreateObject(characterID, row, ply)
+        local character = self:CreateObject(characterID, row, client)
         if ( !character ) then
-            ply:Notify("Failed to load character!")
+            client:Notify("Failed to load character!")
             return false
         end
 
         self.stored[characterID] = character
 
-        hook.Run("PrePlayerLoadedCharacter", ply, character, currentCharacter)
+        hook.Run("PrePlayerLoadedCharacter", client, character, currentCharacter)
 
         net.Start("ow.character.load")
             net.WriteUInt(character:GetID(), 32)
-        net.Send(ply)
+        net.Send(client)
 
-        local plyTable = ply:GetTable()
-        plyTable.owCharacters = plyTable.owCharacters or {}
-        plyTable.owCharacters[characterID] = character
-        plyTable.owCharacter = character
+        local clientTable = client:GetTable()
+        clientTable.owCharacters = clientTable.owCharacters or {}
+        clientTable.owCharacters[characterID] = character
+        clientTable.owCharacter = character
 
-        ply:SetModel(character:GetModel())
-        ply:SetTeam(character:GetFaction())
-        ply:Spawn()
+        client:SetModel(character:GetModel())
+        client:SetTeam(character:GetFaction())
+        client:Spawn()
 
         ow.inventory:CacheAll(characterID)
         ow.item:Cache(characterID)
 
-        hook.Run("PlayerLoadedCharacter", ply, character, currentCharacter)
+        hook.Run("PlayerLoadedCharacter", client, character, currentCharacter)
 
         return character
     else
-        ErrorNoHalt("Failed to load character with ID " .. characterID .. " for player " .. tostring(ply) .. "\n")
+        ErrorNoHalt("Failed to load character with ID " .. characterID .. " for player " .. tostring(client) .. "\n")
         return false
     end
 end
@@ -145,24 +145,24 @@ function ow.character:Delete(characterID)
         return false
     end
 
-    local ply = character:GetPlayer()
-    if ( IsValid(ply) ) then
-        local plyTable = ply:GetTable()
-        plyTable.owCharacters[characterID] = nil
-        plyTable.owCharacter = nil
+    local client = character:GetPlayer()
+    if ( IsValid(client) ) then
+        local clientTable = client:GetTable()
+        clientTable.owCharacters[characterID] = nil
+        clientTable.owCharacter = nil
 
-        ply:SetTeam(0)
-        ply:SetModel("models/player/kleiner.mdl")
+        client:SetTeam(0)
+        client:SetModel("models/player/kleiner.mdl")
 
-        ply:SetNoDraw(true)
-        ply:SetNotSolid(true)
-        ply:SetMoveType(MOVETYPE_NONE)
+        client:SetNoDraw(true)
+        client:SetNotSolid(true)
+        client:SetMoveType(MOVETYPE_NONE)
 
-        ply:KillSilent()
+        client:KillSilent()
 
         net.Start("ow.character.delete")
             net.WriteUInt(characterID, 32)
-        net.Send(ply)
+        net.Send(client)
     end
 
     ow.sqlite:Delete("ow_characters", string.format("id = %s", sql.SQLStr(characterID)))
@@ -171,23 +171,23 @@ function ow.character:Delete(characterID)
     return true
 end
 
-function ow.character:Cache(ply, characterID)
-    if ( !IsValid(ply) or !ply:IsPlayer() ) then
-        ErrorNoHalt("Attempted to cache character for invalid player (" .. tostring(ply) .. ")\n")
+function ow.character:Cache(client, characterID)
+    if ( !IsValid(client) or !client:IsPlayer() ) then
+        ErrorNoHalt("Attempted to cache character for invalid player (" .. tostring(client) .. ")\n")
         return false
     end
 
-    local steamID = ply:SteamID64()
+    local steamID = client:SteamID64()
     local condition = string.format("steamid = %s AND id = %s", sql.SQLStr(steamID), sql.SQLStr(characterID))
     local result = ow.sqlite:Select("ow_characters", nil, condition)
     if ( !result or !result[1] ) then
-        ErrorNoHalt("Failed to cache character with ID " .. characterID .. " for player " .. tostring(ply) .. "\n")
+        ErrorNoHalt("Failed to cache character with ID " .. characterID .. " for player " .. tostring(client) .. "\n")
         return false
     end
 
     characterID = tonumber(characterID)
     if ( !characterID ) then
-        ErrorNoHalt("Failed to convert character ID " .. characterID .. " to number for player " .. tostring(ply) .. "\n")
+        ErrorNoHalt("Failed to convert character ID " .. characterID .. " to number for player " .. tostring(client) .. "\n")
         return false
     end
 
@@ -196,9 +196,9 @@ function ow.character:Cache(ply, characterID)
         return false
     end
 
-    local plyTable = ply:GetTable()
-    plyTable.owCharacters = plyTable.owCharacters or {}
-    plyTable.owCharacters[characterID] = result[1]
+    local clientTable = client:GetTable()
+    clientTable.owCharacters = clientTable.owCharacters or {}
+    clientTable.owCharacters[characterID] = result[1]
     self.stored[characterID] = result[1]
 
     local encoded, err = sfs.encode(result[1])
@@ -209,31 +209,31 @@ function ow.character:Cache(ply, characterID)
 
     net.Start("ow.character.cache")
         net.WriteData(encoded, #encoded)
-    net.Send(ply)
+    net.Send(client)
 
     return true
 end
 
-function ow.character:CacheAll(ply)
-    if ( !IsValid(ply) or !ply:IsPlayer() ) then
-        ErrorNoHalt("Attempted to load characters for invalid player (" .. tostring(ply) .. ")\n")
+function ow.character:CacheAll(client)
+    if ( !IsValid(client) or !client:IsPlayer() ) then
+        ErrorNoHalt("Attempted to load characters for invalid player (" .. tostring(client) .. ")\n")
         return false
     end
 
-    local steamID = ply:SteamID64()
+    local steamID = client:SteamID64()
 
     local condition = string.format("steamid = %s", sql.SQLStr(steamID))
     local result = ow.sqlite:Select("ow_characters", nil, condition)
 
     -- Ensure the player has a table to store characters
-    local plyTable = ply:GetTable()
-    plyTable.owCharacters = {}
+    local clientTable = client:GetTable()
+    clientTable.owCharacters = {}
 
     if ( result ) then
         for _, row in ipairs(result) do
             local id = tonumber(row.id)
             if ( !id ) then
-                ErrorNoHalt("Failed to convert character ID " .. row.id .. " to number for player " .. tostring(ply) .. "\n")
+                ErrorNoHalt("Failed to convert character ID " .. row.id .. " to number for player " .. tostring(client) .. "\n")
                 continue
             end
 
@@ -242,13 +242,13 @@ function ow.character:CacheAll(ply)
                 continue
             end
 
-            local character = self:CreateObject(id, row, ply)
+            local character = self:CreateObject(id, row, client)
             self.stored[id] = character
-            plyTable.owCharacters[id] = character
+            clientTable.owCharacters[id] = character
         end
     end
 
-    local encoded, err = sfs.encode(plyTable.owCharacters)
+    local encoded, err = sfs.encode(clientTable.owCharacters)
     if ( err ) then
         ErrorNoHalt("Failed to encode character: " .. err .. "\n")
         return false
@@ -256,15 +256,15 @@ function ow.character:CacheAll(ply)
 
     net.Start("ow.character.cache.all")
         net.WriteData(encoded, #encoded)
-    net.Send(ply)
+    net.Send(client)
 
-    hook.Run("PlayerLoadedAllCharacters", ply, plyTable.owCharacters)
+    hook.Run("PlayerLoadedAllCharacters", client, clientTable.owCharacters)
 
-    return plyTable.owCharacters
+    return clientTable.owCharacters
 end
 
-concommand.Add("ow_character_test_create", function(ply, cmd, args)
-    ow.character:Create(ply, {
+concommand.Add("ow_character_test_create", function(client, cmd, args)
+    ow.character:Create(client, {
         name = "Test Character"
     })
 end)

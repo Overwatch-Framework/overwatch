@@ -13,8 +13,8 @@ function PANEL:Init()
 end
 
 function PANEL:Populate()
-    local ply = ow.localClient
-    if ( !IsValid(ply) ) then return end
+    local client = ow.localClient
+    if ( !IsValid(client) ) then return end
 
     local parent = self:GetParent()
     parent:SetGradientLeftTarget(0)
@@ -55,8 +55,8 @@ function PANEL:Populate()
     characterList:GetVBar():SetWide(0)
     characterList.Paint = nil
 
-    local plyTable = ply:GetTable()
-    for k, v in pairs(plyTable.owCharacters) do
+    local clientTable = client:GetTable()
+    for k, v in pairs(clientTable.owCharacters) do
         -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
         local button = characterList:Add("ow.button.small")
         button:Dock(TOP)

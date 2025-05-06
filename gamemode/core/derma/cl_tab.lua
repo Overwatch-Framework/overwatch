@@ -32,8 +32,8 @@ function PANEL:Init()
 
     ow.gui.tab = self
 
-    local ply = ow.localClient
-    if ( IsValid(ply) and ply:IsTyping() ) then
+    local client = ow.localClient
+    if ( IsValid(client) and client:IsTyping() ) then
         chat.Close()
     end
 

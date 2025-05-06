@@ -25,33 +25,33 @@ function ow.flag:Get(flag)
 end
 
 ow.flag:Register("t", "flag.toolgun", function(char, has)
-    local ply = char:GetPlayer()
-    if ( !IsValid(ply) ) then return end
+    local client = char:GetPlayer()
+    if ( !IsValid(client) ) then return end
 
     if ( has ) then
-        ply:Give("gmod_tool")
+        client:Give("gmod_tool")
     else
-        local wep = ply:GetActiveWeapon()
+        local wep = client:GetActiveWeapon()
         if ( IsValid(wep) and wep:GetClass() == "gmod_tool" ) then
-            ply:SelectWeapon("ow_hands")
+            client:SelectWeapon("ow_hands")
         end
 
-        ply:StripWeapon("gmod_tool")
+        client:StripWeapon("gmod_tool")
     end
 end)
 
 ow.flag:Register("p", "flag.physgun", function(char, has)
-    local ply = char:GetPlayer()
-    if ( !IsValid(ply) ) then return end
+    local client = char:GetPlayer()
+    if ( !IsValid(client) ) then return end
 
     if ( has ) then
-        ply:Give("weapon_physgun")
+        client:Give("weapon_physgun")
     else
-        local wep = ply:GetActiveWeapon()
+        local wep = client:GetActiveWeapon()
         if ( IsValid(wep) and wep:GetClass() == "weapon_physgun" ) then
-            ply:SelectWeapon("ow_hands")
+            client:SelectWeapon("ow_hands")
         end
 
-        ply:StripWeapon("weapon_physgun")
+        client:StripWeapon("weapon_physgun")
     end
 end)

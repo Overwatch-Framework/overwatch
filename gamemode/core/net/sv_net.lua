@@ -11,30 +11,30 @@ util.AddNetworkString("ow.character.load.failed")
 util.AddNetworkString("ow.character.load")
 util.AddNetworkString("ow.character.variable.set")
 
-net.Receive("ow.character.load", function(len, ply)
+net.Receive("ow.character.load", function(len, client)
     local characterID = net.ReadUInt(32)
-    ow.character:Load(ply, characterID)
+    ow.character:Load(client, characterID)
 end)
 
-net.Receive("ow.character.delete", function(len, ply)
+net.Receive("ow.character.delete", function(len, client)
     local characterID = net.ReadUInt(32)
     local character = ow.character:Get(characterID)
     if ( !character ) then return end
 
-    local bResult = hook.Run("PreCharacterDelete", ply, character)
+    local bResult = hook.Run("PreCharacterDelete", client, character)
     if ( bResult == false ) then return end
 
     ow.character:Delete(characterID)
 
-    hook.Run("PostCharacterDelete", ply, character)
+    hook.Run("PostCharacterDelete", client, character)
 end)
 
-net.Receive("ow.character.create", function(len, ply)
+net.Receive("ow.character.create", function(len, client)
     -- TODO: Make this more secure, validate the payload and check if the player is allowed to create a character and probably check for other stuff and do other cool things later on in the menus
     local payload = sfs.decode(net.ReadData(len / 8))
     if ( !istable(payload) ) then return end
 
-    local bResult = hook.Run("PreCharacterCreate", ply, payload)
+    local bResult = hook.Run("PreCharacterCreate", client, payload)
     if ( bResult == false ) then return end
 
     for k, v in pairs(ow.character.variables) do
@@ -46,32 +46,32 @@ net.Receive("ow.character.create", function(len, ply)
         end
 
         if ( v.OnValidate ) then
-            local validate, reason = v:OnValidate(ply, payload, ply)
+            local validate, reason = v:OnValidate(client, payload, client)
             if ( !validate ) then
                 net.Start("ow.character.create.failed")
                     net.WriteString(reason or "Failed to validate character!")
-                net.Send(ply)
+                net.Send(client)
 
                 return
             end
         end
     end
 
-    local character, reason = ow.character:Create(ply, payload)
+    local character, reason = ow.character:Create(client, payload)
     if ( !character ) then
         net.Start("ow.character.create.failed")
             net.WriteString(reason or "Failed to create character!")
-        net.Send(ply)
+        net.Send(client)
 
         return
     end
 
-    ow.character:Load(ply, character:GetID())
+    ow.character:Load(client, character:GetID())
 
     net.Start("ow.character.create")
-    net.Send(ply)
+    net.Send(client)
 
-    hook.Run("PostCharacterCreate", ply, character, payload)
+    hook.Run("PostCharacterCreate", client, character, payload)
 end)
 
 --[[-----------------------------------------------------------------------------
@@ -89,23 +89,23 @@ util.AddNetworkString("ow.config.reset")
 util.AddNetworkString("ow.config.set")
 util.AddNetworkString("ow.config.sync")
 
-net.Receive("ow.config.reset", function(len, ply)
-    if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end
+net.Receive("ow.config.reset", function(len, client)
+    if ( !CAMI.PlayerHasAccess(client, "Overwatch - Manage Config", nil) ) then return end
 
     local key = net.ReadString()
     local stored = ow.config.stored[key]
     if ( !istable(stored) ) then return end
 
-    local bResult = hook.Run("PrePlayerConfigReset", ply, key)
+    local bResult = hook.Run("PrePlayerConfigReset", client, key)
     if ( bResult == false ) then return end
 
     ow.config:Reset(key)
 
-    hook.Run("PostPlayerConfigReset", ply, key)
+    hook.Run("PostPlayerConfigReset", client, key)
 end)
 
-net.Receive("ow.config.set", function(len, ply)
-    if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Manage Config", nil) ) then return end
+net.Receive("ow.config.set", function(len, client)
+    if ( !CAMI.PlayerHasAccess(client, "Overwatch - Manage Config", nil) ) then return end
 
     local key = net.ReadString()
     local stored = ow.config.stored[key]
@@ -116,12 +116,12 @@ net.Receive("ow.config.set", function(len, ply)
 
     local oldValue = ow.config:Get(key)
 
-    local bResult = hook.Run("PrePlayerConfigChanged", ply, key, value, oldValue)
+    local bResult = hook.Run("PrePlayerConfigChanged", client, key, value, oldValue)
     if ( bResult == false ) then return end
 
     ow.config:Set(key, value)
 
-    hook.Run("PostPlayerConfigChanged", ply, key, value, oldValue)
+    hook.Run("PostPlayerConfigChanged", client, key, value, oldValue)
 end)
 
 --[[-----------------------------------------------------------------------------
@@ -131,20 +131,20 @@ end)
 util.AddNetworkString("ow.option.set")
 util.AddNetworkString("ow.option.sync")
 
-net.Receive("ow.option.set", function(len, ply)
+net.Receive("ow.option.set", function(len, client)
     local key = net.ReadString()
     local value = net.ReadType()
 
-    local bResult = hook.Run("PreOptionChanged", ply, key, value)
+    local bResult = hook.Run("PreOptionChanged", client, key, value)
     if ( bResult == false ) then return false end
 
-    ow.option:Set(ply, key, value)
+    ow.option:Set(client, key, value)
 
-    hook.Run("PostOptionChanged", ply, key, value)
+    hook.Run("PostOptionChanged", client, key, value)
 end)
 
-net.Receive("ow.option.sync", function(len, ply)
-    if ( !IsValid(ply) ) then return end
+net.Receive("ow.option.sync", function(len, client)
+    if ( !IsValid(client) ) then return end
 
     local data = sfs.decode(net.ReadData(len / 8))
     if ( !istable(data) ) then return end
@@ -162,11 +162,11 @@ net.Receive("ow.option.sync", function(len, ply)
                 return
             end
 
-            if ( ow.option.clients[ply] == nil ) then
-                ow.option.clients[ply] = {}
+            if ( ow.option.clients[client] == nil ) then
+                ow.option.clients[client] = {}
             end
 
-            ow.option.clients[ply][k] = data[k]
+            ow.option.clients[client][k] = data[k]
         end
     end
 end)
@@ -181,11 +181,11 @@ util.AddNetworkString("ow.inventory.item.remove")
 util.AddNetworkString("ow.inventory.refresh")
 util.AddNetworkString("ow.inventory.register")
 
-net.Receive("ow.inventory.cache", function(len, ply)
+net.Receive("ow.inventory.cache", function(len, client)
     local inventoryID = net.ReadUInt(32)
     if ( !inventoryID ) then return end
 
-    ow.inventory:Cache(ply, inventoryID)
+    ow.inventory:Cache(client, inventoryID)
 end)
 
 --[[-----------------------------------------------------------------------------
@@ -199,7 +199,7 @@ util.AddNetworkString("ow.item.entity")
 util.AddNetworkString("ow.item.perform")
 util.AddNetworkString("ow.item.spawn")
 
-net.Receive("ow.item.entity", function(len, ply)
+net.Receive("ow.item.entity", function(len, client)
     local itemID = net.ReadUInt(32)
     local entity = net.ReadEntity()
 
@@ -211,29 +211,29 @@ net.Receive("ow.item.entity", function(len, ply)
     item:SetEntity(entity)
 end)
 
-net.Receive("ow.item.perform", function(len, ply)
+net.Receive("ow.item.perform", function(len, client)
     local itemID = net.ReadUInt(32)
     local actionName = net.ReadString()
 
     if ( !itemID or !actionName ) then return end
 
     local item = ow.item:Get(itemID)
-    if ( !item or item:GetOwner() != ply:GetCharacterID() ) then return end
+    if ( !item or item:GetOwner() != client:GetCharacterID() ) then return end
 
     ow.item:PerformAction(itemID, actionName)
 end)
 
-net.Receive("ow.item.spawn", function(len, ply)
+net.Receive("ow.item.spawn", function(len, client)
     local uniqueID = net.ReadString()
     if ( !uniqueID or !ow.item.stored[uniqueID] ) then return end
 
-    local pos = ply:GetEyeTrace().HitPos + vector_up
+    local pos = client:GetEyeTrace().HitPos + vector_up
 
     ow.item:Spawn(nil, uniqueID, pos, nil, function(entity)
         if ( IsValid(entity) ) then
-            ply:Notify("Spawned item: " .. uniqueID)
+            client:Notify("Spawned item: " .. uniqueID)
         else
-            ply:Notify("Failed to spawn item.")
+            client:Notify("Failed to spawn item.")
         end
     end)
 end)
@@ -255,9 +255,9 @@ util.AddNetworkString("ow.luarun.server.test")
 util.AddNetworkString("ow.mainmenu")
 util.AddNetworkString("ow.notification.send")
 
-net.Receive("ow.luarun.server.test", function(len, ply)
-    ply:Ban(0, false)
-    ply:Kick("You have been banned from this server. Thank you taking the bait!")
+net.Receive("ow.luarun.server.test", function(len, client)
+    client:Ban(0, false)
+    client:Kick("You have been banned from this server. Thank you taking the bait!")
 
-    ow.util:PrintWarning("Player " .. ply:Name() .. " (" .. ply:SteamID() .. ") has been banned for using the \"ow.luarun.server.test\" network message!")
+    ow.util:PrintWarning("Player " .. client:Name() .. " (" .. client:SteamID() .. ") has been banned for using the \"ow.luarun.server.test\" network message!")
 end)

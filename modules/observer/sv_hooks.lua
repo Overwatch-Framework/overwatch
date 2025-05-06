@@ -1,23 +1,23 @@
 local MODULE = MODULE
 
-function MODULE:PlayerNoClip(ply, desiredState)
-    if ( !hook.Run("CanPlayerObserve", ply, desiredState) ) then
+function MODULE:PlayerNoClip(client, desiredState)
+    if ( !hook.Run("CanPlayerObserve", client, desiredState) ) then
         return false
     end
 
     if ( desiredState ) then
-        ply:SetNoDraw(true)
-        ply:DrawShadow(false)
-        ply:SetNotSolid(true)
-        ply:SetNoTarget(true)
+        client:SetNoDraw(true)
+        client:DrawShadow(false)
+        client:SetNotSolid(true)
+        client:SetNoTarget(true)
     else
-        ply:SetNoDraw(false)
-        ply:DrawShadow(true)
-        ply:SetNotSolid(false)
-        ply:SetNoTarget(false)
+        client:SetNoDraw(false)
+        client:DrawShadow(true)
+        client:SetNotSolid(false)
+        client:SetNoTarget(false)
     end
 
-    hook.Run("OnPlayerObserver", ply, desiredState)
+    hook.Run("OnPlayerObserver", client, desiredState)
     return true
 end
 
@@ -29,9 +29,9 @@ function MODULE:EntityTakeDamage(target, dmgInfo)
     end
 end
 
-function MODULE:OnPlayerObserver(ply, state)
+function MODULE:OnPlayerObserver(client, state)
     local logging = ow.module:Get("logging")
     if ( logging ) then
-        logging:Send(ply:Nick() .. " is now " .. (state and "observing" or "no longer observing") .. ".")
+        logging:Send(client:Nick() .. " is now " .. (state and "observing" or "no longer observing") .. ".")
     end
 end

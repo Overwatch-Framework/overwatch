@@ -28,7 +28,7 @@ ow.character:RegisterVariable("name", {
     AllowNonAscii = false,
     Numeric = false,
 
-    OnValidate = function(self, parent, payload, ply)
+    OnValidate = function(self, parent, payload, client)
         if ( string.len(payload.name) < 3 ) then
             return false, "Name must be at least 3 characters long!"
         elseif ( string.len(payload.name) > 32 ) then
@@ -56,7 +56,7 @@ ow.character:RegisterVariable("description", {
     ZPos = 0,
     Name = "Description",
 
-    OnValidate = function(self, parent, payload, ply)
+    OnValidate = function(self, parent, payload, client)
         if ( string.len(payload.description) < 10 ) then
             return false, "Description must be at least 10 characters long!"
         end
@@ -74,7 +74,7 @@ ow.character:RegisterVariable("model", {
     ZPos = 0,
     Name = "Model",
 
-    OnValidate = function(self, parent, payload, ply)
+    OnValidate = function(self, parent, payload, client)
         local faction = ow.faction:Get(payload.faction)
         if ( faction and faction.Models ) then
             local found = false
@@ -93,7 +93,7 @@ ow.character:RegisterVariable("model", {
         return true
     end,
 
-    OnPopulate = function(self, parent, payload, ply)
+    OnPopulate = function(self, parent, payload, client)
         local label = parent:Add("ow.text")
         label:Dock(TOP)
         label:SetFont("ow.fonts.button")
@@ -136,8 +136,8 @@ ow.character:RegisterVariable("faction", {
 
     Editable = true,
 
-    OnValidate = function(self, parent, payload, ply)
-        return ow.faction:CanSwitchTo(ply, payload.faction)
+    OnValidate = function(self, parent, payload, client)
+        return ow.faction:CanSwitchTo(client, payload.faction)
     end,
 
     OnSet = function(this, character, value)
@@ -146,9 +146,9 @@ ow.character:RegisterVariable("faction", {
             faction:OnSet(character, value)
         end
 
-        local ply = character:GetPlayer()
-        if ( IsValid(ply) ) then
-            ply:SetTeam(value)
+        local client = character:GetPlayer()
+        if ( IsValid(client) ) then
+            client:SetTeam(value)
         end
     end
 })

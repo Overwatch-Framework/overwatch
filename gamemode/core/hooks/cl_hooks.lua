@@ -1,10 +1,10 @@
-function GM:PlayerStartVoice(ply)
+function GM:PlayerStartVoice(client)
     if ( IsValid(g_VoicePanelList) ) then
         g_VoicePanelList:Remove()
     end
 end
 
-function GM:PlayerEndVoice(ply)
+function GM:PlayerEndVoice(client)
     if ( IsValid(g_VoicePanelList) ) then
         g_VoicePanelList:Remove()
     end
@@ -53,7 +53,7 @@ end
 
 local eyeTraceHullMin = Vector(-2, -2, -2)
 local eyeTraceHullMax = Vector(2, 2, 2)
-function GM:CalcView(ply, pos, angles, fov)
+function GM:CalcView(client, pos, angles, fov)
     if ( IsValid(ow.gui.mainmenu) ) then
         local mainmenuPos = ow.config:Get("mainmenu.pos", vector_origin)
         local mainmenuAng = ow.config:Get("mainmenu.ang", angle_zero)
@@ -67,8 +67,8 @@ function GM:CalcView(ply, pos, angles, fov)
         }
     end
 
-    if ( !ply:Alive() ) then
-        local ragdoll = ply:GetRagdollEntity()
+    if ( !client:Alive() ) then
+        local ragdoll = client:GetRagdollEntity()
         if ( !IsValid(ragdoll) ) then return end
 
         local eyePos
@@ -110,15 +110,15 @@ end
 local LOWERED_ANGLES = Angle(10, 10, 0)
 local LOWERED_LERP = {angles = LOWERED_ANGLES}
 function GM:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
-    local ply = ow.localClient
-    if ( !IsValid(ply) ) then return end
+    local client = ow.localClient
+    if ( !IsValid(client) ) then return end
 
     local targetAngles = LOWERED_ANGLES
     if ( IsValid(weapon) and weapon:IsWeapon() and weapon.LoweredAngles ) then
         targetAngles = weapon.LoweredAngles
     end
 
-    if ( IsValid(weapon) and !ply:IsWeaponRaised() ) then
+    if ( IsValid(weapon) and !client:IsWeaponRaised() ) then
         LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, targetAngles)
     else
         LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, angle_zero)
@@ -133,18 +133,18 @@ local vignette = ow.util:GetMaterial("overwatch/overlay_vignette.png", "noclamp 
 local vignetteColor = Color(0, 0, 0, 255)
 function GM:HUDPaintBackground()
     if ( tobool(hook.Run("ShouldDrawVignette")) ) then
-        local ply = ow.localClient
-        if ( !IsValid(ply) ) then return end
+        local client = ow.localClient
+        if ( !IsValid(client) ) then return end
 
         local scrW, scrH = ScrW(), ScrH()
         local trace = util.TraceLine({
-            start = ply:GetShootPos(),
-            endpos = ply:GetShootPos() + ply:GetAimVector() * 96,
-            filter = ply,
+            start = client:GetShootPos(),
+            endpos = client:GetShootPos() + client:GetAimVector() * 96,
+            filter = client,
             mask = MASK_SHOT
         })
 
-        if ( trace.Hit and trace.HitPos:DistToSqr(ply:GetShootPos()) < 96 ^ 2 ) then
+        if ( trace.Hit and trace.HitPos:DistToSqr(client:GetShootPos()) < 96 ^ 2 ) then
             vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 255)
         else
             vignetteColor.a = Lerp(FrameTime(), vignetteColor.a, 100)
@@ -165,18 +165,18 @@ local padding = 16
 local backgroundColor = Color(10, 10, 10, 220)
 
 function GM:HUDPaint()
-    local ply = ow.localClient
-    if ( !IsValid(ply) ) then return end
+    local client = ow.localClient
+    if ( !IsValid(client) ) then return end
 
     local x, y = 24, 24
     local scrW, scrH = ScrW(), ScrH()
     local shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
         local green = ow.config:Get("color.framework")
-        local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(ply:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(ply:EyeAngles())))
+        local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(client:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(client:EyeAngles())))
         local height = 16 * 6
 
-        local character = ply:GetCharacter()
+        local character = client:GetCharacter()
         if ( character ) then
             height = height + 16 * 6
         end
@@ -188,10 +188,10 @@ function GM:HUDPaint()
 
         draw.SimpleText("[DEVELOPER HUD]", "ow.fonts.developer", x, y, green, TEXT_ALIGN_LEFT)
 
-        draw.SimpleText("Pos: " .. tostring(ply:GetPos()), "ow.fonts.developer", x, y + 16 * 1, green, TEXT_ALIGN_LEFT)
-        draw.SimpleText("Ang: " .. tostring(ply:EyeAngles()), "ow.fonts.developer", x, y + 16 * 2, green, TEXT_ALIGN_LEFT)
-        draw.SimpleText("Health: " .. ply:Health(), "ow.fonts.developer", x, y + 16 * 3, green, TEXT_ALIGN_LEFT)
-        draw.SimpleText("Ping: " .. ply:Ping(), "ow.fonts.developer", x, y + 16 * 4, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Pos: " .. tostring(client:GetPos()), "ow.fonts.developer", x, y + 16 * 1, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Ang: " .. tostring(client:EyeAngles()), "ow.fonts.developer", x, y + 16 * 2, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Health: " .. client:Health(), "ow.fonts.developer", x, y + 16 * 3, green, TEXT_ALIGN_LEFT)
+        draw.SimpleText("Ping: " .. client:Ping(), "ow.fonts.developer", x, y + 16 * 4, green, TEXT_ALIGN_LEFT)
 
         local fps = math.floor(1 / FrameTime())
         draw.SimpleText("FPS: " .. fps, "ow.fonts.developer", x, y + 16 * 5, green, TEXT_ALIGN_LEFT)
@@ -235,9 +235,9 @@ function GM:HUDPaint()
 
         if ( ow.module:Get("thirdperson") and ow.option:Get("thirdperson", false) ) then
             local trace = util.TraceLine({
-                start = ply:GetShootPos(),
-                endpos = ply:GetShootPos() + ply:GetAimVector() * 8192,
-                filter = ply,
+                start = client:GetShootPos(),
+                endpos = client:GetShootPos() + client:GetAimVector() * 8192,
+                filter = client,
                 mask = MASK_SHOT
             })
 
@@ -250,10 +250,10 @@ function GM:HUDPaint()
 
     shouldDraw = hook.Run("ShouldDrawAmmoBox")
     if ( shouldDraw != nil and shouldDraw != false ) then
-        local activeWeapon = ply:GetActiveWeapon()
+        local activeWeapon = client:GetActiveWeapon()
         if ( !IsValid(activeWeapon) ) then return end
 
-        local ammo = ply:GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
+        local ammo = client:GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
         local clip = activeWeapon:Clip1()
         local ammoText = clip .. " / " .. ammo
 
@@ -565,7 +565,7 @@ function GM:ShouldShowInventory()
     return true
 end
 
-function GM:GetCharacterName(ply, target)
+function GM:GetCharacterName(client, target)
     -- TODO: Empty hook, implement this in the future
 end
 
@@ -709,7 +709,7 @@ function GM:GetChatboxPos()
     return x, y
 end
 
-function GM:PlayerBindPress(ply, bind, pressed)
+function GM:PlayerBindPress(client, bind, pressed)
     bind = bind:lower()
 
     if ( bind:find("messagemode") and pressed ) then
@@ -731,10 +731,10 @@ end
 function GM:FinishChat()
 end
 
-function GM:OnPlayerChat(ply, text, team, dead)
+function GM:OnPlayerChat(client, text, team, dead)
     if ( !IsValid(ow.gui.chatbox) ) then return end
 
-    local prefix = IsValid(ply) and ply:Nick() .. ": " or ""
+    local prefix = IsValid(client) and client:Nick() .. ": " or ""
     local msg = prefix .. text
 
     ow.gui.chatbox:AddLine(msg, team and Color(150, 200, 255) or color_white)

@@ -1,27 +1,27 @@
 local MODULE = MODULE
 
-function MODULE:CanPlayerObserve(ply, state)
-    if ( !CAMI.PlayerHasAccess(ply, "Overwatch - Observer") ) then return false end
+function MODULE:CanPlayerObserve(client, state)
+    if ( !CAMI.PlayerHasAccess(client, "Overwatch - Observer") ) then return false end
 
     return true
 end
 
-function MODULE:ShouldDrawObserverHUD(ply)
+function MODULE:ShouldDrawObserverHUD(client)
     return true
 end
 
 if ( CLIENT ) then
-    function MODULE:DrawPhysgunBeam(ply, physgun, enabled, target, physBone, hitPos)
-        if ( CAMI.PlayerHasAccess(ply, "Overwatch - Observer") and ply:GetNoDraw() and ply:GetMoveType() == MOVETYPE_NOCLIP ) then
+    function MODULE:DrawPhysgunBeam(client, physgun, enabled, target, physBone, hitPos)
+        if ( CAMI.PlayerHasAccess(client, "Overwatch - Observer") and client:GetNoDraw() and client:GetMoveType() == MOVETYPE_NOCLIP ) then
             return false
         end
     end
 
     function MODULE:HUDPaint()
-        local ply = ow.localClient
-        if ( !IsValid(ply) or !ply:InObserver() or !ply:Alive() or !ply:GetNoDraw() ) then return end
+        local client = ow.localClient
+        if ( !IsValid(client) or !client:InObserver() or !client:Alive() or !client:GetNoDraw() ) then return end
 
-        if ( hook.Run("ShouldDrawObserverHUD", ply) == false ) then return end
+        if ( hook.Run("ShouldDrawObserverHUD", client) == false ) then return end
 
         local playerCount = 0
         local admins = 0
@@ -33,7 +33,7 @@ if ( CLIENT ) then
                 admins = admins + 1
             end
 
-            if ( v == ply or !v:Alive() ) then continue end
+            if ( v == client or !v:Alive() ) then continue end
 
             local headBone = v:LookupBone("ValveBiped.Bip01_Head1")
             if ( !headBone ) then continue end
@@ -73,6 +73,6 @@ if ( CLIENT ) then
         _, h = draw.SimpleText("Admins: " .. admins, "DermaDefault", 10, y, color_white)
         y = y + h + 2
 
-        hook.Run("PostDrawObserverHUD", ply)
+        hook.Run("PostDrawObserverHUD", client)
     end
 end

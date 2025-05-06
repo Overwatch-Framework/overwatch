@@ -1,37 +1,37 @@
-function MODULE:HandlePlayerJumping(ply, velocity, plyTable)
-    if ( !istable(plyTable) ) then
-        plyTable = ply:GetTable()
+function MODULE:HandlePlayerJumping(client, velocity, clientTable)
+    if ( !istable(clientTable) ) then
+        clientTable = client:GetTable()
     end
 
-    if ( ply:GetMoveType() == MOVETYPE_NOCLIP ) then
-        plyTable.m_bJumping = false
+    if ( client:GetMoveType() == MOVETYPE_NOCLIP ) then
+        clientTable.m_bJumping = false
         return
     end
 
-    if ( !plyTable.m_bJumping and !ply:OnGround() and ply:WaterLevel() <= 0) then
-        if ( !plyTable.m_fGroundTime ) then
-            plyTable.m_fGroundTime = CurTime()
-        elseif ( ( CurTime() - plyTable.m_fGroundTime ) > 0 and velocity:Length2DSqr() < 0.25 ) then
-            plyTable.m_bJumping = true
-            plyTable.m_bFirstJumpFrame = false
-            plyTable.m_flJumpStartTime = 0
+    if ( !clientTable.m_bJumping and !client:OnGround() and client:WaterLevel() <= 0) then
+        if ( !clientTable.m_fGroundTime ) then
+            clientTable.m_fGroundTime = CurTime()
+        elseif ( ( CurTime() - clientTable.m_fGroundTime ) > 0 and velocity:Length2DSqr() < 0.25 ) then
+            clientTable.m_bJumping = true
+            clientTable.m_bFirstJumpFrame = false
+            clientTable.m_flJumpStartTime = 0
         end
     end
 
-    if ( plyTable.m_bJumping ) then
-        if ( plyTable.m_bFirstJumpFrame ) then
-            plyTable.m_bFirstJumpFrame = false
-            ply:AnimRestartMainSequence()
+    if ( clientTable.m_bJumping ) then
+        if ( clientTable.m_bFirstJumpFrame ) then
+            clientTable.m_bFirstJumpFrame = false
+            client:AnimRestartMainSequence()
         end
 
-        if ( ( ply:WaterLevel() >= 2 ) or ( ( CurTime() - plyTable.m_flJumpStartTime ) > 0.2 and ply:OnGround() ) ) then
-            plyTable.m_bJumping = false
-            plyTable.m_fGroundTime = nil
-            ply:AnimRestartMainSequence()
+        if ( ( client:WaterLevel() >= 2 ) or ( ( CurTime() - clientTable.m_flJumpStartTime ) > 0.2 and client:OnGround() ) ) then
+            clientTable.m_bJumping = false
+            clientTable.m_fGroundTime = nil
+            client:AnimRestartMainSequence()
         end
 
-        if ( plyTable.m_bJumping ) then
-            plyTable.CalcIdeal = ACT_MP_JUMP
+        if ( clientTable.m_bJumping ) then
+            clientTable.CalcIdeal = ACT_MP_JUMP
             return true
         end
     end
@@ -39,89 +39,89 @@ function MODULE:HandlePlayerJumping(ply, velocity, plyTable)
     return false
 end
 
-function MODULE:HandlePlayerDucking(ply, velocity, plyTable)
-    if ( !plyTable ) then
-        plyTable = ply:GetTable()
+function MODULE:HandlePlayerDucking(client, velocity, clientTable)
+    if ( !clientTable ) then
+        clientTable = client:GetTable()
     end
 
-    if ( !ply:IsFlagSet(FL_ANIMDUCKING) ) then return false end
+    if ( !client:IsFlagSet(FL_ANIMDUCKING) ) then return false end
 
     if ( velocity:Length2DSqr() > 0.25 ) then
-        plyTable.CalcIdeal = ACT_MP_CROUCHWALK
+        clientTable.CalcIdeal = ACT_MP_CROUCHWALK
     else
-        plyTable.CalcIdeal = ACT_MP_CROUCH_IDLE
+        clientTable.CalcIdeal = ACT_MP_CROUCH_IDLE
     end
 
     return true
 end
 
-function MODULE:HandlePlayerNoClipping(ply, velocity, plyTable)
-    if ( !istable(plyTable) ) then
-        plyTable = ply:GetTable()
+function MODULE:HandlePlayerNoClipping(client, velocity, clientTable)
+    if ( !istable(clientTable) ) then
+        clientTable = client:GetTable()
     end
 
-    if ( ply:GetMoveType() != MOVETYPE_NOCLIP or ply:InVehicle() ) then
-        if ( plyTable.m_bWasNoclipping ) then
-            plyTable.m_bWasNoclipping = nil
-            ply:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
+    if ( client:GetMoveType() != MOVETYPE_NOCLIP or client:InVehicle() ) then
+        if ( clientTable.m_bWasNoclipping ) then
+            clientTable.m_bWasNoclipping = nil
+            client:AnimResetGestureSlot(GESTURE_SLOT_CUSTOM)
         end
 
         return
     end
 
-    if ( !plyTable.m_bWasNoclipping ) then
-        ply:AnimRestartGesture(GESTURE_SLOT_CUSTOM, ACT_GMOD_NOCLIP_LAYER, false)
+    if ( !clientTable.m_bWasNoclipping ) then
+        client:AnimRestartGesture(GESTURE_SLOT_CUSTOM, ACT_GMOD_NOCLIP_LAYER, false)
     end
 
     return true
 end
 
-function MODULE:HandlePlayerVaulting(ply, velocity, plyTable)
-    if ( !istable(plyTable) ) then
-        plyTable = ply:GetTable()
+function MODULE:HandlePlayerVaulting(client, velocity, clientTable)
+    if ( !istable(clientTable) ) then
+        clientTable = client:GetTable()
     end
 
     if ( velocity:LengthSqr() < 1000000 ) then return end
-    if ( ply:IsOnGround() ) then return end
+    if ( client:IsOnGround() ) then return end
 
-    plyTable.CalcIdeal = ACT_MP_SWIM
-
-    return true
-end
-
-function MODULE:HandlePlayerSwimming(ply, velocity, plyTable)
-    if ( !istable(plyTable) ) then
-        plyTable = ply:GetTable()
-    end
-
-    if ( ply:WaterLevel() < 2 or ply:IsOnGround() ) then
-        plyTable.m_bInSwim = false
-        return false
-    end
-
-    plyTable.CalcIdeal = ACT_MP_SWIM
-    plyTable.m_bInSwim = true
+    clientTable.CalcIdeal = ACT_MP_SWIM
 
     return true
 end
 
-function MODULE:HandlePlayerLanding(ply, velocity, WasOnGround)
-    if ( ply:GetMoveType() == MOVETYPE_NOCLIP ) then return end
-    if ( ply:IsOnGround() and !WasOnGround ) then
-        ply:AnimRestartGesture(GESTURE_SLOT_JUMP, ACT_LAND, true)
-    end
-end
-
-function MODULE:HandlePlayerDriving(ply, plyTable)
-    if ( !istable(plyTable) ) then
-        plyTable = ply:GetTable()
+function MODULE:HandlePlayerSwimming(client, velocity, clientTable)
+    if ( !istable(clientTable) ) then
+        clientTable = client:GetTable()
     end
 
-    if ( !ply:InVehicle() or !IsValid(ply:GetParent()) ) then
+    if ( client:WaterLevel() < 2 or client:IsOnGround() ) then
+        clientTable.m_bInSwim = false
         return false
     end
 
-    local pVehicle = ply:GetVehicle()
+    clientTable.CalcIdeal = ACT_MP_SWIM
+    clientTable.m_bInSwim = true
+
+    return true
+end
+
+function MODULE:HandlePlayerLanding(client, velocity, WasOnGround)
+    if ( client:GetMoveType() == MOVETYPE_NOCLIP ) then return end
+    if ( client:IsOnGround() and !WasOnGround ) then
+        client:AnimRestartGesture(GESTURE_SLOT_JUMP, ACT_LAND, true)
+    end
+end
+
+function MODULE:HandlePlayerDriving(client, clientTable)
+    if ( !istable(clientTable) ) then
+        clientTable = client:GetTable()
+    end
+
+    if ( !client:InVehicle() or !IsValid(client:GetParent()) ) then
+        return false
+    end
+
+    local pVehicle = client:GetVehicle()
     if ( !pVehicle.HandleAnimation and pVehicle.GetVehicleClass ) then
         local c = pVehicle:GetVehicleClass()
         local t = list.Get("Vehicles")[c]
@@ -133,42 +133,42 @@ function MODULE:HandlePlayerDriving(ply, plyTable)
     end
 
     if ( isfunction(pVehicle.HandleAnimation) ) then
-        local seq = pVehicle:HandleAnimation(ply)
+        local seq = pVehicle:HandleAnimation(client)
         if ( seq != nil ) then
-            plyTable.CalcSeqOverride = seq
+            clientTable.CalcSeqOverride = seq
         end
     end
 
-    if ( plyTable.CalcSeqOverride == -1 ) then
+    if ( clientTable.CalcSeqOverride == -1 ) then
         local class = pVehicle:GetClass()
         if ( class == "prop_vehicle_jeep" ) then
-            plyTable.CalcSeqOverride = ply:LookupSequence("drive_jeep")
+            clientTable.CalcSeqOverride = client:LookupSequence("drive_jeep")
         elseif ( class == "prop_vehicle_airboat" ) then
-            plyTable.CalcSeqOverride = ply:LookupSequence("drive_airboat")
+            clientTable.CalcSeqOverride = client:LookupSequence("drive_airboat")
         elseif ( class == "prop_vehicle_prisoner_pod" and pVehicle:GetModel() == "models/vehicles/prisoner_pod_inner.mdl" ) then
-            plyTable.CalcSeqOverride = ply:LookupSequence("drive_pd")
+            clientTable.CalcSeqOverride = client:LookupSequence("drive_pd")
         else
-            plyTable.CalcSeqOverride = ply:LookupSequence("sit_rollercoaster")
+            clientTable.CalcSeqOverride = client:LookupSequence("sit_rollercoaster")
         end
     end
 
-    local use_anims = ( plyTable.CalcSeqOverride == ply:LookupSequence("sit_rollercoaster") or plyTable.CalcSeqOverride == ply:LookupSequence("sit") )
-    if ( use_anims and ply:GetAllowWeaponsInVehicle() and IsValid(ply:GetActiveWeapon()) ) then
-        local holdtype = ply:GetActiveWeapon():GetHoldType()
+    local use_anims = ( clientTable.CalcSeqOverride == client:LookupSequence("sit_rollercoaster") or clientTable.CalcSeqOverride == client:LookupSequence("sit") )
+    if ( use_anims and client:GetAllowWeaponsInVehicle() and IsValid(client:GetActiveWeapon()) ) then
+        local holdtype = client:GetActiveWeapon():GetHoldType()
         if ( holdtype == "smg" ) then
             holdtype = "smg1"
         end
 
-        local seqid = ply:LookupSequence("sit_" .. holdtype)
+        local seqid = client:LookupSequence("sit_" .. holdtype)
         if ( seqid != -1 ) then
-            plyTable.CalcSeqOverride = seqid
+            clientTable.CalcSeqOverride = seqid
         end
     end
 
     return true
 end
 
-function MODULE:UpdateAnimation(ply, velocity, maxseqgroundspeed)
+function MODULE:UpdateAnimation(client, velocity, maxseqgroundspeed)
     local len = velocity:Length()
     local movement = 1.0
     if ( len > 0.2 ) then
@@ -176,117 +176,117 @@ function MODULE:UpdateAnimation(ply, velocity, maxseqgroundspeed)
     end
 
     local rate = math.min(movement, 2)
-    if ( ply:WaterLevel() >= 2 ) then
+    if ( client:WaterLevel() >= 2 ) then
         rate = math.max(rate, 0.5)
-    elseif ( !ply:IsOnGround() and len >= 1000 ) then
+    elseif ( !client:IsOnGround() and len >= 1000 ) then
         rate = 0.1
     end
 
-    ply:SetPlaybackRate(rate)
+    client:SetPlaybackRate(rate)
 
     if ( CLIENT ) then
-        if ( ply:InVehicle() ) then
-            local Vehicle = ply:GetVehicle()
+        if ( client:InVehicle() ) then
+            local Vehicle = client:GetVehicle()
             local Velocity = Vehicle:GetVelocity()
             local fwd = Vehicle:GetUp()
             local dp = fwd:Dot(Vector(0, 0, 1))
-            ply:SetPoseParameter("vertical_velocity", (dp < 0 and dp or 0) + fwd:Dot(Velocity) * 0.005)
+            client:SetPoseParameter("vertical_velocity", (dp < 0 and dp or 0) + fwd:Dot(Velocity) * 0.005)
 
             local steer = Vehicle:GetPoseParameter("vehicle_steer")
             steer = steer * 2 - 1
             if ( Vehicle:GetClass() == "prop_vehicle_prisoner_pod" ) then
-                steer = 0 ply:SetPoseParameter("aim_yaw", math.NormalizeAngle(ply:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90))
+                steer = 0 client:SetPoseParameter("aim_yaw", math.NormalizeAngle(client:GetAimVector():Angle().y - Vehicle:GetAngles().y - 90))
             end
 
-            ply:SetPoseParameter("vehicle_steer", steer)
+            client:SetPoseParameter("vehicle_steer", steer)
         end
 
-        self:GrabEarAnimation(ply)
-        self:MouthMoveAnimation(ply)
+        self:GrabEarAnimation(client)
+        self:MouthMoveAnimation(client)
     end
 end
 
-function MODULE:GrabEarAnimation(ply, plyTable)
-    if ( !istable(plyTable) ) then
-        plyTable = ply:GetTable()
+function MODULE:GrabEarAnimation(client, clientTable)
+    if ( !istable(clientTable) ) then
+        clientTable = client:GetTable()
     end
 
-    plyTable.ChatGestureWeight = plyTable.ChatGestureWeight or 0
+    clientTable.ChatGestureWeight = clientTable.ChatGestureWeight or 0
 
-    if ( ply:IsPlayingTaunt() ) then
+    if ( client:IsPlayingTaunt() ) then
         return
     end
 
-    if ( ply:IsTyping() ) then
-        plyTable.ChatGestureWeight = math.Approach(plyTable.ChatGestureWeight, 1, FrameTime() * 5)
+    if ( client:IsTyping() ) then
+        clientTable.ChatGestureWeight = math.Approach(clientTable.ChatGestureWeight, 1, FrameTime() * 5)
     else
-        plyTable.ChatGestureWeight = math.Approach(plyTable.ChatGestureWeight, 0, FrameTime() * 5)
+        clientTable.ChatGestureWeight = math.Approach(clientTable.ChatGestureWeight, 0, FrameTime() * 5)
     end
 
-    if ( plyTable.ChatGestureWeight > 0 ) then
-        ply:AnimRestartGesture(GESTURE_SLOT_VCD, ACT_GMOD_IN_CHAT, true)
-        ply:AnimSetGestureWeight(GESTURE_SLOT_VCD, plyTable.ChatGestureWeight)
+    if ( clientTable.ChatGestureWeight > 0 ) then
+        client:AnimRestartGesture(GESTURE_SLOT_VCD, ACT_GMOD_IN_CHAT, true)
+        client:AnimSetGestureWeight(GESTURE_SLOT_VCD, clientTable.ChatGestureWeight)
     end
 end
 
-function MODULE:MouthMoveAnimation(ply)
+function MODULE:MouthMoveAnimation(client)
     local flexes = {
-        ply:GetFlexIDByName("jaw_drop"),
-        ply:GetFlexIDByName("left_part"),
-        ply:GetFlexIDByName("right_part"),
-        ply:GetFlexIDByName("left_mouth_drop"),
-        ply:GetFlexIDByName("right_mouth_drop")
+        client:GetFlexIDByName("jaw_drop"),
+        client:GetFlexIDByName("left_part"),
+        client:GetFlexIDByName("right_part"),
+        client:GetFlexIDByName("left_mouth_drop"),
+        client:GetFlexIDByName("right_mouth_drop")
     }
 
-    local weight = ply:IsSpeaking() and math.Clamp(ply:VoiceVolume() * 2, 0, 2) or 0
+    local weight = client:IsSpeaking() and math.Clamp(client:VoiceVolume() * 2, 0, 2) or 0
     for k, v in ipairs(flexes) do
-        ply:SetFlexWeight(v, weight)
+        client:SetFlexWeight(v, weight)
     end
 end
 
 local vectorAngle = FindMetaTable("Vector").Angle
 local normalizeAngle = math.NormalizeAngle
-function MODULE:CalcMainActivity(ply, velocity)
-    local plyTable = ply:GetTable()
-    plyTable.CalcIdeal = ACT_MP_STAND_IDLE
+function MODULE:CalcMainActivity(client, velocity)
+    local clientTable = client:GetTable()
+    clientTable.CalcIdeal = ACT_MP_STAND_IDLE
 
-    local eyeAngles = ply:EyeAngles()
-    local aimVector = ply:GetAimVector()
+    local eyeAngles = client:EyeAngles()
+    local aimVector = client:GetAimVector()
     local aimVectorAng = aimVector:Angle()
 
-    ply:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - eyeAngles[2]))
+    client:SetPoseParameter("move_yaw", normalizeAngle(vectorAngle(velocity)[2] - eyeAngles[2]))
 
-    ply:SetPoseParameter("aim_yaw", normalizeAngle(aimVectorAng.y - eyeAngles[2]))
-    ply:SetPoseParameter("aim_pitch", normalizeAngle(aimVectorAng.p - eyeAngles[1]))
+    client:SetPoseParameter("aim_yaw", normalizeAngle(aimVectorAng.y - eyeAngles[2]))
+    client:SetPoseParameter("aim_pitch", normalizeAngle(aimVectorAng.p - eyeAngles[1]))
 
-    self:HandlePlayerLanding(ply, velocity, plyTable.m_bWasOnGround)
+    self:HandlePlayerLanding(client, velocity, clientTable.m_bWasOnGround)
 
-    if !( self:HandlePlayerNoClipping(ply, velocity, plyTable) or
-        self:HandlePlayerDriving(ply, plyTable) or
-        self:HandlePlayerVaulting(ply, velocity, plyTable) or
-        self:HandlePlayerJumping(ply, velocity, plyTable) or
-        self:HandlePlayerSwimming(ply, velocity, plyTable) or
-        self:HandlePlayerDucking(ply, velocity, plyTable) ) then
+    if !( self:HandlePlayerNoClipping(client, velocity, clientTable) or
+        self:HandlePlayerDriving(client, clientTable) or
+        self:HandlePlayerVaulting(client, velocity, clientTable) or
+        self:HandlePlayerJumping(client, velocity, clientTable) or
+        self:HandlePlayerSwimming(client, velocity, clientTable) or
+        self:HandlePlayerDucking(client, velocity, clientTable) ) then
 
         local len2d = velocity:Length2DSqr()
         if ( velocity[3] != 0 and len2d <= 16 ^ 2 ) then
-            plyTable.CalcIdeal = ACT_GLIDE
+            clientTable.CalcIdeal = ACT_GLIDE
         elseif ( len2d > 22500 ) then
-            plyTable.CalcIdeal = ACT_MP_RUN
+            clientTable.CalcIdeal = ACT_MP_RUN
         elseif ( len2d > 0.25 ) then
-            plyTable.CalcIdeal = ACT_MP_WALK
+            clientTable.CalcIdeal = ACT_MP_WALK
         end
     end
 
-    hook.Run("TranslateActivity", ply, plyTable.CalcIdeal)
+    hook.Run("TranslateActivity", client, clientTable.CalcIdeal)
 
-    local seqOverride = plyTable.CalcSeqOverride
-    plyTable.CalcSeqOverride = -1
+    local seqOverride = clientTable.CalcSeqOverride
+    clientTable.CalcSeqOverride = -1
 
-    plyTable.m_bWasOnGround = ply:IsOnGround()
-    plyTable.m_bWasNoclipping = (ply:GetMoveType() == MOVETYPE_NOCLIP and !ply:InVehicle())
+    clientTable.m_bWasOnGround = client:IsOnGround()
+    clientTable.m_bWasNoclipping = (client:GetMoveType() == MOVETYPE_NOCLIP and !client:InVehicle())
 
-    return plyTable.CalcIdeal, seqOverride or plyTable.CalcSeqOverride
+    return clientTable.CalcIdeal, seqOverride or clientTable.CalcSeqOverride
 end
 
 local IdleActivity = ACT_HL2MP_IDLE
@@ -304,20 +304,20 @@ IdleActivityTranslate[ACT_MP_JUMP] = ACT_HL2MP_JUMP_SLAM
 IdleActivityTranslate[ACT_MP_SWIM] = IdleActivity + 9
 IdleActivityTranslate[ACT_LAND] = ACT_LAND
 
-function MODULE:TranslateActivity(ply, act)
-    local newact = ply:TranslateWeaponActivity(act)
+function MODULE:TranslateActivity(client, act)
+    local newact = client:TranslateWeaponActivity(act)
     if ( act == newact ) then
         return IdleActivityTranslate[act]
     end
 
-    local plyTable = ply:GetTable()
-    local owAnimations = plyTable.owAnimations
+    local clientTable = client:GetTable()
+    local owAnimations = clientTable.owAnimations
     if ( owAnimations ) then
         local animTable = owAnimations[act]
         if ( animTable ) then
-            local preferred = animTable[ply:IsWeaponRaised() and 2 or 1]
+            local preferred = animTable[client:IsWeaponRaised() and 2 or 1]
             newact = preferred
-        elseif ( ply.m_bJumping ) then
+        elseif ( client.m_bJumping ) then
             newact = ACT_GLIDE
         end
     end
@@ -325,36 +325,36 @@ function MODULE:TranslateActivity(ply, act)
     return newact
 end
 
-function MODULE:DoAnimationEvent(ply, event, data)
-    local plyTable = ply:GetTable()
+function MODULE:DoAnimationEvent(client, event, data)
+    local clientTable = client:GetTable()
     if ( event == PLAYERANIMEVENT_ATTACK_PRIMARY ) then
-        if ( ply:IsFlagSet(FL_ANIMDUCKING) ) then
-            ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
+        if ( client:IsFlagSet(FL_ANIMDUCKING) ) then
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_CROUCH_PRIMARYFIRE, true)
         else
-            ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_ATTACK_STAND_PRIMARYFIRE, true)
         end
 
         return ACT_VM_PRIMARYATTACK
     elseif ( event == PLAYERANIMEVENT_ATTACK_SECONDARY ) then
         return ACT_VM_SECONDARYATTACK
     elseif ( event == PLAYERANIMEVENT_RELOAD ) then
-        if ( ply:IsFlagSet(FL_ANIMDUCKING) ) then
-            ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
+        if ( client:IsFlagSet(FL_ANIMDUCKING) ) then
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_CROUCH, true)
         else
-            ply:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
+            client:AnimRestartGesture(GESTURE_SLOT_ATTACK_AND_RELOAD, ACT_MP_RELOAD_STAND, true)
         end
 
         return ACT_INVALID
     elseif ( event == PLAYERANIMEVENT_JUMP ) then
-        plyTable.m_bJumping = true
-        plyTable.m_bFirstJumpFrame = true
-        plyTable.m_flJumpStartTime = CurTime()
+        clientTable.m_bJumping = true
+        clientTable.m_bFirstJumpFrame = true
+        clientTable.m_flJumpStartTime = CurTime()
 
-        ply:AnimRestartMainSequence()
+        client:AnimRestartMainSequence()
 
         return ACT_INVALID
     elseif ( event == PLAYERANIMEVENT_CANCEL_RELOAD ) then
-        ply:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
+        client:AnimResetGestureSlot(GESTURE_SLOT_ATTACK_AND_RELOAD)
 
         return ACT_INVALID
     end

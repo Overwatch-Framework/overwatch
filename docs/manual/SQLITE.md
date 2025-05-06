@@ -40,15 +40,15 @@ This will create the table if it doesn't exist using the registered variables as
 
 ### Load a Row
 ```lua
-ow.sqlite:LoadRow("users", "steamid", ply:SteamID(), function(data)
-    ply.databaseInfo = data
+ow.sqlite:LoadRow("users", "steamid", client:SteamID(), function(data)
+    client.databaseInfo = data
 end)
 ```
 This will either return an existing row or insert a default one.
 
 ### Save a Row
 ```lua
-ow.sqlite:SaveRow("users", ply.databaseInfo, "steamid")
+ow.sqlite:SaveRow("users", client.databaseInfo, "steamid")
 ```
 This saves the updated row into the database using the steamid as a unique key.
 
@@ -82,14 +82,14 @@ end
 
 In your character loading logic:
 ```lua
-ow.sqlite:LoadRow("characters", "steamid", ply:SteamID(), function(data)
-    ply.characterData = data
+ow.sqlite:LoadRow("characters", "steamid", client:SteamID(), function(data)
+    client.characterData = data
 end)
 ```
 
 To save:
 ```lua
-ow.sqlite:SaveRow("characters", ply.characterData, "steamid")
+ow.sqlite:SaveRow("characters", client.characterData, "steamid")
 ```
 
 ---

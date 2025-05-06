@@ -1,70 +1,70 @@
 local time
 local loadQueue = {}
-function GM:PlayerInitialSpawn(ply)
-    if ( ply:IsBot() ) then return end
+function GM:PlayerInitialSpawn(client)
+    if ( client:IsBot() ) then return end
 
     time = CurTime()
-    ow.util:Print("Starting to load player " .. ply:SteamName() .. " (" .. ply:SteamID64() .. ")")
+    ow.util:Print("Starting to load player " .. client:SteamName() .. " (" .. client:SteamID64() .. ")")
 
-    ow.sqlite:LoadRow("ow_players", "steamid", ply:SteamID64(), function(data)
-        if ( !IsValid(ply) ) then return end
+    ow.sqlite:LoadRow("ow_players", "steamid", client:SteamID64(), function(data)
+        if ( !IsValid(client) ) then return end
 
-        ply:GetTable().owDatabase = data or {}
+        client:GetTable().owDatabase = data or {}
 
-        ply:SetDBVar("name", ply:SteamName())
-        ply:SetDBVar("ip", ply:IPAddress())
-        ply:SetDBVar("last_played", os.time())
-        ply:SetDBVar("data", IsValid(data) and data.data or "[]")
+        client:SetDBVar("name", client:SteamName())
+        client:SetDBVar("ip", client:IPAddress())
+        client:SetDBVar("last_played", os.time())
+        client:SetDBVar("data", IsValid(data) and data.data or "[]")
 
-        ply:SetTeam(0)
-        ply:SetModel("models/player/kleiner.mdl")
+        client:SetTeam(0)
+        client:SetModel("models/player/kleiner.mdl")
 
-        loadQueue[ply] = true
+        loadQueue[client] = true
 
         -- Do not render the player, as we are in the main menu
         -- and we do not have a character loaded yet
-        ply:SetNoDraw(true)
-        ply:SetNotSolid(true)
-        ply:SetMoveType(MOVETYPE_NONE)
+        client:SetNoDraw(true)
+        client:SetNotSolid(true)
+        client:SetMoveType(MOVETYPE_NONE)
 
-        ply:KillSilent()
+        client:KillSilent()
 
-        ow.util:Print("Loaded player " .. ply:SteamName() .. " (" .. ply:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
+        ow.util:Print("Loaded player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
         time = CurTime()
 
-        ow.config:Synchronize(ply)
+        ow.config:Synchronize(client)
     end)
 end
 
-function GM:StartCommand(ply, cmd)
-    if ( loadQueue[ply] and !cmd:IsForced() ) then
-        loadQueue[ply] = nil
-        ow.character:CacheAll(ply)
-        ow.util:SendChatText(nil, Color(25, 75, 150), ply:SteamName() .. " has joined the server.")
+function GM:StartCommand(client, cmd)
+    if ( loadQueue[client] and !cmd:IsForced() ) then
+        loadQueue[client] = nil
+        ow.character:CacheAll(client)
+        ow.util:SendChatText(nil, Color(25, 75, 150), client:SteamName() .. " has joined the server.")
 
         net.Start("ow.mainmenu")
-        net.Send(ply)
+        net.Send(client)
 
-        ply:SaveDB()
+        client:SaveDB()
 
-        hook.Run("PostPlayerInitialSpawn", ply)
+        hook.Run("PostPlayerInitialSpawn", client)
 
-        ow.util:Print("Finished loading player " .. ply:SteamName() .. " (" .. ply:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
+        ow.util:Print("Finished loading player " .. client:SteamName() .. " (" .. client:SteamID64() .. ") in " .. math.Round(CurTime() - time, 2) .. " seconds.")
         time = CurTime()
     end
 end
 
-function GM:PostPlayerInitialSpawn(ply)
+function GM:PostPlayerInitialSpawn(client)
     -- Do something here
 end
 
-function GM:PlayerDisconnected(ply)
-    if ( !ply:IsBot() ) then
-        ply:SetDBVar("play_time", ply:GetDBVar("play_time") + (os.time() - ply:GetDBVar("last_played")))
-        ply:SetDBVar("last_played", os.time())
-        ply:SaveDB()
+function GM:PlayerDisconnected(client)
+    if ( !client:IsBot() ) then
+        client:SetDBVar("play_time", client:GetDBVar("play_time") + (os.time() - client:GetDBVar("last_played")))
+        client:SetDBVar("last_played", os.time())
+        client:SaveDB()
 
-        local character = ply:GetCharacter()
+        local character = client:GetCharacter()
         if ( character ) then
             character:SetPlayTime(character:GetPlayTime() + (os.time() - character:GetLastPlayed()))
             character:SetLastPlayed(os.time())
@@ -73,53 +73,53 @@ function GM:PlayerDisconnected(ply)
     end
 end
 
-function GM:PlayerSpawn(ply)
-    hook.Run("PlayerLoadout", ply)
+function GM:PlayerSpawn(client)
+    hook.Run("PlayerLoadout", client)
 end
 
-function GM:PlayerLoadout(ply)
-    if ( hook.Run("PlayerGetToolgun", ply) ) then ply:Give("gmod_tool") end
-    if ( hook.Run("PlayerGetPhysgun", ply) ) then ply:Give("weapon_physgun") end
+function GM:PlayerLoadout(client)
+    if ( hook.Run("PlayerGetToolgun", client) ) then client:Give("gmod_tool") end
+    if ( hook.Run("PlayerGetPhysgun", client) ) then client:Give("weapon_physgun") end
 
-    ply:Give("ow_hands")
-    ply:SelectWeapon("ow_hands")
+    client:Give("ow_hands")
+    client:SelectWeapon("ow_hands")
 
-    ply:SetWalkSpeed(ow.config:Get("speed.walk", 80))
-    ply:SetRunSpeed(ow.config:Get("speed.run", 180))
-    ply:SetJumpPower(ow.config:Get("jump.power", 160))
+    client:SetWalkSpeed(ow.config:Get("speed.walk", 80))
+    client:SetRunSpeed(ow.config:Get("speed.run", 180))
+    client:SetJumpPower(ow.config:Get("jump.power", 160))
 
-    ply:SetupHands()
+    client:SetupHands()
 
-    hook.Run("PostPlayerLoadout", ply)
+    hook.Run("PostPlayerLoadout", client)
 
     return true
 end
 
-function GM:PostPlayerLoadout(ply)
+function GM:PostPlayerLoadout(client)
 end
 
-function GM:PlayerDeathThink(ply)
+function GM:PlayerDeathThink(client)
     -- TODO: uh, some happy day this should be replaced
-    if ( ply:KeyPressed(IN_ATTACK) or ply:KeyPressed(IN_ATTACK2) or ply:KeyPressed(IN_JUMP) or ply:IsBot() ) then
-        ply:Spawn()
+    if ( client:KeyPressed(IN_ATTACK) or client:KeyPressed(IN_ATTACK2) or client:KeyPressed(IN_JUMP) or client:IsBot() ) then
+        client:Spawn()
     end
 end
 
-function GM:PlayerSay(ply, text, teamChat)
+function GM:PlayerSay(client, text, teamChat)
     if ( string.sub(text, 1, 1) == "/" ) then
         local arguments = string.Explode(" ", string.sub(text, 2))
         local command = arguments[1]
         table.remove(arguments, 1)
 
-        ow.command:Run(ply, command, table.concat(arguments, " "))
+        ow.command:Run(client, command, table.concat(arguments, " "))
     else
-        ow.chat:SendSpeaker(ply, "ic", text)
+        ow.chat:SendSpeaker(client, "ic", text)
     end
 
     return ""
 end
 
-function GM:PlayerUseSpawnSaver(ply)
+function GM:PlayerUseSpawnSaver(client)
     return false
 end
 
@@ -129,35 +129,35 @@ function GM:Initialize()
     ow.schema:Initialize()
 end
 
-function GM:SetupPlayerVisibility(ply, viewEntity)
-    if ( ply:Team() == 0 ) then
+function GM:SetupPlayerVisibility(client, viewEntity)
+    if ( client:Team() == 0 ) then
         AddOriginToPVS(ow.config:Get("mainmenu.pos", vector_origin))
     end
 end
 
-function GM:PlayerSwitchFlashlight(ply, bEnabled)
+function GM:PlayerSwitchFlashlight(client, bEnabled)
     return true
 end
 
-function GM:GetFallDamage(ply, speed)
+function GM:GetFallDamage(client, speed)
     if ( speed > 100 ) then
         ow.util:Print("I would ragdoll the player... but missing function!")
         -- TODO: Implement this in the future
-        -- ply:Ragdoll()
+        -- client:Ragdoll()
     end
 
     return speed / 8
 end
 
-function GM:PlayerDeletedCharacter(ply, characterID)
+function GM:PlayerDeletedCharacter(client, characterID)
     -- TODO: Empty hook, implement this in the future
 end
 
-function GM:PlayerLoadedCharacter(ply, character, previousCharacter)
+function GM:PlayerLoadedCharacter(client, character, previousCharacter)
     -- TODO: Empty hook, implement this in the future
 end
 
-function GM:PlayerCreatedCharacter(ply, character)
+function GM:PlayerCreatedCharacter(client, character)
     -- TODO: Empty hook, implement this in the future
 end
 
@@ -168,23 +168,23 @@ function GM:Think()
     if ( CurTime() >= nextThink ) then
         nextThink = CurTime() + 1
 
-        for _, ply in player.Iterator() do
-            if ( !IsValid(ply) or !ply:Alive() ) then continue end
-            if ( ply:Team() == 0 ) then continue end
+        for _, client in player.Iterator() do
+            if ( !IsValid(client) or !client:Alive() ) then continue end
+            if ( client:Team() == 0 ) then continue end
 
             -- Voice chat listeners
             local voiceListeners = {}
 
             for _, listener in player.Iterator() do
-                if ( listener == ply ) then continue end
-                if ( listener:EyePos():DistToSqr(ply:EyePos()) > ow.config:Get("voice.distance", 384) ^ 2 ) then continue end
+                if ( listener == client ) then continue end
+                if ( listener:EyePos():DistToSqr(client:EyePos()) > ow.config:Get("voice.distance", 384) ^ 2 ) then continue end
 
                 voiceListeners[listener] = true
             end
 
             -- Overwrite the voice listeners if the config is disabled
             if ( ow.config:Get("voice", true) ) then
-                playerVoiceListeners[ply] = voiceListeners
+                playerVoiceListeners[client] = voiceListeners
             else
                 playerVoiceListeners = {}
             end
@@ -212,23 +212,23 @@ function GM:PlayerCanHearPlayersVoice(listener, talker)
     return true, true
 end
 
-function GM:CanPlayerSuicide(ply)
+function GM:CanPlayerSuicide(client)
     return false
 end
 
-function GM:PlayerDeathSound(ply)
+function GM:PlayerDeathSound(client)
     return true
 end
 
-function GM:PlayerHurt(ply, attacker, healthRemaining, damageTaken)
-    local painSound = hook.Run("GetPlayerPainSound", ply, attacker, healthRemaining, damageTaken)
-    if ( painSound and painSound != "" and !ply:InObserver() ) then
+function GM:PlayerHurt(client, attacker, healthRemaining, damageTaken)
+    local painSound = hook.Run("GetPlayerPainSound", client, attacker, healthRemaining, damageTaken)
+    if ( painSound and painSound != "" and !client:InObserver() ) then
         if ( !file.Exists("sound/" .. painSound, "GAME") ) then
             ow.util:PrintWarning("PlayerPainSound: Sound file does not exist! " .. painSound)
             return false
         end
 
-        ply:EmitSound(painSound, 75, 100, 1, CHAN_VOICE)
+        client:EmitSound(painSound, 75, 100, 1, CHAN_VOICE)
     end
 end
 
@@ -247,10 +247,10 @@ local drownSounds = {
     Sound("player/pl_drown3.wav"),
 }
 
-function GM:GetPlayerPainSound(ply, attacker, healthRemaining, damageTaken)
-    if ( ply:Health() <= 0 ) then return end
+function GM:GetPlayerPainSound(client, attacker, healthRemaining, damageTaken)
+    if ( client:Health() <= 0 ) then return end
 
-    if ( ply:WaterLevel() >= 3 ) then
+    if ( client:WaterLevel() >= 3 ) then
         return drownSounds[math.random(#drownSounds)]
     end
 
@@ -259,15 +259,15 @@ function GM:GetPlayerPainSound(ply, attacker, healthRemaining, damageTaken)
     end
 end
 
-function GM:PlayerDeath(ply, inflictor, attacker)
-    local deathSound = hook.Run("GetPlayerDeathSound", ply, inflictor, attacker)
-    if ( deathSound and deathSound != "" and !ply:InObserver() ) then
+function GM:PlayerDeath(client, inflictor, attacker)
+    local deathSound = hook.Run("GetPlayerDeathSound", client, inflictor, attacker)
+    if ( deathSound and deathSound != "" and !client:InObserver() ) then
         if ( !file.Exists("sound/" .. deathSound, "GAME") ) then
             ow.util:PrintWarning("PlayerDeathSound: Sound file does not exist! " .. deathSound)
             return false
         end
 
-        ply:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
+        client:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
     end
 end
 
@@ -277,24 +277,24 @@ local deathSounds = {
     Sound("vo/npc/male01/pain09.wav")
 }
 
-function GM:GetPlayerDeathSound(ply, inflictor, attacker)
+function GM:GetPlayerDeathSound(client, inflictor, attacker)
     return deathSounds[math.random(#deathSounds)]
 end
 
-function GM:PostPlayerDropItem(ply, item, entity)
+function GM:PostPlayerDropItem(client, item, entity)
     if ( !item or !IsValid(entity) ) then return end
 
     entity:EmitSound("physics/body/body_medium_impact_soft" .. math.random(1, 4) .. ".wav", 75, math.random(90, 110), 1, CHAN_ITEM)
 end
 
-function GM:PostPlayerTakeItem(ply, item, entity)
+function GM:PostPlayerTakeItem(client, item, entity)
     if ( !item or !IsValid(entity) ) then return end
 
     entity:EmitSound("physics/body/body_medium_impact_soft" .. math.random(5, 7) .. ".wav", 75, math.random(90, 110), 1, CHAN_ITEM)
 end
 
-local function IsAdmin(_, ply)
-    return ply:IsAdmin()
+local function IsAdmin(_, client)
+    return client:IsAdmin()
 end
 
 GM.PlayerSpawnEffect = IsAdmin

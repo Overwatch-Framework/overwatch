@@ -75,19 +75,19 @@ local function GetViewModelBob(pos, ang)
     local swayMult = ow.option:Get("sway.multiplier")
     local swayMultSprint = ow.option:Get("sway.multiplier.sprint")
 
-    local ply = ow.localClient
+    local client = ow.localClient
     local ft = FrameTime()
     local time = ft * 4
 
-    Multiplier = Lerp(time * 50, Multiplier, ply:IsSprinting() and swayMultSprint or swayMult)
+    Multiplier = Lerp(time * 50, Multiplier, client:IsSprinting() and swayMultSprint or swayMult)
 
-    local velocityangle = ply:GetVelocity()
+    local velocityangle = client:GetVelocity()
     local v = velocityangle:Length()
     v = math.Clamp(v, 0, 500)
     ViewModelBobVelocity = math.Approach(ViewModelBobVelocity, v, ft * 10000)
     local d = math.Clamp(ViewModelBobVelocity / 500, 0, 1)
 
-    if ( ply:OnGround() and ply:GetMoveType() != MOVETYPE_NOCLIP ) then
+    if ( client:OnGround() and client:GetMoveType() != MOVETYPE_NOCLIP ) then
         ViewModelNotOnGround = math.Approach(ViewModelNotOnGround, 0, ft / 0.1)
     else
         ViewModelNotOnGround = math.Approach(ViewModelNotOnGround, 1, ft / 0.1)
@@ -100,11 +100,11 @@ local function GetViewModelBob(pos, ang)
     mag = mag * Lerp(ts, 1, 2)
     step = Lerp(time, step, 12)
 
-    local sidemove = (ply:GetVelocity():Dot(ply:EyeAngles():Right()) / ply:GetMaxSpeed()) * 4 * (1.5-amount)
+    local sidemove = (client:GetVelocity():Dot(client:EyeAngles():Right()) / client:GetMaxSpeed()) * 4 * (1.5-amount)
     SideMove = Lerp(math.Clamp(ft * 8, 0, 1), SideMove, sidemove)
 
     CrouchMultiplier = Lerp(time, CrouchMultiplier, 1)
-    if ( ply:Crouching() ) then
+    if ( client:Crouching() ) then
         CrouchMultiplier = Lerp(time, CrouchMultiplier, 3.5 + amount * 10)
         step = Lerp(time, step, 8)
     end
@@ -113,7 +113,7 @@ local function GetViewModelBob(pos, ang)
     JumpMove = Lerp(math.Clamp(ft * 8, 0, 1), JumpMove, jumpmove)
     local smoothjumpmove2 = math.Clamp(JumpMove, -0.3, 0.01) * (1.5 - amount)
 
-    if ( ply:IsSprinting() ) then
+    if ( client:IsSprinting() ) then
         SprintInertia = Lerp(ft * 2, SprintInertia, 1)
         WalkInertia = Lerp(ft * 2, WalkInertia, 0)
     else

@@ -12,8 +12,8 @@ function ENT:Initialize()
     self:PhysWake()
 end
 
-function ENT:Use(ply)
-    if ( !IsValid(ply) or !ply:IsPlayer() ) then return end
+function ENT:Use(client)
+    if ( !IsValid(client) or !client:IsPlayer() ) then return end
 
     local amount = self:GetAmount()
     if ( amount <= 0 ) then
@@ -21,19 +21,19 @@ function ENT:Use(ply)
         return
     end
 
-    local character = ply:GetCharacter()
+    local character = client:GetCharacter()
     if ( !character ) then return end
 
-    local prevent = hook.Run("PrePlayerTakeMoney", ply, self, amount)
+    local prevent = hook.Run("PrePlayerTakeMoney", client, self, amount)
     if ( prevent == false ) then return end
 
     character:GiveMoney(amount)
     net.Start("ow.currency.give")
         net.WriteFloat(amount, 32)
         net.WriteEntity(self)
-    net.Send(ply)
+    net.Send(client)
 
-    hook.Run("PostPlayerTakeMoney", ply, self, amount)
+    hook.Run("PostPlayerTakeMoney", client, self, amount)
 
     SafeRemoveEntity(self)
 end
