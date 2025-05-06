@@ -68,8 +68,7 @@ function PANEL:Think()
     local screenWidth = ScrW()
     local tooltipWidth = self:GetWide()
 
-    self:SetPos(mouseX + tooltipWidth + 16 > screenWidth and mouseX - tooltipWidth - 16 or mouseX + 16, mouseY)
-
+    self:SetPos(math.Clamp(mouseX + 16, 0, screenWidth - tooltipWidth), mouseY)
     self:SetAlpha(self.alpha)
 
     if ( IsValid(self.panel) ) then
