@@ -64,10 +64,12 @@ function PLAYER:SetData(key, value)
     clientTable.owDatabase.data = util.TableToJSON(data)
 end
 
-function PLAYER:CreateRagdoll()
+function PLAYER:CreateServerRagdoll()
     if ( !self:GetCharacter() ) then return end
 
     local ragdoll = ents.Create("prop_ragdoll")
+    if ( !IsValid(ragdoll) ) then return nil end
+
     ragdoll:SetModel(self:GetModel())
     ragdoll:SetSkin(self:GetSkin())
     ragdoll:InheritBodygroups(self)
@@ -75,16 +77,16 @@ function PLAYER:CreateRagdoll()
     ragdoll:SetPos(self:GetPos())
     ragdoll:SetAngles(self:GetAngles())
     ragdoll:SetCreator(self)
-    ragdoll:SetDataVariable("owner", self:GetCharacter():GetID())
     ragdoll:Spawn()
 
     ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
     ragdoll:Activate()
 
+    local velocity = self:GetVelocity()
     for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
         local phys = ragdoll:GetPhysicsObjectNum(i)
         if ( IsValid(phys) ) then
-            phys:SetVelocity(self:GetVelocity())
+            phys:SetVelocity(velocity)
 
             local index = ragdoll:TranslatePhysBoneToBone(i)
             local bone = self:TranslatePhysBoneToBone(index)
@@ -98,6 +100,24 @@ function PLAYER:CreateRagdoll()
     end
 
     return ragdoll
+end
+
+function PLAYER:SetRagdolled(bState)
+    if ( bState == nil ) then bState = false end
+
+    if ( !bState ) then
+        SafeRemoveEntity(self:GetDataVariable("ragdoll", nil))
+        self:SetDataVariable("ragdoll", nil)
+        return
+    end
+
+    local ragdoll = self:CreateServerRagdoll()
+    timer.Simple(0.1, function()
+        if ( IsValid(ragdoll) ) then
+            ragdoll:SetDataVariable("owner", self)
+            self:SetDataVariable("ragdoll", ragdoll)
+        end
+    end)
 end
 
 function PLAYER:SetWeaponRaised(bRaised)

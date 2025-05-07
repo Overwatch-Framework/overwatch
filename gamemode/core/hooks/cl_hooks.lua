@@ -65,10 +65,8 @@ function GM:CalcView(client, pos, angles, fov)
         }
     end
 
-    if ( !client:Alive() ) then
-        local ragdoll = client:GetRagdollEntity()
-        if ( !IsValid(ragdoll) ) then return end
-
+    local ragdoll = ow.localClient:GetDataVariable("ragdoll", nil)
+    if ( IsValid(ragdoll) ) then
         local eyePos
         local eyeAng
 

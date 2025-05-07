@@ -246,15 +246,31 @@ function GM:GetPlayerPainSound(client, attacker, healthRemaining, damageTaken)
     end
 end
 
+function GM:DoPlayerDeath(client, attacker, dmgInfo)
+    if ( hook.Run("PreSpawnClientRagdoll", client, attacker, dmgInfo ) != false ) then
+        local ragdoll = client:CreateRagdoll()
+
+        hook.Run("PostSpawnClientRagdoll", client, ragdoll, attacker, dmgInfo)
+    end
+end
+
 function GM:PlayerDeath(client, inflictor, attacker)
-    local deathSound = hook.Run("GetPlayerDeathSound", client, inflictor, attacker)
-    if ( deathSound and deathSound != "" and !client:InObserver() ) then
-        if ( !file.Exists("sound/" .. deathSound, "GAME") ) then
-            ow.util:PrintWarning("PlayerDeathSound: Sound file does not exist! " .. deathSound)
-            return false
+    local character = client:GetCharacter()
+    if ( character ) then
+        local clientRagdoll = client:GetRelay("ragdoll")
+        if ( IsValid(clientRagdoll) and hook.Run("ShouldRemoveRagdollOnDeath", client) != false ) then
+            clientRagdoll:Remove()
         end
 
-        client:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
+        local deathSound = hook.Run("GetPlayerDeathSound", client, inflictor, attacker)
+        if ( deathSound and deathSound != "" and !client:InObserver() ) then
+            if ( !file.Exists("sound/" .. deathSound, "GAME") ) then
+                ow.util:PrintWarning("PlayerDeathSound: Sound file does not exist! " .. deathSound)
+                return false
+            end
+
+            client:EmitSound(deathSound, 75, 100, 1, CHAN_VOICE)
+        end
     end
 end
 

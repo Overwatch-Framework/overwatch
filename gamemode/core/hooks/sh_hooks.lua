@@ -134,3 +134,7 @@ function GM:PlayerSwitchWeapon(client, hOldWeapon, hNewWeapon)
         end)
     end
 end
+
+function GM:PreSpawnClientRagdoll(client)
+
+end
