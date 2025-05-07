@@ -330,3 +330,73 @@ ow.util:LoadFile("cl_module.lua")
 
 ow.util:LoadFile("sh_hooks.lua")
 ow.util:LoadFile("sv_hooks.lua")
+
+local playerMeta = FindMetaTable("Player")
+if ( SERVER ) then
+    function playerMeta:LeaveSequence()
+        local prevent = hook.Run("PreClientLeaveSequence", self)
+        if ( prevent != nil and prevent == false ) then return end
+
+        ow.net:Start(nil, "sequence.reset", self)
+
+        self:SetDataVariable("sequence.callback", nil)
+        self:SetDataVariable("sequence.forced", nil)
+        self:SetMoveType(MOVETYPE_WALK)
+
+        local callback = self:GetDataVariable("sequence.callback")
+        if ( isfunction(callback) ) then
+            callback(self)
+        end
+
+        hook.Run("PostClientLeaveSequence", self)
+    end
+
+    function playerMeta:ForceSequence(sequence, callback, time, noFreeze)
+        local prevent = hook.Run("PreClientForceSequence", self, sequence, callback, time, noFreeze)
+        if ( prevent != nil and prevent == false ) then return end
+
+        if ( sequence == nil ) then
+            ow.net:Start(nil, "sequence.reset", self)
+            return
+        end
+
+        local sequenceID = self:LookupSequence(sequence)
+        if ( sequenceID == -1 ) then
+            ow.util:PrintError("Invalid sequence \"" .. sequence .. "\"!")
+            return
+        end
+
+        local sequenceTime = isnumber(time) and time or self:SequenceDuration(sequenceID)
+
+        self:SetCycle(0)
+        self:SetPlaybackRate(1)
+        self:SetDataVariable("sequence.forced", sequenceID)
+        self:SetDataVariable("sequence.callback", callback or nil)
+
+        if ( !noFreeze ) then
+            self:SetMoveType(MOVETYPE_NONE)
+        end
+
+        if ( sequenceTime > 0 ) then
+            timer.Create("ow.sequence." .. self:SteamID64(), sequenceTime, 1, function()
+                self:LeaveSequence()
+            end)
+
+            return sequenceTime
+        end
+
+        hook.Run("PostClientForceSequence", self, sequence, callback, time, noFreeze)
+    end
+else
+    ow.net:Hook("sequence.set", function(client)
+        if ( !IsValid(client) ) then return end
+
+        hook.Run("PostClientForceSequence", client)
+    end)
+
+    ow.net:Hook("sequence.reset", function(client)
+        if ( !IsValid(client) ) then return end
+
+        hook.Run("PostClientLeaveSequence", client)
+    end)
+end
