@@ -36,8 +36,8 @@ end
 -- Inherits the bodygroups of the given entity.
 -- @realm shared
 function ENTITY:InheritBodygroups(entity)
-    for _, v in ipairs(entity:GetBodyGroups() or {}) do
-        self:SetBodygroup(v.id, entity:GetBodygroup(v.id))
+    for i = 0, (entity:GetNumBodyGroups() - 1) do
+        self:SetBodygroup(i, entity:GetBodygroup(i))
     end
 end
 
@@ -107,7 +107,7 @@ function ENTITY:IsLocked()
             return self:GetInternalVariable("m_bLocked")
         end
     else
-        return self:GetNetVar("locked", false)
+        return self:GetDataVariable("locked", false)
     end
 
     return false

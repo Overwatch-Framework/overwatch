@@ -119,27 +119,6 @@ function PLAYER:Notify(text, iType, length)
     ow.notification:Send(self, text, iType, length)
 end
 
-if ( SERVER ) then
-    function PLAYER:SetWeaponRaised(bRaised)
-        if ( bRaised == nil ) then bRaised = true end
-
-        self:SetRelay("bWeaponRaised", bRaised)
-        self:SetRelay("bCanShoot", bRaised)
-
-        local weapon = self:GetActiveWeapon()
-        if ( IsValid(weapon) and weapon:IsWeapon() and weapon.SetWeaponRaised ) then
-            weapon:SetWeaponRaised(bRaised)
-        end
-
-        hook.Run("PlayerWeaponRaised", self, bRaised)
-    end
-
-    function PLAYER:ToggleWeaponRaise()
-        local bRaised = self:GetRelay("bWeaponRaised", false)
-        self:SetWeaponRaised(!bRaised)
-    end
-end
-
 ow.alwaysRaised = ow.alwaysRaised or {}
 ow.alwaysRaised["gmod_tool"] = true
 ow.alwaysRaised["gmod_camera"] = true

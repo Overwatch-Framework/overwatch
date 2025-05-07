@@ -23,7 +23,7 @@ function ow.command:Run(client, command, arguments)
         return false
     end
 
-    if ( CAMI == nil ) then
+    if ( !tobool(CAMI) ) then
         if ( info.AdminOnly and !client:IsAdmin() ) then
             client:Notify("You must be an admin to run this command!")
             return false

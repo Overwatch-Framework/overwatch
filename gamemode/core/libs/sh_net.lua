@@ -29,7 +29,7 @@ if ( SERVER ) then
         local recipients = {}
         local sendPVS = false
 
-        if ( type(target) == "Vector" ) then
+        if ( isvector(target) ) then
             sendPVS = true
         elseif ( istable(target) ) then
             for _, v in ipairs(target) do
@@ -79,7 +79,7 @@ net.Receive("ow.net.msg", function(len, ply)
     end
 
     local callback = ow.net.stored[name]
-    if ( !callback ) then
+    if ( !isfunction(callback) ) then
         ErrorNoHalt("[ow.net] No handler for '" .. name .. "'\n")
         return
     end

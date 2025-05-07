@@ -12,17 +12,18 @@ ow.config.stored = ow.config.stored or {}
 function ow.config:Load()
     local config = ow.data:Get("config", {}, true, false)
 
-    hook.Run("PreConfigLoad", config)
+    for k, v in pairs(config) do
+        local storedData = self.stored[k]
+        if ( !istable(storedData) ) then continue end
 
-    local tableToSend =  self.stored
+        storedData.Value = v
+    end
+
+    local tableToSend =  self:GetSaveData()
     for k, v in pairs(tableToSend) do
-        if ( v.NoNetworking ) then
+        local storedData = self.stored[k]
+        if ( istable(storedData) and storedData.NoNetworking ) then
             tableToSend[k] = nil
-            continue
-        end
-
-        if ( config[k] != nil ) then
-            v.Value = config[k]
         end
     end
 

@@ -63,3 +63,58 @@ function PLAYER:SetData(key, value)
     data[key] = value
     clientTable.owDatabase.data = util.TableToJSON(data)
 end
+
+function PLAYER:CreateRagdoll()
+    if ( !self:GetCharacter() ) then return end
+
+    local ragdoll = ents.Create("prop_ragdoll")
+    ragdoll:SetModel(self:GetModel())
+    ragdoll:SetSkin(self:GetSkin())
+    ragdoll:InheritBodygroups(self)
+    ragdoll:InheritMaterials(self)
+    ragdoll:SetPos(self:GetPos())
+    ragdoll:SetAngles(self:GetAngles())
+    ragdoll:SetCreator(self)
+    ragdoll:SetDataVariable("owner", self:GetCharacter():GetID())
+    ragdoll:Spawn()
+
+    ragdoll:SetCollisionGroup(COLLISION_GROUP_DEBRIS_TRIGGER)
+    ragdoll:Activate()
+
+    for i = 0, ragdoll:GetPhysicsObjectCount() - 1 do
+        local phys = ragdoll:GetPhysicsObjectNum(i)
+        if ( IsValid(phys) ) then
+            phys:SetVelocity(self:GetVelocity())
+
+            local index = ragdoll:TranslatePhysBoneToBone(i)
+            local bone = self:TranslatePhysBoneToBone(index)
+            if ( bone != -1 ) then
+                local pos, ang = self:GetBonePosition(bone)
+
+                phys:SetPos(pos)
+                phys:SetAngles(ang)
+            end
+        end
+    end
+
+    return ragdoll
+end
+
+function PLAYER:SetWeaponRaised(bRaised)
+    if ( bRaised == nil ) then bRaised = true end
+
+    self:SetRelay("bWeaponRaised", bRaised)
+    self:SetRelay("bCanShoot", bRaised)
+
+    local weapon = self:GetActiveWeapon()
+    if ( IsValid(weapon) and weapon:IsWeapon() and isfunction(weapon.SetWeaponRaised) ) then
+        weapon:SetWeaponRaised(bRaised)
+    end
+
+    hook.Run("PlayerWeaponRaised", self, bRaised)
+end
+
+function PLAYER:ToggleWeaponRaise()
+    local bRaised = self:GetRelay("bWeaponRaised", false)
+    self:SetWeaponRaised(!bRaised)
+end
