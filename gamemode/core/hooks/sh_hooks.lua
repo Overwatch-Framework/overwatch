@@ -138,3 +138,7 @@ end
 function GM:PreSpawnClientRagdoll(client)
 
 end
+
+function GM:GetGameDescription()
+    return "Overwatch" .. (SCHEMA and " > " .. SCHEMA.Name or "")
+end
