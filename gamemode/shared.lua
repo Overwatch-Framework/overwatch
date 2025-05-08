@@ -43,10 +43,6 @@ function GM:OnReloaded()
         ow.option:Load()
     else
         ow.config:Load()
-
-        for _, client in player.Iterator() do
-            ow.config:Synchronize(client)
-        end
     end
 
     hook.Run("LoadFonts")

@@ -104,15 +104,15 @@ function MODULE:ShouldDrawLocalPlayer(client)
 end
 
 function MODULE:PrePlayerDraw(client, flags)
-    if ( ow.config:Get("thirdperson.tracecheck") ) then
+    if ( ow.config:Get("thirdperson.tracecheck") and ow.localClient != client ) then
         local traceLine = util.TraceLine({
             start = ow.localClient:GetShootPos(),
-            endpos = client:GetPos() + Vector(0, 0, 5),
+            endpos = client:GetShootPos(),
             filter = ow.localClient
         })
 
-        if ( traceLine.Hit ) then
-            return false
+        if ( !traceLine.Hit ) then
+            return true
         end
     end
 end
