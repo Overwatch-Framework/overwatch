@@ -1,14 +1,10 @@
 ow.command:Register("Respawn", {
     Description = "Respawn a player.",
     AdminOnly = true,
-    Callback = function(info, client, arguments)
-        local target = ow.util:FindPlayer(arguments[1])
-        if ( !IsValid(target) ) then
-            ow.util:PrintError("Attempted to respawn an invalid player!", client)
-            client:Notify("You must provide a valid player to respawn!")
-            return
-        end
-
+    Arguments = {
+        ow.type.player
+    },
+    Callback = function(info, client, target)
         if ( target:GetCharacter() == nil ) then
             client:Notify("The targeted player does not have a character!")
             return
@@ -21,30 +17,14 @@ ow.command:Register("Respawn", {
     end
 })
 
-ow.command:Register("SetModel", {
-    Description = "Set the model of a player.",
+ow.command:Register("CharSetModel", {
+    Description = "Set the model of a character.",
     AdminOnly = true,
-    AutoComplete = function(client, split)
-        local suggestions = {}
-        for _, v in player.Iterator() do
-            table.insert(suggestions, "/SetModel " .. v:Nick())
-        end
-
-        return suggestions
-    end,
-    Callback = function(info, client, arguments)
-        local target = ow.util:FindPlayer(arguments[1])
-        if ( !IsValid(target) ) then
-            client:Notify("You must provide a valid player to set the model of!")
-            return
-        end
-
-        local model = arguments[2]
-        if ( !isstring(model) or model == "" or !string.StartsWith(model, "models/") ) then
-            client:Notify("You must provide a valid model to set!")
-            return
-        end
-
+    Arguments = {
+        ow.type.player,
+        ow.type.string
+    },
+    Callback = function(info, client, target, model)
         if ( string.lower(model) == string.lower(target:GetModel()) ) then
             client:Notify("The targeted player already has that model!")
             return
@@ -62,18 +42,15 @@ ow.command:Register("SetModel", {
     end
 })
 
-ow.command:Register("SetFaction", {
-    Description = "Set the faction of a player.",
+ow.command:Register("CharSetFaction", {
+    Description = "Set the faction of a character.",
     AdminOnly = true,
-    Callback = function(info, client, arguments)
-        local target = ow.util:FindPlayer(arguments[1])
-        if ( !IsValid(target) ) then
-            client:Notify("You must provide a valid player to set the faction of!")
-            return
-        end
-
-        local factionIdentifier = arguments[2]
-        local faction = ow.faction:Get(factionIdentifier)
+    Arguments = {
+        ow.type.player,
+        ow.type.string
+    },
+    Callback = function(info, client, target, identifier)
+        local faction = ow.faction:Get(identifier)
         if ( !faction ) then
             client:Notify("You must provide a valid faction to set!")
             return
@@ -95,14 +72,11 @@ ow.command:Register("SetFaction", {
 ow.command:Register("CharGiveFlags", {
     Description = "Give a character a flag.",
     AdminOnly = true,
-    Callback = function(info, client, arguments)
-        local target = ow.util:FindPlayer(arguments[1])
-        if ( !IsValid(target) ) then
-            client:Notify("You must provide a valid player to give a flag to!")
-            return
-        end
-
-        local flags = arguments[2]
+    Arguments = {
+        ow.type.player,
+        ow.type.string
+    },
+    Callback = function(info, client, target, flags)
         if ( !isstring(flags) or #flags == 0 ) then
             client:Notify("You must provide either single flag or a set of flags!")
             return
