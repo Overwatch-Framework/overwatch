@@ -103,9 +103,9 @@ function GM:CalcView(client, pos, angles, fov)
     end
 end
 
-local LOWERED_POS = Vector(0, 0, 0)
+local LOWERED_POS = vector_origin
 local LOWERED_ANGLES = Angle(10, 10, 0)
-local LOWERED_LERP = {pos = Vector(0, 0, 0), angles = Angle(0, 0, 0)}
+local LOWERED_LERP = {pos = vector_origin, angles = angle_zero}
 function GM:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
     local client = ow.localClient
     if ( !IsValid(client) ) then return end
