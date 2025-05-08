@@ -164,9 +164,12 @@ function GM:HUDPaint()
     local client = ow.localClient
     if ( !IsValid(client) ) then return end
 
+    local shouldDraw = hook.Run("PreHUDPaint")
+    if ( shouldDraw == false ) then return end
+
     local x, y = 24, 24
     local scrW, scrH = ScrW(), ScrH()
-    local shouldDraw = hook.Run("ShouldDrawDebugHUD")
+    shouldDraw = hook.Run("ShouldDrawDebugHUD")
     if ( shouldDraw != false ) then
         local green = ow.config:Get("color.framework")
         local width = math.max(ow.util:GetTextWidth("ow.fonts.developer", "Pos: " .. tostring(client:GetPos())), ow.util:GetTextWidth("ow.fonts.developer", "Ang: " .. tostring(client:EyeAngles())))
@@ -255,6 +258,8 @@ function GM:HUDPaint()
 
         draw.SimpleTextOutlined(ammoText, "ow.fonts.bold", scrW - 16, scrH - 16, color_white, TEXT_ALIGN_RIGHT, TEXT_ALIGN_BOTTOM, 1, color_black)
     end
+
+    hook.Run("PostHUDPaint")
 end
 
 local elements = {
@@ -518,6 +523,12 @@ function GM:OnPauseMenuShow()
     end
 
     return false
+end
+
+function GM:PreHUDPaint()
+end
+
+function GM:PostHUDPaint()
 end
 
 function GM:ShouldDrawCrosshair()
