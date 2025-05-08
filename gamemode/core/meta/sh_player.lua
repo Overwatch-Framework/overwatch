@@ -141,3 +141,7 @@ if ( CLIENT ) then
         return lightLevel < factor
     end
 end
+
+function PLAYER:IsOverwatchDeveloper() -- Official Overwatch Developers
+    return self:SteamID64() == "76561197963057641" or self:SteamID64() == "76561198373309941"
+end
