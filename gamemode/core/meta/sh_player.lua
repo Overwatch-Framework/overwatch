@@ -132,3 +132,12 @@ function PLAYER:IsWeaponRaised()
 
     return self:GetRelay("bWeaponRaised", false)
 end
+
+if ( CLIENT ) then
+    function PLAYER:InDarkness(factor)
+        if ( factor == nil ) then factor = 0.5 end
+
+        local lightLevel = render.GetLightColor(self:GetPos()):Length()
+        return lightLevel < factor
+    end
+end
