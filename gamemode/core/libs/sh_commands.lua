@@ -69,7 +69,7 @@ end
 -- @return table The command.
 function ow.command:Get(identifier)
     if ( !isstring(identifier) ) then
-        ow.util:PrintError("Attempted to get a command with invalid identifier!")
+        ow.util:PrintError("Attempted to get a command with an invalid identifier!")
         return false
     end
 
@@ -93,7 +93,6 @@ function ow.command:Get(identifier)
         end
     end
 
-    ow.util:PrintError("Attempted to get a command with invalid identifier!")
     return false
 end
 
