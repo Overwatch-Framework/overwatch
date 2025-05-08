@@ -315,15 +315,20 @@ IdleActivityTranslate[ACT_MP_SWIM] = IdleActivity + 9
 IdleActivityTranslate[ACT_LAND] = ACT_LAND
 
 function MODULE:TranslateActivity(client, act)
-    local newact = client:TranslateWeaponActivity(act)
-    if ( act == newact ) then
+    local clientTable = client:GetTable()
+    local oldAct = client.owLastAct or -1
+    if ( oldAct != act ) then
+        clientTable.owLastAct = act
+    end
+
+    local newAct = client:TranslateWeaponActivity(act)
+    if ( act == newAct ) then
         return IdleActivityTranslate[act]
     end
 
-    local clientTable = client:GetTable()
-    local class = ow.animations:GetModelClass(model)
+    local class = ow.animations:GetModelClass(client:GetModel())
     if ( !class or class == "player" ) then
-        return newact
+        return newAct
     end
 
     local owAnimations = clientTable.owAnimations
@@ -331,13 +336,31 @@ function MODULE:TranslateActivity(client, act)
         local animTable = owAnimations[act]
         if ( animTable ) then
             local preferred = animTable[client:IsWeaponRaised() and 2 or 1]
-            newact = preferred
+            newAct = preferred
         elseif ( client.m_bJumping ) then
-            newact = ACT_GLIDE
+            newAct = ACT_GLIDE
         end
     end
 
-    return newact
+    if ( isstring(newAct) ) then
+        local seq = client:LookupSequence(newAct)
+        if ( seq != -1 ) then
+            clientTable.CalcSeqOverride = client:LookupSequence(newAct)
+        end
+    elseif ( istable(newAct) ) then
+        if ( !clientTable.CalcSeqOverrideTable ) then
+            clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
+        end
+
+        -- Randomly select a new sequence from the table if we came from a different act
+        if ( oldAct != newAct ) then
+            clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
+        end
+
+        clientTable.CalcSeqOverride = clientTable.CalcSeqOverrideTable
+    end
+
+    return newAct
 end
 
 function MODULE:DoAnimationEvent(client, event, data)
