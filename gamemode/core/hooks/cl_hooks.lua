@@ -103,23 +103,34 @@ function GM:CalcView(client, pos, angles, fov)
     end
 end
 
+local LOWERED_POS = Vector(0, 0, 0)
 local LOWERED_ANGLES = Angle(10, 10, 0)
-local LOWERED_LERP = {angles = LOWERED_ANGLES}
+local LOWERED_LERP = {pos = Vector(0, 0, 0), angles = Angle(0, 0, 0)}
 function GM:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
     local client = ow.localClient
     if ( !IsValid(client) ) then return end
 
+    local targetPos = LOWERED_POS
     local targetAngles = LOWERED_ANGLES
-    if ( IsValid(weapon) and weapon:IsWeapon() and weapon.LoweredAngles ) then
-        targetAngles = weapon.LoweredAngles
+    if ( IsValid(weapon) and weapon:IsWeapon() ) then
+        if ( weapon.LoweredPos ) then
+            targetPos = weapon.LoweredPos
+        end
+
+        if ( weapon.LoweredAngles ) then
+            targetAngles = weapon.LoweredAngles
+        end
     end
 
     if ( IsValid(weapon) and !client:IsWeaponRaised() ) then
+        LOWERED_LERP.pos = Lerp(FrameTime() * 4, LOWERED_LERP.pos, targetPos)
         LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, targetAngles)
     else
+        LOWERED_LERP.pos = Lerp(FrameTime() * 4, LOWERED_LERP.pos, vector_origin)
         LOWERED_LERP.angles = LerpAngle(FrameTime() * 4, LOWERED_LERP.angles, angle_zero)
     end
 
+    pos = pos + LOWERED_LERP.pos
     ang = ang + LOWERED_LERP.angles
 
     return self.BaseClass:CalcViewModelView(weapon, viewModel, oldPos, oldAng, pos, ang)
