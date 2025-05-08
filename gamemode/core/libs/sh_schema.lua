@@ -17,13 +17,13 @@ function ow.schema:Initialize()
     SCHEMA = {}
 
     local folder = engine.ActiveGamemode()
-    local path = folder .. "/schema/sh_schema.lua"
+    local schema = folder .. "/schema/sh_schema.lua"
 
     file.CreateDir("overwatch/" .. folder)
 
     ow.util:Print("Searching for schema...")
 
-    local bSuccess = file.Exists(path, "LUA")
+    local bSuccess = file.Exists(schema, "LUA")
     if ( !bSuccess ) then
         ow.util:PrintError("Schema not found!")
         return false
@@ -31,10 +31,9 @@ function ow.schema:Initialize()
         SCHEMA.Folder = folder
 
         ow.util:Print("Schema found, loading \"" .. SCHEMA.Folder .. "\"...")
-        ow.util:LoadFile(path)
     end
 
-    hook.Run("PreInitializeSchema", SCHEMA, path)
+    hook.Run("PreInitializeSchema", SCHEMA, schema)
 
     for k, v in pairs(default) do
         if ( !SCHEMA[k] ) then
@@ -49,7 +48,7 @@ function ow.schema:Initialize()
 
     -- Load the current map config if it exists
     local map = game.GetMap()
-    path = folder .. "/schema/config/maps/" .. map .. ".lua"
+    local path = folder .. "/schema/config/maps/" .. map .. ".lua"
     if ( file.Exists(path, "LUA") ) then
         hook.Run("PreInitializeMapConfig", SCHEMA, path, map)
         ow.util:Print("Loading map config for \"" .. map .. "\"...")
@@ -64,6 +63,10 @@ function ow.schema:Initialize()
         ow.config:Load()
     end
 
+    -- Load the sh_schema.lua file after we load all necessary files
+    ow.util:LoadFile(schema)
+
+    -- Load the modules after the schema file is loaded
     ow.module:LoadFolder(folder .. "/modules")
 
     ow.util:Print("Loaded schema " .. SCHEMA.Name)
