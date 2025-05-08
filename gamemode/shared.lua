@@ -7,7 +7,7 @@
 GM.Name = "Overwatch"
 GM.Author = "Riggs & bloodycop"
 GM.Description = "A roleplaying gamemode for Garry's Mod."
-GM.Version = "Foundation"
+GM.Version = "alpha-0.1.0"
 
 function widgets.PlayerTick()
 end
