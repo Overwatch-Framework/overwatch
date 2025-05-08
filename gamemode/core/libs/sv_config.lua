@@ -19,14 +19,7 @@ function ow.config:Load()
         storedData.Value = v
     end
 
-    local tableToSend =  self:GetSaveData()
-    for k, v in pairs(tableToSend) do
-        local storedData = self.stored[k]
-        if ( istable(storedData) and storedData.NoNetworking ) then
-            tableToSend[k] = nil
-        end
-    end
-
+    local tableToSend =  self:GetNetworkData()
     ow.net:Start(nil, "config.sync", tableToSend)
 
     ow.util:Print("Configuration loaded.")
@@ -38,6 +31,22 @@ end
 function ow.config:GetSaveData()
     local saveData = {}
     for k, v in pairs(self.stored) do
+        if ( v.Value != nil and v.Value != v.Default ) then
+            saveData[k] = v.Value
+        end
+    end
+
+    return saveData
+end
+
+function ow.config:GetNetworkData()
+    local saveData = self:GetSaveData()
+    for k, v in pairs(self.stored) do
+        if ( v.NoNetworking ) then
+            saveData[k] = nil
+            continue
+        end
+
         if ( v.Value != nil and v.Value != v.Default ) then
             saveData[k] = v.Value
         end
@@ -88,22 +97,13 @@ end
 function ow.config:ResetAll()
     hook.Run("PreConfigReset")
 
-    local tableToSend =  self.stored
-    for k, v in pairs(tableToSend) do
-        if ( v.NoNetworking ) then
-            tableToSend[k] = nil
-            continue
-        end
-
-        if ( config[k] != nil ) then
-            v.Value = config[k]
-        end
+    for k, v in pairs(self.stored) do
+        self:Reset(k)
     end
 
-    ow.net:Start(nil, "config.sync", tableToSend)
+    ow.net:Start(nil, "config.sync", self:GetNetworkData())
 
     self:Save()
-
     hook.Run("PostConfigReset")
 
     return true
@@ -117,18 +117,11 @@ end
 function ow.config:Synchronize(client)
     if ( !IsValid(client) ) then return false end
 
-    local tableToSend =  self:GetSaveData()
-    for k, v in pairs(tableToSend) do
-        local storedData = self.stored[k]
-        if ( istable(storedData) and storedData.NoNetworking ) then
-            tableToSend[k] = nil
-        end
-    end
-
+    local tableToSend = self:GetNetworkData()
     local shouldSend = hook.Run("PreConfigSync", client, tableToSend)
     if ( shouldSend == false ) then return false end
 
-    ow.net:Start(nil, "config.sync", tableToSend)
+    ow.net:Start(client, "config.sync", tableToSend)
 
     hook.Run("PostConfigSync", client)
 
