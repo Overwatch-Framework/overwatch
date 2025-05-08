@@ -71,7 +71,7 @@ function PANEL:Init()
     local buttonSizeable = self.buttons:Add("EditablePanel")
 
     -- eon did not like the close button :(
-    /*
+    --[[
     local closeButton = self.buttons:Add("ow.button")
     closeButton:Dock(BOTTOM)
     closeButton:DockMargin(0, 16, 0, 0)
@@ -80,10 +80,10 @@ function PANEL:Init()
     closeButton.DoClick = function()
         self:Close()
     end
-    */
+    ]]
 
     -- eon did not like the main menu button :(
-    /*
+    --[[
     local menuButton = self.buttons:Add("ow.button")
     menuButton:Dock(BOTTOM)
     menuButton:SetText("tab.mainmenu")
@@ -101,7 +101,7 @@ function PANEL:Init()
         self:SetMouseInputEnabled(true)
         self:SetKeyboardInputEnabled(true)
     end
-    */
+    ]]
 
     self.container = self:Add("EditablePanel")
     self.container:SetSize(self:GetWide() - self.buttons:GetWide() - padding - paddingSmall, self:GetTall() - padding)

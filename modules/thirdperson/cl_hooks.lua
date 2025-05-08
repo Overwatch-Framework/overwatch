@@ -117,7 +117,7 @@ function MODULE:PrePlayerDraw(client, flags)
     end
 end
 
-/*
+--[[
 function MODULE:AddToolMenuCategories()
     spawnmenu.AddToolCategory("Overwatch", "User", "User")
 end
@@ -135,4 +135,4 @@ function MODULE:AddToolMenuTabs()
         panel:NumSlider(ow.localization:GetPhrase("options.thirdperson.position.z"), "ow_thirdperson_position_z", -1000, 1000, 0)
     end)
 end
-*/
+]]

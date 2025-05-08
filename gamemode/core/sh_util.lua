@@ -547,6 +547,7 @@ if ( CLIENT ) then
     -- @param passes number The number of passes to apply.
     -- @param alpha number The alpha value of the blur.
     function ow.util:DrawBlur(panel, amount, passes, alpha)
+
         amount = amount or 5
 
         if ( ow.option:Get("performance.blur") == true ) then
@@ -577,6 +578,8 @@ if ( CLIENT ) then
     -- @param passes number The number of passes to apply.
     -- @param alpha number The alpha value of the blur.
     function ow.util:DrawBlurRect(x, y, width, height, amount, passes, alpha)
+        if ( !blur ) then return end
+
         amount = amount or 5
 
         if ( ow.option:Get("performance.blur") == true ) then
