@@ -93,7 +93,7 @@ net.Receive("ow.net.msg", function(len, ply)
     ow.util:Print("[ow.net] Received '" .. name .. "' from " .. (SERVER and ply:Nick() or "server"))
 end)
 
-/*
+--[[
 --- Example usage:
 if ( SERVER ) then
     ow.net:Hook("test", function(client, val, val2)
@@ -105,4 +105,4 @@ if ( CLIENT ) then
     ow.net:Start(nil, "test", {89})
     ow.net:Start(nil, "test", "hello", "world")
 end
-*/
+]]

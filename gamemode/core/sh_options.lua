@@ -1,4 +1,4 @@
-/*
+--[[
 -- Don't know if there is are more efficient way to do this or to retrieve the languages from gmod itself.
 local languages = {
     ["bg"] = "Bulgarian",
@@ -48,7 +48,7 @@ ow.option:Register("language", {
         return languages
     end
 })
-*/
+]]
 
 ow.option:Register("inventory.sort", {
     Name = "options.inventory.sort",
