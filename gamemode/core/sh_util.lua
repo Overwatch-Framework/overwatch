@@ -547,6 +547,8 @@ if ( CLIENT ) then
     -- @param passes number The number of passes to apply.
     -- @param alpha number The alpha value of the blur.
     function ow.util:DrawBlur(panel, amount, passes, alpha)
+        if ( !IsValid(panel) ) then return end
+        if ( !blur ) then return end
 
         amount = amount or 5
 
