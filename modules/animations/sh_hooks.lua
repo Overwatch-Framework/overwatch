@@ -317,9 +317,6 @@ IdleActivityTranslate[ACT_LAND] = ACT_LAND
 function MODULE:TranslateActivity(client, act)
     local clientTable = client:GetTable()
     local oldAct = client.owLastAct or -1
-    if ( oldAct != act ) then
-        clientTable.owLastAct = act
-    end
 
     local newAct = client:TranslateWeaponActivity(act)
     if ( act == newAct ) then
@@ -331,12 +328,21 @@ function MODULE:TranslateActivity(client, act)
         return newAct
     end
 
-    local owAnimations = clientTable.owAnimations
-    if ( owAnimations ) then
-        local animTable = owAnimations[act]
+    local animTable = clientTable.owAnimations
+    if ( animTable ) then
+        if ( !animTable[ACT_MP_JUMP] ) then
+            animTable[ACT_MP_JUMP] = ACT_JUMP
+        end
+
+        animTable = animTable[act]
+
         if ( animTable ) then
-            local preferred = animTable[client:IsWeaponRaised() and 2 or 1]
-            newAct = preferred
+            if ( istable(animTable) ) then
+                local preferred = animTable[client:IsWeaponRaised() and 2 or 1]
+                newAct = preferred
+            else
+                newAct = animTable
+            end
         elseif ( client.m_bJumping ) then
             newAct = ACT_GLIDE
         end
@@ -352,12 +358,15 @@ function MODULE:TranslateActivity(client, act)
             clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
         end
 
-        -- Randomly select a new sequence from the table if we came from a different act
         if ( oldAct != newAct ) then
             clientTable.CalcSeqOverrideTable = client:LookupSequence(newAct[math.random(#newAct)])
         end
 
         clientTable.CalcSeqOverride = clientTable.CalcSeqOverrideTable
+    end
+
+    if ( oldAct != newAct ) then
+        clientTable.owLastAct = newAct
     end
 
     return newAct
