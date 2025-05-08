@@ -94,13 +94,21 @@ function GM:PlayerDeathThink(client)
 end
 
 function GM:PlayerSay(client, text, teamChat)
-    if ( string.sub(text, 1, 1) == "/" ) then
+    if ( string.sub(text, 1, 3) == ".//" ) then
+        -- Check if it's a way of using local out of character chat using .// prefix
+        local message = string.Explode(" ", string.sub(text, 4))
+        table.remove(message, 1)
+
+        ow.command:Run(client, "looc", table.concat(message, " "))
+    elseif ( string.sub(text, 1, 1) == "/" ) then
+        -- This is a command, so we need to parse it
         local arguments = string.Explode(" ", string.sub(text, 2))
         local command = arguments[1]
         table.remove(arguments, 1)
 
         ow.command:Run(client, command, table.concat(arguments, " "))
     else
+        -- Everything else is a normal chat message
         ow.chat:SendSpeaker(client, "ic", text)
     end
 
