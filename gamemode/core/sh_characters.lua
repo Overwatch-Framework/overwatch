@@ -146,6 +146,13 @@ ow.character:RegisterVariable("model", {
                 end
             end
         end
+    end,
+
+    OnSet = function(self, character, value)
+        local client = character:GetPlayer()
+        if ( IsValid(client) ) then
+            client:SetModel(value)
+        end
     end
 })
 
