@@ -1,10 +1,6 @@
 --- Utility functions
 -- @module ow.util
 
--- Most utility functions were imported from Minerva's edit of Helix and some from the original.
--- https://github.com/riggs9162/helix/blob/riggs9162/gamemode/core/sh_util.lua
--- https://github.com/NebulousCloud/helix/blob/master/gamemode/core/sh_util.lua
-
 --- Converts and sanitizes input data into the specified type.
 -- This supports simple type coercion and fallback defaults.
 -- @param typeID number A type constant from ow.types
