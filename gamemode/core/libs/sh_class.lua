@@ -38,7 +38,7 @@ ow.class.meta = {
         end
 
         if ( type(other) == "Player" ) then
-            return self:GetID() == other:GetFaction()
+            return self:GetID() == other:GetID()
         end
 
         return false
