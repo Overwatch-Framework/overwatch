@@ -143,5 +143,5 @@ if ( CLIENT ) then
 end
 
 function PLAYER:IsOverwatchDeveloper() -- Official Overwatch Developers
-    return self:SteamID64() == "76561197963057641" or self:SteamID64() == "76561198373309941"
+    return self:SteamID64() == "76561197963057641"
 end

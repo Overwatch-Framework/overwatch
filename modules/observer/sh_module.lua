@@ -1,7 +1,7 @@
 local MODULE = MODULE
 
 MODULE.Name = "Observer"
-MODULE.Author = "Riggs & bloodycop"
+MODULE.Author = "Riggs"
 MODULE.Description = "Provides a system for observer mode."
 
 local meta = FindMetaTable("Player")

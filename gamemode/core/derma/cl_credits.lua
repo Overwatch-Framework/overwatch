@@ -3,7 +3,6 @@
 
 local CREDITS = {
     {"Riggs", "76561197963057641", {"credit.developer.lead", "credit.designer.lead"}},
-    {"bloodycop", "76561198373309941", {"credit.developer.lead", "credit.qol"}}
 }
 
 local SPECIALS = {}

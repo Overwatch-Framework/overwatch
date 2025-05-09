@@ -2,10 +2,10 @@
 --- Top-level library containing all Overwatch libraries. A large majority of the framework is split into respective libraries that
 -- reside within `ow`.
 -- @module ow
--- @author riggs9162 & bloodycop6385
+-- @author riggs9162
 
 GM.Name = "Overwatch"
-GM.Author = "Riggs & bloodycop"
+GM.Author = "Riggs"
 GM.Description = "A roleplaying gamemode for Garry's Mod."
 GM.Version = "alpha-0.1.0"
 
