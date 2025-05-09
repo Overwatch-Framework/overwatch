@@ -12,7 +12,7 @@ function ow.option:Set(client, key, value)
 
     if ( !IsValid(client) ) then return false end
 
-    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
+    if ( ow.util:DetectType(value) != stored.Type ) then
         ow.util:PrintError("Attempted to set option \"" .. key .. "\" with invalid type!")
         return false
     end

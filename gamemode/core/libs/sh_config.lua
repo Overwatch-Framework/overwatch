@@ -54,7 +54,7 @@ function ow.config:Set(key, value)
         value = stored.Default
     end
 
-    if ( ow.util:GetTypeFromValue(value) != stored.Type ) then
+    if ( ow.util:DetectType(value) != stored.Type ) then
         ow.util:PrintError("Attempted to set config \"" .. key .. "\" with invalid type!")
         return false
     end
@@ -140,7 +140,7 @@ function ow.config:Register(key, data)
     end
 
     if ( data.Type == nil ) then
-        data.Type = ow.util:GetTypeFromValue(data.Default)
+        data.Type = ow.util:DetectType(data.Default)
 
         if ( data.Type == nil ) then
             ow.util:PrintError("Config \"" .. key .. "\" has an invalid type!")

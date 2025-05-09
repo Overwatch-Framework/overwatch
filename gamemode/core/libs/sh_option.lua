@@ -144,7 +144,7 @@ function ow.option:Register(key, data)
     end
 
     if ( data.Type == nil ) then
-        data.Type = ow.util:GetTypeFromValue(data.Default)
+        data.Type = ow.util:DetectType(data.Default)
 
         if ( data.Type == nil ) then
             ow.util:PrintError("Option \"" .. key .. "\" has an invalid type!")

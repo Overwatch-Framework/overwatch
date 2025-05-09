@@ -5,146 +5,86 @@
 -- https://github.com/riggs9162/helix/blob/riggs9162/gamemode/core/sh_util.lua
 -- https://github.com/NebulousCloud/helix/blob/master/gamemode/core/sh_util.lua
 
---- A table of variable types that are used throughout the framework. It represents types as a table with the keys being the
--- name of the type, and the values being some number value. **You should never directly use these number values!** Using the
--- values from this table will ensure backwards compatibility if the values in this table change.
---
--- This table also contains the numerical values of the types as keys. This means that if you need to check if a type exists, or
--- if you need to get the name of a type, you can do a table lookup with a numerical value. Note that special types are not
--- included since they are not real types that can be compared with.
--- @table ow.type
--- @realm shared
--- @field string A regular string.
--- @field text A regular string that can contain newlines.
--- @field number Any number.
--- @field player Any player that matches the given query string in `ow.util.FindPlayer`.
--- @field steamid A string that matches the Steam ID format of `STEAM_X:X:XXXXXXXX`.
--- @field character Any player's character that matches the given query string in `ow.util.FindPlayer`.
--- @field bool A string representation of a bool - `false` and `0` will return `false`, anything else will return `true`.
--- @field color A color represented by its red/green/blue/alpha values.
--- @field vector A 3D vector represented by its x/y/z values.
--- @field optional This is a special type that can be bitwise OR'd with any other type to make it optional.
--- @field array This is a special type that can be bitwise OR'd with any other type to make it an array of that type.
--- @usage -- checking if type exists
--- print(ow.type[2] != nil)
--- > true
---
--- -- getting name of type
--- print(ow.type[ow.type.string])
--- > "string"
+--- Converts and sanitizes input data into the specified type.
+-- This supports simple type coercion and fallback defaults.
+-- @param typeID number A type constant from ow.types
+-- @param value any The raw value to sanitize
+-- @return any A validated and converted result
+-- @usage ow.util:CoerceType(ow.types.number, "123") -- returns 123
+function ow.util:CoerceType(typeID, value)
+    if ( typeID == ow.types.string or typeID == ow.types.text ) then
+        return tostring(value)
 
-ow.type = ow.type or {
-    [2] = "string",
-    [4] = "text",
-    [8] = "number",
-    [16] = "player",
-    [32] = "steamid",
-    [64] = "character",
-    [128] = "bool",
-    [1024] = "color",
-    [2048] = "vector",
+    elseif ( typeID == ow.types.number ) then
+        return tonumber(value) or 0
 
-    string = 2,
-    text = 4,
-    number = 8,
-    player = 16,
-    steamid = 32,
-    character = 64,
-    bool = 128,
-    color = 1024,
-    vector = 2048,
-    angle = 4096,
+    elseif ( typeID == ow.types.bool ) then
+        return tobool(value)
 
-    optional = 256,
-    array = 512
-}
+    elseif ( typeID == ow.types.vector ) then
+        return isvector(value) and value or vector_origin
 
---- Sanitizes an input value with the given type. This function ensures that a valid type is always returned. If a valid value
--- could not be found, it will return the default value for the type. This only works for simple types - e.g it does not work
--- for player, character, or Steam ID types.
--- @realm shared
--- @owtypes type Type to check for
--- @param input Value to sanitize
--- @return Sanitized value
--- @see ow.type
--- @usage print(ow.util:SanitizeType(ow.type.number, "123"))
--- > 123
--- print(ow.util:SanitizeType(ow.type.bool, 1))
--- > true
-function ow.util:SanitizeType(type, input)
-    if ( type == ow.type.string ) then
-        return tostring(input)
-    elseif ( type == ow.type.text ) then
-        return tostring(input)
-    elseif ( type == ow.type.number ) then
-        return tonumber(input or 0) or 0
-    elseif ( type == ow.type.bool ) then
-        return tobool(input)
-    elseif ( type == ow.type.color ) then
-        return IsColor(input) and input or color_white
-    elseif ( type == ow.type.vector ) then
-        return isvector(input) and input or vector_origin
-    elseif ( type == ow.type.angle ) then
-        return isangle(input) and input or angle_zero
-    elseif ( type == ow.type.array ) then
-        return input
-    elseif ( type == ow.type.player ) then
-        if ( isstring(input) ) then
-            return ow.util:FindPlayer(input)
-        elseif ( isnumber(input) ) then
-            return Player(input)
-        elseif ( IsValid(input) and input:IsPlayer() ) then
-            return input
+    elseif ( typeID == ow.types.angle ) then
+        return isangle(value) and value or angle_zero
+
+    elseif ( typeID == ow.types.color ) then
+        return IsColor(value) and value or color_white
+
+    elseif ( typeID == ow.types.player ) then
+        if ( isstring(value) ) then
+            return ow.util:FindPlayer(value)
+        elseif ( isnumber(value) ) then
+            return Player(value)
+        elseif ( IsValid(value) and value:IsPlayer() ) then
+            return value
         end
 
-        return nil
-    else
-        error("attempted to sanitize " .. ( ow.type[type] and ( "invalid type " .. ow.type[type] ) or "unknown type " .. type ))
+    elseif ( typeID == ow.types.character ) then
+        if ( istable(value) and getmetatable(value) == ow.character.meta ) then
+            return value
+        end
+
+    elseif ( typeID == ow.types.steamid ) then
+        if ( isstring(value) and #value == 17 and value:match("^%d+$") ) then
+            return value
+        end
     end
+
+    return nil
 end
 
-local typeMap = {
-    string = ow.type.string,
-    number = ow.type.number,
-    Player = ow.type.player,
-    boolean = ow.type.bool,
-    Vector = ow.type.vector,
-    Angle = ow.type.angle,
+local basicTypeMap = {
+    string  = ow.types.string,
+    number  = ow.types.number,
+    boolean = ow.types.bool,
+    Vector  = ow.types.vector,
+    Angle   = ow.types.angle
 }
 
-local tableMap = {
-    [ow.type.character] = function(value)
-        return getmetatable(value) == ow.character.meta
-    end,
-
-    [ow.type.color] = function(value)
-        return IsColor(value)
-    end,
-
-    [ow.type.steamid] = function(value)
-        return isstring(value) and ( value:match("^%d+$") and #value == 17 )
-    end
+local checkTypeMap = {
+    [ow.types.color] = function(val) return IsColor(val) end,
+    [ow.types.character] = function(val) return getmetatable(val) == ow.character.meta end,
+    [ow.types.steamid] = function(val) return isstring(val) and #val == 17 and val:match("^%d+$") end
 }
 
---- Returns the `ow.type` of the given value.
--- @realm shared
--- @param value Value to get the type of
--- @treturn ow.type Type of value
--- @see ow.type
--- @usage print(ow.util:GetTypeFromValue("hello"))
--- > 2 -- i.e the value of ow.type.string
-function ow.util:GetTypeFromValue(value)
-    local result = typeMap[type(value)]
-    if ( result ) then
-        return result
-    end
+--- Attempts to identify the framework type of a given value.
+-- @param value any The value to analyze
+-- @return number|nil A type constant from ow.types or nil if unknown
+-- @usage local t = ow.util:DetectType(Color(255,0,0)) -- returns ow.types.color
+function ow.util:DetectType(value)
+    local luaType = type(value)
+    local mapped = basicTypeMap[luaType]
 
-    if ( istable(value) ) then
-        for k, v in pairs(tableMap) do
-            if ( v(value) ) then
-                return k
-            end
+    if ( mapped ) then return mapped end
+
+    for typeID, validator in pairs(checkTypeMap) do
+        if ( validator(value) ) then
+            return typeID
         end
+    end
+
+    if ( IsValid(value) and value:IsPlayer() ) then
+        return ow.types.player
     end
 end
 

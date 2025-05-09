@@ -147,7 +147,7 @@ function ow.command:SanitiseArguments(command, arguments)
             v = bit.band(v, bit.bnot(ow.type.optional))
         end
 
-        sanitised[k] = ow.util:SanitizeType(v, arguments[k])
+        sanitised[k] = ow.util:CoerceType(v, arguments[k])
     end
 
     return sanitised
