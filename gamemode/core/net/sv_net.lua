@@ -28,7 +28,7 @@ ow.net:Hook("character.create", function(client, payload)
         if ( v.Editable != true ) then continue end
 
         -- This is a bit of a hack, but it works for now.
-        if ( v.Type == ow.type.string or v.Type == ow.type.text ) then
+        if ( v.Type == ow.types.string or v.Type == ow.types.text ) then
             payload[k] = string.Trim(payload[k] or "")
         end
 

@@ -1,17 +1,17 @@
 ow.character:RegisterVariable("steamid", {
-    Type = ow.type.string,
+    Type = ow.types.string,
     Field = "steamid",
     Default = ""
 })
 
 ow.character:RegisterVariable("schema", {
-    Type = ow.type.string,
+    Type = ow.types.string,
     Field = "schema",
     Default = "overwatch"
 })
 
 ow.character:RegisterVariable("data", {
-    Type = ow.type.string,
+    Type = ow.types.string,
     Field = "data",
     Default = "[]",
 
@@ -43,7 +43,7 @@ ow.character:RegisterVariable("data", {
 })
 
 ow.character:RegisterVariable("name", {
-    Type = ow.type.string,
+    Type = ow.types.string,
     Field = "name",
     Default = "John Doe",
 
@@ -74,7 +74,7 @@ ow.character:RegisterVariable("name", {
 })
 
 ow.character:RegisterVariable("description", {
-    Type = ow.type.text,
+    Type = ow.types.text,
     Field = "description",
     Default = "A mysterious person.",
 
@@ -92,7 +92,7 @@ ow.character:RegisterVariable("description", {
 })
 
 ow.character:RegisterVariable("model", {
-    Type = ow.type.string,
+    Type = ow.types.string,
     Field = "model",
     Default = "models/player/kleiner.mdl",
 
@@ -157,13 +157,13 @@ ow.character:RegisterVariable("model", {
 })
 
 ow.character:RegisterVariable("money", {
-    Type = ow.type.number,
+    Type = ow.types.number,
     Field = "money",
     Default = 0
 })
 
 ow.character:RegisterVariable("faction", {
-    Type = ow.type.number,
+    Type = ow.types.number,
     Field = "faction",
     Default = 0,
 
@@ -187,26 +187,26 @@ ow.character:RegisterVariable("faction", {
 })
 
 ow.character:RegisterVariable("class", {
-    Type = ow.type.number,
+    Type = ow.types.number,
     Field = "class",
     Default = 0
 })
 
 ow.character:RegisterVariable("flags", {
-    Type = ow.type.string,
+    Type = ow.types.string,
     Field = "flags",
     Default = "",
 })
 
 ow.character:RegisterVariable("play_time", {
-    Type = ow.type.number,
+    Type = ow.types.number,
     Field = "play_time",
     Alias = "PlayTime",
     Default = 0
 })
 
 ow.character:RegisterVariable("last_played", {
-    Type = ow.type.number,
+    Type = ow.types.number,
     Field = "last_played",
     Alias = "LastPlayed",
     Default = 0

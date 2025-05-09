@@ -138,13 +138,13 @@ function ow.command:SanitiseArguments(command, arguments)
 
     local sanitised = {}
     for k, v in ipairs(commandArgs) do
-        if ( bit.band(v, ow.type.optional) == ow.type.optional ) then
+        if ( bit.band(v, ow.types.optional) == ow.types.optional ) then
             if ( arguments[k] == nil ) then
                 sanitised[k] = nil
                 continue
             end
 
-            v = bit.band(v, bit.bnot(ow.type.optional))
+            v = bit.band(v, bit.bnot(ow.types.optional))
         end
 
         sanitised[k] = ow.util:CoerceType(v, arguments[k])

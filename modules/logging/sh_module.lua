@@ -7,7 +7,7 @@ MODULE.Author = "Riggs, bloodycop"
 ow.config:Register("logging", {
     Name = "Logging",
     Description = "Enable or disable the logging system.",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true
 })
 

@@ -109,7 +109,7 @@ function PANEL:AddSetting(settingData)
 
     local label
     local options
-    if ( settingData.Type == ow.type.bool ) then
+    if ( settingData.Type == ow.types.bool ) then
         label = panel:Add("ow.text")
         label:Dock(RIGHT)
         label:DockMargin(0, 0, ScreenScale(8), 0)
@@ -138,7 +138,7 @@ function PANEL:AddSetting(settingData)
             end):SetIcon("icon16/arrow_refresh.png")
             menu:Open()
         end
-    elseif ( settingData.Type == ow.type.number ) then
+    elseif ( settingData.Type == ow.types.number ) then
         local slider = panel:Add("ow.slider")
         slider:Dock(RIGHT)
         slider:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -222,7 +222,7 @@ function PANEL:AddSetting(settingData)
             end):SetIcon("icon16/arrow_refresh.png")
             menu:Open()
         end
-    elseif ( settingData.Type == ow.type.array ) then
+    elseif ( settingData.Type == ow.types.array ) then
         options = settingData:Populate()
         local keys = {}
         for k2, _ in pairs(options) do
@@ -284,7 +284,7 @@ function PANEL:AddSetting(settingData)
             end
             menu:Open()
         end
-    elseif ( configData.Type == ow.type.color ) then
+    elseif ( configData.Type == ow.types.color ) then
         local color = panel:Add("EditablePanel")
         color:Dock(RIGHT)
         color:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -348,7 +348,7 @@ function PANEL:AddSetting(settingData)
             end):SetIcon("icon16/arrow_refresh.png")
             menu:Open()
         end
-    elseif ( configData.Type == ow.type.string ) then
+    elseif ( configData.Type == ow.types.string ) then
         local text = panel:Add("ow.text.entry")
         text:Dock(RIGHT)
         text:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -378,9 +378,9 @@ function PANEL:AddSetting(settingData)
     end
 
     panel.OnHovered = function(this)
-        if ( settingData.Type == ow.type.bool ) then
+        if ( settingData.Type == ow.types.bool ) then
             label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
-        elseif ( settingData.Type == ow.type.array ) then
+        elseif ( settingData.Type == ow.types.array ) then
             local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
             label:SetText("< " .. phrase .. " >", true)
         end
@@ -403,9 +403,9 @@ function PANEL:AddSetting(settingData)
     end
 
     panel.OnUnHovered = function(this)
-        if ( settingData.Type == ow.type.bool ) then
+        if ( settingData.Type == ow.types.bool ) then
             label:SetText(value and enabled or disabled, true)
-        elseif ( settingData.Type == ow.type.array ) then
+        elseif ( settingData.Type == ow.types.array ) then
             local phrase = (options and options[value]) and ow.localization:GetPhrase(options[value]) or unknown
             label:SetText(phrase, true)
         end

@@ -16,7 +16,7 @@ ow.localization:Register("en", {
 
 ow.option:Register("sway", {
     Name = "option.sway",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     Description = "option.sway.help",
     NoNetworking = true,
@@ -25,7 +25,7 @@ ow.option:Register("sway", {
 
 ow.option:Register("sway.multiplier", {
     Name = "option.sway.multiplier",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 1,
     Min = 0,
     Max = 10,
@@ -37,7 +37,7 @@ ow.option:Register("sway.multiplier", {
 
 ow.option:Register("sway.multiplier.sprint", {
     Name = "option.sway.multiplier.sprint",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 1,
     Min = 0,
     Max = 10,

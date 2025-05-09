@@ -21,7 +21,7 @@ function PANEL:ResetPayload()
         if ( v.Editable != true ) then continue end
 
         -- This is a bit of a hack, but it works for now.
-        if ( v.Type == ow.type.string or v.Type == ow.type.text ) then
+        if ( v.Type == ow.types.string or v.Type == ow.types.text ) then
             self:SetPayload(k, "")
         end
     end
@@ -219,7 +219,7 @@ function PANEL:PopulateCreateCharacter()
                 if ( isNextEmpty ) then continue end
             end
 
-            if ( v.Type == ow.type.string or v.Type == ow.type.text ) then
+            if ( v.Type == ow.types.string or v.Type == ow.types.text ) then
                 local entry = self.characterCreateForm:GetChild(k)
                 if ( entry and entry:GetValue() != "" ) then
                     self:SetPayload(k, entry:GetValue())
@@ -262,7 +262,7 @@ function PANEL:PopulateCreateCharacterForm()
             continue
         end
 
-        if ( v.Type == ow.type.string ) then
+        if ( v.Type == ow.types.string ) then
             zPos = zPos + 1 + v.ZPos
 
             local label = self.characterCreateForm:Add("ow.text")
@@ -295,7 +295,7 @@ function PANEL:PopulateCreateCharacterForm()
 
                 self:SetPayload(k, text)
             end
-        elseif ( v.Type == ow.type.text ) then
+        elseif ( v.Type == ow.types.text ) then
             zPos = zPos + 1 + v.ZPos
 
             local label = self.characterCreateForm:Add("ow.text")

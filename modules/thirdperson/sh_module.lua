@@ -29,7 +29,7 @@ ow.localization:Register("en", {
 
 ow.option:Register("thirdperson", {
     Name = "option.thirdperson",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = false,
     Description = "option.thirdperson.enable.help",
     NoNetworking = true,
@@ -38,7 +38,7 @@ ow.option:Register("thirdperson", {
 
 ow.option:Register("thirdperson.follow.head", {
     Name = "options.thirdperson.follow.head",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = false,
     Description = "options.thirdperson.follow.head.help",
     NoNetworking = true,
@@ -47,7 +47,7 @@ ow.option:Register("thirdperson.follow.head", {
 
 ow.option:Register("thirdperson.follow.hit.angles", {
     Name = "options.thirdperson.follow.hit.angles",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     Description = "options.thirdperson.follow.hit.angles.help",
     NoNetworking = true,
@@ -56,7 +56,7 @@ ow.option:Register("thirdperson.follow.hit.angles", {
 
 ow.option:Register("thirdperson.follow.hit.fov", {
     Name = "options.thirdperson.follow.hit.fov",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     Description = "options.thirdperson.follow.hit.fov.help",
     NoNetworking = true,
@@ -65,7 +65,7 @@ ow.option:Register("thirdperson.follow.hit.fov", {
 
 ow.option:Register("thirdperson.position.x", {
     Name = "options.thirdperson.position.x",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 50,
     Min = -100,
     Max = 100,
@@ -77,7 +77,7 @@ ow.option:Register("thirdperson.position.x", {
 
 ow.option:Register("thirdperson.position.y", {
     Name = "options.thirdperson.position.y",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 25,
     Min = -100,
     Max = 100,
@@ -89,7 +89,7 @@ ow.option:Register("thirdperson.position.y", {
 
 ow.option:Register("thirdperson.position.z", {
     Name = "options.thirdperson.position.z",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 0,
     Min = -100,
     Max = 100,
@@ -101,7 +101,7 @@ ow.option:Register("thirdperson.position.z", {
 
 ow.config:Register("thirdperson.tracecheck", {
     Name = "options.thirdperson.traceplayercheck",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = false,
     Description = "options.thirdperson.traceplayercheck.help",
     Category = "category.thirdperson"

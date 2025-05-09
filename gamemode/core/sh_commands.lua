@@ -2,7 +2,7 @@ ow.command:Register("Respawn", {
     Description = "Respawn a player.",
     AdminOnly = true,
     Arguments = {
-        ow.type.player
+        ow.types.player
     },
     Callback = function(info, client, target)
         if ( target:GetCharacter() == nil ) then
@@ -21,8 +21,8 @@ ow.command:Register("CharSetModel", {
     Description = "Set the model of a character.",
     AdminOnly = true,
     Arguments = {
-        ow.type.player,
-        ow.type.string
+        ow.types.player,
+        ow.types.string
     },
     Callback = function(info, client, target, model)
         if ( string.lower(model) == string.lower(target:GetModel()) ) then
@@ -46,8 +46,8 @@ ow.command:Register("CharSetFaction", {
     Description = "Set the faction of a character.",
     AdminOnly = true,
     Arguments = {
-        ow.type.player,
-        ow.type.string
+        ow.types.player,
+        ow.types.string
     },
     Callback = function(info, client, target, identifier)
         local faction = ow.faction:Get(identifier)
@@ -73,8 +73,8 @@ ow.command:Register("CharGiveFlags", {
     Description = "Give a character a flag.",
     AdminOnly = true,
     Arguments = {
-        ow.type.player,
-        ow.type.string
+        ow.types.player,
+        ow.types.string
     },
     Callback = function(info, client, target, flags)
         if ( !isstring(flags) or #flags == 0 ) then
@@ -137,9 +137,9 @@ ow.command:Register("CharTakeFlags", {
     Description = "Take a flag from a character.",
     AdminOnly = true,
     Arguments = {
-        ow.type.player,
-        ow.type.string,
-        bit.bor(ow.type.number, ow.type.optional) -- TODO: Doesn't work
+        ow.types.player,
+        ow.types.string,
+        bit.bor(ow.types.number, ow.types.optional) -- TODO: Doesn't work
     },
     Callback = function(info, client, target, flags, number)
         if ( !IsValid(target) ) then

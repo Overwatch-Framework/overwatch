@@ -38,7 +38,7 @@ local languages = {
 ow.option:Register("language", {
     Name = "options.language",
     Description = "options.language.help",
-    Type = ow.type.array,
+    Type = ow.types.array,
     Default = "en",
     OnChange = function(self, value)
         -- GMOD blocks the console command gmod_language from being run in the console
@@ -53,7 +53,7 @@ ow.option:Register("language", {
 ow.option:Register("inventory.sort", {
     Name = "options.inventory.sort",
     Description = "options.inventory.sort.help",
-    Type = ow.type.array,
+    Type = ow.types.array,
     Default = "name",
     NoNetworking = true,
     Populate = function()
@@ -68,7 +68,7 @@ ow.option:Register("inventory.sort", {
 ow.option:Register("vignette", {
     Name = "options.vignette",
     Description = "options.vignette.help",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     NoNetworking = true
 })
@@ -76,7 +76,7 @@ ow.option:Register("vignette", {
 ow.option:Register("tab.fade.time", {
     Name = "options.tab.fade.time",
     Description = "options.tab.fade.time.help",
-    Type = ow.type.number,
+    Type = ow.types.number,
     NoNetworking = true,
     Default = 0.4,
     Min = 0,
@@ -87,7 +87,7 @@ ow.option:Register("tab.fade.time", {
 ow.option:Register("tab.anchor.time", {
     Name = "options.tab.anchor.time",
     Description = "options.tab.anchor.time.help",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 0.4,
     NoNetworking = true,
     Min = 0,
@@ -99,7 +99,7 @@ ow.option:Register("mainmenu.music", {
     Name = "options.mainmenu.music",
     Description = "options.mainmenu.music.help",
     SubCategory = "category.mainmenu",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     NoNetworking = true
 })
@@ -108,7 +108,7 @@ ow.option:Register("mainmenu.music.volume", {
     Name = "options.mainmenu.music.volume",
     Description = "options.mainmenu.music.volume.help",
     SubCategory = "category.mainmenu",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 50,
     NoNetworking = true,
     Min = 0,
@@ -120,7 +120,7 @@ ow.option:Register("mainmenu.music.loop", {
     Name = "options.mainmenu.music.loop",
     Description = "options.mainmenu.music.loop.help",
     SubCategory = "category.mainmenu",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     NoNetworking = true
 })
@@ -129,7 +129,7 @@ ow.option:Register("performance.blur", {
     Name = "options.performance.blur",
     Description = "options.performance.blur.help",
     Category = "category.performance",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     NoNetworking = true
 })
@@ -138,7 +138,7 @@ ow.option:Register("performance.animations", {
     Name = "options.performance.animations",
     Description = "options.performance.animations.help",
     Category = "category.performance",
-    Type = ow.type.bool,
+    Type = ow.types.bool,
     Default = true,
     NoNetworking = true
 })
@@ -147,7 +147,7 @@ ow.option:Register("chat.size.font", {
     Name = "options.chat.size.font",
     Description = "options.chat.size.font.help",
     Category = "category.chat",
-    Type = ow.type.number,
+    Type = ow.types.number,
     Default = 1,
     NoNetworking = true,
     Min = 0,

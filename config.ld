@@ -61,7 +61,7 @@ new_type("panel", "Panels", true)
 tparam_alias("char", "Character")
 tparam_alias("inventory", "Inventory")
 tparam_alias("item", "Item")
-tparam_alias("owtypes", "ow.type")
+tparam_alias("owtypes", "ow.types")
 
 -- standard types
 tparam_alias("string", "string")

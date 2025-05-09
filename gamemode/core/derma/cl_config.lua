@@ -109,7 +109,7 @@ function PANEL:AddConfig(configData)
 
     local label
     local configs
-    if ( configData.Type == ow.type.bool ) then
+    if ( configData.Type == ow.types.bool ) then
         label = panel:Add("ow.text")
         label:Dock(RIGHT)
         label:DockMargin(0, 0, ScreenScale(8), 0)
@@ -139,7 +139,7 @@ function PANEL:AddConfig(configData)
             end)
             menu:Open()
         end
-    elseif ( configData.Type == ow.type.number ) then
+    elseif ( configData.Type == ow.types.number ) then
         local slider = panel:Add("ow.slider")
         slider:Dock(RIGHT)
         slider:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -218,7 +218,7 @@ function PANEL:AddConfig(configData)
             end)
             menu:Open()
         end
-    elseif ( configData.Type == ow.type.array ) then
+    elseif ( configData.Type == ow.types.array ) then
         configs = configData:Populate()
         local keys = {}
         for k2, _ in pairs(configs) do
@@ -282,7 +282,7 @@ function PANEL:AddConfig(configData)
             end
             menu:Open()
         end
-    elseif ( configData.Type == ow.type.color ) then
+    elseif ( configData.Type == ow.types.color ) then
         local color = panel:Add("EditablePanel")
         color:Dock(RIGHT)
         color:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -346,7 +346,7 @@ function PANEL:AddConfig(configData)
             end)
             menu:Open()
         end
-    elseif ( configData.Type == ow.type.string ) then
+    elseif ( configData.Type == ow.types.string ) then
         local text = panel:Add("ow.text.entry")
         text:Dock(RIGHT)
         text:DockMargin(ScreenScale(8), ScreenScale(6), ScreenScale(8), ScreenScale(6))
@@ -377,9 +377,9 @@ function PANEL:AddConfig(configData)
     end
 
     panel.OnHovered = function(this)
-        if ( configData.Type == ow.type.bool ) then
+        if ( configData.Type == ow.types.bool ) then
             label:SetText(value and "< " .. enabled .. " >" or "< " .. disabled .. " >", true)
-        elseif ( configData.Type == ow.type.array ) then
+        elseif ( configData.Type == ow.types.array ) then
             local phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
             label:SetText("< " .. phrase .. " >", true)
         end
@@ -402,9 +402,9 @@ function PANEL:AddConfig(configData)
     end
 
     panel.OnUnHovered = function(this)
-        if ( configData.Type == ow.type.bool ) then
+        if ( configData.Type == ow.types.bool ) then
             label:SetText(value and enabled or disabled, true)
-        elseif ( configData.Type == ow.type.array ) then
+        elseif ( configData.Type == ow.types.array ) then
             local phrase = (configs and configs[value]) and ow.localization:GetPhrase(configs[value]) or unknown
             label:SetText(phrase, true)
         end
