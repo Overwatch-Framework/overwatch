@@ -1,20 +1,15 @@
+-- TODO: replace this with an original credits screen
+-- https://github.com/NebulousCloud/helix/blob/master/gamemode/core/derma/cl_credits.lua
+
 local CREDITS = {
     {"Riggs", "76561197963057641", {"credit.developer.lead", "credit.designer.lead"}},
     {"bloodycop", "76561198373309941", {"credit.developer.lead", "credit.qol"}}
 }
 
-local SPECIALS = {
-    {
-        {"Luna", "76561197988658543"},
-        {"Rain GBizzle", "76561198036111376"}
-    },
-    {
-        {"Black Tea", "76561197999893894"}
-    }
-}
+local SPECIALS = {}
 
 local MISC = {
-    {"Helix", "For this credits screen"},
+    {"Helix", "For this credits screen and some other snippets."},
     {"Project Ordinance", "something"}
 }
 

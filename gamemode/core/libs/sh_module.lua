@@ -28,6 +28,9 @@ function ow.module:Get(identifier)
     return false
 end
 
+-- Credits to Nutscript and Helix for this function.
+-- https://github.com/rebel1324/NutScript/blob/1.1/gamemode/core/libs/sh_plugin.lua#L100
+-- https://github.com/NebulousCloud/helix/blob/master/gamemode/core/libs/sh_plugin.lua#L108
 function ow.module:LoadEntities(path)
     local bLoadedTools
     local files, folders

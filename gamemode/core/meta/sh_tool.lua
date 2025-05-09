@@ -1,3 +1,6 @@
+-- Credits to Helix for this file.
+-- https://github.com/NebulousCloud/helix/blob/master/gamemode/core/meta/sh_tool.lua
+
 local TOOL = ow.tool or {}
 
 function TOOL:Create()

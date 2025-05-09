@@ -1,6 +1,10 @@
 --- Utility functions
 -- @module ow.util
 
+-- Most utility functions were imported from Minerva's edit of Helix and some from the original.
+-- https://github.com/riggs9162/helix/blob/riggs9162/gamemode/core/sh_util.lua
+-- https://github.com/NebulousCloud/helix/blob/master/gamemode/core/sh_util.lua
+
 --- A table of variable types that are used throughout the framework. It represents types as a table with the keys being the
 -- name of the type, and the values being some number value. **You should never directly use these number values!** Using the
 -- values from this table will ensure backwards compatibility if the values in this table change.
