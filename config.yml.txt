@@ -1,7 +1,0 @@
-database:
-  adapter: ""
-  hostname: ""
-  username: ""
-  password: ""
-  database: ""
-  port: 3306
