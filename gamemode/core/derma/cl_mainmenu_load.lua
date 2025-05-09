@@ -57,7 +57,6 @@ function PANEL:Populate()
 
     local clientTable = client:GetTable()
     for k, v in pairs(clientTable.owCharacters) do
-        -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
         local button = characterList:Add("ow.button.small")
         button:Dock(TOP)
         button:DockMargin(0, 0, 0, 16)

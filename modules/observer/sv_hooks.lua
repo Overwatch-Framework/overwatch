@@ -25,7 +25,7 @@ function MODULE:EntityTakeDamage(target, dmgInfo)
     if ( !IsValid(target) or !target:IsPlayer() ) then return end
 
     if ( CAMI.PlayerHasAccess(target, "Overwatch - Observer") and target:GetNoDraw() and target:GetMoveType() == MOVETYPE_NOCLIP ) then
-        return true -- bloodycop: better than GodEnable imo.
+        return true
     end
 end
 

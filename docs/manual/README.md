@@ -16,4 +16,4 @@ If you would like to contribute to Overwatch, please fork the repository and sub
 
 ### Credits
 
-Overwatch was created by [Riggs](https://minerva-servers.com/porfolio/riggs9162) and [eon](https://minerva-servers.com/porfolio/eon).
+Overwatch was created by [Riggs](https://minerva-servers.com/porfolio/riggs9162).

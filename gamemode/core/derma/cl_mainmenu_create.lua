@@ -95,7 +95,6 @@ function PANEL:PopulateFactionSelect()
         local description = (v.Description and string.upper(v.Description)) or "UNKNOWN FACTION DESCRIPTION"
         local descriptionWrapped = ow.util:GetWrappedText(description, "ow.fonts.button.small", factionList:GetTall() * 1.5)
 
-        -- In HL2 the create (chapter) background images are 2048x1024 -- thank you eon
         local factionButton = factionList:Add("ow.button.small")
         factionButton:Dock(LEFT)
         factionButton:DockMargin(0, 0, 16, 0)

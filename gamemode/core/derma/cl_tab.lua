@@ -70,39 +70,6 @@ function PANEL:Init()
 
     local buttonSizeable = self.buttons:Add("EditablePanel")
 
-    -- eon did not like the close button :(
-    --[[
-    local closeButton = self.buttons:Add("ow.button")
-    closeButton:Dock(BOTTOM)
-    closeButton:DockMargin(0, 16, 0, 0)
-    closeButton:SetText("tab.close")
-
-    closeButton.DoClick = function()
-        self:Close()
-    end
-    ]]
-
-    -- eon did not like the main menu button :(
-    --[[
-    local menuButton = self.buttons:Add("ow.button")
-    menuButton:Dock(BOTTOM)
-    menuButton:SetText("tab.mainmenu")
-
-    menuButton.DoClick = function()
-        self:Close(function()
-            if ( IsValid(ow.gui.mainmenu) ) then
-                ow.gui.mainmenu:Remove()
-            end
-
-            ow.gui.mainmenu = vgui.Create("ow.mainmenu")
-        end)
-
-        -- Keep them on so it isnt awkward when they expect to move their mouse
-        self:SetMouseInputEnabled(true)
-        self:SetKeyboardInputEnabled(true)
-    end
-    ]]
-
     self.container = self:Add("EditablePanel")
     self.container:SetSize(self:GetWide() - self.buttons:GetWide() - padding - paddingSmall, self:GetTall() - padding)
     self.container:SetPos(self:GetWide(), paddingSmall)
