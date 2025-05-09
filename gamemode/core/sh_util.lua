@@ -300,34 +300,63 @@ function ow.util:FindPlayer(identifier)
     return nil
 end
 
---- Wraps text to fit within a specified width.
--- @realm shared
+--- Breaks a string into lines that fit within a maximum width in pixels.
+-- Words are wrapped cleanly, and long words are split by character if needed.
+-- @realm client
 -- @param text string The text to wrap.
--- @param font string The font to use for wrapping.
--- @param maxWidth number The maximum width of the text.
--- @return table A table containing the wrapped lines of text.
--- @usage local lines = ow.util:WrapText("This is a long line of text that needs to be wrapped.", "Default", 200)
--- > lines = {"This is a long line of text", "that needs to be wrapped."}
-function ow.util:WrapText(text, font, maxWidth)
-    surface.SetFont(font)
+-- @param font string Font name to use.
+-- @param maxWidth number Maximum allowed width in pixels.
+-- @return table Table of wrapped lines.
+-- @usage local lines = ow.util:GetWrappedText("Long example string", "DermaDefault", 250)
+function ow.util:GetWrappedText(text, font, maxWidth)
+    if ( !isstring(text) or !isstring(font) or !isnumber(maxWidth) ) then
+        ow.util:PrintError("Attempted to wrap text with no value", text, font, maxWidth)
+        return false
+    end
 
-    local words = string.Explode(" ", text)
     local lines = {}
     local line = ""
 
-    for k, v in ipairs(words) do
-        local w = surface.GetTextSize(v)
-        local lw = surface.GetTextSize(line)
-
-        if ( lw + w > maxWidth ) then
-            table.insert(lines, line)
-            line = ""
-        end
-
-        line = line .. v .. " "
+    if ( self:GetTextWidth(font, text) <= maxWidth ) then
+        return {text}
     end
 
-    table.insert(lines, line)
+    local words = string.Explode(" ", text)
+
+    for i = 1, #words do
+        local word = words[i]
+        local wordWidth = self:GetTextWidth(font, word)
+
+        if ( wordWidth > maxWidth ) then
+            for j = 1, string.len(word) do
+                local char = string.sub(word, j, j)
+                local next = line .. char
+
+                if ( self:GetTextWidth(font, next) > maxWidth ) then
+                    table.insert(lines, line)
+                    line = ""
+                end
+
+                line = line .. char
+            end
+
+            continue
+        end
+
+        local space = (line == "") and "" or " "
+        local next = line .. space .. word
+
+        if ( self:GetTextWidth(font, next) > maxWidth ) then
+            table.insert(lines, line)
+            line = word
+        else
+            line = next
+        end
+    end
+
+    if ( line != "" ) then
+        table.insert(lines, line)
+    end
 
     return lines
 end

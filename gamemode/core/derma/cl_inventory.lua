@@ -164,7 +164,7 @@ function PANEL:SetInfo(id)
     name:SetText(item:GetName(), true)
 
     local description = item:GetDescription()
-    local descriptionWrapped = ow.util:WrapText(description, "ow.fonts", self.info:GetWide() - 32)
+    local descriptionWrapped = ow.util:GetWrappedText(description, "ow.fonts", self.info:GetWide() - 32)
     for k, v in pairs(descriptionWrapped) do
         local text = self.info:Add("ow.text")
         text:Dock(TOP)

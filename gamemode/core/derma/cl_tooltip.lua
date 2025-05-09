@@ -43,7 +43,7 @@ end
 function PANEL:SizeToContents()
     local title = ow.localization:GetPhrase(self.title) or self.title
     local desc = ow.localization:GetPhrase(self.description) or self.description
-    local descWrapped = ow.util:WrapText(desc, "ow.fonts", ScreenScale(128))
+    local descWrapped = ow.util:GetWrappedText(desc, "ow.fonts", ScreenScale(128))
 
     local width = 0
     local titleWidth = ow.util:GetTextWidth("ow.fonts.large.bold", title)
@@ -97,7 +97,7 @@ function PANEL:Paint(width, height)
     draw.SimpleText(title, "ow.fonts.large.bold", 8, 0, color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 
     local desc = ow.localization:GetPhrase(self.description) or self.description
-    local descWrapped = ow.util:WrapText(desc, "ow.fonts", width - 32)
+    local descWrapped = ow.util:GetWrappedText(desc, "ow.fonts", width - 32)
     for i = 1, #descWrapped do
         draw.SimpleText(descWrapped[i], "ow.fonts", 16, 32 + (i - 1) * ow.util:GetTextHeight("ow.fonts"), color_white, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
     end

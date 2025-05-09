@@ -21,7 +21,7 @@ function ow.notification:Add(text, duration, bgColor)
 
     -- Prepare wrapped lines
     local maxTextWidth = PANEL_WIDTH - PANEL_MARGIN * 2
-    local lines = ow.util:WrapText(text, FONT_NAME, maxTextWidth)
+    local lines = ow.util:GetWrappedText(text, FONT_NAME, maxTextWidth)
     surface.SetFont(FONT_NAME)
     local _, lineHeight = surface.GetTextSize("Ay")
     local totalHeight = #lines * lineHeight + PANEL_MARGIN * 2
