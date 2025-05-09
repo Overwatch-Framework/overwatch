@@ -540,69 +540,73 @@ if ( CLIENT ) then
         return mat
     end
 
-    local blur = ow.util:GetMaterial("pp/blurscreen")
-    local surface = surface
-    local render = render
+    local blurMaterial = ow.util:GetMaterial("pp/blurscreen")
+    local scrW, scrH = ScrW(), ScrH()
 
-    --- Draws blur on a panel.
-    -- @realm client
-    -- @param panel Panel The panel to draw the blur on.
-    -- @param amount number The amount of blur to apply.
-    -- @param passes number The number of passes to apply.
-    -- @param alpha number The alpha value of the blur.
-    function ow.util:DrawBlur(panel, amount, passes, alpha)
+    --- Draws a blur within a panel’s bounds. Falls back to a dim overlay if blur is disabled.
+    -- @param panel Panel Panel to apply blur to.
+    -- @param intensity number Blur strength (0–10 suggested).
+    -- @param steps number Blur quality/steps. Defaults to 0.2.
+    -- @param alpha number Overlay alpha (default 255).
+    -- @usage ow.util:DrawBlur(panel, 6, 0.2, 200)
+    function ow.util:DrawBlur(panel, intensity, steps, alpha)
         if ( !IsValid(panel) ) then return end
-        if ( !blur ) then return end
 
-        amount = amount or 5
+        if ( ow.option:Get("performance.blur") != true ) then
+            surface.SetDrawColor(30, 30, 30, alpha or (intensity or 5) * 20)
+            surface.DrawRect(0, 0, panel:GetWide(), panel:GetTall())
+            return
+        end
 
-        if ( ow.option:Get("performance.blur") == true ) then
-            surface.SetMaterial(blur)
-            surface.SetDrawColor(255, 255, 255, alpha or 255)
+        local x, y = panel:LocalToScreen(0, 0)
+        local blurAmount = intensity or 5
+        local passStep = steps or 0.2
+        local overlayAlpha = alpha or 255
 
-            local x, y = panel:LocalToScreen(0, 0)
+        surface.SetMaterial(blurMaterial)
+        surface.SetDrawColor(255, 255, 255, overlayAlpha)
 
-            for i = -( passes or 0.2 ), 1, 0.2 do
-                -- Do things to the blur material to make it blurry.
-                blur:SetFloat("$blur", i * amount)
-                blur:Recompute()
+        for i = -passStep, 1, passStep do
+            blurMaterial:SetFloat("$blur", i * blurAmount)
+            blurMaterial:Recompute()
 
-                -- Draw the blur material over the screen.
-                render.UpdateScreenEffectTexture()
-                surface.DrawTexturedRect(x * -1, y * -1, ScrW(), ScrH())
-            end
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
         end
     end
 
-    --- Draws a blurred rectangle.
-    -- @realm client
-    -- @param x number The x position of the rectangle.
-    -- @param y number The y position of the rectangle.
-    -- @param w number The width of the rectangle.
-    -- @param h number The height of the rectangle.
-    -- @param amount number The amount of blur to apply.
-    -- @param passes number The number of passes to apply.
-    -- @param alpha number The alpha value of the blur.
-    function ow.util:DrawBlurRect(x, y, width, height, amount, passes, alpha)
-        if ( !blur ) then return end
+    --- Draws a blur within an arbitrary screen rectangle. Not intended for panels.
+    -- @param x number X position.
+    -- @param y number Y position.
+    -- @param width number Width.
+    -- @param height number Height.
+    -- @param intensity number Blur strength (0–10 suggested).
+    -- @param steps number Blur quality/steps. Defaults to 0.2.
+    -- @param alpha number Overlay alpha (default 255).
+    -- @usage ow.util:DrawBlurRect(0, 0, 512, 256, 8, 0.2, 180)
+    function ow.util:DrawBlurRect(x, y, width, height, intensity, steps, alpha)
+        if ( ow.option:Get("performance.blur") != true ) then
+            surface.SetDrawColor(30, 30, 30, (intensity or 5) * 20)
+            surface.DrawRect(x, y, width, height)
+            return
+        end
 
-        amount = amount or 5
+        local blurAmount = intensity or 5
+        local passStep = steps or 0.2
+        local overlayAlpha = alpha or 255
 
-        if ( ow.option:Get("performance.blur") == true ) then
-            surface.SetMaterial(blur)
-            surface.SetDrawColor(255, 255, 255, alpha or 255)
+        local u0, v0 = x / scrW, y / scrH
+        local u1, v1 = (x + width) / scrW, (y + height) / scrH
 
-            local scrW, scrH = ScrW(), ScrH()
-            local x2, y2 = x / scrW, y / scrH
-            local w2, h2 = (x + width) / scrW, (y + height) / scrH
+        surface.SetMaterial(blurMaterial)
+        surface.SetDrawColor(255, 255, 255, overlayAlpha)
 
-            for i = -( passes or 0.2 ), 1, 0.2 do
-                blur:SetFloat("$blur", i * amount)
-                blur:Recompute()
+        for i = -passStep, 1, passStep do
+            blurMaterial:SetFloat("$blur", i * blurAmount)
+            blurMaterial:Recompute()
 
-                render.UpdateScreenEffectTexture()
-                surface.DrawTexturedRectUV(x, y, width, height, x2, y2, w2, h2)
-            end
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRectUV(x, y, width, height, u0, v0, u1, v1)
         end
     end
 end
